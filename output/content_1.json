@@ -1,0 +1,98 @@
+{
+  "content_id": "content_1",
+  "created_at": "2026-09-26T21:39:08.753234+00:00",
+  "brand": "Bullseye Theory",
+  "status": "pending_approval",
+  "topic": {
+    "title": "What is a Support Level in Trading?",
+    "source": "controlled_educational_topic",
+    "score": 0.9
+  },
+  "research": {
+    "summary": "A support level is a price area where buying interest may be strong enough to slow or stop a decline. Support is not a guaranteed floor, and price can move below the area.",
+    "key_points": [
+      "Support is better understood as a price area rather than an exact guaranteed price.",
+      "Traders often identify support from previous price areas where buying interest appeared.",
+      "A support area can fail and price can move below it.",
+      "Technical analysis helps interpret market data but does not guarantee future price movement."
+    ],
+    "sources": [
+      {
+        "name": "Fidelity — Support and Resistance",
+        "url": ""
+      },
+      {
+        "name": "Fidelity — What Is Technical Analysis?",
+        "url": ""
+      }
+    ]
+  },
+  "fact_check": {
+    "status": "review_required",
+    "notes": [
+      "Educational claims should be checked against the listed sources.",
+      "Do not publish unverified claims as confirmed facts.",
+      "Do not describe market outcomes as guaranteed."
+    ],
+    "source_count": 2
+  },
+  "script": {
+    "hook": "Support level kya hota hai? Chalo ise simple example se samajhte hain.",
+    "body": "Support ek price area hota hai jahan past mein buying interest dekhne ko mila ho sakta hai. Important point ye hai ki support exact floor nahi hota. Price support ke neeche bhi ja sakta hai. Isliye support ko prediction ya guarantee nahi samajhna chahiye.",
+    "cta": "Agar aap trading basics simple language mein seekhna chahte ho, follow for more educational content.",
+    "disclaimer": "Educational content only. This is not financial advice. Trading and investing involve risk, and losses are possible."
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Content passed basic safety screening."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "scenes": [
+      {
+        "scene": 1,
+        "visual": "Simple price chart showing a horizontal support area.",
+        "text": "Support = price area"
+      },
+      {
+        "scene": 2,
+        "visual": "Price touches the support area and moves upward.",
+        "text": "Buying interest may appear"
+      },
+      {
+        "scene": 3,
+        "visual": "Price breaks below the support area.",
+        "text": "Support can fail"
+      },
+      {
+        "scene": 4,
+        "visual": "Educational disclaimer on screen.",
+        "text": "Not financial advice"
+      }
+    ]
+  },
+  "social": {
+    "caption": "Support level ko simple language mein samjho: ye ek price area ho sakta hai jahan buying interest historically appear hua ho. Lekin support guaranteed floor nahi hota.\n\nEducational content only. This is not financial advice. Trading and investing involve risk, and losses are possible.",
+    "hashtags": [
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#SupportAndResistance",
+      "#TradingBasics",
+      "#StockMarketEducation",
+      "#BeginnerTrading"
+    ]
+  },
+  "publishing": {
+    "instagram": {
+      "status": "not_published"
+    },
+    "telegram": {
+      "status": "not_published"
+    }
+  },
+  "approval": {
+    "required": true,
+    "status": "pending"
+  }
+}

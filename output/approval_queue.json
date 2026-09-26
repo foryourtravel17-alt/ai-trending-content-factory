@@ -1,0 +1,19 @@
+{
+  "updated_at": "2026-09-26T21:39:08.753692+00:00",
+  "items": [
+    {
+      "content_id": "content_1",
+      "topic": "What is a Support Level in Trading?",
+      "status": "pending_approval",
+      "approval_required": true,
+      "created_at": "2026-09-26T21:39:08.753234+00:00"
+    },
+    {
+      "content_id": "content_2",
+      "topic": "3 Common Mistakes Beginner Traders Make",
+      "status": "pending_approval",
+      "approval_required": true,
+      "created_at": "2026-09-26T21:39:08.753510+00:00"
+    }
+  ]
+}
