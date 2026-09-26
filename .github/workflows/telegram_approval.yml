@@ -1,0 +1,310 @@
+name: Telegram Approval
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  telegram-approval:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Process Telegram approvals and send pending content
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import html
+          import json
+          import os
+          import pathlib
+          import urllib.parse
+          import urllib.request
+
+          token = os.environ.get("TELEGRAM_BOT_TOKEN")
+          chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+
+          if not token or not chat_id:
+              raise SystemExit("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID secret.")
+
+          base = f"https://api.telegram.org/bot{token}"
+          output = pathlib.Path("output")
+          output.mkdir(parents=True, exist_ok=True)
+
+          state_path = output / "telegram_state.json"
+
+          if state_path.exists():
+              try:
+                  state = json.loads(state_path.read_text(encoding="utf-8"))
+              except Exception:
+                  state = {}
+          else:
+              state = {}
+
+          state.setdefault("offset", 0)
+          state.setdefault("sent_keys", [])
+
+          def api(method, params=None):
+              params = params or {}
+              data = urllib.parse.urlencode(params).encode()
+              req = urllib.request.Request(
+                  f"{base}/{method}",
+                  data=data,
+                  method="POST"
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  result = json.load(response)
+
+              if not result.get("ok"):
+                  raise RuntimeError(f"Telegram API error in {method}: {result}")
+
+              return result["result"]
+
+          def save_state():
+              state["sent_keys"] = state["sent_keys"][-500:]
+              state_path.write_text(
+                  json.dumps(state, indent=2, ensure_ascii=False),
+                  encoding="utf-8"
+              )
+
+          def load_json(path):
+              try:
+                  return json.loads(path.read_text(encoding="utf-8"))
+              except Exception:
+                  return None
+
+          def save_json(path, data):
+              path.write_text(
+                  json.dumps(data, indent=2, ensure_ascii=False),
+                  encoding="utf-8"
+              )
+
+          # ------------------------------------------------------------
+          # 1. Send new pending content to the Bullseye Theory Telegram chat
+          # ------------------------------------------------------------
+          queue_path = output / "approval_queue.json"
+          queue = load_json(queue_path)
+
+          if isinstance(queue, dict):
+              items = queue.get("items", [])
+          elif isinstance(queue, list):
+              items = queue
+          else:
+              items = []
+
+          sent_any = False
+
+          for item in items:
+              content_id = item.get("content_id")
+              if not content_id:
+                  continue
+
+              content_path = output / f"{content_id}.json"
+              content = load_json(content_path)
+
+              if not isinstance(content, dict):
+                  continue
+
+              approval = content.get("approval", {})
+              status = content.get("status", "")
+
+              if approval.get("status") != "pending":
+                  continue
+
+              if status != "pending_approval":
+                  continue
+
+              created_at = content.get("created_at", "")
+              sent_key = f"{content_id}:{created_at}"
+
+              if sent_key in state["sent_keys"]:
+                  continue
+
+              topic = content.get("topic", {})
+              title = topic.get("title", item.get("topic", content_id))
+
+              script = content.get("script", {})
+              hook = script.get("hook", "")
+              body = script.get("body", "")
+
+              social = content.get("social", {})
+              caption = social.get("caption", "")
+              hashtags = " ".join(social.get("hashtags", []))
+
+              disclaimer = (
+                  "For informational and research purposes only. "
+                  "This is not financial advice."
+              )
+
+              message = (
+                  "<b>🐂 Bullseye Theory — Approval Required</b>\n\n"
+                  f"<b>Content:</b> {html.escape(str(content_id))}\n"
+                  f"<b>Topic:</b> {html.escape(str(title))}\n\n"
+                  f"<b>Hook:</b> {html.escape(str(hook))}\n\n"
+                  f"<b>Script:</b>\n{html.escape(str(body))}\n\n"
+                  f"<b>Caption:</b>\n{html.escape(str(caption))}\n\n"
+                  f"<b>Hashtags:</b> {html.escape(hashtags)}\n\n"
+                  f"<i>{html.escape(disclaimer)}</i>"
+              )
+
+              # Telegram messages have a practical size limit.
+              if len(message) > 3900:
+                  message = message[:3900] + "\n\n<i>[Message shortened]</i>"
+
+              keyboard = {
+                  "inline_keyboard": [
+                      [
+                          {
+                              "text": "✅ APPROVE",
+                              "callback_data": f"approve:{content_id}"
+                          },
+                          {
+                              "text": "❌ REJECT",
+                              "callback_data": f"reject:{content_id}"
+                          }
+                      ]
+                  ]
+              }
+
+              result = api(
+                  "sendMessage",
+                  {
+                      "chat_id": chat_id,
+                      "text": message,
+                      "parse_mode": "HTML",
+                      "reply_markup": json.dumps(keyboard)
+                  }
+              )
+
+              state["sent_keys"].append(sent_key)
+              sent_any = True
+
+              print(f"Sent approval request for {content_id} (message {result.get('message_id')}).")
+
+          # ------------------------------------------------------------
+          # 2. Read Telegram callback buttons and update content status
+          # ------------------------------------------------------------
+          offset = int(state.get("offset", 0))
+
+          updates = api(
+              "getUpdates",
+              {
+                  "offset": offset,
+                  "timeout": 1,
+                  "limit": 100,
+                  "allowed_updates": json.dumps(["callback_query"])
+              }
+          )
+
+          for update in updates:
+              update_id = update.get("update_id")
+              if update_id is not None:
+                  state["offset"] = max(int(state.get("offset", 0)), update_id + 1)
+
+              callback = update.get("callback_query")
+              if not callback:
+                  continue
+
+              callback_data = callback.get("data", "")
+              callback_id = callback.get("id", "")
+
+              if ":" not in callback_data:
+                  continue
+
+              action, content_id = callback_data.split(":", 1)
+
+              if action not in {"approve", "reject"}:
+                  continue
+
+              content_path = output / f"{content_id}.json"
+              content = load_json(content_path)
+
+              if not isinstance(content, dict):
+                  api(
+                      "answerCallbackQuery",
+                      {
+                          "callback_query_id": callback_id,
+                          "text": "Content file not found."
+                      }
+                  )
+                  continue
+
+              if action == "approve":
+                  content["approval"]["status"] = "approved"
+                  content["status"] = "approved_for_publishing"
+                  message_text = "✅ Approved for publishing."
+                  queue_status = "approved"
+              else:
+                  content["approval"]["status"] = "rejected"
+                  content["status"] = "rejected"
+                  message_text = "❌ Content rejected."
+                  queue_status = "rejected"
+
+              content["approval"]["approved_via"] = "telegram"
+              content["approval"]["telegram_user"] = (
+                  callback.get("from", {}).get("username")
+                  or callback.get("from", {}).get("first_name")
+                  or "telegram_user"
+              )
+
+              save_json(content_path, content)
+
+              for item in items:
+                  if item.get("content_id") == content_id:
+                      item["status"] = queue_status
+
+              api(
+                  "answerCallbackQuery",
+                  {
+                      "callback_query_id": callback_id,
+                      "text": message_text
+                  }
+              )
+
+              message = callback.get("message")
+              if message:
+                  try:
+                      api(
+                          "editMessageReplyMarkup",
+                          {
+                              "chat_id": str(message.get("chat", {}).get("id", "")),
+                              "message_id": str(message.get("message_id", "")),
+                              "reply_markup": json.dumps({"inline_keyboard": []})
+                          }
+                      )
+                  except Exception as exc:
+                      print(f"Could not remove buttons: {exc}")
+
+              print(f"{content_id}: {queue_status}")
+
+          if isinstance(queue, dict):
+              queue["items"] = items
+              save_json(queue_path, queue)
+
+          save_state()
+
+          if sent_any:
+              print("New Telegram approval requests were sent.")
+
+          print("Telegram approval cycle completed.")
+          PY
+
+      - name: Commit Telegram state and approvals
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/
+          if git diff --cached --quiet; then
+            echo "No Telegram state changes to commit."
+          else
+            git commit -m "chore: update Telegram approval state"
+            git push
+          fi
