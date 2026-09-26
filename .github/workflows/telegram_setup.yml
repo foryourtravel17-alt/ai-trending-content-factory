@@ -7,11 +7,11 @@ permissions:
   contents: read
 
 jobs:
-  detect-chat:
+  diagnose-telegram:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Detect Telegram Chat ID
+      - name: Diagnose Telegram updates
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
@@ -19,6 +19,8 @@ jobs:
           import json
           import os
           import sys
+          import time
+          import urllib.parse
           import urllib.request
 
           token = os.environ.get("TELEGRAM_BOT_TOKEN")
@@ -27,75 +29,135 @@ jobs:
               print("ERROR: TELEGRAM_BOT_TOKEN secret is missing.")
               sys.exit(1)
 
-          url = f"https://api.telegram.org/bot{token}/getUpdates"
+          base = f"https://api.telegram.org/bot{token}"
 
-          try:
-              with urllib.request.urlopen(url, timeout=30) as response:
-                  data = json.load(response)
-          except Exception as e:
-              print("ERROR: Could not connect to Telegram.")
-              print(str(e))
+          def call(method, params=None):
+              params = params or {}
+              data = urllib.parse.urlencode(params).encode()
+              request = urllib.request.Request(
+                  f"{base}/{method}",
+                  data=data,
+                  method="POST"
+              )
+
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          print("Checking bot token...")
+          me = call("getMe")
+
+          if not me.get("ok"):
+              print("ERROR: Telegram rejected the bot token.")
+              print(me)
               sys.exit(1)
 
-          if not data.get("ok"):
-              print("ERROR: Telegram API returned an error.")
-              print(data)
+          bot = me["result"]
+          print(f"Bot OK: @{bot.get('username', 'unknown')}")
+
+          print("")
+          print("Checking webhook...")
+          webhook = call("getWebhookInfo")
+
+          if not webhook.get("ok"):
+              print("ERROR: Could not check webhook.")
+              print(webhook)
               sys.exit(1)
 
-          updates = data.get("result", [])
+          info = webhook.get("result", {})
+          webhook_url = info.get("url", "")
 
-          if not updates:
-              print("NO CHAT FOUND.")
-              print("Open your Bullseye Theory AI bot in Telegram and send /start.")
+          if webhook_url:
+              print(f"Webhook found: {webhook_url}")
+              print("Removing webhook so getUpdates can be used...")
+
+              deleted = call(
+                  "deleteWebhook",
+                  {"drop_pending_updates": "false"}
+              )
+
+              print(f"deleteWebhook result: {deleted}")
+
+              if not deleted.get("ok"):
+                  print("ERROR: Could not remove webhook.")
+                  sys.exit(1)
+
+          else:
+              print("No webhook is currently set.")
+
+          print("")
+          print("Waiting briefly for Telegram updates...")
+          time.sleep(2)
+
+          updates = call(
+              "getUpdates",
+              {
+                  "timeout": "2",
+                  "limit": "100",
+                  "allowed_updates": '["message"]'
+              }
+          )
+
+          if not updates.get("ok"):
+              print("ERROR: getUpdates failed.")
+              print(updates)
+              sys.exit(1)
+
+          results = updates.get("result", [])
+
+          if not results:
+              print("")
+              print("NO CHAT FOUND YET.")
+              print("")
+              print("IMPORTANT:")
+              print("Now open the Bullseye Theory AI bot in Telegram.")
+              print("Send /start again AFTER this workflow finishes.")
+              print("Then run this workflow one more time.")
               sys.exit(0)
 
           found = set()
 
-          for update in updates:
-              message = update.get("message") or update.get("channel_post")
+          for update in results:
+              message = update.get("message")
 
               if not message:
                   continue
 
               chat = message.get("chat", {})
               chat_id = chat.get("id")
-              chat_type = chat.get("type")
-              chat_title = chat.get("title")
-              username = chat.get("username")
-              first_name = chat.get("first_name")
 
-              if chat_id is not None:
-                  item = (
-                      str(chat_id),
-                      str(chat_type),
-                      str(chat_title or ""),
-                      str(username or ""),
-                      str(first_name or "")
-                  )
+              if chat_id is None:
+                  continue
 
-                  if item not in found:
-                      found.add(item)
+              found.add((
+                  str(chat_id),
+                  str(chat.get("type", "")),
+                  str(chat.get("title") or ""),
+                  str(chat.get("username") or ""),
+                  str(chat.get("first_name") or "")
+              ))
 
           if not found:
-              print("Updates were received, but no chat message was found.")
-              print("Send /start to the bot and run this workflow again.")
-          else:
-              print("")
-              print("TELEGRAM CHAT FOUND")
-              print("===================")
+              print("Updates were received, but no normal message was found.")
+              print("Send /start again and rerun this workflow.")
+              sys.exit(0)
 
-              for chat_id, chat_type, title, username, first_name in sorted(found):
-                  print(f"Chat ID: {chat_id}")
-                  print(f"Type: {chat_type}")
+          print("")
+          print("================================")
+          print("TELEGRAM CHAT FOUND")
+          print("================================")
 
-                  if title:
-                      print(f"Title: {title}")
+          for chat_id, chat_type, title, username, first_name in sorted(found):
+              print(f"Chat ID: {chat_id}")
+              print(f"Type: {chat_type}")
 
-                  if username:
-                      print(f"Username: @{username}")
+              if title:
+                  print(f"Title: {title}")
 
-                  if first_name:
-                      print(f"Name: {first_name}")
+              if username:
+                  print(f"Username: @{username}")
 
-                  print("-------------------")
+              if first_name:
+                  print(f"Name: {first_name}")
+
+              print("--------------------------------")
           PY
