@@ -7,11 +7,11 @@ permissions:
   contents: read
 
 jobs:
-  diagnose-telegram:
+  detect-chat:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Diagnose Telegram updates
+      - name: Detect Telegram Chat ID
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
@@ -39,112 +39,101 @@ jobs:
                   data=data,
                   method="POST"
               )
-
-              with urllib.request.urlopen(request, timeout=30) as response:
+              with urllib.request.urlopen(request, timeout=40) as response:
                   return json.load(response)
 
-          print("Checking bot token...")
           me = call("getMe")
 
           if not me.get("ok"):
               print("ERROR: Telegram rejected the bot token.")
-              print(me)
               sys.exit(1)
 
-          bot = me["result"]
-          print(f"Bot OK: @{bot.get('username', 'unknown')}")
+          print(f"Bot OK: @{me['result'].get('username', 'unknown')}")
 
-          print("")
-          print("Checking webhook...")
           webhook = call("getWebhookInfo")
 
           if not webhook.get("ok"):
               print("ERROR: Could not check webhook.")
-              print(webhook)
               sys.exit(1)
 
-          info = webhook.get("result", {})
-          webhook_url = info.get("url", "")
+          webhook_url = webhook["result"].get("url", "")
 
           if webhook_url:
-              print(f"Webhook found: {webhook_url}")
-              print("Removing webhook so getUpdates can be used...")
-
-              deleted = call(
+              print("Webhook found. Removing it...")
+              result = call(
                   "deleteWebhook",
                   {"drop_pending_updates": "false"}
               )
-
-              print(f"deleteWebhook result: {deleted}")
-
-              if not deleted.get("ok"):
-                  print("ERROR: Could not remove webhook.")
-                  sys.exit(1)
-
+              print(f"Webhook removal: {result}")
           else:
               print("No webhook is currently set.")
 
           print("")
-          print("Waiting briefly for Telegram updates...")
-          time.sleep(2)
+          print("======================================")
+          print("WAITING FOR TELEGRAM MESSAGE")
+          print("======================================")
+          print("Now open Bullseye Theory AI bot and send /start.")
+          print("The workflow will listen for up to 60 seconds.")
+          print("")
 
-          updates = call(
-              "getUpdates",
-              {
-                  "timeout": "2",
-                  "limit": "100",
-                  "allowed_updates": '["message"]'
-              }
-          )
-
-          if not updates.get("ok"):
-              print("ERROR: getUpdates failed.")
-              print(updates)
-              sys.exit(1)
-
-          results = updates.get("result", [])
-
-          if not results:
-              print("")
-              print("NO CHAT FOUND YET.")
-              print("")
-              print("IMPORTANT:")
-              print("Now open the Bullseye Theory AI bot in Telegram.")
-              print("Send /start again AFTER this workflow finishes.")
-              print("Then run this workflow one more time.")
-              sys.exit(0)
-
+          deadline = time.time() + 60
           found = set()
 
-          for update in results:
-              message = update.get("message")
+          while time.time() < deadline:
 
-              if not message:
+              try:
+                  updates = call(
+                      "getUpdates",
+                      {
+                          "timeout": "10",
+                          "limit": "100",
+                          "allowed_updates": '["message"]'
+                      }
+                  )
+              except Exception as e:
+                  print(f"Temporary Telegram error: {e}")
+                  time.sleep(2)
                   continue
 
-              chat = message.get("chat", {})
-              chat_id = chat.get("id")
-
-              if chat_id is None:
+              if not updates.get("ok"):
+                  print("Telegram API error:")
+                  print(updates)
+                  time.sleep(2)
                   continue
 
-              found.add((
-                  str(chat_id),
-                  str(chat.get("type", "")),
-                  str(chat.get("title") or ""),
-                  str(chat.get("username") or ""),
-                  str(chat.get("first_name") or "")
-              ))
+              for update in updates.get("result", []):
+                  message = update.get("message")
+
+                  if not message:
+                      continue
+
+                  chat = message.get("chat", {})
+                  chat_id = chat.get("id")
+
+                  if chat_id is not None:
+                      found.add((
+                          str(chat_id),
+                          str(chat.get("type", "")),
+                          str(chat.get("title") or ""),
+                          str(chat.get("username") or ""),
+                          str(chat.get("first_name") or "")
+                      ))
+
+              if found:
+                  break
+
+              time.sleep(2)
 
           if not found:
-              print("Updates were received, but no normal message was found.")
-              print("Send /start again and rerun this workflow.")
+              print("")
+              print("NO CHAT FOUND.")
+              print("The bot did not receive a message during the 60-second window.")
               sys.exit(0)
 
           print("")
-          print("================================")
+          print("======================================")
           print("TELEGRAM CHAT FOUND")
-          print("================================")
+          print("======================================")
 
           for chat_id, chat_type, title, username, first_name in sorted(found):
               print(f"Chat ID: {chat_id}")
@@ -159,5 +148,5 @@ jobs:
               if first_name:
                   print(f"Name: {first_name}")
 
-              print("--------------------------------")
+              print("--------------------------------------")
           PY
