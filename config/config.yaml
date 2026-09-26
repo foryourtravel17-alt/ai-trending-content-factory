@@ -1,0 +1,8 @@
+brand: "Bullseye Theory"
+mock_mode: true
+output_dir: "output"
+content:
+  default_format: "short_reel"
+  language: "English"
+  disclaimer: "Educational content only. Not financial advice."
+  max_hashtags: 8
