@@ -3,7 +3,7 @@ name: Generate Approved Reel
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["AI Trading Content Pipeline", "AI Trading Content Pipeline "]
+    workflows: ["Telegram Approval"]
     types: [completed]
 
 permissions:
@@ -27,13 +27,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install FFmpeg
+      - name: Install FFmpeg and Pillow
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-
-      - name: Install Pillow
-        run: python -m pip install --upgrade pillow
+          python -m pip install --upgrade pillow
 
       - name: Generate approved Reel
         run: python src/reel_generator.py
