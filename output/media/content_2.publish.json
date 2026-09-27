@@ -1,7 +1,14 @@
 {
   "content_id": "content_2",
   "video": "output/media/content_2.mp4",
-  "caption": "",
-  "hashtags": [],
+  "caption": "3 common mistakes beginner forex traders should understand:\n1. Trading without a clear plan.\n2. Ignoring risk management.\n3. Treating past price movement as a guarantee.\n\nEducational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible.",
+  "hashtags": [
+    "#ForexTrading",
+    "#ForexEducation",
+    "#BeginnerTrader",
+    "#RiskManagement",
+    "#TradingBasics",
+    "#TradingEducation"
+  ],
   "status": "ready_for_instagram"
 }
