@@ -2,9 +2,15 @@ name: Telegram Approval
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
+
+concurrency:
+  group: telegram-approval
+  cancel-in-progress: false
 
 jobs:
   telegram-approval:
@@ -23,8 +29,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          python src/telegram_process.py
+        run: python src/telegram_process.py
 
       - name: Commit Telegram state and approvals
         run: |
