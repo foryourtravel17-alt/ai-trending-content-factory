@@ -1,205 +1,131 @@
-#!/usr/bin/env python3
-"""Process Telegram approval button clicks for Bullseye Theory.
-
-Polls Telegram getUpdates for callback_query events, updates the matching
-content JSON and approval queue, acknowledges the button click, and removes
-the inline buttons. No trading or order execution is performed.
-"""
-
 import json
 import os
 import urllib.parse
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
-from pathlib import Path
 
-OUTPUT_DIR = Path("output")
-STATE_FILE = OUTPUT_DIR / "telegram_state.json"
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
-CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
+API = f"https://api.telegram.org/bot{TOKEN}"
+STATE_FILE = "output/telegram_state.json"
+QUEUE_FILE = "output/approval_queue.json"
 
 
-def api(method, payload=None):
-    if not TOKEN:
-        raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured")
-
-    url = f"https://api.telegram.org/bot{TOKEN}/{method}"
-    data = urllib.parse.urlencode(payload or {}).encode()
-
-    request = urllib.request.Request(
-        url,
-        data=data,
-        method="POST",
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-    )
-
+def api(method, data=None, timeout=30):
+    data = data or {}
+    encoded = urllib.parse.urlencode(data).encode()
+    req = urllib.request.Request(f"{API}/{method}", data=encoded, method="POST")
     try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            result = json.loads(response.read().decode("utf-8"))
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            payload = json.loads(response.read().decode())
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
+        body = exc.read().decode(errors="replace")
         raise RuntimeError(f"Telegram API HTTP {exc.code}: {body}") from exc
 
-    if not result.get("ok"):
-        raise RuntimeError(f"Telegram API error: {result}")
-
-    return result
-
-
-def load_offset():
-    if not STATE_FILE.exists():
-        return 0
-
-    try:
-        return int(json.loads(STATE_FILE.read_text(encoding="utf-8")).get("update_offset", 0))
-    except Exception:
-        return 0
+    if not payload.get("ok"):
+        raise RuntimeError(f"Telegram API error: {payload}")
+    return payload["result"]
 
 
-def save_offset(offset):
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(
-        json.dumps({"update_offset": offset}, indent=2),
-        encoding="utf-8",
-    )
+def load_json(path, default):
+    if not os.path.exists(path):
+        return default
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
-def set_status(content_id, approved):
-    content_path = OUTPUT_DIR / f"{content_id}.json"
-    if not content_path.exists():
-        print(f"SKIP {content_id}: content file not found")
-        return False
-
-    data = json.loads(content_path.read_text(encoding="utf-8"))
-
-    status = "approved" if approved else "rejected"
-    data["approval"]["status"] = status
-    data["approval"]["approved_at"] = datetime.now(timezone.utc).isoformat()
-    data["status"] = "approved_for_publishing" if approved else "rejected"
-
-    data.setdefault("publishing", {}).setdefault("telegram", {})
-    data["publishing"]["telegram"]["status"] = "approval_received"
-
-    content_path.write_text(
-        json.dumps(data, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
-
-    queue_path = OUTPUT_DIR / "approval_queue.json"
-    if queue_path.exists():
-        queue = json.loads(queue_path.read_text(encoding="utf-8"))
-
-        for item in queue.get("items", []):
-            if item.get("content_id") == content_id:
-                item["status"] = status
-                item["approval_status"] = status
-
-        queue_path.write_text(
-            json.dumps(queue, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
-
-    return True
+def save_json(path, value):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(value, f, indent=2, ensure_ascii=False)
+        f.write("\n")
 
 
 def main():
-    if not TOKEN:
-        raise RuntimeError("TELEGRAM_BOT_TOKEN secret is missing")
-
-    offset = load_offset()
-
-    payload = {
-        "offset": offset,
-        "limit": 100,
-        "timeout": 0,
-        "allowed_updates": json.dumps(["callback_query"]),
-    }
-
-    result = api("getUpdates", payload)
-    updates = result.get("result", [])
-
-    print(f"Telegram updates received: {len(updates)}")
+    state = load_json(STATE_FILE, {"update_offset": 0})
+    queue = load_json(QUEUE_FILE, {"items": []})
+    offset = int(state.get("update_offset", 0))
     print(f"Starting offset: {offset}")
 
-    if not updates:
+    result = api("getUpdates", {"offset": offset, "timeout": 5, "allowed_updates": json.dumps(["callback_query"])})
+    print(f"Telegram updates received: {len(result)}")
+
+    if not result:
         print("No Telegram approval updates found.")
-        save_offset(offset)
         return
 
-    highest = offset
+    queue_by_id = {item.get("content_id"): item for item in queue.get("items", [])}
 
-    for update in updates:
-        update_id = int(update.get("update_id", 0))
-        highest = max(highest, update_id + 1)
-
+    for update in result:
+        update_id = int(update["update_id"])
         callback = update.get("callback_query")
-        if not callback:
-            continue
+        print(f"Processing update: {update_id}")
 
-        callback_id = callback.get("id", "")
-        callback_data = str(callback.get("data", ""))
+        if callback:
+            data = callback.get("data", "")
+            callback_id = callback.get("id", "")
+            print(f"Callback received: {data}")
 
-        message = callback.get("message") or {}
-        chat = message.get("chat") or {}
-        callback_chat_id = str(chat.get("id", ""))
+            parts = data.split(":", 1)
+            if len(parts) == 2 and parts[0] in ("approve", "reject"):
+                action, content_id = parts
+                content_path = f"output/{content_id}.json"
 
-        print(
-            f"Callback received: data={callback_data!r}, "
-            f"chat_id={callback_chat_id or 'missing'}"
-        )
+                if os.path.exists(content_path):
+                    content = load_json(content_path, {})
+                    new_status = (
+                        "approved_for_publishing"
+                        if action == "approve"
+                        else "rejected"
+                    )
+                    content["status"] = new_status
+                    content["approval_action"] = action
+                    save_json(content_path, content)
+                    print(f"{action.title()}d {content_id}")
 
-        if CHAT_ID and callback_chat_id != CHAT_ID:
-            print("SKIP callback: chat ID does not match TELEGRAM_CHAT_ID")
-            continue
+                    if content_id in queue_by_id:
+                        queue_by_id[content_id]["status"] = (
+                            "approved" if action == "approve" else "rejected"
+                        )
+                        queue_by_id[content_id]["processed"] = True
 
-        if ":" not in callback_data:
-            print("SKIP callback: invalid callback data")
-            continue
+                    # Telegram callback queries expire quickly. A stale callback
+                    # must NOT make the GitHub job fail after we have processed it.
+                    try:
+                        api("answerCallbackQuery", {
+                            "callback_query_id": callback_id,
+                            "text": "Approved" if action == "approve" else "Rejected",
+                            "show_alert": "false",
+                        })
+                        print("Callback acknowledged.")
+                    except Exception as exc:
+                        print(f"Callback acknowledgement skipped: {exc}")
 
-        action, content_id = callback_data.split(":", 1)
+                    # Removing the buttons is best-effort too.
+                    message = callback.get("message") or {}
+                    chat_id = message.get("chat", {}).get("id")
+                    message_id = message.get("message_id")
+                    if chat_id and message_id:
+                        try:
+                            api("editMessageReplyMarkup", {
+                                "chat_id": chat_id,
+                                "message_id": message_id,
+                                "reply_markup": json.dumps({"inline_keyboard": []}),
+                            })
+                            print("Telegram buttons removed.")
+                        except Exception as exc:
+                            print(f"Button removal skipped: {exc}")
+                else:
+                    print(f"Content file not found: {content_path}")
+            else:
+                print(f"Ignoring non-approval callback: {data}")
 
-        if action not in ("approve", "reject"):
-            print(f"SKIP callback: unknown action {action!r}")
-            continue
+        # Always advance the offset after handling this update so an expired
+        # callback query is not replayed forever.
+        state["update_offset"] = update_id + 1
 
-        approved = action == "approve"
-
-        if set_status(content_id, approved):
-            answer = (
-                "Approved for publishing."
-                if approved
-                else "Rejected."
-            )
-
-            api(
-                "answerCallbackQuery",
-                {
-                    "callback_query_id": callback_id,
-                    "text": answer,
-                },
-            )
-
-            try:
-                api(
-                    "editMessageReplyMarkup",
-                    {
-                        "chat_id": callback_chat_id,
-                        "message_id": str(message.get("message_id", "")),
-                        "reply_markup": json.dumps(
-                            {"inline_keyboard": []}
-                        ),
-                    },
-                )
-            except Exception as exc:
-                print(f"Button removal warning: {exc}")
-
-            print(f"SUCCESS: {content_id} -> {action}")
-        else:
-            print(f"SKIP {content_id}: state was not updated")
-
-    save_offset(highest)
-    print(f"Saved Telegram update offset: {highest}")
+    queue["items"] = list(queue_by_id.values())
+    save_json(QUEUE_FILE, queue)
+    save_json(STATE_FILE, state)
+    print(f"Saved next offset: {state['update_offset']}")
 
 
 if __name__ == "__main__":
