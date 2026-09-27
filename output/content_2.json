@@ -1,21 +1,24 @@
 {
   "content_id": "content_2",
-  "created_at": "2026-09-27T07:57:30.393276+00:00",
+  "created_at": "2026-09-27T08:40:24.901027+00:00",
   "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Forex",
+  "audience": "Global",
   "status": "pending_approval",
   "topic": {
-    "title": "3 Common Mistakes Beginner Traders Make",
+    "title": "3 Common Mistakes Beginner Forex Traders Make",
     "source": "controlled_educational_topic",
     "score": 0.88
   },
   "research": {
-    "summary": "Beginner traders can face avoidable problems when they trade without a defined plan, misunderstand risk, or treat market predictions as guarantees.",
+    "summary": "Beginner forex traders can face avoidable problems when they trade without a defined plan, misunderstand risk, or treat market predictions as guarantees.",
     "key_points": [
       "Trading without a defined plan can make decisions inconsistent.",
-      "Risk management is important because individual trades can result in losses.",
+      "Risk management matters because individual forex trades can result in losses.",
       "Past price movement does not guarantee future results.",
-      "A trading idea should be treated as a possibility rather than a guaranteed outcome.",
-      "Educational content should remain separate from personalized financial advice."
+      "A trading idea is a possibility, not a guaranteed outcome.",
+      "Educational content should not be presented as personalized financial advice."
     ],
     "sources": [
       {
@@ -34,10 +37,10 @@
     "source_count": 1
   },
   "script": {
-    "hook": "Beginner traders ki 3 common mistakes — kya aap bhi inmein se koi kar rahe ho?",
-    "body": "First, bina plan ke trade karna. Second, risk ko ignore karna. Third, past price movement ko future guarantee samajhna. Trading mein uncertainty hoti hai, isliye educational concepts ko guaranteed outcomes ki tarah present nahi karna chahiye.",
-    "cta": "Aise beginner-friendly trading concepts ke liye follow for more educational content.",
-    "disclaimer": "Educational content only. This is not financial advice. Trading and investing involve risk, and losses are possible."
+    "hook": "3 common mistakes beginner forex traders should understand.",
+    "body": "First, trading without a clear plan. Second, ignoring risk management. Third, assuming past price movement guarantees the future. Forex markets are uncertain, so educational concepts should never be presented as guaranteed outcomes.",
+    "cta": "Follow Bullseye Theory for more practical forex education.",
+    "disclaimer": "Educational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible."
   },
   "safety_check": {
     "passed": true,
@@ -49,18 +52,18 @@
     "scenes": [
       {
         "scene": 1,
-        "visual": "Clean beginner-friendly trading graphic.",
-        "text": "3 Common Mistakes Beginner Traders Make"
+        "visual": "Clean beginner-friendly forex graphic.",
+        "text": "3 Common Mistakes Beginner Forex Traders Make"
       },
       {
         "scene": 2,
-        "visual": "Simple educational chart or diagram.",
+        "visual": "Simple currency-pair chart or diagram.",
         "text": "Understand the concept"
       },
       {
         "scene": 3,
-        "visual": "Risk reminder graphic.",
-        "text": "Markets involve risk"
+        "visual": "Risk-management reminder graphic.",
+        "text": "Forex involves risk"
       },
       {
         "scene": 4,
@@ -70,13 +73,14 @@
     ]
   },
   "social": {
-    "caption": "Beginner traders ke liye 3 important lessons: plan, risk awareness aur realistic expectations.\n\nEducational content only. This is not financial advice. Trading and investing involve risk, and losses are possible.",
+    "caption": "3 common mistakes beginner forex traders should understand:\n1. Trading without a clear plan.\n2. Ignoring risk management.\n3. Treating past price movement as a guarantee.\n\nEducational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible.",
     "hashtags": [
-      "#TradingEducation",
-      "#TradingBasics",
+      "#ForexTrading",
+      "#ForexEducation",
       "#BeginnerTrader",
       "#RiskManagement",
-      "#StockMarketEducation"
+      "#TradingBasics",
+      "#TradingEducation"
     ]
   },
   "publishing": {

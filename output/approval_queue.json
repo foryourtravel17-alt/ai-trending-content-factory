@@ -1,19 +1,19 @@
 {
-  "updated_at": "2026-09-27T07:57:30.393582+00:00",
+  "updated_at": "2026-09-27T08:40:24.901306+00:00",
   "items": [
     {
       "content_id": "content_1",
-      "topic": "What is a Support Level in Trading?",
+      "topic": "What Is a Support Level in Forex Trading?",
       "status": "pending_approval",
       "approval_required": true,
-      "created_at": "2026-09-27T07:57:30.392907+00:00"
+      "created_at": "2026-09-27T08:40:24.900670+00:00"
     },
     {
       "content_id": "content_2",
-      "topic": "3 Common Mistakes Beginner Traders Make",
+      "topic": "3 Common Mistakes Beginner Forex Traders Make",
       "status": "pending_approval",
       "approval_required": true,
-      "created_at": "2026-09-27T07:57:30.393276+00:00"
+      "created_at": "2026-09-27T08:40:24.901027+00:00"
     }
   ],
   "telegram_sent": [

@@ -1,29 +1,32 @@
 {
   "content_id": "content_1",
-  "created_at": "2026-09-27T07:57:30.392907+00:00",
+  "created_at": "2026-09-27T08:40:24.900670+00:00",
   "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Forex",
+  "audience": "Global",
   "status": "pending_approval",
   "topic": {
-    "title": "What is a Support Level in Trading?",
+    "title": "What Is a Support Level in Forex Trading?",
     "source": "controlled_educational_topic",
     "score": 0.9
   },
   "research": {
-    "summary": "A support level is a price area where buying interest may be strong enough to slow or stop a decline. Support is not a guaranteed floor, and price can move below the area.",
+    "summary": "A support level is a price area where buying interest may be strong enough to slow or temporarily stop a decline. Support is not a guaranteed floor, and price can move below it.",
     "key_points": [
-      "Support is better understood as a price area rather than an exact guaranteed price.",
-      "Traders often identify support from previous price areas where buying interest appeared.",
+      "Support is a price area, not an exact guaranteed price.",
+      "Traders may identify support from previous areas where buying interest appeared.",
       "A support area can fail and price can move below it.",
-      "Technical analysis helps interpret market data but does not guarantee future price movement."
+      "Technical analysis does not guarantee future forex price movements."
     ],
     "sources": [
       {
         "name": "Fidelity — Support and Resistance",
-        "url": ""
+        "url": "https://www.fidelity.com/learning-center/trading-investing/technical-analysis/support-and-resistance"
       },
       {
         "name": "Fidelity — What Is Technical Analysis?",
-        "url": ""
+        "url": "https://www.fidelity.com/learning-center/trading-investing/technical-analysis/what-is-technical-analysis"
       }
     ]
   },
@@ -37,10 +40,10 @@
     "source_count": 2
   },
   "script": {
-    "hook": "Support level kya hota hai? Chalo ise simple example se samajhte hain.",
-    "body": "Support ek price area hota hai jahan past mein buying interest dekhne ko mila ho sakta hai. Important point ye hai ki support exact floor nahi hota. Price support ke neeche bhi ja sakta hai. Isliye support ko prediction ya guarantee nahi samajhna chahiye.",
-    "cta": "Agar aap trading basics simple language mein seekhna chahte ho, follow for more educational content.",
-    "disclaimer": "Educational content only. This is not financial advice. Trading and investing involve risk, and losses are possible."
+    "hook": "What is a support level in forex trading? Here is the simple explanation.",
+    "body": "A support level is a price area where buying interest may appear after a decline. Think of it as an area where price has previously found demand. But support is not a guaranteed floor. Price can break below it, so it should never be treated as a prediction or guarantee.",
+    "cta": "Follow Bullseye Theory for more beginner-friendly forex education.",
+    "disclaimer": "Educational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible."
   },
   "safety_check": {
     "passed": true,
@@ -52,12 +55,12 @@
     "scenes": [
       {
         "scene": 1,
-        "visual": "Simple price chart showing a horizontal support area.",
+        "visual": "Clean forex price chart showing a horizontal support area.",
         "text": "Support = price area"
       },
       {
         "scene": 2,
-        "visual": "Price touches the support area and moves upward.",
+        "visual": "Currency-pair price approaches the support area.",
         "text": "Buying interest may appear"
       },
       {
@@ -67,20 +70,20 @@
       },
       {
         "scene": 4,
-        "visual": "Educational disclaimer on screen.",
+        "visual": "Clean educational disclaimer screen.",
         "text": "Not financial advice"
       }
     ]
   },
   "social": {
-    "caption": "Support level ko simple language mein samjho: ye ek price area ho sakta hai jahan buying interest historically appear hua ho. Lekin support guaranteed floor nahi hota.\n\nEducational content only. This is not financial advice. Trading and investing involve risk, and losses are possible.",
+    "caption": "What is a support level in forex trading?\n\nA support level is a price area where buying interest may have appeared historically. It is not a guaranteed floor, and price can break below the area.\n\nEducational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible.",
     "hashtags": [
-      "#TradingEducation",
+      "#ForexTrading",
+      "#ForexEducation",
       "#TechnicalAnalysis",
       "#SupportAndResistance",
-      "#TradingBasics",
-      "#StockMarketEducation",
-      "#BeginnerTrading"
+      "#TradingEducation",
+      "#BeginnerForex"
     ]
   },
   "publishing": {
