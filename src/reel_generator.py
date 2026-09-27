@@ -189,12 +189,13 @@ def build(content):
     ]
     subprocess.run(cmd, check=True)
 
-    # Store a small metadata record used by the publisher.
+    # Store metadata using the live content schema used by the publisher.
+    social = content.get("social", {}) or {}
     meta = {
         "content_id": content_id,
         "video": str(output),
-        "caption": content.get("caption", ""),
-        "hashtags": content.get("hashtags", []),
+        "caption": social.get("caption", ""),
+        "hashtags": social.get("hashtags", []),
         "status": "ready_for_instagram",
     }
     (MEDIA_DIR / f"{content_id}.publish.json").write_text(
