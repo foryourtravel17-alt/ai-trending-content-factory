@@ -44,12 +44,30 @@ def main():
         print("No approved content. Nothing to publish.")
         return
 
+    # Duplicate-publish guard: never create a second Instagram container
+    # for content that is already marked as published.
+    instagram_state = approved.get("publishing", {}).get("instagram", {})
+    if (
+        approved.get("status") == "published_to_instagram"
+        or instagram_state.get("status") == "published_to_instagram"
+        or approved.get("instagram_media_id")
+        or instagram_state.get("media_id")
+    ):
+        print(f"{content_path.name} is already marked as published. Nothing to publish.")
+        return
+
     repo = os.environ["GITHUB_REPOSITORY"]
-    video_url = f"https://raw.githubusercontent.com/{repo}/main/output/media/{approved["content_id"]}.mp4"
+    content_id = approved["content_id"]
+    video_url = (
+        f"https://raw.githubusercontent.com/{repo}/main/"
+        f"output/media/{content_id}.mp4"
+    )
     print(f"Public Reel URL: {video_url}")
 
-    caption = approved.get("caption", "")
-    hashtags = approved.get("hashtags", [])
+    # Live content schema stores social metadata under approved["social"].
+    social = approved.get("social", {}) or {}
+    caption = social.get("caption", "")
+    hashtags = social.get("hashtags", [])
     if isinstance(hashtags, list):
         caption = (caption + "\n\n" + " ".join(hashtags)).strip()
 
@@ -84,9 +102,21 @@ def main():
     })
     print(f"Instagram published media: {published}")
 
+    media_id = published.get("id")
     approved["status"] = "published_to_instagram"
-    approved["instagram_media_id"] = published.get("id")
-    content_path.write_text(json.dumps(approved, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    approved["instagram_media_id"] = media_id
+
+    publishing = approved.setdefault("publishing", {})
+    instagram = publishing.setdefault("instagram", {})
+    instagram["status"] = "published_to_instagram"
+    instagram["media_id"] = media_id
+
+    approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+    content_path.write_text(
+        json.dumps(approved, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":
