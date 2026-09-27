@@ -5,7 +5,7 @@
   "language": "English",
   "market": "Forex",
   "audience": "Global",
-  "status": "pending_approval",
+  "status": "approved_for_publishing",
   "topic": {
     "title": "3 Common Mistakes Beginner Forex Traders Make",
     "source": "controlled_educational_topic",
@@ -94,5 +94,6 @@
   "approval": {
     "required": true,
     "status": "pending"
-  }
+  },
+  "approval_action": "approve"
 }
