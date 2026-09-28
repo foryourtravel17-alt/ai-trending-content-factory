@@ -36,6 +36,22 @@ jobs:
       - name: Generate approved Reel
         run: python src/reel_generator.py
 
+      - name: Upload Reel to Supabase
+        env:
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          set -e
+          VIDEO_PATH="$(find output/media -maxdepth 1 -type f -name '*.mp4' -printf '%T@ %p\n' | sort -nr | head -1 | cut -d' ' -f2-)"
+          if [ -z "$VIDEO_PATH" ]; then
+            echo "No generated Reel found."
+            exit 1
+          fi
+          CONTENT_ID="$(basename "$VIDEO_PATH" .mp4)"
+          echo "Uploading $VIDEO_PATH to Supabase as reels/$CONTENT_ID.mp4"
+          curl --fail-with-body --retry 3 --retry-delay 2             -X POST             "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/REELS/reels/$CONTENT_ID.mp4"             -H "Authorization: Bearer $SUPABASE_SECRET_KEY"             -H "apikey: $SUPABASE_SECRET_KEY"             -H "Content-Type: video/mp4"             -H "x-upsert: true"             --data-binary "@$VIDEO_PATH"
+          echo "Supabase upload successful."
+          echo "Public URL: https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/$CONTENT_ID.mp4"
+
       - name: Commit generated Reel
         run: |
           git config user.name "github-actions[bot]"
