@@ -11,6 +11,7 @@ IG_USER_ID = os.environ["INSTAGRAM_USER_ID"]
 TOKEN = os.environ["INSTAGRAM_ACCESS_TOKEN"]
 
 API = f"https://graph.facebook.com/{API_VERSION}"
+PAGE_ID = "1327622920435805"
 
 
 def request(method, url, params):
@@ -28,8 +29,9 @@ def request(method, url, params):
 
 
 def resolve_instagram_user_id():
-    # Resolve the connected Instagram Professional account from the Page token.
-    page = request("GET", f"{API}/me", {
+    # Resolve the connected Instagram Professional account from the Bullseye Theory Page.
+    # The Page ID is stable and the same Page query was verified in Graph API Explorer.
+    page = request("GET", f"{API}/{PAGE_ID}", {
         "fields": "id,name,instagram_business_account{id,username}",
         "access_token": TOKEN,
     })
