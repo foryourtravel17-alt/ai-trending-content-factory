@@ -25,12 +25,18 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Send pending approval requests
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python src/telegram_send.py
+
       - name: Process Telegram approvals
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python src/telegram_process.py
 
-      - name: Commit Telegram state and approvals
+      - name: Commit Telegram state, queue, and approvals
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -38,6 +44,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No Telegram state or approval changes to commit."
           else
-            git commit -m "chore: process Telegram approvals"
+            git commit -m "chore: automate Telegram approval loop"
             git push
           fi
