@@ -48,7 +48,7 @@ def main():
     print(f"Starting offset: {offset}")
 
     queue_by_id = {item.get("content_id"): item for item in queue.get("items", [])}
-    deadline = time.time() + 55
+    deadline = time.time() + 240
     processed_any = False
 
     while time.time() < deadline:
