@@ -56,11 +56,45 @@ def main():
         print(f"{content_path.name} is already marked as published. Nothing to publish.")
         return
 
-    repo = os.environ["GITHUB_REPOSITORY"]
     content_id = approved["content_id"]
+    video_path = Path("output/media") / f"{content_id}.mp4"
+    if not video_path.exists():
+        raise RuntimeError(f"Approved Reel file not found: {video_path}")
+
+    # Upload the Reel to the public Supabase REELS bucket first.
+    # Meta needs a publicly reachable video URL; the GitHub repository is private.
+    supabase_url = "https://kjhdcpjztuzpysdauqdz.supabase.co"
+    supabase_key = os.environ["SUPABASE_SECRET_KEY"]
+    object_path = f"reels/{content_id}.mp4"
+    upload_url = (
+        f"{supabase_url}/storage/v1/object/REELS/"
+        f"{urllib.parse.quote(object_path, safe='/')}"
+    )
+    print(f"Uploading Reel to Supabase: {object_path}")
+    upload_data = video_path.read_bytes()
+    upload_req = urllib.request.Request(
+        upload_url,
+        data=upload_data,
+        method="PUT",
+        headers={
+            "Authorization": f"Bearer {supabase_key}",
+            "apikey": supabase_key,
+            "Content-Type": "video/mp4",
+            "x-upsert": "true",
+        },
+    )
+    try:
+        with urllib.request.urlopen(upload_req, timeout=180) as response:
+            response.read()
+    except urllib.error.HTTPError as e:
+        body = e.read().decode(errors="replace")
+        raise RuntimeError(
+            f"Supabase upload failed HTTP {e.code}: {body}"
+        ) from e
+
     video_url = (
-        f"https://raw.githubusercontent.com/{repo}/main/"
-        f"output/media/{content_id}.mp4"
+        f"{supabase_url}/storage/v1/object/public/REELS/"
+        f"{urllib.parse.quote(object_path, safe='/')}"
     )
     print(f"Public Reel URL: {video_url}")
 
