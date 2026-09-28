@@ -30,8 +30,9 @@ jobs:
       - name: Install FFmpeg and Pillow
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg espeak-ng
           python -m pip install --upgrade pillow
+          python -m pip install --upgrade edge-tts
 
       - name: Generate approved Reel
         run: python src/reel_generator.py
