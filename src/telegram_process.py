@@ -45,7 +45,7 @@ def main():
     offset = int(state.get("update_offset", 0))
     print(f"Starting offset: {offset}")
 
-    result = api("getUpdates", {"offset": offset, "timeout": 5, "allowed_updates": json.dumps(["callback_query"])})
+    result = api("getUpdates", {"offset": offset, "timeout": 60, "allowed_updates": json.dumps(["callback_query"])})
     print(f"Telegram updates received: {len(result)}")
 
     if not result:
