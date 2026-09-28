@@ -1,14 +1,19 @@
 {
   "content_id": "content_2",
   "video": "output/media/content_2.mp4",
-  "caption": "3 common mistakes beginner forex traders should understand:\n1. Trading without a clear plan.\n2. Ignoring risk management.\n3. Treating past price movement as a guarantee.\n\nEducational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible.",
+  "caption": "News Volatility Can Change the Trading Environment\n\nHigh-impact economic releases can coincide with rapid price movement, wider spreads, and sudden changes in liquidity conditions. That does not tell you which direction price will move. It tells you the environment may be different from a quiet session. Knowing the calendar and adjusting your risk process is part of responsible market preparation.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
   "hashtags": [
     "#ForexTrading",
-    "#ForexEducation",
-    "#BeginnerTrader",
+    "#EconomicCalendar",
     "#RiskManagement",
-    "#TradingBasics",
-    "#TradingEducation"
+    "#TradingEducation",
+    "#BullseyeTheory"
   ],
-  "status": "ready_for_instagram"
+  "status": "ready_for_instagram",
+  "audio": {
+    "voice": "professional male English neural voice with local fallback",
+    "background_music": "procedural cinematic low-volume bed",
+    "voice_duration_seconds": 44.26
+  },
+  "visual_style": "Premium institutional forex aesthetic: dark obsidian trading terminal, Dubai-inspired luxury skyline silhouettes, metallic gold accents, restrained neon lime signals, USD/currency motifs, realistic illustrative candlestick charts, cinematic motion, and clean typography. Charts are illustrative and never presented as live signals."
 }
