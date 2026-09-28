@@ -1,49 +1,48 @@
 {
   "content_id": "content_1",
-  "created_at": "2026-09-28T01:37:25.804424+00:00",
+  "created_at": "2026-09-28T15:36:42.701120+00:00",
   "brand": "Bullseye Theory",
   "language": "English",
-  "market": "Forex",
+  "market": "Multi-Market",
   "audience": "Global",
+  "content_category": "Process",
   "status": "pending_approval",
   "topic": {
-    "title": "What Is a Support Level in Forex Trading?",
-    "source": "controlled_educational_topic",
-    "score": 0.9
+    "title": "Why a Trading Journal Can Improve Your Learning Loop",
+    "source": "daily_rotating_educational_topic",
+    "score": 0.91
   },
   "research": {
-    "summary": "A support level is a price area where buying interest may be strong enough to slow or temporarily stop a decline. Support is not a guaranteed floor, and price can move below it.",
+    "summary": "A useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.",
     "key_points": [
-      "Support is a price area, not an exact guaranteed price.",
-      "Traders may identify support from previous areas where buying interest appeared.",
-      "A support area can fail and price can move below it.",
-      "Technical analysis does not guarantee future forex price movements."
+      "A useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.",
+      "Educational analysis should distinguish a scenario from a guarantee.",
+      "Risk management and process discipline remain central to responsible trading education."
     ],
     "sources": [
       {
-        "name": "Fidelity — Support and Resistance",
-        "url": "https://www.fidelity.com/learning-center/trading-investing/technical-analysis/support-and-resistance"
-      },
-      {
-        "name": "Fidelity — What Is Technical Analysis?",
-        "url": "https://www.fidelity.com/learning-center/trading-investing/technical-analysis/what-is-technical-analysis"
+        "name": "Bullseye Theory educational framework",
+        "url": "",
+        "type": "internal_educational_reference"
       }
     ]
   },
   "fact_check": {
     "status": "review_required",
     "notes": [
-      "Educational claims should be checked against the listed sources.",
+      "Review the educational claims and chart interpretation before approval.",
       "Do not publish unverified claims as confirmed facts.",
-      "Do not describe market outcomes as guaranteed."
+      "Do not describe market outcomes, profits, or losses as guaranteed.",
+      "Do not turn educational analysis into personalized financial advice or direct trade instructions."
     ],
-    "source_count": 2
+    "source_count": 1
   },
   "script": {
-    "hook": "What is a support level in forex trading? Here is the simple explanation.",
-    "body": "A support level is a price area where buying interest may appear after a decline. Think of it as an area where price has previously found demand. But support is not a guaranteed floor. Price can break below it, so it should never be treated as a prediction or guarantee.",
-    "cta": "Follow Bullseye Theory for more beginner-friendly forex education.",
-    "disclaimer": "Educational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible."
+    "hook": "Your chart may forget your mistakes. Your journal should not.",
+    "body": "A useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.",
+    "cta": "Follow Bullseye Theory for practical chart analysis, disciplined trading education, and realistic market thinking.",
+    "tagline": "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN",
+    "disclaimer": "Educational content only. This is not financial advice. Trading involves substantial risk, and losses are possible."
   },
   "safety_check": {
     "passed": true,
@@ -52,38 +51,38 @@
   },
   "visual_plan": {
     "format": "short_video",
+    "style": "Premium institutional forex aesthetic: dark obsidian trading terminal, Dubai-inspired luxury skyline silhouettes, metallic gold accents, restrained neon lime signals, USD/currency motifs, realistic illustrative candlestick charts, cinematic motion, and clean typography. Charts are illustrative and never presented as live signals.",
     "scenes": [
       {
         "scene": 1,
-        "visual": "Clean forex price chart showing a horizontal support area.",
-        "text": "Support = price area"
+        "visual": "Show a clean journal template beside a chart.",
+        "text": "RECORD"
       },
       {
         "scene": 2,
-        "visual": "Currency-pair price approaches the support area.",
-        "text": "Buying interest may appear"
+        "visual": "Highlight the decision, risk, and outcome fields.",
+        "text": "REVIEW"
       },
       {
         "scene": 3,
-        "visual": "Price breaks below the support area.",
-        "text": "Support can fail"
+        "visual": "Group repeated mistakes into a simple dashboard.",
+        "text": "FIND PATTERNS"
       },
       {
         "scene": 4,
-        "visual": "Clean educational disclaimer screen.",
-        "text": "Not financial advice"
+        "visual": "End with one process change for the next session.",
+        "text": "IMPROVE"
       }
     ]
   },
   "social": {
-    "caption": "What is a support level in forex trading?\n\nA support level is a price area where buying interest may have appeared historically. It is not a guaranteed floor, and price can break below the area.\n\nEducational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible.",
+    "caption": "Why a Trading Journal Can Improve Your Learning Loop\n\nA useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
     "hashtags": [
-      "#ForexTrading",
-      "#ForexEducation",
-      "#TechnicalAnalysis",
-      "#SupportAndResistance",
+      "#TradingJournal",
+      "#TradingPsychology",
       "#TradingEducation",
-      "#BeginnerForex"
+      "#ForexTrading",
+      "#BullseyeTheory"
     ]
   },
   "publishing": {

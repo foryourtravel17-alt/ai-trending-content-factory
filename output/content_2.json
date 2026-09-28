@@ -1,46 +1,48 @@
 {
   "content_id": "content_2",
-  "created_at": "2026-09-28T01:37:25.804794+00:00",
+  "created_at": "2026-09-28T15:36:42.703429+00:00",
   "brand": "Bullseye Theory",
   "language": "English",
   "market": "Forex",
   "audience": "Global",
-  "status": "published_to_instagram",
+  "content_category": "Market Context",
+  "status": "pending_approval",
   "topic": {
-    "title": "3 Common Mistakes Beginner Forex Traders Make",
-    "source": "controlled_educational_topic",
-    "score": 0.88
+    "title": "News Volatility Can Change the Trading Environment",
+    "source": "daily_rotating_educational_topic",
+    "score": 0.84
   },
   "research": {
-    "summary": "Beginner forex traders can face avoidable problems when they trade without a defined plan, misunderstand risk, or treat market predictions as guarantees.",
+    "summary": "High-impact economic releases can coincide with rapid price movement, wider spreads, and sudden changes in liquidity conditions. That does not tell you which direction price will move. It tells you the environment may be different from a quiet session. Knowing the calendar and adjusting your risk process is part of responsible market preparation.",
     "key_points": [
-      "Trading without a defined plan can make decisions inconsistent.",
-      "Risk management matters because individual forex trades can result in losses.",
-      "Past price movement does not guarantee future results.",
-      "A trading idea is a possibility, not a guaranteed outcome.",
-      "Educational content should not be presented as personalized financial advice."
+      "High-impact economic releases can coincide with rapid price movement, wider spreads, and sudden changes in liquidity conditions. That does not tell you which direction price will move. It tells you the environment may be different from a quiet session. Knowing the calendar and adjusting your risk process is part of responsible market preparation.",
+      "Educational analysis should distinguish a scenario from a guarantee.",
+      "Risk management and process discipline remain central to responsible trading education."
     ],
     "sources": [
       {
-        "name": "Fidelity — Trading and Investing Education",
-        "url": ""
+        "name": "Bullseye Theory educational framework",
+        "url": "",
+        "type": "internal_educational_reference"
       }
     ]
   },
   "fact_check": {
     "status": "review_required",
     "notes": [
-      "Educational claims should be checked against the listed sources.",
+      "Review the educational claims and chart interpretation before approval.",
       "Do not publish unverified claims as confirmed facts.",
-      "Do not describe market outcomes as guaranteed."
+      "Do not describe market outcomes, profits, or losses as guaranteed.",
+      "Do not turn educational analysis into personalized financial advice or direct trade instructions."
     ],
     "source_count": 1
   },
   "script": {
-    "hook": "3 common mistakes beginner forex traders should understand.",
-    "body": "First, trading without a clear plan. Second, ignoring risk management. Third, assuming past price movement guarantees the future. Forex markets are uncertain, so educational concepts should never be presented as guaranteed outcomes.",
-    "cta": "Follow Bullseye Theory for more practical forex education.",
-    "disclaimer": "Educational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible."
+    "hook": "The chart can change character when major economic news hits.",
+    "body": "High-impact economic releases can coincide with rapid price movement, wider spreads, and sudden changes in liquidity conditions. That does not tell you which direction price will move. It tells you the environment may be different from a quiet session. Knowing the calendar and adjusting your risk process is part of responsible market preparation.",
+    "cta": "Follow Bullseye Theory for practical chart analysis, disciplined trading education, and realistic market thinking.",
+    "tagline": "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN",
+    "disclaimer": "Educational content only. This is not financial advice. Trading involves substantial risk, and losses are possible."
   },
   "safety_check": {
     "passed": true,
@@ -49,44 +51,43 @@
   },
   "visual_plan": {
     "format": "short_video",
+    "style": "Premium institutional forex aesthetic: dark obsidian trading terminal, Dubai-inspired luxury skyline silhouettes, metallic gold accents, restrained neon lime signals, USD/currency motifs, realistic illustrative candlestick charts, cinematic motion, and clean typography. Charts are illustrative and never presented as live signals.",
     "scenes": [
       {
         "scene": 1,
-        "visual": "Clean beginner-friendly forex graphic.",
-        "text": "3 Common Mistakes Beginner Forex Traders Make"
+        "visual": "Show an illustrative high-impact event on a calendar.",
+        "text": "ECONOMIC CALENDAR"
       },
       {
         "scene": 2,
-        "visual": "Simple currency-pair chart or diagram.",
-        "text": "Understand the concept"
+        "visual": "Animate candle ranges expanding around the event.",
+        "text": "VOLATILITY"
       },
       {
         "scene": 3,
-        "visual": "Risk-management reminder graphic.",
-        "text": "Forex involves risk"
+        "visual": "Show movement in both directions without a prediction.",
+        "text": "UNCERTAINTY"
       },
       {
         "scene": 4,
-        "visual": "Educational disclaimer.",
-        "text": "Not financial advice"
+        "visual": "End on a calendar-and-risk checklist.",
+        "text": "PREPARE"
       }
     ]
   },
   "social": {
-    "caption": "3 common mistakes beginner forex traders should understand:\n1. Trading without a clear plan.\n2. Ignoring risk management.\n3. Treating past price movement as a guarantee.\n\nEducational content only. This is not financial advice. Forex trading involves substantial risk, and losses are possible.",
+    "caption": "News Volatility Can Change the Trading Environment\n\nHigh-impact economic releases can coincide with rapid price movement, wider spreads, and sudden changes in liquidity conditions. That does not tell you which direction price will move. It tells you the environment may be different from a quiet session. Knowing the calendar and adjusting your risk process is part of responsible market preparation.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
     "hashtags": [
       "#ForexTrading",
-      "#ForexEducation",
-      "#BeginnerTrader",
+      "#EconomicCalendar",
       "#RiskManagement",
-      "#TradingBasics",
-      "#TradingEducation"
+      "#TradingEducation",
+      "#BullseyeTheory"
     ]
   },
   "publishing": {
     "instagram": {
-      "status": "published_to_instagram",
-      "media_id": "18162300484495208"
+      "status": "not_published"
     },
     "telegram": {
       "status": "not_published"
@@ -94,9 +95,6 @@
   },
   "approval": {
     "required": true,
-    "status": "approved"
-  },
-  "approval_action": "approve",
-  "instagram_media_id": "18162300484495208",
-  "published_at": "2026-09-28T15:18:57Z"
+    "status": "pending"
+  }
 }

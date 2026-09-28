@@ -1,20 +1,19 @@
 {
-  "updated_at": "2026-09-28T08:59:50.813Z",
+  "updated_at": "2026-09-28T15:36:42.703747+00:00",
   "items": [
     {
       "content_id": "content_1",
-      "topic": "What Is a Support Level in Forex Trading?",
+      "topic": "Why a Trading Journal Can Improve Your Learning Loop",
       "status": "pending_approval",
       "approval_required": true,
-      "created_at": "2026-09-28T01:37:25.804424+00:00"
+      "created_at": "2026-09-28T15:36:42.701120+00:00"
     },
     {
       "content_id": "content_2",
-      "topic": "3 Common Mistakes Beginner Forex Traders Make",
-      "status": "approved",
+      "topic": "News Volatility Can Change the Trading Environment",
+      "status": "pending_approval",
       "approval_required": true,
-      "created_at": "2026-09-28T01:37:25.804794+00:00",
-      "processed": true
+      "created_at": "2026-09-28T15:36:42.703429+00:00"
     }
   ],
   "telegram_sent": [
