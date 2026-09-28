@@ -93,7 +93,7 @@
   },
   "approval": {
     "required": true,
-    "status": "pending"
+    "status": "approved"
   },
   "approval_action": "approve"
 }
