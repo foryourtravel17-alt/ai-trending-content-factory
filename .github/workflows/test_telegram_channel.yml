@@ -1,0 +1,29 @@
+name: Test Telegram Channel Post
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Send latest Reel to Bullseye Theory Telegram channel
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          VIDEO_URL="https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/content_2.mp4"
+          CAPTION="🎯 Bullseye Theory — Trading Education
+
+News volatility can change the trading environment.
+
+Learn | Trade | Earn
+
+Educational content only. This is not financial advice."
+
+          RESPONSE=$(curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo"             --data-urlencode "chat_id=@bullseye_theory"             --data-urlencode "video=${VIDEO_URL}"             --data-urlencode "caption=${CAPTION}")
+
+          echo "$RESPONSE"
+          echo "$RESPONSE" | grep -q '"ok":true'
