@@ -46,15 +46,20 @@ def resolve_instagram_user_id():
 def main():
     content_path = Path("output/content_2.json")
     approved = None
-    for p in sorted(Path("output").glob("content_*.json")):
+    approved_candidates = []
+    for p in Path("output").glob("content_*.json"):
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
             continue
         if data.get("status") == "approved_for_publishing":
-            approved = data
-            content_path = p
-            break
+            approved_candidates.append((p, data))
+
+    # Pick the newest approved draft so the generated MP4 and the content JSON
+    # stay aligned when two Reels are approved in the same day.
+    if approved_candidates:
+        approved_candidates.sort(key=lambda item: item[0].stat().st_mtime, reverse=True)
+        content_path, approved = approved_candidates[0]
 
     if not approved:
         print("No approved content. Nothing to publish.")
