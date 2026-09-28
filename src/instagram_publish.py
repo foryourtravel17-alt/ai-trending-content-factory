@@ -12,6 +12,7 @@ TOKEN = os.environ["INSTAGRAM_ACCESS_TOKEN"]
 
 API = f"https://graph.facebook.com/{API_VERSION}"
 PAGE_ID = "1327622920435805"
+TELEGRAM_CHANNEL = "@bullseye_theory"
 
 
 def request(method, url, params):
@@ -160,6 +161,32 @@ def main():
     print(f"Instagram published media: {published}")
 
     media_id = published.get("id")
+
+    # Mirror the successfully published Reel to the public Bullseye Theory
+    # Telegram channel. The bot is already an administrator with Post Messages.
+    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    if telegram_token:
+        telegram_caption = (caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Earn").strip()
+        telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendVideo"
+        telegram_params = urllib.parse.urlencode({
+            "chat_id": TELEGRAM_CHANNEL,
+            "video": video_url,
+            "caption": telegram_caption[:1024],
+        }).encode()
+        telegram_req = urllib.request.Request(
+            telegram_url,
+            data=telegram_params,
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(telegram_req, timeout=120) as response:
+                telegram_result = json.loads(response.read().decode())
+            if not telegram_result.get("ok"):
+                raise RuntimeError(f"Telegram API error: {telegram_result}")
+            print(f"Telegram channel post sent: {telegram_result['result'].get('message_id')}")
+        except urllib.error.HTTPError as e:
+            body = e.read().decode(errors="replace")
+            raise RuntimeError(f"Telegram channel post failed HTTP {e.code}: {body}") from e
     approved["status"] = "published_to_instagram"
     approved["instagram_media_id"] = media_id
 
