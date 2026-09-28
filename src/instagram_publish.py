@@ -27,6 +27,20 @@ def request(method, url, params):
         raise RuntimeError(f"Meta API HTTP {e.code}: {body}") from e
 
 
+def resolve_instagram_user_id():
+    # Resolve the connected Instagram Professional account from the Page token.
+    page = request("GET", f"{API}/me", {
+        "fields": "id,name,instagram_business_account{id,username}",
+        "access_token": TOKEN,
+    })
+    ig = (page.get("instagram_business_account") or {})
+    resolved_id = ig.get("id")
+    if not resolved_id:
+        raise RuntimeError(f"Meta token has no connected Instagram account: {page}")
+    print(f"Resolved Instagram account: @{ig.get('username', '')} ({resolved_id})")
+    return resolved_id
+
+
 def main():
     content_path = Path("output/content_2.json")
     approved = None
@@ -55,6 +69,8 @@ def main():
     ):
         print(f"{content_path.name} is already marked as published. Nothing to publish.")
         return
+
+    ig_user_id = resolve_instagram_user_id()
 
     content_id = approved["content_id"]
     video_path = Path("output/media") / f"{content_id}.mp4"
@@ -106,7 +122,7 @@ def main():
         caption = (caption + "\n\n" + " ".join(hashtags)).strip()
 
     print(f"Creating Instagram Reel container for {content_path.name}")
-    container = request("POST", f"{API}/{IG_USER_ID}/media", {
+    container = request("POST", f"{API}/{ig_user_id}/media", {
         "media_type": "REELS",
         "video_url": video_url,
         "caption": caption,
@@ -130,7 +146,7 @@ def main():
     else:
         raise RuntimeError("Instagram container did not finish in the expected time.")
 
-    published = request("POST", f"{API}/{IG_USER_ID}/media_publish", {
+    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
         "creation_id": creation_id,
         "access_token": TOKEN,
     })
