@@ -6,7 +6,7 @@
   "market": "Forex",
   "audience": "Global",
   "content_category": "Market Context",
-  "status": "approved_for_publishing",
+  "status": "published_to_instagram",
   "topic": {
     "title": "News Volatility Can Change the Trading Environment",
     "source": "daily_rotating_educational_topic",
@@ -87,7 +87,8 @@
   },
   "publishing": {
     "instagram": {
-      "status": "not_published"
+      "status": "published_to_instagram",
+      "media_id": "17897363349604764"
     },
     "telegram": {
       "status": "not_published"
@@ -97,5 +98,7 @@
     "required": true,
     "status": "pending"
   },
-  "approval_action": "approve"
+  "approval_action": "approve",
+  "instagram_media_id": "17897363349604764",
+  "published_at": "2026-09-28T15:41:34Z"
 }
