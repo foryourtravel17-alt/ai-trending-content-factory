@@ -1,21 +1,21 @@
 {
   "content_id": "content_1",
-  "created_at": "2026-09-28T15:36:42.701120+00:00",
+  "created_at": "2026-09-29T01:36:43.823960+00:00",
   "brand": "Bullseye Theory",
   "language": "English",
-  "market": "Multi-Market",
+  "market": "Forex",
   "audience": "Global",
-  "content_category": "Process",
+  "content_category": "Risk Management",
   "status": "pending_approval",
   "topic": {
-    "title": "Why a Trading Journal Can Improve Your Learning Loop",
+    "title": "Position Sizing Starts With Risk, Not With the Lot Button",
     "source": "daily_rotating_educational_topic",
-    "score": 0.91
+    "score": 0.84
   },
   "research": {
-    "summary": "A useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.",
+    "summary": "Position sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.",
     "key_points": [
-      "A useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.",
+      "Position sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.",
       "Educational analysis should distinguish a scenario from a guarantee.",
       "Risk management and process discipline remain central to responsible trading education."
     ],
@@ -38,8 +38,8 @@
     "source_count": 1
   },
   "script": {
-    "hook": "Your chart may forget your mistakes. Your journal should not.",
-    "body": "A useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.",
+    "hook": "Do not choose position size first and ask about risk later.",
+    "body": "Position sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.",
     "cta": "Follow Bullseye Theory for practical chart analysis, disciplined trading education, and realistic market thinking.",
     "tagline": "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN",
     "disclaimer": "Educational content only. This is not financial advice. Trading involves substantial risk, and losses are possible."
@@ -55,33 +55,33 @@
     "scenes": [
       {
         "scene": 1,
-        "visual": "Show a clean journal template beside a chart.",
-        "text": "RECORD"
+        "visual": "Show a risk budget before a position-size control.",
+        "text": "START WITH RISK"
       },
       {
         "scene": 2,
-        "visual": "Highlight the decision, risk, and outcome fields.",
-        "text": "REVIEW"
+        "visual": "Illustrate how changing stop distance changes exposure.",
+        "text": "STOP DISTANCE"
       },
       {
         "scene": 3,
-        "visual": "Group repeated mistakes into a simple dashboard.",
-        "text": "FIND PATTERNS"
+        "visual": "Show smaller and larger notional sizes against the same move.",
+        "text": "SIZE THE POSITION"
       },
       {
         "scene": 4,
-        "visual": "End with one process change for the next session.",
-        "text": "IMPROVE"
+        "visual": "Finish with a clean sizing checklist.",
+        "text": "DISCIPLINE"
       }
     ]
   },
   "social": {
-    "caption": "Why a Trading Journal Can Improve Your Learning Loop\n\nA useful trading journal records the setup, the reason for the decision, the risk, the outcome, and what you would change next time. The point is not to collect screenshots. The point is to identify repeated behavior. A journal turns random experiences into a feedback loop that can help you study your own process.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
+    "caption": "Position Sizing Starts With Risk, Not With the Lot Button\n\nPosition sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
     "hashtags": [
-      "#TradingJournal",
-      "#TradingPsychology",
-      "#TradingEducation",
+      "#RiskManagement",
+      "#PositionSizing",
       "#ForexTrading",
+      "#TradingEducation",
       "#BullseyeTheory"
     ]
   },

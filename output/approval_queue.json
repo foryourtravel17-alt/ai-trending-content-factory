@@ -1,20 +1,19 @@
 {
-  "updated_at": "2026-09-28T15:36:42.703747+00:00",
+  "updated_at": "2026-09-29T01:36:43.824508+00:00",
   "items": [
     {
       "content_id": "content_1",
-      "topic": "Why a Trading Journal Can Improve Your Learning Loop",
+      "topic": "Position Sizing Starts With Risk, Not With the Lot Button",
       "status": "pending_approval",
       "approval_required": true,
-      "created_at": "2026-09-28T15:36:42.701120+00:00"
+      "created_at": "2026-09-29T01:36:43.823960+00:00"
     },
     {
       "content_id": "content_2",
-      "topic": "News Volatility Can Change the Trading Environment",
-      "status": "approved",
+      "topic": "Liquidity: Why Price Can Move Fast Around Key Areas",
+      "status": "pending_approval",
       "approval_required": true,
-      "created_at": "2026-09-28T15:36:42.703429+00:00",
-      "processed": true
+      "created_at": "2026-09-29T01:36:43.824277+00:00"
     }
   ],
   "telegram_sent": [
