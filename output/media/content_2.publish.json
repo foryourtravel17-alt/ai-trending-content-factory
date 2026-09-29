@@ -1,11 +1,11 @@
 {
   "content_id": "content_2",
   "video": "output/media/content_2.mp4",
-  "caption": "News Volatility Can Change the Trading Environment\n\nHigh-impact economic releases can coincide with rapid price movement, wider spreads, and sudden changes in liquidity conditions. That does not tell you which direction price will move. It tells you the environment may be different from a quiet session. Knowing the calendar and adjusting your risk process is part of responsible market preparation.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
+  "caption": "Liquidity: Why Price Can Move Fast Around Key Areas\n\nLiquidity describes how easily buying and selling can happen without a large price impact. When liquidity is thinner or many orders interact around the same area, price can move quickly and slippage can become more relevant. Treat liquidity as a market condition to understand, not as a magic signal that tells you what happens next.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
   "hashtags": [
     "#ForexTrading",
-    "#EconomicCalendar",
-    "#RiskManagement",
+    "#Liquidity",
+    "#MarketMicrostructure",
     "#TradingEducation",
     "#BullseyeTheory"
   ],
@@ -13,7 +13,7 @@
   "audio": {
     "voice": "professional male English neural voice with local fallback",
     "background_music": "procedural cinematic low-volume bed",
-    "voice_duration_seconds": 44.26
+    "voice_duration_seconds": 42.98
   },
   "visual_style": "Premium institutional forex aesthetic: dark obsidian trading terminal, Dubai-inspired luxury skyline silhouettes, metallic gold accents, restrained neon lime signals, USD/currency motifs, realistic illustrative candlestick charts, cinematic motion, and clean typography. Charts are illustrative and never presented as live signals."
 }
