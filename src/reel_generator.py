@@ -82,8 +82,16 @@ def gradient_background():
         g = int(13 + 10 * t)
         b = int(26 + 18 * t)
         for x in range(WIDTH):
-            glow = int(5 * max(0, 1 - abs(x - 770) / 420) * max(0, 1 - abs(y - 430) / 780))
-            px[x, y] = (min(255, r + glow), min(255, g + glow), min(255, b + glow))
+            glow = int(
+                5
+                * max(0, 1 - abs(x - 770) / 420)
+                * max(0, 1 - abs(y - 430) / 780)
+            )
+            px[x, y] = (
+                min(255, r + glow),
+                min(255, g + glow),
+                min(255, b + glow),
+            )
     return img
 
 
@@ -93,7 +101,11 @@ def draw_bullseye(draw, cx=914, cy=125):
         (37, 3, WHITE),
         (22, 5, LIME),
     ]:
-        draw.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), outline=fill, width=width)
+        draw.ellipse(
+            (cx - radius, cy - radius, cx + radius, cy + radius),
+            outline=fill,
+            width=width,
+        )
     draw.ellipse((cx - 5, cy - 5, cx + 5, cy + 5), fill=LIME)
 
 
@@ -124,19 +136,32 @@ def draw_skyline(draw):
         draw.rectangle((left, top, right, base), fill=(10, 17, 29))
         for wx in range(left + 14, right - 8, 24):
             for wy in range(top + 18, base - 18, 36):
-                draw.rectangle((wx, wy, wx + 7, wy + 10), fill=(88, 77, 43))
-    # Abstract tower/spire.
+                draw.rectangle(
+                    (wx, wy, wx + 7, wy + 10),
+                    fill=(88, 77, 43),
+                )
     draw.polygon([(715, 1360), (748, 1110), (781, 1360)], fill=(12, 19, 31))
     draw.line((748, 1110, 748, 1015), fill=GOLD, width=4)
 
 
 def draw_ticker(draw, topic, category):
-    draw.rounded_rectangle((60, 180, WIDTH - 60, 250), radius=20, fill=(15, 24, 41), outline=GRID, width=2)
+    draw.rounded_rectangle(
+        (60, 180, WIDTH - 60, 250),
+        radius=20,
+        fill=(15, 24, 41),
+        outline=GRID,
+        width=2,
+    )
     left = f"BTX  •  {category.upper()}"
     right = "USD  EUR  GBP  JPY   |   ILLUSTRATIVE"
     draw.text((86, 197), left, font=TINY, fill=GOLD)
     bbox = draw.textbbox((0, 0), right, font=TINY)
-    draw.text((WIDTH - 88 - (bbox[2] - bbox[0]), 197), right, font=TINY, fill=MUTED)
+    draw.text(
+        (WIDTH - 88 - (bbox[2] - bbox[0]), 197),
+        right,
+        font=TINY,
+        fill=MUTED,
+    )
     draw.text((80, 270), "BULLSEYE THEORY", font=SMALL, fill=WHITE)
     topic_line = topic.upper()
     lines = wrap(draw, topic_line, TINY, 680)
@@ -148,7 +173,9 @@ def draw_ticker(draw, topic, category):
 
 def draw_chart(draw, area, style="trend"):
     left, top, right, bottom = area
-    draw.rounded_rectangle(area, radius=28, fill=(10, 18, 31), outline=GRID, width=2)
+    draw.rounded_rectangle(
+        area, radius=28, fill=(10, 18, 31), outline=GRID, width=2
+    )
     draw_grid(draw, (left + 22, top + 22, right - 22, bottom - 22))
 
     n = 14
@@ -182,11 +209,22 @@ def draw_chart(draw, area, style="trend"):
             outline=fill,
         )
 
-    draw.text((left + 30, top + 24), "ILLUSTRATIVE / NOT A SIGNAL", font=TINY, fill=MUTED)
+    draw.text(
+        (left + 30, top + 24),
+        "ILLUSTRATIVE / NOT A SIGNAL",
+        font=TINY,
+        fill=MUTED,
+    )
 
 
 def add_emphasis_panel(draw, label, text):
-    draw.rounded_rectangle((70, 570, WIDTH - 70, 1210), radius=40, fill=PANEL, outline=GRID, width=2)
+    draw.rounded_rectangle(
+        (70, 570, WIDTH - 70, 1210),
+        radius=40,
+        fill=PANEL,
+        outline=GRID,
+        width=2,
+    )
     draw.text((105, 620), label.upper(), font=SMALL, fill=GOLD)
     centered(draw, text, 860, BODY, WIDTH - 260)
 
@@ -200,7 +238,13 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
     draw_skyline(d)
 
     if scene_index == 0:
-        d.rounded_rectangle((70, 570, WIDTH - 70, 1190), radius=40, fill=PANEL, outline=GOLD, width=2)
+        d.rounded_rectangle(
+            (70, 570, WIDTH - 70, 1190),
+            radius=40,
+            fill=PANEL,
+            outline=GOLD,
+            width=2,
+        )
         d.text((108, 625), "THE HOOK", font=SMALL, fill=LIME)
         centered(d, title, 870, TITLE, WIDTH - 260)
         draw_chart(d, (105, 1260, 975, 1570), "trend")
@@ -221,13 +265,44 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
         centered(d, body, 895, BODY, WIDTH - 250)
         draw_chart(d, (105, 1260, 975, 1570), "trend")
     elif scene_index == 6:
-        d.rounded_rectangle((70, 570, WIDTH - 70, 1180), radius=40, fill=PANEL, outline=LIME, width=2)
-        centered(d, "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.", 800, TITLE, WIDTH - 250, fill=LIME)
-        centered(d, "LEARN  |  TRADE  |  EARN", 1035, BIG, WIDTH - 220, fill=WHITE)
+        d.rounded_rectangle(
+            (70, 570, WIDTH - 70, 1180),
+            radius=40,
+            fill=PANEL,
+            outline=LIME,
+            width=2,
+        )
+        centered(
+            d,
+            "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.",
+            800,
+            TITLE,
+            WIDTH - 250,
+            fill=LIME,
+        )
+        centered(
+            d,
+            "LEARN  |  TRADE  |  EARN",
+            1035,
+            BIG,
+            WIDTH - 220,
+            fill=WHITE,
+        )
         draw_chart(d, (105, 1260, 975, 1570), "range")
     else:
-        d.rounded_rectangle((70, 570, WIDTH - 70, 1200), radius=40, fill=PANEL, outline=GOLD, width=2)
-        d.text((108, 625), "EDUCATIONAL NOTICE", font=SMALL, fill=GOLD)
+        d.rounded_rectangle(
+            (70, 570, WIDTH - 70, 1200),
+            radius=40,
+            fill=PANEL,
+            outline=GOLD,
+            width=2,
+        )
+        d.text(
+            (108, 625),
+            "EDUCATIONAL NOTICE",
+            font=SMALL,
+            fill=GOLD,
+        )
         centered(
             d,
             "Educational content only.\nThis is not financial advice.\nTrading involves substantial risk, and losses are possible.",
@@ -238,7 +313,6 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
         )
         draw_chart(d, (105, 1260, 975, 1570), "risk")
 
-    # Safe footer branding.
     d.text((80, 1645), "BULLSEYE THEORY", font=SMALL, fill=WHITE)
     d.text((80, 1683), "LEARN  |  TRADE  |  EARN", font=TINY, fill=MUTED)
 
@@ -252,9 +326,13 @@ def approved_items():
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
-        if data.get("status") == "approved_for_publishing":
+        if (
+            data.get("status") == "approved_for_publishing"
+            and not data.get("reel_generated", False)
+            and not (MEDIA_DIR / f"{data.get('content_id', '')}.mp4").exists()
+        ):
             items.append((path, data))
-    return sorted(items, key=lambda item: item[0].stat().st_mtime, reverse=True)
+    return sorted(items, key=lambda item: item[0].stat().st_mtime)
 
 
 def run(cmd, check=True):
@@ -281,8 +359,6 @@ def make_voice_segment(text, base_path):
     mp3 = base_path.with_suffix(".mp3")
     wav = base_path.with_suffix(".wav")
 
-    # Prefer a natural online neural voice. The generator gracefully falls back
-    # to a local male voice if the online service is unavailable.
     edge_ok = False
     try:
         run([
@@ -407,15 +483,16 @@ def make_ass(script, voice_durations):
         "disclaimer": "&H00D8B358",
     }
 
-    for (name, text), duration in zip(
-        [x for x in [
+    active_segments = [
+        x for x in [
             ("hook", script.get("hook", "")),
             ("body", script.get("body", "")),
             ("cta", script.get("cta", "")),
             ("disclaimer", script.get("disclaimer", "")),
-        ] if str(x[1]).strip()],
-        voice_durations,
-    ):
+        ] if str(x[1]).strip()
+    ]
+
+    for (name, text), duration in zip(active_segments, voice_durations):
         chunks = subtitle_chunks(text, 8)
         piece = duration / max(1, len(chunks))
         for idx, chunk in enumerate(chunks):
@@ -436,7 +513,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,DejaVu Sans,43,&H00FFFFFF,&H00FFFFFF,&H90000000,&H90000000,1,0,0,0,100,100,0,0,3,2,1,2,80,80,250,1
+Style: Default,DejaVu Sans,43,&H00FFFFFF,&H00FFFFFF,&H90000000,&H90000000,1,0,0,0,100,100,0,0,0,3,2,1,2,80,80,250,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -492,7 +569,9 @@ def build(content):
         path = (TMP_DIR / f"frame_{i:03d}.png").resolve()
         lines.append(f"file '{path}'")
         lines.append(f"duration {FRAME_SECONDS}")
-    lines.append(f"file '{(TMP_DIR / f'frame_{len(frame_specs)-1:03d}.png').resolve()}'")
+    lines.append(
+        f"file '{(TMP_DIR / f'frame_{len(frame_specs)-1:03d}.png').resolve()}'"
+    )
     concat.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     output = MEDIA_DIR / f"{content_id}.mp4"
@@ -544,14 +623,30 @@ def build(content):
         json.dumps(meta, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+
+    content["reel_generated"] = True
+    content["reel_generated_at"] = (
+        __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+    )
+    publishing = content.setdefault("publishing", {})
+    instagram = publishing.setdefault("instagram", {})
+    instagram["status"] = "ready_for_publish"
+    content["publishing"]["reel_file"] = str(output)
+    content_path = OUTPUT_DIR / f"{content_id}.json"
+    content_path.write_text(
+        json.dumps(content, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
     print(f"Created premium Reel: {output}")
     print(f"Voiceover duration: {voice_duration:.2f}s")
+    print(f"Marked {content_id} as reel_generated to prevent duplicate generation.")
 
 
 def main():
     items = approved_items()
     if not items:
-        print("No approved_for_publishing content found.")
+        print("No ungenerated approved_for_publishing content found.")
         return
     path, content = items[0]
     print(f"Using approved content: {path}")
