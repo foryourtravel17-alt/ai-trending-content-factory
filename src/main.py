@@ -17,6 +17,7 @@ from pathlib import Path
 BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
 MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
+AUTO_PUBLISH_ENABLED = os.getenv("AUTO_PUBLISH_ENABLED", "false").lower() == "true"
 
 PHILOSOPHY = "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN"
 
@@ -450,7 +451,7 @@ def build_content(item, index):
     visuals = visual_plan(item)
     social = caption_and_hashtags(item)
 
-    status = "pending_approval" if safety["passed"] else "safety_review_required"
+    status = "approved_for_publishing" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else ("pending_approval" if safety["passed"] else "safety_review_required")
 
     return {
         "content_id": f"content_{index}",
@@ -477,8 +478,9 @@ def build_content(item, index):
             "telegram": {"status": "not_published"},
         },
         "approval": {
-            "required": True,
-            "status": "pending",
+            "required": not AUTO_PUBLISH_ENABLED,
+            "status": "approved" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else "pending",
+            "mode": "automatic" if AUTO_PUBLISH_ENABLED else "manual",
         },
     }
 
@@ -491,7 +493,7 @@ def create_approval_queue(contents):
                 "content_id": content["content_id"],
                 "topic": content["topic"]["title"],
                 "status": content["status"],
-                "approval_required": True,
+                "approval_required": content["approval"].get("required", True),
                 "created_at": content["created_at"],
             }
             for content in contents
@@ -504,6 +506,7 @@ def main():
     print("Bullseye Theory — AI Trading Content Factory")
     print("=============================================")
     print(f"Mock mode: {MOCK_MODE}")
+    print(f"Automatic publishing mode: {AUTO_PUBLISH_ENABLED}")
     print(f"Daily philosophy: {PHILOSOPHY}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
