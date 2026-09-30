@@ -71,7 +71,8 @@ jobs:
       - name: Upload Reel to Supabase
         if: steps.approval_check.outputs.has_approved == 'true'
         env:
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -e
           VIDEO_PATH="$(find output/media -maxdepth 1 -type f -name '*.mp4' -printf '%T@ %p\n' | sort -nr | head -1 | cut -d' ' -f2-)"
@@ -83,9 +84,9 @@ jobs:
           echo "Uploading $VIDEO_PATH to Supabase as reels/$CONTENT_ID.mp4"
           curl --fail-with-body --retry 3 --retry-delay 2 \
             -X POST \
-            "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/REELS/reels/$CONTENT_ID.mp4" \
-            -H "Authorization: Bearer $SUPABASE_SECRET_KEY" \
-            -H "apikey: $SUPABASE_SECRET_KEY" \
+            "${SUPABASE_URL}/storage/v1/object/REELS/reels/$CONTENT_ID.mp4" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
             -H "Content-Type: video/mp4" \
             -H "x-upsert: true" \
             --data-binary "@$VIDEO_PATH"
