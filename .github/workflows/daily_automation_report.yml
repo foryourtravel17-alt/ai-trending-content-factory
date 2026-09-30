@@ -1,0 +1,99 @@
+name: Bullseye Daily Automation Report
+
+on:
+  schedule:
+    - cron: "0 16 * * *" # 21:30 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Build automation report
+        id: report
+        shell: python
+        run: |
+          import json
+          import os
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+
+          now = datetime.now(timezone.utc)
+          cutoff = now - timedelta(hours=24)
+          files = sorted(Path("output").glob("content_*.json"))
+
+          generated = 0
+          approved = 0
+          reels = 0
+          instagram = 0
+          telegram = 0
+          recent_titles = []
+
+          for path in files:
+              try:
+                  data = json.loads(path.read_text(encoding="utf-8"))
+              except Exception:
+                  continue
+              created = data.get("created_at", "")
+              try:
+                  created_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+              except Exception:
+                  continue
+              if created_dt < cutoff:
+                  continue
+
+              generated += 1
+              if data.get("status") == "approved_for_publishing":
+                  approved += 1
+              if data.get("reel_generated") or (Path("output/media") / f"{data.get('content_id', path.stem)}.mp4").exists():
+                  reels += 1
+
+              ig = data.get("publishing", {}).get("instagram", {}).get("status", "")
+              tg = data.get("publishing", {}).get("telegram", {}).get("status", "")
+              if ig in {"published", "success"}:
+                  instagram += 1
+              if tg in {"published", "success"}:
+                  telegram += 1
+
+              recent_titles.append(data.get("topic", {}).get("title", path.stem))
+
+          lines = [
+              "🎯 Bullseye Theory — Daily Automation Report",
+              "",
+              f"Last 24h generated: {generated}",
+              f"Approved: {approved}",
+              f"Reels ready: {reels}",
+              f"Instagram recorded published: {instagram}",
+              f"Telegram recorded published: {telegram}",
+              "",
+          ]
+
+          if recent_titles:
+              lines.append("Recent content:")
+              lines.extend(f"• {title}" for title in recent_titles[-3:])
+          else:
+              lines.append("⚠️ No new content was recorded in the last 24 hours.")
+
+          lines.append("")
+          lines.append("Scheduled windows: 07:00 / 13:00 / 19:00 IST")
+          message = "\n".join(lines)
+
+          Path("/tmp/report.txt").write_text(message, encoding="utf-8")
+          print(message)
+
+      - name: Send report to Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          MESSAGE="$(cat /tmp/report.txt)"
+          curl -sS --fail-with-body -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${MESSAGE}"
