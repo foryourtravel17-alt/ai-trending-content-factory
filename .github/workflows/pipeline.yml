@@ -27,6 +27,7 @@ jobs:
       - name: Run content pipeline
         env:
           MOCK_MODE: "true"
+          AUTO_PUBLISH_ENABLED: "true"
         run: python src/main.py
 
       - name: Send pending content to Telegram
