@@ -311,7 +311,45 @@ TOPICS = [
         ],
         "hashtags": ["#ForexTrading", "#Liquidity", "#MarketMicrostructure", "#TradingEducation", "#BullseyeTheory"],
     },
-]
+],
+    {
+        "title": "What You Actually Learn Inside Bullseye Theory",
+        "market": "Multi-Market",
+        "category": "Course Preview",
+        "hook": "A trading course should teach you a process, not sell you a dream.",
+        "body": (
+            "Bullseye Theory is built around the foundations that traders need before chasing complexity: "
+            "market structure, trend and context, price action, risk management, trading psychology, and disciplined execution. "
+            "The goal is to help learners understand why a chart behaves the way it does and build a repeatable learning process. "
+            "Trading remains uncertain, and education cannot remove market risk."
+        ),
+        "visuals": [
+            ("THE FOUNDATION", "Reveal a premium course curriculum grid."),
+            ("THE FRAMEWORK", "Animate market structure, price action, risk, and psychology modules."),
+            ("THE PROCESS", "Show lessons moving from concept to chart application."),
+            ("LEARN FIRST", "Finish with the Bullseye Theory website/course CTA and risk disclaimer."),
+        ],
+        "hashtags": ["#BullseyeTheory", "#TradingEducation", "#ForexEducation", "#TradingCourse", "#TradingPsychology"],
+    },
+    {
+        "title": "Before You Learn Entries, Learn These Four Trading Foundations",
+        "market": "Multi-Market",
+        "category": "Course Preview",
+        "hook": "If you only learn entries, you are learning the smallest part of trading.",
+        "body": (
+            "Before focusing on entries, build four foundations: market structure, context, risk management, and psychology. "
+            "These determine how you interpret a setup, how much exposure you take, and how you behave when the market does not cooperate. "
+            "A good education should connect all four instead of teaching an isolated pattern as a shortcut."
+        ),
+        "visuals": [
+            ("01 STRUCTURE", "Mark higher highs, lower lows, and structural shifts."),
+            ("02 CONTEXT", "Compare trend, range, and unclear conditions."),
+            ("03 RISK", "Show position size and invalidation before a target."),
+            ("04 PSYCHOLOGY", "End with discipline and patience, then a soft course CTA."),
+        ],
+        "hashtags": ["#BullseyeTheory", "#TradingEducation", "#MarketStructure", "#RiskManagement", "#TradingMindset"],
+    }
+
 
 
 def now_utc():
