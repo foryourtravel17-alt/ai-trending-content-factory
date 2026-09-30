@@ -3,7 +3,7 @@
 """
 Bullseye Theory — AI Trading Content Factory
 
-Creates two English educational trading Reels per daily run.
+Creates English educational trading Reel drafts for scheduled daily publishing windows.
 The system is designed for chart education, market structure, risk awareness,
 trading psychology, and disciplined learning. It does not provide personalized
 financial advice, trade signals, or guaranteed-return claims.
