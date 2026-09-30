@@ -25,6 +25,13 @@ def request(method, url, params):
             return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
         body = e.read().decode(errors="replace")
+        if e.code == 400 and '"code":190' in body:
+            raise RuntimeError(
+                "META_ACCESS_TOKEN_INVALID: Meta rejected INSTAGRAM_ACCESS_TOKEN "
+                "(OAuth error 190). The token is expired, revoked, or invalid. "
+                "No Reel was published; refresh/re-authorize the Meta token and "
+                "replace the GitHub secret INSTAGRAM_ACCESS_TOKEN."
+            ) from e
         raise RuntimeError(f"Meta API HTTP {e.code}: {body}") from e
 
 
