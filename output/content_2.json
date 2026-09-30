@@ -6,7 +6,7 @@
   "market": "Forex",
   "audience": "Global",
   "content_category": "Market Structure",
-  "status": "pending_approval",
+  "status": "approved_for_publishing",
   "topic": {
     "title": "Market Structure: Higher Highs, Lower Lows, and Real Direction",
     "source": "daily_rotating_educational_topic",
@@ -96,5 +96,6 @@
   "approval": {
     "required": true,
     "status": "pending"
-  }
+  },
+  "approval_action": "approve"
 }

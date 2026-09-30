@@ -11,10 +11,14 @@
     {
       "content_id": "content_2",
       "topic": "Market Structure: Higher Highs, Lower Lows, and Real Direction",
-      "status": "pending_approval",
+      "status": "approved",
       "approval_required": true,
-      "created_at": "2026-09-30T01:38:34.066406+00:00"
+      "created_at": "2026-09-30T01:38:34.066406+00:00",
+      "processed": true
     }
   ],
-  "telegram_sent": []
+  "telegram_sent": [
+    "content_1",
+    "content_2"
+  ]
 }
