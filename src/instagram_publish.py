@@ -87,8 +87,8 @@ def main():
 
     # Upload the Reel to the public Supabase REELS bucket first.
     # Meta needs a publicly reachable video URL; the GitHub repository is private.
-    supabase_url = "https://kjhdcpjztuzpysdauqdz.supabase.co"
-    supabase_key = os.environ["SUPABASE_SECRET_KEY"]
+    supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+    supabase_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
     object_path = f"reels/{content_id}.mp4"
     upload_url = (
         f"{supabase_url}/storage/v1/object/REELS/"
