@@ -6,7 +6,7 @@
   "market": "Forex",
   "audience": "Global",
   "content_category": "Technical Analysis",
-  "status": "approved_for_publishing",
+  "status": "published_to_instagram",
   "topic": {
     "title": "Why Support and Resistance Are Zones, Not Magic Lines",
     "source": "daily_rotating_educational_topic",
@@ -87,7 +87,8 @@
   },
   "publishing": {
     "instagram": {
-      "status": "ready_for_publish"
+      "status": "published_to_instagram",
+      "media_id": "18037932185838730"
     },
     "telegram": {
       "status": "not_published"
@@ -101,5 +102,7 @@
   },
   "approval_action": "approve",
   "reel_generated": true,
-  "reel_generated_at": "2026-09-30T13:06:27.434355+00:00"
+  "reel_generated_at": "2026-09-30T13:06:27.434355+00:00",
+  "instagram_media_id": "18037932185838730",
+  "published_at": "2026-09-30T19:22:38Z"
 }
