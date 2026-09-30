@@ -18,6 +18,7 @@ BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
 MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
 AUTO_PUBLISH_ENABLED = os.getenv("AUTO_PUBLISH_ENABLED", "false").lower() == "true"
+CONTENT_BATCH_SIZE = max(1, min(int(os.getenv("CONTENT_BATCH_SIZE", "1")), 3))
 
 PHILOSOPHY = "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN"
 
@@ -313,15 +314,21 @@ def save_json(filename, data):
 
 
 def trend_discovery():
-    # Two topics per daily run. The rotation is deterministic and avoids
-    # pretending that we have live market-news data when no live feed is configured.
-    day_number = datetime.now(timezone.utc).timetuple().tm_yday
-    start = (day_number * 2) % len(TOPICS)
-    selected = [TOPICS[start], TOPICS[(start + 1) % len(TOPICS)]]
+    # Three daily publishing windows are scheduled in GitHub Actions.
+    # The slot-aware rotation keeps consecutive posts varied without inventing
+    # live market data when no live data feed is configured.
+    now = datetime.now(timezone.utc)
+    day_number = now.timetuple().tm_yday
+    slot = now.hour // 6
+    start = ((day_number * 7) + slot * 3) % len(TOPICS)
+    selected = [
+        TOPICS[(start + i) % len(TOPICS)]
+        for i in range(CONTENT_BATCH_SIZE)
+    ]
     return [
         {
             **topic,
-            "score": round(0.84 + ((day_number + i) % 8) / 100, 2),
+            "score": round(0.84 + ((day_number + slot + i) % 8) / 100, 2),
         }
         for i, topic in enumerate(selected)
     ]
@@ -443,7 +450,7 @@ def caption_and_hashtags(item):
     }
 
 
-def build_content(item, index):
+def build_content(item, index, content_id=None):
     research_data = research(item)
     fact_check_data = fact_check(research_data)
     script = script_generation(item, research_data)
@@ -454,7 +461,7 @@ def build_content(item, index):
     status = "approved_for_publishing" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else ("pending_approval" if safety["passed"] else "safety_review_required")
 
     return {
-        "content_id": f"content_{index}",
+        "content_id": content_id or f"content_{index}",
         "created_at": now_utc(),
         "brand": BRAND,
         "language": "English",
@@ -486,18 +493,29 @@ def build_content(item, index):
 
 
 def create_approval_queue(contents):
+    existing = load_json("approval_queue.json", {})
+    existing_items = {}
+    existing_sent = []
+
+    if isinstance(existing, dict):
+        existing_sent = list(existing.get("telegram_sent", []))
+        for item in existing.get("items", []):
+            if item.get("content_id"):
+                existing_items[item["content_id"]] = item
+
+    for content in contents:
+        existing_items[content["content_id"]] = {
+            "content_id": content["content_id"],
+            "topic": content["topic"]["title"],
+            "status": content["status"],
+            "approval_required": content["approval"].get("required", True),
+            "created_at": content["created_at"],
+        }
+
     return {
         "updated_at": now_utc(),
-        "items": [
-            {
-                "content_id": content["content_id"],
-                "topic": content["topic"]["title"],
-                "status": content["status"],
-                "approval_required": content["approval"].get("required", True),
-                "created_at": content["created_at"],
-            }
-            for content in contents
-        ],
+        "items": list(existing_items.values()),
+        "telegram_sent": existing_sent,
     }
 
 
@@ -514,17 +532,20 @@ def main():
     topics = trend_discovery()
     contents = []
 
+    run_stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     for index, item in enumerate(topics, start=1):
-        print(f"Generating content {index}: {item['title']}")
-        content = build_content(item, index)
+        content_id = f"content_{run_stamp}_{index}"
+        print(f"Generating {content_id}: {item['title']}")
+        content = build_content(item, index, content_id)
         contents.append(content)
-        save_json(f"content_{index}.json", content)
-        print(f"Saved: content_{index}.json")
+        save_json(f"{content_id}.json", content)
+        print(f"Saved: {content_id}.json")
 
     save_json("approval_queue.json", create_approval_queue(contents))
 
     print("---------------------------------------------")
     print(f"Generated: {len(contents)} English educational Reel drafts")
+    print(f"Content batch size: {CONTENT_BATCH_SIZE}")
     print("Approval queue created.")
     print("---------------------------------------------")
 
