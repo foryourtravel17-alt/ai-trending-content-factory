@@ -27,6 +27,21 @@ DISCLAIMER = (
     "Trading involves substantial risk, and losses are possible."
 )
 
+REFERENCE_DNA_PATH = Path("config/reference_content_dna.json")
+
+def load_reference_dna():
+    try:
+        return json.loads(REFERENCE_DNA_PATH.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {
+            "derived_content_pillars": [],
+            "format_principles": [],
+            "conversion_principles": [],
+            "target_mix": {"education": 70, "authority_and_trust": 20, "course_conversion": 10},
+        }
+
+REFERENCE_DNA = load_reference_dna()
+
 # Evergreen expert-style educational topics. The daily run selects two topics
 # deterministically so the page gets variety without inventing live market data.
 TOPICS = [
@@ -337,6 +352,12 @@ def trend_discovery():
 def research(item):
     return {
         "summary": item["body"],
+        "reference_strategy": {
+            "source_type": "six_account_reference_dna",
+            "pillars": REFERENCE_DNA.get("derived_content_pillars", []),
+            "format_principles": REFERENCE_DNA.get("format_principles", []),
+            "rule": "Use reference accounts for patterns and topic research only; generate original Bullseye Theory wording, visuals, and analysis.",
+        },
         "key_points": [
             item["body"],
             "Educational analysis should distinguish a scenario from a guarantee.",
@@ -450,7 +471,7 @@ def caption_and_hashtags(item):
     }
 
 
-def build_content(item, index, content_id=None):
+def build_content(item, index, content_id=None, content_role="education"):
     research_data = research(item)
     fact_check_data = fact_check(research_data)
     script = script_generation(item, research_data)
@@ -468,6 +489,11 @@ def build_content(item, index, content_id=None):
         "market": item["market"],
         "audience": "Global",
         "content_category": item["category"],
+        "content_role": content_role,
+        "content_strategy": {
+            "target_mix": REFERENCE_DNA.get("target_mix", {}),
+            "conversion_principles": REFERENCE_DNA.get("conversion_principles", []),
+        },
         "status": status,
         "topic": {
             "title": item["title"],
@@ -535,8 +561,15 @@ def main():
     run_stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     for index, item in enumerate(topics, start=1):
         content_id = f"content_{run_stamp}_{index}"
-        print(f"Generating {content_id}: {item['title']}")
-        content = build_content(item, index, content_id)
+        sequence_number = ((datetime.now(timezone.utc).timetuple().tm_yday - 1) * 3) + index
+        if sequence_number % 10 == 0:
+            content_role = "course_conversion"
+        elif sequence_number % 5 == 0:
+            content_role = "authority_and_trust"
+        else:
+            content_role = "education"
+        print(f"Generating {content_id}: {item['title']} [{content_role}]")
+        content = build_content(item, index, content_id, content_role)
         contents.append(content)
         save_json(f"{content_id}.json", content)
         print(f"Saved: {content_id}.json")
