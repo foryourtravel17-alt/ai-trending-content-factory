@@ -1,21 +1,21 @@
 {
   "content_id": "content_1",
-  "created_at": "2026-09-29T01:36:43.823960+00:00",
+  "created_at": "2026-09-30T01:38:34.066150+00:00",
   "brand": "Bullseye Theory",
   "language": "English",
   "market": "Forex",
   "audience": "Global",
-  "content_category": "Risk Management",
+  "content_category": "Technical Analysis",
   "status": "pending_approval",
   "topic": {
-    "title": "Position Sizing Starts With Risk, Not With the Lot Button",
+    "title": "Why Support and Resistance Are Zones, Not Magic Lines",
     "source": "daily_rotating_educational_topic",
-    "score": 0.84
+    "score": 0.85
   },
   "research": {
-    "summary": "Position sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.",
+    "summary": "Markets often react around price areas, not a single exact number. Look for repeated reactions, failed breaks, and context from the higher timeframe. A zone can help organize your analysis, but it is never a guaranteed floor or ceiling. The real skill is reading what price does when it reaches the area.",
     "key_points": [
-      "Position sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.",
+      "Markets often react around price areas, not a single exact number. Look for repeated reactions, failed breaks, and context from the higher timeframe. A zone can help organize your analysis, but it is never a guaranteed floor or ceiling. The real skill is reading what price does when it reaches the area.",
       "Educational analysis should distinguish a scenario from a guarantee.",
       "Risk management and process discipline remain central to responsible trading education."
     ],
@@ -38,8 +38,8 @@
     "source_count": 1
   },
   "script": {
-    "hook": "Do not choose position size first and ask about risk later.",
-    "body": "Position sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.",
+    "hook": "If you draw one perfect support line and expect price to respect it, stop for a second.",
+    "body": "Markets often react around price areas, not a single exact number. Look for repeated reactions, failed breaks, and context from the higher timeframe. A zone can help organize your analysis, but it is never a guaranteed floor or ceiling. The real skill is reading what price does when it reaches the area.",
     "cta": "Follow Bullseye Theory for practical chart analysis, disciplined trading education, and realistic market thinking.",
     "tagline": "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN",
     "disclaimer": "Educational content only. This is not financial advice. Trading involves substantial risk, and losses are possible."
@@ -55,32 +55,32 @@
     "scenes": [
       {
         "scene": 1,
-        "visual": "Show a risk budget before a position-size control.",
-        "text": "START WITH RISK"
+        "visual": "Show a shaded support zone with three historical reactions.",
+        "text": "ILLUSTRATIVE CHART"
       },
       {
         "scene": 2,
-        "visual": "Illustrate how changing stop distance changes exposure.",
-        "text": "STOP DISTANCE"
+        "visual": "Highlight rejection, compression, and a failed break.",
+        "text": "READ THE REACTION"
       },
       {
         "scene": 3,
-        "visual": "Show smaller and larger notional sizes against the same move.",
-        "text": "SIZE THE POSITION"
+        "visual": "Zoom out to a higher timeframe before drawing conclusions.",
+        "text": "CONTEXT MATTERS"
       },
       {
         "scene": 4,
-        "visual": "Finish with a clean sizing checklist.",
-        "text": "DISCIPLINE"
+        "visual": "Show price moving through the zone to reinforce uncertainty.",
+        "text": "NO GUARANTEE"
       }
     ]
   },
   "social": {
-    "caption": "Position Sizing Starts With Risk, Not With the Lot Button\n\nPosition sizing begins with how much risk your plan allows, not with the biggest lot size you can click. The same stop distance can create very different account impact at different position sizes. Learning the relationship between capital, stop distance, and exposure is a core trading skill. Bigger size is not the same thing as a better trade.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
+    "caption": "Why Support and Resistance Are Zones, Not Magic Lines\n\nMarkets often react around price areas, not a single exact number. Look for repeated reactions, failed breaks, and context from the higher timeframe. A zone can help organize your analysis, but it is never a guaranteed floor or ceiling. The real skill is reading what price does when it reaches the area.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
     "hashtags": [
-      "#RiskManagement",
-      "#PositionSizing",
       "#ForexTrading",
+      "#TechnicalAnalysis",
+      "#PriceAction",
       "#TradingEducation",
       "#BullseyeTheory"
     ]
