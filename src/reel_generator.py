@@ -13,6 +13,7 @@ TMP_DIR = Path("/tmp/bullseye_reel_frames")
 WIDTH, HEIGHT = 1080, 1920
 FPS = 30
 FRAME_SECONDS = 5
+MIN_SCENE_SECONDS = 2.25
 
 NAVY = (8, 14, 27)
 PANEL = (14, 22, 38)
@@ -185,6 +186,23 @@ def draw_chart(draw, area, style="trend"):
 
     if style == "range":
         trend = [42, 70, 25, 65, 35, 75, 30, 68, 28, 72, 34, 64, 40, 58]
+        zone_y = top + int((bottom - top) * 0.46)
+        draw.rectangle(
+            (left + 34, zone_y, right - 34, zone_y + 90),
+            outline=GOLD,
+            width=2,
+        )
+        draw.text((left + 48, zone_y + 20), "RANGE", font=TINY, fill=GOLD)
+    elif style == "break":
+        trend = [22, 35, 30, 48, 46, 62, 55, 74, 70, 86, 82, 95, 155, 48]
+        bx = left + 44 + 12 * step
+        draw.line((bx, top + 36, bx, bottom - 30), fill=LIME, width=4)
+        draw.polygon([(bx, top + 42), (bx - 12, top + 64), (bx + 12, top + 64)], fill=LIME)
+    elif style == "risk":
+        trend = [10, 18, 15, 26, 40, 34, 48, 45, 60, 54, 72, 66, 82, 76]
+        risk_y = bottom - 170
+        draw.line((left + 34, risk_y, right - 34, risk_y), fill=GOLD, width=3)
+        draw.text((left + 48, risk_y - 34), "EXPOSURE", font=TINY, fill=GOLD)
     elif style == "break":
         trend = [22, 35, 30, 48, 46, 62, 55, 74, 70, 86, 82, 95, 155, 48]
     elif style == "risk":
@@ -245,11 +263,11 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
             outline=GOLD,
             width=2,
         )
-        d.text((108, 625), "THE HOOK", font=SMALL, fill=LIME)
+        d.text((108, 625), "THE HOOK", font=SMALL, fill=GOLD)
         centered(d, title, 870, TITLE, WIDTH - 260)
         draw_chart(d, (105, 1260, 975, 1570), "trend")
     elif scene_index in (1, 2, 3, 4):
-        d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=LIME)
+        d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=GOLD)
         add_emphasis_panel(d, title, body)
         style = "trend"
         lower = f"{title} {body} {scene_visual}".lower()
@@ -278,7 +296,7 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
             800,
             TITLE,
             WIDTH - 250,
-            fill=LIME,
+            fill=GOLD,
         )
         centered(
             d,
@@ -564,11 +582,14 @@ def build(content):
     voice_duration = ffprobe_duration(voice)
 
     concat = TMP_DIR / "frames.txt"
+    # Fit the complete storyboard to the narration so the takeaway,
+    # philosophy, and disclaimer are not silently cut off.
+    scene_seconds = max(MIN_SCENE_SECONDS, voice_duration / len(frame_specs))
     lines = []
     for i in range(len(frame_specs)):
         path = (TMP_DIR / f"frame_{i:03d}.png").resolve()
         lines.append(f"file '{path}'")
-        lines.append(f"duration {FRAME_SECONDS}")
+        lines.append(f"duration {scene_seconds:.3f}")
     lines.append(
         f"file '{(TMP_DIR / f'frame_{len(frame_specs)-1:03d}.png').resolve()}'"
     )
@@ -640,6 +661,7 @@ def build(content):
 
     print(f"Created premium Reel: {output}")
     print(f"Voiceover duration: {voice_duration:.2f}s")
+    print(f"Storyboard scene duration: {scene_seconds:.2f}s across {len(frame_specs)} scenes")
     print(f"Marked {content_id} as reel_generated to prevent duplicate generation.")
 
 
