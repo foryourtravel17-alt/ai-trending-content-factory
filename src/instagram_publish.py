@@ -8,9 +8,9 @@ from pathlib import Path
 
 API_VERSION = os.environ.get("META_GRAPH_API_VERSION", "v23.0")
 TOKEN = os.environ["INSTAGRAM_ACCESS_TOKEN"]
+INSTAGRAM_USER_ID = os.environ["INSTAGRAM_USER_ID"]
 
 API = f"https://graph.facebook.com/{API_VERSION}"
-PAGE_ID = "1327622920435805"
 TELEGRAM_CHANNEL = "@bullseye_theory"
 
 
@@ -33,19 +33,6 @@ def request(method, url, params):
                 "replace the GitHub secret INSTAGRAM_ACCESS_TOKEN."
             ) from e
         raise RuntimeError(f"Meta API HTTP {e.code}: {body}") from e
-
-
-def resolve_instagram_user_id():
-    page = request("GET", f"{API}/{PAGE_ID}", {
-        "fields": "id,name,instagram_business_account{id,username}",
-        "access_token": TOKEN,
-    })
-    ig = (page.get("instagram_business_account") or {})
-    resolved_id = ig.get("id")
-    if not resolved_id:
-        raise RuntimeError(f"Meta token has no connected Instagram account: {page}")
-    print(f"Resolved Instagram account: @{ig.get('username', '')} ({resolved_id})")
-    return resolved_id
 
 
 def is_already_published(data):
@@ -78,8 +65,6 @@ def load_newest_unpublished_approved():
             print(f"Skipping approved draft without Reel file: {p.name}")
             continue
 
-        # created_at is the source-of-truth ordering field. content_id is a
-        # deterministic tie-breaker when multiple drafts share a timestamp.
         created_at = str(data.get("created_at", ""))
         candidates.append((created_at, content_id, p, data))
 
@@ -105,8 +90,8 @@ def main():
         return
 
     print(f"Selected newest unpublished approved content: {content_path.name}")
+    print(f"Using configured Instagram account ID: {INSTAGRAM_USER_ID}")
 
-    ig_user_id = resolve_instagram_user_id()
     content_id = approved["content_id"]
     video_path = Path("output/media") / f"{content_id}.mp4"
 
@@ -150,7 +135,7 @@ def main():
         caption = (caption + "\n\n" + " ".join(hashtags)).strip()
 
     print(f"Creating Instagram Reel container for {content_path.name}")
-    container = request("POST", f"{API}/{ig_user_id}/media", {
+    container = request("POST", f"{API}/{INSTAGRAM_USER_ID}/media", {
         "media_type": "REELS",
         "video_url": video_url,
         "caption": caption,
@@ -174,7 +159,7 @@ def main():
     else:
         raise RuntimeError("Instagram container did not finish in the expected time.")
 
-    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
+    published = request("POST", f"{API}/{INSTAGRAM_USER_ID}/media_publish", {
         "creation_id": creation_id,
         "access_token": TOKEN,
     })
@@ -184,8 +169,6 @@ def main():
     if not media_id:
         raise RuntimeError(f"Instagram publish returned no media id: {published}")
 
-    # Persist the Instagram result immediately. If Telegram fails, a retry
-    # cannot create a duplicate Instagram Reel.
     approved["status"] = "published_to_instagram"
     approved["instagram_media_id"] = media_id
     approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
