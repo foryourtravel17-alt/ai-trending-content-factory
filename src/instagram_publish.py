@@ -7,7 +7,6 @@ import urllib.error
 from pathlib import Path
 
 API_VERSION = os.environ.get("META_GRAPH_API_VERSION", "v23.0")
-IG_USER_ID = os.environ["INSTAGRAM_USER_ID"]
 TOKEN = os.environ["INSTAGRAM_ACCESS_TOKEN"]
 
 API = f"https://graph.facebook.com/{API_VERSION}"
@@ -30,8 +29,6 @@ def request(method, url, params):
 
 
 def resolve_instagram_user_id():
-    # Resolve the connected Instagram Professional account from the Bullseye Theory Page.
-    # The Page ID is stable and the same Page query was verified in Graph API Explorer.
     page = request("GET", f"{API}/{PAGE_ID}", {
         "fields": "id,name,instagram_business_account{id,username}",
         "access_token": TOKEN,
@@ -44,49 +41,68 @@ def resolve_instagram_user_id():
     return resolved_id
 
 
-def main():
-    content_path = Path("output/content_2.json")
-    approved = None
-    approved_candidates = []
+def is_already_published(data):
+    instagram = data.get("publishing", {}).get("instagram", {}) or {}
+    return (
+        data.get("status") == "published_to_instagram"
+        or instagram.get("status") == "published_to_instagram"
+        or bool(data.get("instagram_media_id"))
+        or bool(instagram.get("media_id"))
+    )
+
+
+def load_newest_unpublished_approved():
+    candidates = []
     for p in Path("output").glob("content_*.json"):
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
             continue
-        if data.get("status") == "approved_for_publishing":
-            approved_candidates.append((p, data))
 
-    # Pick the newest approved draft so the generated MP4 and the content JSON
-    # stay aligned when two Reels are approved in the same day.
-    if approved_candidates:
-        approved_candidates.sort(key=lambda item: item[0].stat().st_mtime, reverse=True)
-        content_path, approved = approved_candidates[0]
+        if data.get("status") != "approved_for_publishing":
+            continue
+        if is_already_published(data):
+            print(f"Skipping already-published draft: {p.name}")
+            continue
 
+        content_id = str(data.get("content_id", ""))
+        video_path = Path("output/media") / f"{content_id}.mp4"
+        if not video_path.exists():
+            print(f"Skipping approved draft without Reel file: {p.name}")
+            continue
+
+        # created_at is the source-of-truth ordering field. content_id is a
+        # deterministic tie-breaker when multiple drafts share a timestamp.
+        created_at = str(data.get("created_at", ""))
+        candidates.append((created_at, content_id, p, data))
+
+    if not candidates:
+        return None, None
+
+    candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
+    _, _, content_path, approved = candidates[0]
+    return content_path, approved
+
+
+def save_state(content_path, approved):
+    content_path.write_text(
+        json.dumps(approved, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def main():
+    content_path, approved = load_newest_unpublished_approved()
     if not approved:
-        print("No approved content. Nothing to publish.")
+        print("No unpublished approved content. Nothing to publish.")
         return
 
-    # Duplicate-publish guard: never create a second Instagram container
-    # for content that is already marked as published.
-    instagram_state = approved.get("publishing", {}).get("instagram", {})
-    if (
-        approved.get("status") == "published_to_instagram"
-        or instagram_state.get("status") == "published_to_instagram"
-        or approved.get("instagram_media_id")
-        or instagram_state.get("media_id")
-    ):
-        print(f"{content_path.name} is already marked as published. Nothing to publish.")
-        return
+    print(f"Selected newest unpublished approved content: {content_path.name}")
 
     ig_user_id = resolve_instagram_user_id()
-
     content_id = approved["content_id"]
     video_path = Path("output/media") / f"{content_id}.mp4"
-    if not video_path.exists():
-        raise RuntimeError(f"Approved Reel file not found: {video_path}")
 
-    # Upload the Reel to the public Supabase REELS bucket first.
-    # Meta needs a publicly reachable video URL; the GitHub repository is private.
     supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
     supabase_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
     object_path = f"reels/{content_id}.mp4"
@@ -95,10 +111,10 @@ def main():
         f"{urllib.parse.quote(object_path, safe='/')}"
     )
     print(f"Uploading Reel to Supabase: {object_path}")
-    upload_data = video_path.read_bytes()
+
     upload_req = urllib.request.Request(
         upload_url,
-        data=upload_data,
+        data=video_path.read_bytes(),
         method="PUT",
         headers={
             "Authorization": f"Bearer {supabase_key}",
@@ -112,9 +128,7 @@ def main():
             response.read()
     except urllib.error.HTTPError as e:
         body = e.read().decode(errors="replace")
-        raise RuntimeError(
-            f"Supabase upload failed HTTP {e.code}: {body}"
-        ) from e
+        raise RuntimeError(f"Supabase upload failed HTTP {e.code}: {body}") from e
 
     video_url = (
         f"{supabase_url}/storage/v1/object/public/REELS/"
@@ -122,7 +136,6 @@ def main():
     )
     print(f"Public Reel URL: {video_url}")
 
-    # Live content schema stores social metadata under approved["social"].
     social = approved.get("social", {}) or {}
     caption = social.get("caption", "")
     hashtags = social.get("hashtags", [])
@@ -161,46 +174,59 @@ def main():
     print(f"Instagram published media: {published}")
 
     media_id = published.get("id")
+    if not media_id:
+        raise RuntimeError(f"Instagram publish returned no media id: {published}")
 
-    # Mirror the successfully published Reel to the public Bullseye Theory
-    # Telegram channel. The bot is already an administrator with Post Messages.
-    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    if telegram_token:
-        telegram_caption = (caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Earn").strip()
-        telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendVideo"
-        telegram_params = urllib.parse.urlencode({
-            "chat_id": TELEGRAM_CHANNEL,
-            "video": video_url,
-            "caption": telegram_caption[:1024],
-        }).encode()
-        telegram_req = urllib.request.Request(
-            telegram_url,
-            data=telegram_params,
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(telegram_req, timeout=120) as response:
-                telegram_result = json.loads(response.read().decode())
-            if not telegram_result.get("ok"):
-                raise RuntimeError(f"Telegram API error: {telegram_result}")
-            print(f"Telegram channel post sent: {telegram_result['result'].get('message_id')}")
-        except urllib.error.HTTPError as e:
-            body = e.read().decode(errors="replace")
-            raise RuntimeError(f"Telegram channel post failed HTTP {e.code}: {body}") from e
+    # Persist the Instagram result immediately. If Telegram fails, a retry
+    # cannot create a duplicate Instagram Reel.
     approved["status"] = "published_to_instagram"
     approved["instagram_media_id"] = media_id
+    approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
     publishing = approved.setdefault("publishing", {})
     instagram = publishing.setdefault("instagram", {})
     instagram["status"] = "published_to_instagram"
     instagram["media_id"] = media_id
+    save_state(content_path, approved)
 
-    approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-
-    content_path.write_text(
-        json.dumps(approved, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
+    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    if telegram_token:
+        telegram_state = publishing.setdefault("telegram", {})
+        if telegram_state.get("status") == "published":
+            print("Telegram already marked as published. Skipping Telegram duplicate.")
+        else:
+            telegram_caption = (
+                caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Earn"
+            ).strip()
+            telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendVideo"
+            telegram_params = urllib.parse.urlencode({
+                "chat_id": TELEGRAM_CHANNEL,
+                "video": video_url,
+                "caption": telegram_caption[:1024],
+            }).encode()
+            telegram_req = urllib.request.Request(
+                telegram_url,
+                data=telegram_params,
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(telegram_req, timeout=120) as response:
+                    telegram_result = json.loads(response.read().decode())
+                if not telegram_result.get("ok"):
+                    raise RuntimeError(f"Telegram API error: {telegram_result}")
+                message_id = telegram_result["result"].get("message_id")
+                print(f"Telegram channel post sent: {message_id}")
+                telegram_state["status"] = "published"
+                telegram_state["message_id"] = message_id
+                telegram_state["published_at"] = time.strftime(
+                    "%Y-%m-%dT%H:%M:%SZ", time.gmtime()
+                )
+                save_state(content_path, approved)
+            except urllib.error.HTTPError as e:
+                body = e.read().decode(errors="replace")
+                raise RuntimeError(
+                    f"Telegram channel post failed HTTP {e.code}: {body}"
+                ) from e
 
 
 if __name__ == "__main__":
