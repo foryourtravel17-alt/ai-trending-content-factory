@@ -556,6 +556,15 @@ def build_content(item, index, content_id=None, content_role="education"):
     }
 
 
+def load_json(filename, default=None):
+    """Load a JSON file from OUTPUT_DIR, returning default when it is missing or invalid."""
+    path = OUTPUT_DIR / filename
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {} if default is None else default
+
+
 def create_approval_queue(contents):
     existing = load_json("approval_queue.json", {})
     existing_items = {}
