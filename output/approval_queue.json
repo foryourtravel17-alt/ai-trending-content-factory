@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-01T07:38:37.704716+00:00",
+  "updated_at": "2026-10-01T13:40:44.915948+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -29,6 +29,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-01T07:38:37.704389+00:00"
+    },
+    {
+      "content_id": "content_20261001_134044_1",
+      "topic": "Why Overtrading Can Destroy Good Decision-Making",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-01T13:40:44.915538+00:00"
     }
   ],
   "telegram_sent": [

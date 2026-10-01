@@ -1,0 +1,139 @@
+{
+  "content_id": "content_20261001_134044_1",
+  "created_at": "2026-10-01T13:40:44.915538+00:00",
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Forex",
+  "audience": "Global",
+  "content_category": "Trading Psychology",
+  "content_role": "course_conversion",
+  "content_strategy": {
+    "target_mix": {
+      "education": 70,
+      "authority_and_trust": 20,
+      "course_conversion": 10
+    },
+    "conversion_principles": [
+      "education first, promotion second",
+      "use course previews and curriculum clarity rather than income promises",
+      "build trust through process, risk awareness, and transparent limitations",
+      "never use guaranteed returns, fake P&L, fake scarcity, or personalized trade instructions"
+    ]
+  },
+  "status": "approved_for_publishing",
+  "topic": {
+    "title": "Why Overtrading Can Destroy Good Decision-Making",
+    "source": "daily_rotating_educational_topic",
+    "score": 0.88
+  },
+  "research": {
+    "summary": "Overtrading can happen when boredom, frustration, or the need to recover a loss starts driving decisions. A disciplined trader can spend more time waiting than clicking. Build a checklist, define what qualifies as a setup, and learn to do nothing when the chart does not meet your conditions. Patience is part of the strategy.",
+    "reference_strategy": {
+      "source_type": "six_account_reference_dna",
+      "pillars": [
+        "step_by_step_trading_education",
+        "chart_and_price_action_breakdowns",
+        "market_structure_and_context",
+        "risk_management_and_position_sizing",
+        "trading_psychology_and_discipline",
+        "mistakes_myths_and_corrections",
+        "market_news_and_event_explainers",
+        "learner_journey_and_process",
+        "course_preview_and_curriculum"
+      ],
+      "format_principles": [
+        "strong first-second hook",
+        "one clear learning outcome per reel",
+        "chart/example before abstract explanation",
+        "short structured narrative",
+        "practical takeaway",
+        "soft course CTA after genuine value",
+        "premium institutional visual treatment"
+      ],
+      "rule": "Use reference accounts for patterns and topic research only; generate original Bullseye Theory wording, visuals, and analysis."
+    },
+    "key_points": [
+      "Overtrading can happen when boredom, frustration, or the need to recover a loss starts driving decisions. A disciplined trader can spend more time waiting than clicking. Build a checklist, define what qualifies as a setup, and learn to do nothing when the chart does not meet your conditions. Patience is part of the strategy.",
+      "Educational analysis should distinguish a scenario from a guarantee.",
+      "Risk management and process discipline remain central to responsible trading education."
+    ],
+    "sources": [
+      {
+        "name": "Bullseye Theory educational framework",
+        "url": "",
+        "type": "internal_educational_reference"
+      }
+    ]
+  },
+  "fact_check": {
+    "status": "review_required",
+    "notes": [
+      "Review the educational claims and chart interpretation before approval.",
+      "Do not publish unverified claims as confirmed facts.",
+      "Do not describe market outcomes, profits, or losses as guaranteed.",
+      "Do not turn educational analysis into personalized financial advice or direct trade instructions."
+    ],
+    "source_count": 1
+  },
+  "script": {
+    "hook": "More trades do not automatically mean more opportunity.",
+    "body": "Overtrading can happen when boredom, frustration, or the need to recover a loss starts driving decisions. A disciplined trader can spend more time waiting than clicking. Build a checklist, define what qualifies as a setup, and learn to do nothing when the chart does not meet your conditions. Patience is part of the strategy.",
+    "cta": "Follow Bullseye Theory for practical chart analysis, disciplined trading education, and realistic market thinking.",
+    "tagline": "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN",
+    "disclaimer": "Educational content only. This is not financial advice. Trading involves substantial risk, and losses are possible."
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Content passed basic safety screening."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional forex aesthetic: dark obsidian trading terminal, Dubai-inspired luxury skyline silhouettes, metallic gold accents, restrained neon lime signals, USD/currency motifs, realistic illustrative candlestick charts, cinematic motion, and clean typography. Charts are illustrative and never presented as live signals.",
+    "scenes": [
+      {
+        "scene": 1,
+        "visual": "Fill an illustrative terminal with low-quality signals and alerts.",
+        "text": "NOISE"
+      },
+      {
+        "scene": 2,
+        "visual": "Filter the noise through a simple setup checklist.",
+        "text": "CHECKLIST"
+      },
+      {
+        "scene": 3,
+        "visual": "Show an empty chart area with a patience timer.",
+        "text": "WAIT"
+      },
+      {
+        "scene": 4,
+        "visual": "End on a clean rule: no setup, no trade.",
+        "text": "DISCIPLINE"
+      }
+    ]
+  },
+  "social": {
+    "caption": "Why Overtrading Can Destroy Good Decision-Making\n\nOvertrading can happen when boredom, frustration, or the need to recover a loss starts driving decisions. A disciplined trader can spend more time waiting than clicking. Build a checklist, define what qualifies as a setup, and learn to do nothing when the chart does not meet your conditions. Patience is part of the strategy.\n\nTRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN\n\nEducational content only. This is not financial advice. Trading involves substantial risk, and losses are possible.",
+    "hashtags": [
+      "#TradingPsychology",
+      "#ForexTrading",
+      "#Discipline",
+      "#TradingEducation",
+      "#BullseyeTheory"
+    ]
+  },
+  "publishing": {
+    "instagram": {
+      "status": "not_published"
+    },
+    "telegram": {
+      "status": "not_published"
+    }
+  },
+  "approval": {
+    "required": false,
+    "status": "approved",
+    "mode": "automatic"
+  }
+}
