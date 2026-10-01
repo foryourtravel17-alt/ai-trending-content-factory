@@ -311,7 +311,7 @@ TOPICS = [
         ],
         "hashtags": ["#ForexTrading", "#Liquidity", "#MarketMicrostructure", "#TradingEducation", "#BullseyeTheory"],
     },
-],
+    {
     {
         "title": "What You Actually Learn Inside Bullseye Theory",
         "market": "Multi-Market",
@@ -349,6 +349,7 @@ TOPICS = [
         ],
         "hashtags": ["#BullseyeTheory", "#TradingEducation", "#MarketStructure", "#RiskManagement", "#TradingMindset"],
     }
+]
 
 
 
