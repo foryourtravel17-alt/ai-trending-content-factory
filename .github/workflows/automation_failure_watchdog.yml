@@ -30,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
           api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/${WORKFLOW_ID}/runs?per_page=20&branch=main"
-          previous=$(curl -sS --fail -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" "$api" | jq -r --argjson current "$CURRENT_RUN_ID" ".workflow_runs[] | select(.id != \\($current)) | .conclusion" | head -n 1)
+          previous=$(curl -sS --fail -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" "$api" | jq -r --argjson current "$CURRENT_RUN_ID" ".workflow_runs[] | select(.id != $current) | .conclusion" | head -n 1)
           if [ "$previous" = "failure" ]; then
             echo "Previous run of ${WORKFLOW_NAME} also failed; suppressing duplicate Telegram alert."
             exit 0
