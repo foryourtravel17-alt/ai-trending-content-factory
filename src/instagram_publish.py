@@ -36,35 +36,49 @@ def request(method, url, params):
 
 
 def resolve_instagram_user_id():
-    # Use the verified IG account ID directly in production. This avoids
-    # requiring /me/accounts on every run and supports a Page Access Token,
-    # which Meta's Instagram API examples use for Reel publishing.
-    if CONFIGURED_INSTAGRAM_USER_ID:
-        print(f"Using configured Instagram account ID: {CONFIGURED_INSTAGRAM_USER_ID}")
-        return CONFIGURED_INSTAGRAM_USER_ID
-
-    # Fallback for first-time setup when no IG ID is configured.
-    accounts = request("GET", f"{API}/me/accounts", {
+    # The publishing secret is a Page Access Token. With a Page token, Meta's
+    # documented and simplest identity check is /me: it resolves to the Page
+    # and can expose its linked Instagram professional account.
+    page = request("GET", f"{API}/me", {
         "fields": "id,name,instagram_business_account{id,username}",
         "access_token": TOKEN,
     })
-    pages = accounts.get("data") or []
+    page_id = str(page.get("id") or "")
+    page_name = str(page.get("name") or "")
+    ig = page.get("instagram_business_account") or {}
+    ig_id = str(ig.get("id") or "")
+    username = str(ig.get("username") or "")
 
-    for page in pages:
-        ig = page.get("instagram_business_account") or {}
-        ig_id = str(ig.get("id") or "")
-        if ig_id:
-            username = str(ig.get("username") or "")
+    if ig_id:
+        print(
+            f"Resolved Instagram account: @{username} ({ig_id}) "
+            f"via Page '{page_name}' ({page_id})"
+        )
+        if CONFIGURED_INSTAGRAM_USER_ID and CONFIGURED_INSTAGRAM_USER_ID != ig_id:
             print(
-                f"Resolved Instagram account: @{username} ({ig_id}) "
-                f"via Page '{page.get('name', '')}' ({page.get('id', '')})"
+                "Configured INSTAGRAM_USER_ID differs from Meta's linked "
+                f"Instagram ID; using the linked ID {ig_id}."
             )
-            return ig_id
+        return ig_id
+
+    if CONFIGURED_INSTAGRAM_USER_ID:
+        # Compatibility fallback: validate the configured account with the
+        # current Page token before attempting to publish.
+        configured = request("GET", f"{API}/{CONFIGURED_INSTAGRAM_USER_ID}", {
+            "fields": "id,username",
+            "access_token": TOKEN,
+        })
+        validated_id = str(configured.get("id") or "")
+        if validated_id:
+            print(f"Validated configured Instagram account ID: {validated_id}")
+            return validated_id
 
     raise RuntimeError(
-        "META_INSTAGRAM_ACCOUNT_NOT_FOUND: No Instagram Business/Creator "
-        "account was returned. Set INSTAGRAM_USER_ID to the verified "
-        "Bullseye Theory Instagram account ID."
+        "META_INSTAGRAM_ACCOUNT_NOT_LINKED: The current Meta Page Access "
+        f"Token resolves to Page '{page_name}' ({page_id}) but Meta did not "
+        "return instagram_business_account. Link the Bullseye Theory "
+        "Professional Instagram account to this Facebook Page and "
+        "re-authorize the Meta app. No Reel was published."
     )
 
 def is_already_published(data):
