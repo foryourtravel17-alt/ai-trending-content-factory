@@ -24,8 +24,17 @@ jobs:
           WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
           WORKFLOW_STATUS: ${{ github.event.workflow_run.conclusion }}
           RUN_URL: ${{ github.event.workflow_run.html_url }}
+          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          CURRENT_RUN_ID: ${{ github.event.workflow_run.id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/${WORKFLOW_ID}/runs?per_page=20&branch=main"
+          previous=$(curl -sS --fail -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" "$api" | jq -r --argjson current "$CURRENT_RUN_ID" ".workflow_runs[] | select(.id != \\($current)) | .conclusion" | head -n 1)
+          if [ "$previous" = "failure" ]; then
+            echo "Previous run of ${WORKFLOW_NAME} also failed; suppressing duplicate Telegram alert."
+            exit 0
+          fi
           message="⚠️ Bullseye Theory automation alert%0A%0AWorkflow: ${WORKFLOW_NAME}%0AStatus: ${WORKFLOW_STATUS}%0A%0AOpen run: ${RUN_URL}"
           curl -sS --fail-with-body -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
