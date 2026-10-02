@@ -2,9 +2,6 @@ name: Publish Approved Reel to Instagram
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/instagram_publish.yml"
   workflow_run:
     workflows: ["Generate Approved Reel"]
     types: [completed]
@@ -18,9 +15,9 @@ concurrency:
 
 jobs:
   publish:
+    # Publish after a successful Reel generation, or when manually dispatched.
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'push' ||
       github.event.workflow_run.conclusion == 'success'
 
     runs-on: ubuntu-24.04
