@@ -12,35 +12,23 @@ jobs:
   token-health:
     runs-on: ubuntu-24.04
     steps:
-      - name: Validate Meta access token
+      - name: Validate Instagram publishing token
         env:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
         run: |
           set -euo pipefail
-          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me"             --data-urlencode "fields=id,name"             --data-urlencode "access_token=${INSTAGRAM_ACCESS_TOKEN}")"
-          echo "Meta token health response received."
+          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${INSTAGRAM_USER_ID}" \
+            --data-urlencode "fields=id,username" \
+            --data-urlencode "access_token=${INSTAGRAM_ACCESS_TOKEN}")"
+          echo "Instagram token health response received."
           if echo "${response}" | grep -q '"error"'; then
             echo "${response}"
             exit 1
           fi
           echo "${response}" | grep -q '"id"'
-          echo "Meta access token is valid."
-
-          accounts="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" \
-            --data-urlencode "fields=id,name,instagram_business_account{id,username}" \
-            --data-urlencode "access_token=${INSTAGRAM_ACCESS_TOKEN}")"
-          echo "Meta account-access response received."
-          if echo "${accounts}" | grep -q '"error"'; then
-            echo "${accounts}"
-            exit 1
-          fi
-          if ! echo "${accounts}" | grep -q '"instagram_business_account"'; then
-            echo "${accounts}"
-            echo "No connected Instagram Business/Creator account was returned."
-            exit 1
-          fi
-          echo "Connected Instagram account access is valid."
+          echo "Instagram publishing token can access the configured Bullseye Theory account."
 
       - name: Alert Telegram on invalid token
         if: failure()
