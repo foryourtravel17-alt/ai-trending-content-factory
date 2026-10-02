@@ -1,6 +1,9 @@
 name: Instagram Token Health Check
 
 on:
+  push:
+    paths:
+      - '.github/workflows/instagram_token_health.yml'
   workflow_dispatch:
   schedule:
     - cron: "0 */6 * * *"
