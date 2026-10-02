@@ -36,52 +36,36 @@ def request(method, url, params):
 
 
 def resolve_instagram_user_id():
-    # Avoid the Page/{PAGE_ID} endpoint because this workflow does not require
-    # pages_read_engagement. The token already has pages_show_list + instagram_basic.
+    # Use the verified IG account ID directly in production. This avoids
+    # requiring /me/accounts on every run and supports a Page Access Token,
+    # which Meta's Instagram API examples use for Reel publishing.
+    if CONFIGURED_INSTAGRAM_USER_ID:
+        print(f"Using configured Instagram account ID: {CONFIGURED_INSTAGRAM_USER_ID}")
+        return CONFIGURED_INSTAGRAM_USER_ID
+
+    # Fallback for first-time setup when no IG ID is configured.
     accounts = request("GET", f"{API}/me/accounts", {
         "fields": "id,name,instagram_business_account{id,username}",
         "access_token": TOKEN,
     })
     pages = accounts.get("data") or []
 
-    matches = []
     for page in pages:
         ig = page.get("instagram_business_account") or {}
         ig_id = str(ig.get("id") or "")
-        ig_username = str(ig.get("username") or "")
         if ig_id:
-            matches.append((ig_id, ig_username, page.get("name", ""), page.get("id", "")))
+            username = str(ig.get("username") or "")
+            print(
+                f"Resolved Instagram account: @{username} ({ig_id}) "
+                f"via Page '{page.get('name', '')}' ({page.get('id', '')})"
+            )
+            return ig_id
 
-    if not matches:
-        raise RuntimeError(
-            "META_INSTAGRAM_ACCOUNT_NOT_FOUND: The Meta token can access /me/accounts, "
-            "but no connected Instagram Business/Creator account was returned. "
-            "Check that the Bullseye Theory Instagram account is connected to its "
-            "Facebook Page and that the token includes instagram_basic."
-        )
-
-    if CONFIGURED_INSTAGRAM_USER_ID:
-        for ig_id, username, page_name, page_id in matches:
-            if ig_id == CONFIGURED_INSTAGRAM_USER_ID:
-                print(
-                    f"Resolved configured Instagram account: @{username} "
-                    f"({ig_id}) via Page '{page_name}' ({page_id})"
-                )
-                return ig_id
-
-        print(
-            f"Configured Instagram account ID {CONFIGURED_INSTAGRAM_USER_ID} "
-            "was not returned by /me/accounts; using the first accessible "
-            f"Instagram account instead: @{matches[0][1]} ({matches[0][0]})"
-        )
-
-    ig_id, username, page_name, page_id = matches[0]
-    print(
-        f"Resolved Instagram account: @{username} ({ig_id}) "
-        f"via Page '{page_name}' ({page_id})"
+    raise RuntimeError(
+        "META_INSTAGRAM_ACCOUNT_NOT_FOUND: No Instagram Business/Creator "
+        "account was returned. Set INSTAGRAM_USER_ID to the verified "
+        "Bullseye Theory Instagram account ID."
     )
-    return ig_id
-
 
 def is_already_published(data):
     instagram = data.get("publishing", {}).get("instagram", {}) or {}
