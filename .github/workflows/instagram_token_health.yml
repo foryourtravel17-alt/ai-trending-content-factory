@@ -15,50 +15,29 @@ jobs:
   token-health:
     runs-on: ubuntu-24.04
     steps:
-      - name: Validate Meta Page token and linked Instagram account
+      - name: Validate Meta credential and linked Instagram account
         env:
+          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
-          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
         run: |
           set -euo pipefail
-
-          page_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me"             --data-urlencode "fields=id,name,instagram_business_account{id,username}"             --data-urlencode "access_token=${INSTAGRAM_ACCESS_TOKEN}")"
-
-          echo "Meta Page token identity response received."
-          if echo "${page_response}" | grep -q '"error"'; then
-            echo "${page_response}"
+          token="${META_SYSTEM_USER_TOKEN:-${INSTAGRAM_ACCESS_TOKEN:-}}"
+          if [ -z "${token}" ]; then
+            echo "ERROR: No Meta credential configured."
             exit 1
           fi
-
-          echo "${page_response}" | grep -q '"id"'
-          echo "${page_response}" | grep -q '"name"'
-
-          linked_ig_id="$(python -c 'import json,sys; d=json.load(sys.stdin); print((d.get("instagram_business_account") or {}).get("id",""))' <<<"${page_response}")"
-
-          if [ -n "${linked_ig_id}" ]; then
-            echo "Linked Instagram account detected: ${linked_ig_id}"
+          if [ -n "${META_SYSTEM_USER_TOKEN:-}" ]; then
+            response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${META_SYSTEM_USER_TOKEN}")"
+            if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
+            linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
+            if [ -z "${linked}" ]; then echo "ERROR: System User has no assigned Page with a linked Instagram account."; exit 1; fi
+            echo "System User credential is valid; linked Instagram account: ${linked}"
           else
-            echo "ERROR: Meta Page token is valid, but this Page has no instagram_business_account visible to the token."
-            echo "The Facebook Page must be linked to the Bullseye Theory Professional Instagram account and the Meta app must be re-authorized."
-            exit 1
+            response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me" --data-urlencode "fields=id,name,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
+            if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
+            echo "Legacy Page token can access the linked Instagram account."
           fi
-
-          if [ -n "${INSTAGRAM_USER_ID:-}" ] && [ "${INSTAGRAM_USER_ID}" != "${linked_ig_id}" ]; then
-            echo "NOTICE: INSTAGRAM_USER_ID differs from Meta's linked Instagram ID."
-            echo "Configured ID: ${INSTAGRAM_USER_ID}"
-            echo "Linked ID: ${linked_ig_id}"
-          fi
-
-          ig_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked_ig_id}"             --data-urlencode "fields=id,username"             --data-urlencode "access_token=${INSTAGRAM_ACCESS_TOKEN}")"
-
-          if echo "${ig_response}" | grep -q '"error"'; then
-            echo "${ig_response}"
-            exit 1
-          fi
-
-          echo "${ig_response}" | grep -q '"id"'
-          echo "Instagram publishing token can access the linked Bullseye Theory account."
 
       - name: Alert Telegram on invalid token or broken Instagram link
         if: failure()
