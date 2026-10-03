@@ -7,7 +7,9 @@ import urllib.error
 from pathlib import Path
 
 API_VERSION = os.environ.get("META_GRAPH_API_VERSION", "v23.0")
-TOKEN = os.environ["INSTAGRAM_ACCESS_TOKEN"]
+SYSTEM_USER_TOKEN = os.environ.get("META_SYSTEM_USER_TOKEN", "").strip()
+LEGACY_PAGE_TOKEN = os.environ.get("INSTAGRAM_ACCESS_TOKEN", "").strip()
+TOKEN = SYSTEM_USER_TOKEN or LEGACY_PAGE_TOKEN
 CONFIGURED_INSTAGRAM_USER_ID = os.environ.get("INSTAGRAM_USER_ID", "").strip()
 
 API = f"https://graph.facebook.com/{API_VERSION}"
@@ -36,9 +38,33 @@ def request(method, url, params):
 
 
 def resolve_instagram_user_id():
-    # The publishing secret is a Page Access Token. With a Page token, Meta's
-    # documented and simplest identity check is /me: it resolves to the Page
-    # and can expose its linked Instagram professional account.
+    global TOKEN
+    if not TOKEN:
+        raise RuntimeError("META_TOKEN_NOT_CONFIGURED: Add META_SYSTEM_USER_TOKEN to GitHub Actions.")
+
+    if SYSTEM_USER_TOKEN:
+        pages = request("GET", f"{API}/me/accounts", {
+            "fields": "id,name,access_token,tasks,instagram_business_account{id,username}",
+            "access_token": SYSTEM_USER_TOKEN,
+        })
+        rows = pages.get("data") or []
+        eligible = [p for p in rows if (p.get("instagram_business_account") or {}).get("id")]
+        eligible.sort(key=lambda p: 0 if str(p.get("name", "")).strip().lower() == "bullseye theory" else 1)
+        selected = eligible[0] if eligible else None
+        if not selected:
+            raise RuntimeError("META_PAGE_NOT_ASSIGNED: Meta System User has no assigned Page with a linked Instagram professional account.")
+        page_id = str(selected.get("id") or "")
+        page_name = str(selected.get("name") or "")
+        page_token = str(selected.get("access_token") or "")
+        ig = selected.get("instagram_business_account") or {}
+        ig_id = str(ig.get("id") or "")
+        username = str(ig.get("username") or "")
+        if not page_token or not ig_id:
+            raise RuntimeError(f"META_INSTAGRAM_ACCOUNT_NOT_READY: Page '{page_name}' ({page_id}) did not return its Page token and linked Instagram account.")
+        TOKEN = page_token
+        print(f"Resolved Instagram account: @{username} ({ig_id}) via Page '{page_name}' ({page_id}) using Meta System User token")
+        return ig_id
+
     page = request("GET", f"{API}/me", {
         "fields": "id,name,instagram_business_account{id,username}",
         "access_token": TOKEN,
@@ -48,38 +74,15 @@ def resolve_instagram_user_id():
     ig = page.get("instagram_business_account") or {}
     ig_id = str(ig.get("id") or "")
     username = str(ig.get("username") or "")
-
     if ig_id:
-        print(
-            f"Resolved Instagram account: @{username} ({ig_id}) "
-            f"via Page '{page_name}' ({page_id})"
-        )
-        if CONFIGURED_INSTAGRAM_USER_ID and CONFIGURED_INSTAGRAM_USER_ID != ig_id:
-            print(
-                "Configured INSTAGRAM_USER_ID differs from Meta's linked "
-                f"Instagram ID; using the linked ID {ig_id}."
-            )
+        print(f"Resolved Instagram account: @{username} ({ig_id}) via Page '{page_name}' ({page_id}) using legacy Page token")
         return ig_id
-
     if CONFIGURED_INSTAGRAM_USER_ID:
-        # Compatibility fallback: validate the configured account with the
-        # current Page token before attempting to publish.
-        configured = request("GET", f"{API}/{CONFIGURED_INSTAGRAM_USER_ID}", {
-            "fields": "id,username",
-            "access_token": TOKEN,
-        })
+        configured = request("GET", f"{API}/{CONFIGURED_INSTAGRAM_USER_ID}", {"fields": "id,username", "access_token": TOKEN})
         validated_id = str(configured.get("id") or "")
         if validated_id:
-            print(f"Validated configured Instagram account ID: {validated_id}")
             return validated_id
-
-    raise RuntimeError(
-        "META_INSTAGRAM_ACCOUNT_NOT_LINKED: The current Meta Page Access "
-        f"Token resolves to Page '{page_name}' ({page_id}) but Meta did not "
-        "return instagram_business_account. Link the Bullseye Theory "
-        "Professional Instagram account to this Facebook Page and "
-        "re-authorize the Meta app. No Reel was published."
-    )
+    raise RuntimeError("META_INSTAGRAM_ACCOUNT_NOT_LINKED: Meta did not return a linked Instagram professional account for the current credential.")
 
 def is_already_published(data):
     instagram = data.get("publishing", {}).get("instagram", {}) or {}
