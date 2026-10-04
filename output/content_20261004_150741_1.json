@@ -125,15 +125,18 @@
   },
   "publishing": {
     "instagram": {
-      "status": "not_published"
+      "status": "ready_for_publish"
     },
     "telegram": {
       "status": "not_published"
-    }
+    },
+    "reel_file": "output/media/content_20261004_150741_1.mp4"
   },
   "approval": {
     "required": false,
     "status": "approved",
     "mode": "automatic"
-  }
+  },
+  "reel_generated": true,
+  "reel_generated_at": "2026-10-04T15:09:22.842452+00:00"
 }
