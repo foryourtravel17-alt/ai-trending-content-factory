@@ -6,7 +6,8 @@ on:
       - '.github/workflows/instagram_token_health.yml'
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    # Avoid the top of the hour because GitHub documents higher Actions load there.
+    - cron: "17 */6 * * *"
 
 permissions:
   contents: read
@@ -23,16 +24,17 @@ jobs:
           set -euo pipefail
           token="${META_SYSTEM_USER_TOKEN:-}"
           if [ -z "${token}" ]; then
-            echo "ERROR: No Meta credential configured."
+            echo "ERROR: No Meta System User credential configured."
             exit 1
           fi
-          if [ -n "${META_SYSTEM_USER_TOKEN:-}" ]; then
-            response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${META_SYSTEM_USER_TOKEN}")"
-            if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
-            linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
-            if [ -z "${linked}" ]; then echo "ERROR: System User has no assigned Page with a linked Instagram account."; exit 1; fi
-            echo "System User credential is valid; linked Instagram account: ${linked}"
+          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
+          if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
+          linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
+          if [ -z "${linked}" ]; then
+            echo "ERROR: System User has no assigned Page with a linked Instagram account."
+            exit 1
           fi
+          echo "System User credential is valid; linked Instagram account: ${linked}"
 
       - name: Alert Telegram on invalid token or broken Instagram link
         if: failure()
@@ -40,5 +42,5 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
           set -euo pipefail
-          message="⚠️ Bullseye Theory automation: Meta/Instagram access check failed. The Page token or Page↔Instagram link needs attention. Open the failed Token Health Check run for the exact error."
-          curl -sS --fail-with-body -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"             --data-urlencode "chat_id=@bullseye_theory"             --data-urlencode "text=${message}"
+          message="⚠️ Bullseye Theory automation: Meta/Instagram access check failed. Open the failed Token Health Check run for the exact error."
+          curl -sS --fail-with-body -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" --data-urlencode "chat_id=@bullseye_theory" --data-urlencode "text=${message}"
