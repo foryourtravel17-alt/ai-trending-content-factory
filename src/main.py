@@ -14,6 +14,8 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+from free_llm_router import generate_json
+
 BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
 MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
@@ -426,7 +428,7 @@ def fact_check(research_data):
 
 
 def script_generation(item, research_data):
-    return {
+    fallback = {
         "hook": item["hook"],
         "body": item["body"],
         "cta": (
@@ -436,6 +438,45 @@ def script_generation(item, research_data):
         "tagline": PHILOSOPHY,
         "disclaimer": DISCLAIMER,
     }
+
+    system_prompt = (
+        "You write original English educational trading content for Bullseye Theory. "
+        "Never give personalized financial advice, direct buy/sell instructions, guaranteed outcomes, "
+        "or claims of certainty. Use clear institutional language. Return JSON only with keys: "
+        "hook, body, cta, tagline, disclaimer. Keep the educational meaning faithful to the supplied topic."
+    )
+    user_prompt = json.dumps({
+        "topic": item,
+        "research": research_data,
+        "required_disclaimer": DISCLAIMER,
+        "brand_philosophy": PHILOSOPHY,
+        "constraints": [
+            "Do not invent live market data or sources.",
+            "Do not turn an educational example into a trade signal.",
+            "Keep hook concise and body practical.",
+            "CTA must be educational, not profit-oriented.",
+        ],
+    }, ensure_ascii=False)
+
+    try:
+        generated = generate_json(system_prompt, user_prompt)
+    except Exception as exc:
+        print(f"Optional LLM unavailable; using deterministic script fallback: {exc}")
+        generated = None
+
+    if not isinstance(generated, dict):
+        return fallback
+
+    result = {
+        "hook": str(generated.get("hook", fallback["hook"])).strip(),
+        "body": str(generated.get("body", fallback["body"])).strip(),
+        "cta": str(generated.get("cta", fallback["cta"])).strip(),
+        "tagline": PHILOSOPHY,
+        "disclaimer": DISCLAIMER,
+    }
+    if not result["hook"] or not result["body"]:
+        return fallback
+    return result
 
 
 def safety_check(script):
