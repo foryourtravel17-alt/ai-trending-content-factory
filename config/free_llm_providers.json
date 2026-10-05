@@ -1,0 +1,27 @@
+{
+  "purpose": "Advisory catalog for Bullseye Theory's optional free-first LLM layer. Verify provider limits before enabling.",
+  "source": "https://github.com/open-free-llm-api/awesome-freellm-apis",
+  "updated_reference": "2026-10-05",
+  "providers": [
+    {
+      "id": "groq",
+      "base_url": "https://api.groq.com/openai/v1",
+      "models": ["openai/gpt-oss-120b", "openai/gpt-oss-20b"],
+      "integration": "openai_compatible",
+      "use": "Fast educational script/caption generation"
+    },
+    {
+      "id": "openrouter",
+      "base_url": "https://openrouter.ai/api/v1",
+      "models": ["openai/gpt-oss-120b:free", "google/gemma-4-26b-a4b-it:free"],
+      "integration": "openai_compatible",
+      "use": "Fallback/model-choice layer"
+    }
+  ],
+  "rules": [
+    "Never store provider keys in source code.",
+    "Keep LLM_ENABLED=false until a provider key is deliberately configured.",
+    "Treat free-tier limits as changeable; verify provider documentation before production use.",
+    "LLM output remains subject to Bullseye Theory safety checks and human approval."
+  ]
+}

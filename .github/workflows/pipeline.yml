@@ -31,6 +31,11 @@ jobs:
           MOCK_MODE: "true"
           AUTO_PUBLISH_ENABLED: "true"
           CONTENT_BATCH_SIZE: "1"
+          # Optional free-first LLM layer; remains disabled unless explicitly enabled.
+          LLM_ENABLED: ${{ vars.LLM_ENABLED || 'false' }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
         run: python src/main.py
 
       - name: Send pending content to Telegram
