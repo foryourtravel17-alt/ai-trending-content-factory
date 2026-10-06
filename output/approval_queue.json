@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T07:38:34.063530+00:00",
+  "updated_at": "2026-10-06T13:40:42.565223+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -134,6 +134,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-06T07:38:34.063136+00:00"
+    },
+    {
+      "content_id": "content_20261006_134042_1",
+      "topic": "Trend or Range? Stop Using the Same Playbook Everywhere",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-06T13:40:42.564785+00:00"
     }
   ],
   "telegram_sent": [
