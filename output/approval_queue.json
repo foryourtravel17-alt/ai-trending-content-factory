@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T13:40:42.565223+00:00",
+  "updated_at": "2026-10-07T01:40:29.405575+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -141,6 +141,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-06T13:40:42.564785+00:00"
+    },
+    {
+      "content_id": "content_20261007_014029_1",
+      "topic": "Big Capital Does Not Fix Bad Risk Management",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-07T01:40:29.405121+00:00"
     }
   ],
   "telegram_sent": [
