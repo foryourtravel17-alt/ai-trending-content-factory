@@ -1,0 +1,32 @@
+name: Ritu Daily Content Pack
+
+on:
+  schedule:
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Ritu branch
+        uses: actions/checkout@v4
+        with:
+          ref: ritu-os
+          fetch-depth: 0
+
+      - name: Build today's queue
+        env:
+          TZ: Asia/Kolkata
+        run: python ritu-os/scripts/generate_daily.py
+
+      - name: Commit and push Ritu queue
+        run: |
+          git config user.name "Ritu Creator OS"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ritu-os/content_queue.json
+          git diff --cached --quiet || git commit -m "Auto-generate Ritu daily content pack"
+          git push origin HEAD:ritu-os
