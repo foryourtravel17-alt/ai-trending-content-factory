@@ -1,0 +1,10 @@
+{
+  "generated_at": "initial",
+  "mode": "free-first",
+  "status": "ready_for_asset_generation",
+  "manual_required": [
+    "Connect an authorized AI image/video provider when generation credits/API access are available.",
+    "Connect Meta/Instagram publishing permissions before automated posting."
+  ],
+  "posts": []
+}
