@@ -13,7 +13,7 @@
 <section class="grid">
 <div class="card"><div class="small">Daily target</div><div class="metric">2–3</div><p>Instagram posts/day</p></div>
 <div class="card"><div class="small">Character</div><div class="metric">360°</div><p>Reference system</p></div>
-<div class="card"><div class="small">Pipeline</div><div class="metric">20%</div><p>Scaffold started</p></div>
+<div class="card"><div class="small">Automation</div><div class="metric">ON</div><p>Daily content pack</p></div>
 <div class="card"><div class="small">Publishing</div><div class="metric">OFF</div><p>Awaiting Meta authorization</p></div>
 </section>
 <section class="section cols">
@@ -33,15 +33,34 @@
 <div class="row"><span>6. Analytics loop</span><span class="warn status">NEXT</span></div>
 </div>
 </section>
-<section class="section card"><h2>Today's Content Queue</h2>
-<div class="row"><div><b>Reel 01</b><div class="small">Attraction / dating hook • 10–20 sec • non-graphic</div></div><span class="pill">IDEA</span></div>
-<div class="row"><div><b>Photo</b><div class="small">Lifestyle portrait • consistent identity</div></div><span class="pill">PROMPT</span></div>
-<div class="row"><div><b>Reel 02</b><div class="small">Confidence / relationship topic • fresh angle</div></div><span class="pill">IDEA</span></div>
-<button class="btn" onclick="alert('Content generation will be connected after an AI provider key is added.')">Generate next batch</button>
+<section class="section card"><h2>Today’s Content Queue <span class="small">• auto-generated daily</span></h2>
+<div id="queue"><div class="small">Loading today’s pack…</div></div>
+<button class="btn alt" onclick="loadQueue()">Refresh</button>
 </section>
 <section class="section cols">
 <div class="card"><h2>Monetization</h2><div class="row"><span>Instagram → Telegram</span><span class="status">PLAN</span></div><div class="row"><span>Paid subscriptions</span><span class="status">PLAN</span></div><div class="row"><span>PPV / exclusive drops</span><span class="status">PLAN</span></div><p class="small">Platform choice will be evaluated before launch; keep AI disclosure and platform rules enabled.</p></div>
-<div class="card"><h2>Free-first Build</h2><p>Use free/open components first. No payment bypassing. Paid services can be added only when revenue starts.</p><div class="bar"><i></i></div><p class="small">Current scaffold: dashboard + pipeline states. Next: authorized Meta connection and AI provider connection.</p></div>
+<div class="card"><h2>Free-first Build</h2><p>Use free/open components first. No payment bypassing. Paid services can be added only when revenue starts.</p><div class="bar"><i></i></div><p class="small">Automatic now: daily content pack + Render redeploy. Manual only: authorized AI provider connection and Meta/Instagram publishing authorization.</p></div>
 </section>
+<section class="section card"><h2>Manual Only</h2>
+<div class="row"><span>AI image/video provider credentials</span><span class="warn status">YOU</span></div>
+<div class="row"><span>Meta / Instagram authorization</span><span class="warn status">YOU</span></div>
+<div class="row"><span>Telegram bot credential</span><span class="warn status">ONLY IF NEEDED</span></div>
+<p class="small">Everything else in this dashboard is designed to run automatically once these authorized connections exist.</p></section>
 </main>
+<script>
+async function loadQueue(){
+  const box=document.getElementById('queue');
+  try{
+    const r=await fetch('content_queue.json?ts='+Date.now());
+    const data=await r.json();
+    if(!data.posts || !data.posts.length){box.innerHTML='<div class="small">Daily pack will appear after the scheduled workflow runs.</div>';return;}
+    box.innerHTML=data.posts.map((p,i)=>
+      '<div class="row"><div><b>Slot '+(i+1)+' • '+p.type.toUpperCase()+' • '+p.theme+'</b>'+
+      '<div class="small">'+p.hook+'</div><div class="small">'+p.caption+'</div></div>'+
+      '<span class="pill">'+p.approval.toUpperCase()+'</span></div>'
+    ).join('');
+  }catch(e){box.innerHTML='<div class="small">Queue unavailable right now. The automation will retry on its next run.</div>';}
+}
+loadQueue();
+</script>
 </body></html>
