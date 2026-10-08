@@ -20,7 +20,7 @@
       "never use guaranteed returns, fake P&L, fake scarcity, or personalized trade instructions"
     ]
   },
-  "status": "approved_for_publishing",
+  "status": "published_to_instagram",
   "topic": {
     "title": "Risk-to-Reward: What It Actually Tells You",
     "source": "daily_rotating_educational_topic",
@@ -125,10 +125,13 @@
   },
   "publishing": {
     "instagram": {
-      "status": "ready_for_publish"
+      "status": "published_to_instagram",
+      "media_id": "18108620612185224"
     },
     "telegram": {
-      "status": "not_published"
+      "status": "published",
+      "message_id": 49,
+      "published_at": "2026-10-08T18:59:19Z"
     },
     "reel_file": "output/media/content_20261002_013835_1.mp4"
   },
@@ -138,5 +141,7 @@
     "mode": "automatic"
   },
   "reel_generated": true,
-  "reel_generated_at": "2026-10-02T01:39:46.518304+00:00"
+  "reel_generated_at": "2026-10-02T01:39:46.518304+00:00",
+  "instagram_media_id": "18108620612185224",
+  "published_at": "2026-10-08T18:59:15Z"
 }
