@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T13:42:37.406310+00:00",
+  "updated_at": "2026-10-09T01:41:39.782334+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -183,6 +183,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-08T13:42:37.405837+00:00"
+    },
+    {
+      "content_id": "content_20261009_014139_1",
+      "topic": "False Breakouts: Read the Reaction, Not Just the Wick",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-09T01:41:39.781862+00:00"
     }
   ],
   "telegram_sent": [
