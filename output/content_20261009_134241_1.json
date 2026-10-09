@@ -20,7 +20,7 @@
       "never use guaranteed returns, fake P&L, fake scarcity, or personalized trade instructions"
     ]
   },
-  "status": "approved_for_publishing",
+  "status": "published_to_instagram",
   "topic": {
     "title": "Position Sizing Starts With Risk, Not With the Lot Button",
     "source": "daily_rotating_educational_topic",
@@ -125,10 +125,13 @@
   },
   "publishing": {
     "instagram": {
-      "status": "ready_for_publish"
+      "status": "published_to_instagram",
+      "media_id": "18091365107674725"
     },
     "telegram": {
-      "status": "not_published"
+      "status": "published",
+      "message_id": 54,
+      "published_at": "2026-10-09T13:45:39Z"
     },
     "reel_file": "output/media/content_20261009_134241_1.mp4"
   },
@@ -138,5 +141,7 @@
     "mode": "automatic"
   },
   "reel_generated": true,
-  "reel_generated_at": "2026-10-09T13:44:22.968845+00:00"
+  "reel_generated_at": "2026-10-09T13:44:22.968845+00:00",
+  "instagram_media_id": "18091365107674725",
+  "published_at": "2026-10-09T13:45:35Z"
 }
