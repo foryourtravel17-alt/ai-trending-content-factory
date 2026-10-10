@@ -4,6 +4,8 @@ import time
 import urllib.parse
 import urllib.request
 import urllib.error
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 API_VERSION = os.environ.get("META_GRAPH_API_VERSION", "v23.0")
@@ -90,7 +92,44 @@ def is_already_published(data):
     )
 
 
+MAX_CONTENT_AGE = timedelta(hours=24)
+DAILY_PUBLISH_LIMIT = 3
+LOCAL_TZ = ZoneInfo("Asia/Kolkata")
+
+
+def parse_timestamp(value):
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        return None
+
+
+def published_today_count():
+    today_local = datetime.now(LOCAL_TZ).date()
+    count = 0
+    for p in Path("output").glob("content_*.json"):
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not is_already_published(data):
+            continue
+        published_at = parse_timestamp(data.get("published_at") or data.get("publishing", {}).get("instagram", {}).get("published_at"))
+        if published_at and published_at.astimezone(LOCAL_TZ).date() == today_local:
+            count += 1
+    return count
+
+
 def load_newest_unpublished_approved():
+    today_count = published_today_count()
+    if today_count >= DAILY_PUBLISH_LIMIT:
+        print(f"Daily publishing cap reached: {today_count}/{DAILY_PUBLISH_LIMIT} Instagram Reels in Asia/Kolkata. Nothing to publish.")
+        return None, None
+
+    now = datetime.now(timezone.utc)
     candidates = []
     for p in Path("output").glob("content_*.json"):
         try:
@@ -104,16 +143,30 @@ def load_newest_unpublished_approved():
             print(f"Skipping already-published draft: {p.name}")
             continue
 
+        fact_check_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
+        if fact_check_status not in {"passed", "verified", "approved"}:
+            print(f"Skipping draft requiring fact-check review ({fact_check_status or 'missing status'}): {p.name}")
+            continue
+
+        created_at = parse_timestamp(data.get("created_at"))
+        if not created_at:
+            print(f"Skipping draft with missing/invalid created_at: {p.name}")
+            continue
+        age = now - created_at
+        if age < timedelta(seconds=0) or age > MAX_CONTENT_AGE:
+            print(f"Skipping stale/future-dated draft ({age} old): {p.name}")
+            continue
+
         content_id = str(data.get("content_id", ""))
         video_path = Path("output/media") / f"{content_id}.mp4"
         if not video_path.exists():
             print(f"Skipping approved draft without Reel file: {p.name}")
             continue
 
-        created_at = str(data.get("created_at", ""))
-        candidates.append((created_at, content_id, p, data))
+        candidates.append((created_at.isoformat(), content_id, p, data))
 
     if not candidates:
+        print("No fresh, fact-checked, unpublished approved content is eligible.")
         return None, None
 
     candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
