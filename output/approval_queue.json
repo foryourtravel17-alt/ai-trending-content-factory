@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-09T13:42:41.473225+00:00",
+  "updated_at": "2026-10-10T01:40:45.098566+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -204,6 +204,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-09T13:42:41.472734+00:00"
+    },
+    {
+      "content_id": "content_20261010_014045_1",
+      "topic": "Liquidity: Why Price Can Move Fast Around Key Areas",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-10T01:40:45.098133+00:00"
     }
   ],
   "telegram_sent": [
