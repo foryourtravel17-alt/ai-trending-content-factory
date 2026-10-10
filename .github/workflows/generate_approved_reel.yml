@@ -2,12 +2,6 @@ name: Generate Approved Reel
 
 on:
   workflow_dispatch:
-  schedule:
-    # Safety-net runs 3 times per day (Asia/Kolkata).
-    # The approval check makes these no-op when nothing is approved,
-    # so this does not bypass the human approval gate.
-    - cron: "15 0,8,16 * * *"
-      timezone: "Asia/Kolkata"
   workflow_run:
     workflows: ["AI Trading Content Pipeline"]
     types: [completed]
