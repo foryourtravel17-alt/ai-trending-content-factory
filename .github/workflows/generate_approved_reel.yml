@@ -41,18 +41,30 @@ jobs:
           python - <<'PY'
           import json
           import os
+          from datetime import datetime, timezone, timedelta
           from pathlib import Path
 
           found = False
+          now = datetime.now(timezone.utc)
           for path in sorted(Path("output").glob("content_*.json")):
               try:
                   data = json.loads(path.read_text(encoding="utf-8"))
               except Exception:
                   continue
+              try:
+                  created = datetime.fromisoformat(str(data.get("created_at", "")).replace("Z", "+00:00"))
+                  if created.tzinfo is None:
+                      created = created.replace(tzinfo=timezone.utc)
+                  age = now - created.astimezone(timezone.utc)
+              except (TypeError, ValueError):
+                  continue
+              fact_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
               content_id = data.get("content_id", path.stem)
               video = Path("output/media") / f"{content_id}.mp4"
               if (
                   data.get("status") == "approved_for_publishing"
+                  and fact_status in {"passed", "verified", "approved"}
+                  and timedelta(0) <= age <= timedelta(hours=24)
                   and not data.get("reel_generated", False)
                   and not video.exists()
               ):
