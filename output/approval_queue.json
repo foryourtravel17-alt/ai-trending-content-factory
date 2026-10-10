@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10T01:40:45.098566+00:00",
+  "updated_at": "2026-10-10T07:38:00.964913+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -211,6 +211,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-10T01:40:45.098133+00:00"
+    },
+    {
+      "content_id": "content_20261010_073800_1",
+      "topic": "Why Support and Resistance Are Zones, Not Magic Lines",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-10T07:38:00.964482+00:00"
     }
   ],
   "telegram_sent": [
