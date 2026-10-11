@@ -66,12 +66,12 @@ def _accessible_image_url(image_path: Path) -> str:
     raise RuntimeError("Generated card is not publicly reachable. Enable GitHub Pages or check the raw GitHub URL.")
 
 
-def _telegram(method: str, data: dict) -> dict:
+def _telegram(method: str, data: dict, files: dict | None = None) -> dict:
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured.")
     try:
-        response = requests.post(f"https://api.telegram.org/bot{token}/{method}", data=data, timeout=45)
+        response = requests.post(f"https://api.telegram.org/bot{token}/{method}", data=data, files=files, timeout=45)
     except requests.RequestException as exc:
         raise RuntimeError(f"Telegram {method} request failed ({type(exc).__name__}); bot token redacted.") from None
     if not response.ok:
@@ -140,7 +140,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         return record
 
     human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
-    image_url = _accessible_image_url(card_path)
+    image_url = None
     telegram_caption = copy["telegram_html"][:1000]
     if human_approval:
         if platforms.get("telegram_dm", {}).get("status") != "sent":
@@ -151,16 +151,16 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                 {"text": "✅ APPROVE & PUBLISH", "callback_data": f"market_approve:{signal['signal_id']}"},
                 {"text": "❌ REJECT", "callback_data": f"market_reject:{signal['signal_id']}"},
             ]]}
-            result = _telegram("sendPhoto", {
-                "chat_id": chat_id, "photo": image_url,
-                "caption": ("📝 DRAFT — choose approve or reject\n\n" + telegram_caption)[:1024],
-                "parse_mode": "HTML",
-                "reply_markup": json.dumps(keyboard, separators=(",", ":")),
-            })
+            with card_path.open("rb") as photo:
+                result = _telegram("sendPhoto", {
+                    "chat_id": chat_id,
+                    "caption": ("📝 DRAFT — choose approve or reject\n\n" + telegram_caption)[:1024],
+                    "parse_mode": "HTML",
+                    "reply_markup": json.dumps(keyboard, separators=(",", ":")),
+                }, files={"photo": photo})
             platforms["telegram_dm"] = {"status": "sent", "message_id": result.get("message_id")}
             log.info("Draft sent to Telegram DM for %s; waiting for button approval.", signal["signal_id"])
         record["status"] = "pending_approval"
-        record["image_url"] = image_url
         return record
 
     errors = []
@@ -168,10 +168,11 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
         if token:
             try:
-                result = _telegram("sendPhoto", {
-                    "chat_id": TELEGRAM_CHANNEL, "photo": image_url,
-                    "caption": telegram_caption, "parse_mode": "HTML",
-                })
+                with card_path.open("rb") as photo:
+                    result = _telegram("sendPhoto", {
+                        "chat_id": TELEGRAM_CHANNEL,
+                        "caption": telegram_caption, "parse_mode": "HTML",
+                    }, files={"photo": photo})
                 platforms["telegram"] = {"status": "published", "message_id": result.get("message_id")}
                 log.info("Telegram published %s (message %s).", signal["signal_id"], result.get("message_id"))
             except Exception as exc:
@@ -188,6 +189,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
         if token and user_id:
             try:
+                image_url = _accessible_image_url(card_path)
                 media_id = _instagram_publish(image_url, copy["instagram_caption"])
                 platforms["instagram"] = {"status": "published", "media_id": media_id}
                 log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
