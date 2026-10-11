@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from pathlib import Path
 
-from config.env import instagram_access_token, instagram_user_id
+from config.env import instagram_access_token, instagram_user_id, content_is_approved
 
 API_VERSION = os.environ.get("META_GRAPH_API_VERSION", "v23.0")
 SYSTEM_USER_TOKEN = instagram_access_token()
@@ -142,6 +142,9 @@ def load_newest_unpublished_approved():
             continue
 
         if data.get("status") != "approved_for_publishing":
+            continue
+        if not content_is_approved(data):
+            print(f"Skipping content without a valid human approval binding: {p.name}")
             continue
         if is_already_published(data):
             print(f"Skipping already-published draft: {p.name}")
