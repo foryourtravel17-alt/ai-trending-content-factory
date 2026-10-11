@@ -39,8 +39,8 @@ jobs:
       INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
       META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
       META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
-      GH_USER: ${{ secrets.GH_USER }}
-      GH_REPO: ${{ secrets.GH_REPO }}
+      GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
+      GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
       IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
       GITHUB_REPOSITORY: ${{ github.repository }}
       LOG_LEVEL: INFO
