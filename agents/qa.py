@@ -41,12 +41,11 @@ def validate(signal: dict, state: dict) -> tuple[bool, str]:
         return False, "neutral or unknown direction is not publishable"
     risk = abs(entry - stop)
     rr = abs(targets[1] - entry) / risk
-    if risk <= 0 or rr < 1.5:
-        return False, f"risk/reward to TP2 below 1.5 ({rr:.2f})"
+    if risk <= 0 or rr < 1.5 - 1e-9:
+        return False, f"risk/reward to TP2 below 1.5 ({rr:.4f})"
     prior = state.get("signals", {})
     if signal["signal_id"] in prior:
         return False, "duplicate signal_id"
-    # Guard against repeated same-symbol direction in the same market bar.
     for existing in prior.values():
         if (existing.get("symbol") == signal["symbol"]
                 and existing.get("as_of") == signal.get("as_of")
