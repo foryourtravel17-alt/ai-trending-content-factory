@@ -19,8 +19,7 @@ def api(method, data=None, timeout=30):
         with urllib.request.urlopen(req, timeout=timeout) as response:
             payload = json.loads(response.read().decode())
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode(errors="replace")
-        raise RuntimeError(f"Telegram API HTTP {exc.code}: {body}") from exc
+        raise RuntimeError(f"Telegram API HTTP {exc.code}; response redacted to protect bot token.") from None
 
     if not payload.get("ok"):
         raise RuntimeError(f"Telegram API error: {payload}")
