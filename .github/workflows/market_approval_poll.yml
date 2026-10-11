@@ -2,7 +2,7 @@ name: Market Signal Approval Poller
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,7 @@ jobs:
         id: approval
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          POLL_SECONDS: "10"
         run: python src/telegram_process.py
 
       - name: Publish the approved market scenario
