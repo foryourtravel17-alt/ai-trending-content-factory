@@ -678,6 +678,14 @@ def main():
     path, content = items[0]
     print(f"Using approved content: {path}")
     build(content)
+    manifest_path = OUTPUT_DIR / "latest_reel_generated.json"
+    manifest_path.write_text(
+        json.dumps({
+            "content_ids": [content.get("content_id")],
+            "generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        }, indent=2) + "\\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":
