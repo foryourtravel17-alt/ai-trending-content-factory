@@ -78,6 +78,10 @@ for item in items:
         continue
 
     approval = content.get("approval", {})
+    fact_status = str((content.get("fact_check") or {}).get("status", "")).lower()
+    if fact_status not in {"passed", "verified", "approved"}:
+        print(f"Not sending approval button for fact-check review item: {content_id} ({fact_status or 'missing status'}).")
+        continue
     if approval.get("status") != "pending":
         continue
     try:
