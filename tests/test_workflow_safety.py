@@ -11,7 +11,7 @@ class WorkflowSafetyTests(unittest.TestCase):
 
     def test_market_workflow_requires_approval_by_default(self):
         workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
-        self.assertIn("HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'true' }}", workflow)
+        self.assertIn('HUMAN_APPROVAL: "true"', workflow)
 
 
 if __name__ == "__main__":
