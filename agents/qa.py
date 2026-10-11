@@ -26,10 +26,13 @@ def validate(signal: dict, state: dict) -> tuple[bool, str]:
     try:
         entry, stop = float(signal["entry"]), float(signal["stop_loss"])
         targets = [float(signal[f"tp{i}"]) for i in (1, 2, 3)]
+        reported_rr = float(signal["rr_tp2"])
     except (TypeError, ValueError):
-        return False, "levels must be numeric"
+        return False, "levels and reported risk/reward must be numeric"
     if not all(math.isfinite(x) and x > 0 for x in [entry, stop, *targets]):
         return False, "levels must be finite positive prices"
+    if not math.isfinite(reported_rr) or reported_rr <= 0:
+        return False, "reported risk/reward must be finite and positive"
     direction = str(signal["direction"]).upper()
     if direction == "LONG":
         if not stop < entry < targets[0] < targets[1] < targets[2]:
@@ -43,6 +46,8 @@ def validate(signal: dict, state: dict) -> tuple[bool, str]:
     rr = abs(targets[1] - entry) / risk
     if risk <= 0 or rr < 1.5 - 1e-9:
         return False, f"risk/reward to TP2 below 1.5 ({rr:.4f})"
+    if not math.isclose(reported_rr, rr, rel_tol=1e-4, abs_tol=1e-4):
+        return False, f"reported risk/reward ({reported_rr:.4f}) does not match price levels ({rr:.4f})"
     prior = state.get("signals", {})
     if signal["signal_id"] in prior:
         return False, "duplicate signal_id"
