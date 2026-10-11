@@ -6,6 +6,7 @@ import logging
 import hashlib
 import os
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
@@ -184,7 +185,10 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                         "chat_id": TELEGRAM_CHANNEL,
                         "caption": telegram_caption, "parse_mode": "HTML",
                     }, files={"photo": photo})
-                platforms["telegram"] = {"status": "published", "message_id": result.get("message_id")}
+                platforms["telegram"] = {
+                    "status": "published", "message_id": result.get("message_id"),
+                    "published_at": datetime.now(timezone.utc).isoformat(),
+                }
                 log.info("Telegram published %s (message %s).", signal["signal_id"], result.get("message_id"))
             except Exception as exc:
                 platforms["telegram"] = {"status": "failed", "error": str(exc)[:300]}
@@ -202,7 +206,10 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             try:
                 image_url = _accessible_image_url(card_path)
                 media_id = _instagram_publish(image_url, copy["instagram_caption"])
-                platforms["instagram"] = {"status": "published", "media_id": media_id}
+                platforms["instagram"] = {
+                    "status": "published", "media_id": media_id,
+                    "published_at": datetime.now(timezone.utc).isoformat(),
+                }
                 log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
             except Exception as exc:
                 platforms["instagram"] = {"status": "failed", "error": str(exc)[:300]}
