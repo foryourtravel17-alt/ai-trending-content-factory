@@ -21,15 +21,18 @@ class ApprovalGateTests(unittest.TestCase):
     def content(self, **overrides):
         item = {
             "content_id": "content_test_1",
+            "content_version": 1,
+            "created_at": "2026-10-11T00:00:00+00:00",
+            "topic": {"title": "Test topic"},
+            "script": {"hook": "Test hook", "body": "Test body"},
             "status": "approved_for_publishing",
             "fact_check": {"status": "passed"},
             "safety_check": {"passed": True},
-            "approval": {
-                "required": True, "status": "approved",
-                "version": 1, "content_hash": "a" * 64,
-            },
+            "approval": {"required": True, "status": "approved", "version": 1},
         }
         item.update(overrides)
+        if item.get("approval") is not None and item["approval"].get("status") == "approved":
+            item["approval"]["content_hash"] = env.approval_hash(item)
         return item
 
     def test_missing_approval_record_fails_closed(self):
