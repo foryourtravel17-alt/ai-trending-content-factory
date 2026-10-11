@@ -1,10 +1,15 @@
-"""Send a transparent weekly signal, outcome, and publishing summary to Telegram."""
+"""Send weekly hypothetical signal outcomes and available Instagram Insights to Telegram.
+
+This is scenario analysis from public OHLC, not broker execution or realized P&L.
+"""
 from __future__ import annotations
 import json
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import requests
+import pandas as pd
+import yfinance as yf
 
 STATE = Path("data/state.json")
 
@@ -26,6 +31,68 @@ def fetch_engagement(media_id: str, token: str, version: str) -> dict | None:
     except (requests.RequestException, ValueError, TypeError) as exc:
         print(f"Insights unavailable for media {media_id}: {exc}")
         return None
+
+def fetch_weekly_ohlc(symbol: str) -> pd.DataFrame | None:
+    try:
+        frame = yf.download(symbol, period="7d", interval="1h", auto_adjust=True,
+                             progress=False, threads=False, timeout=20)
+        if frame is None or frame.empty:
+            return None
+        if isinstance(frame.columns, pd.MultiIndex):
+            matched = False
+            for level in range(frame.columns.nlevels):
+                if symbol in frame.columns.get_level_values(level):
+                    frame = frame.xs(symbol, axis=1, level=level, drop_level=True)
+                    matched = True
+                    break
+            if not matched:
+                frame.columns = frame.columns.get_level_values(0)
+        frame.columns = [str(c).title() for c in frame.columns]
+        if not {"High", "Low"}.issubset(frame.columns):
+            return None
+        if frame.index.tz is None:
+            frame.index = frame.index.tz_localize("UTC")
+        else:
+            frame.index = frame.index.tz_convert("UTC")
+        return frame.sort_index()
+    except Exception as exc:
+        print(f"Outcome data unavailable for {symbol}: {exc}")
+        return None
+
+def evaluate_signal(signal: dict, frame: pd.DataFrame) -> tuple[float | None, str]:
+    try:
+        as_of = pd.Timestamp(signal["as_of"])
+        as_of = as_of.tz_localize("UTC") if as_of.tzinfo is None else as_of.tz_convert("UTC")
+        future = frame[frame.index > as_of]
+        direction = signal["direction"]
+        stop = float(signal["stop_loss"])
+        targets = [float(signal[f"tp{i}"]) for i in (1, 2, 3)]
+        if future.empty:
+            return None, "open/no newer candles"
+        for _, bar in future.iterrows():
+            high, low = float(bar["High"]), float(bar["Low"])
+            # Conservative rule: if stop and target were both touched in one bar, assume SL first.
+            if direction == "LONG":
+                if low <= stop:
+                    return -1.0, "SL"
+                if high >= targets[2]:
+                    return 2.0, "TP3"
+                if high >= targets[1]:
+                    return 1.5, "TP2"
+                if high >= targets[0]:
+                    return 1.0, "TP1"
+            else:
+                if high >= stop:
+                    return -1.0, "SL"
+                if low <= targets[2]:
+                    return 2.0, "TP3"
+                if low <= targets[1]:
+                    return 1.5, "TP2"
+                if low <= targets[0]:
+                    return 1.0, "TP1"
+        return None, "open/no level touched"
+    except (KeyError, TypeError, ValueError):
+        return None, "invalid signal record"
 
 def main():
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
@@ -50,32 +117,45 @@ def main():
             continue
     published = [r for r in signals if r.get("status") in {"published", "partial"}]
     pending = [r for r in signals if r.get("status") == "pending_approval"]
-    outcomes = [r.get("outcome", {}) for r in signals if isinstance(r.get("outcome"), dict)]
-    r_values = []
-    for outcome in outcomes:
-        try:
-            if outcome.get("r_multiple") is not None:
-                r_values.append(float(outcome["r_multiple"]))
-        except (TypeError, ValueError):
-            continue
-    total_r = sum(r_values) if r_values else None
-    ig_count = sum(1 for r in published if r.get("publishing", {}).get("instagram", {}).get("status") == "published")
-    tg_count = sum(1 for r in published if r.get("publishing", {}).get("telegram", {}).get("status") == "published")
     lines = [
         "🎯 Bullseye Theory — Weekly Automation Report",
         f"Period: {cutoff.date().isoformat()} to {now.date().isoformat()} (UTC)",
         "",
         f"Scenarios generated: {len(signals)}",
-        f"Published records: {len(published)}",
-        f"Instagram posts confirmed: {ig_count}",
-        f"Telegram posts confirmed: {tg_count}",
+        f"Published/partial records: {len(published)}",
+        f"Instagram posts confirmed: {sum(1 for r in published if r.get('publishing', {}).get('instagram', {}).get('status') == 'published')}",
+        f"Telegram posts confirmed: {sum(1 for r in published if r.get('publishing', {}).get('telegram', {}).get('status') == 'published')}",
         f"Awaiting human review: {len(pending)}",
         "",
     ]
-    if total_r is None:
-        lines.append("Outcome/P&L: not tracked — no explicit closed-outcome records were logged.")
+
+    # Approximate outcomes from OHLC bars after the scenario timestamp; not executed P&L.
+    by_symbol = {}
+    for record in published:
+        signal = record.get("signal", {})
+        symbol = signal.get("symbol")
+        if symbol:
+            by_symbol.setdefault(symbol, []).append(record)
+    results = []
+    open_count = 0
+    for symbol, records in by_symbol.items():
+        frame = fetch_weekly_ohlc(symbol)
+        if frame is None:
+            open_count += len(records)
+            continue
+        for record in records:
+            result, label = evaluate_signal(record.get("signal", {}), frame)
+            if result is None:
+                open_count += 1
+            else:
+                results.append((result, label))
+    if results:
+        net_r = sum(result for result, _ in results)
+        lines.append(f"Scenario outcome estimate: {len(results)} resolved, net {net_r:+.2f}R; SL {sum(1 for _, label in results if label == 'SL')}, targets {sum(1 for _, label in results if label.startswith('TP'))}.")
+        lines.append("This is OHLC-based hypothetical scenario analysis, not actual broker P&L; same-candle SL/TP is counted as SL.")
     else:
-        lines.append(f"Logged outcomes: {len(r_values)} closed scenario(s), net {total_r:+.2f}R (recorded outcomes only).")
+        lines.append("Scenario outcome estimate: no resolved post-signal levels available yet.")
+    lines.append(f"Open/unavailable scenarios: {open_count}.")
 
     ig_token = os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip()
     version = os.getenv("META_GRAPH_API_VERSION", "v23.0")
@@ -96,15 +176,12 @@ def main():
     else:
         lines.append("Engagement: Insights unavailable (check token permissions or configure IG_ACCESS_TOKEN).")
     lines.extend([
-        "Targets are not counted as hits unless an outcome is explicitly recorded.",
+        "Targets are not counted as hits unless observed in post-signal candles.",
         "Educational market scenarios only — not financial advice.",
     ])
     message = "\n".join(lines)
-    response = requests.post(
-        f"https://api.telegram.org/bot{token}/sendMessage",
-        data={"chat_id": chat, "text": message},
-        timeout=30,
-    )
+    response = requests.post(f"https://api.telegram.org/bot{token}/sendMessage",
+                             data={"chat_id": chat, "text": message}, timeout=30)
     response.raise_for_status()
     if not response.json().get("ok"):
         raise RuntimeError(f"Telegram rejected report: {response.text[:400]}")
