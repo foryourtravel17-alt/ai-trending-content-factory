@@ -42,7 +42,8 @@ class DryRunSmokeTest(unittest.TestCase):
             self.assertTrue(ok, reason)
             record = {"signal": signal, "copy": copy, "publishing": {}}
             result = publish(signal, copy, Path(card), record, dry_run=True)
-            self.assertEqual(result["status"], "dry_run")
+            self.assertEqual(result["status"], "generated")
+            self.assertEqual(result["last_run_mode"], "dry_run")
             self.assertEqual(result["publishing"], {})
             self.assertTrue(copy["instagram_caption"])
 
