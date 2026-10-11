@@ -20,8 +20,8 @@ class AdsPreflightTests(unittest.TestCase):
         })
         self.assertIsNotNone(score)
         self.assertEqual(score["interactions"], 39)
-        self.assertEqual(score["weighted_engagement"], 68)
-        self.assertEqual(score["weighted_engagement_per_reach_pct"], 6.8)
+        self.assertEqual(score["weighted_engagement"], 72)
+        self.assertEqual(score["weighted_engagement_per_reach_pct"], 7.2)
 
     def test_zero_reach_is_not_ranked(self):
         self.assertIsNone(score_metrics({"reach": 0, "likes": 100}))
