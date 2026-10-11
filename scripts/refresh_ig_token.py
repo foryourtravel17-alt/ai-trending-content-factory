@@ -23,12 +23,19 @@ def main():
     current = os.getenv("IG_ACCESS_TOKEN", "").strip()
     if not all((app_id, app_secret, current)):
         raise SystemExit("Set META_APP_ID, META_APP_SECRET and IG_ACCESS_TOKEN in your local environment.")
-    response = requests.get("https://graph.facebook.com/v23.0/oauth/access_token", params={
-        "grant_type": "fb_exchange_token", "client_id": app_id,
-        "client_secret": app_secret, "fb_exchange_token": current,
-    }, timeout=30)
-    response.raise_for_status()
-    payload = response.json()
+    try:
+        response = requests.get("https://graph.facebook.com/v23.0/oauth/access_token", params={
+            "grant_type": "fb_exchange_token", "client_id": app_id,
+            "client_secret": app_secret, "fb_exchange_token": current,
+        }, timeout=30)
+    except requests.RequestException as exc:
+        raise SystemExit(f"Meta token exchange failed ({type(exc).__name__}); credentials redacted.") from None
+    if not response.ok:
+        raise SystemExit(f"Meta token exchange failed with HTTP {response.status_code}; response redacted.")
+    try:
+        payload = response.json()
+    except ValueError:
+        raise SystemExit("Meta returned invalid JSON; response redacted.")
     refreshed = payload.get("access_token")
     if not refreshed:
         raise SystemExit("Meta did not return an access_token; inspect the API error without sharing secrets.")
