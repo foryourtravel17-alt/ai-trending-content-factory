@@ -22,6 +22,8 @@ log = logging.getLogger("orchestrator")
 OUTPUT = Path("output")
 DRY_RUN = os.getenv("DRY_RUN", "0").strip().lower() in {"1", "true", "yes"}
 HUMAN_APPROVAL = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
+GENERATE_ONLY = os.getenv("GENERATE_ONLY", "false").strip().lower() == "true"
+PUBLISH_ONLY = os.getenv("PUBLISH_ONLY", "false").strip().lower() == "true"
 
 
 def save_state(state: dict) -> None:
@@ -43,8 +45,7 @@ def _retry_pending(state: dict) -> None:
             if not card_path.exists():
                 log.warning("Pending draft %s has no card image; skipping retry.", signal_id)
                 continue
-            updated = publish(record["signal"], record["copy"], card_path, record,
-                              dry_run=DRY_RUN)
+            updated = publish(record["signal"], record["copy"], card_path, record, dry_run=DRY_RUN)
             state["signals"][signal_id] = updated
             save_state(state)
         except Exception:
@@ -53,9 +54,40 @@ def _retry_pending(state: dict) -> None:
             save_state(state)
 
 
+def _publish_prepared(state: dict) -> int:
+    errors = 0
+    for signal_id, record in list(state.get("signals", {}).items()):
+        if record.get("status") not in {"generated", "publish_failed"}:
+            continue
+        try:
+            card_path = Path(record.get("card_path", ""))
+            if not card_path.exists():
+                raise FileNotFoundError(f"Card image missing for {signal_id}: {card_path}")
+            updated = publish(record["signal"], record["copy"], card_path, record, dry_run=DRY_RUN)
+            state["signals"][signal_id] = updated
+            state.setdefault("runs", []).append({
+                "at": datetime.now(timezone.utc).isoformat(),
+                "signal_id": signal_id, "status": updated.get("status"),
+                "dry_run": DRY_RUN,
+            })
+            save_state(state)
+        except Exception:
+            errors += 1
+            log.exception("Publish failed for prepared signal %s; continuing.", signal_id)
+            record["status"] = "publish_failed"
+            record["last_error"] = "See workflow logs for details."
+            save_state(state)
+    return errors
+
+
 def main() -> int:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     state = load_state()
+    if PUBLISH_ONLY:
+        errors = _publish_prepared(state)
+        log.info("Publish-only run complete. errors=%s dry_run=%s", errors, DRY_RUN)
+        return 1 if errors else 0
+
     _retry_pending(state)
     results = {"checked": 0, "signals": 0, "skipped": 0, "errors": 0}
     candidates = []
@@ -81,7 +113,7 @@ def main() -> int:
     for _, signal, frame in candidates:
         signal_id = signal["signal_id"]
         prior = state.setdefault("signals", {}).get(signal_id)
-        if prior and prior.get("status") not in {"pending_approval"}:
+        if prior and prior.get("status") not in {"pending_approval", "publish_failed"}:
             log.info("Duplicate signal %s already recorded with status=%s; skipped.",
                      signal_id, prior.get("status"))
             results["skipped"] += 1
@@ -98,35 +130,40 @@ def main() -> int:
                 "publishing": {},
             }
             ok, reason = validate(signal, state)
-            if not ok and not (prior and prior.get("status") == "pending_approval" and not HUMAN_APPROVAL):
+            if not ok and not (prior and prior.get("status") in {"pending_approval", "publish_failed"}):
                 log.info("QA rejected %s: %s", signal_id, reason)
                 results["skipped"] += 1
                 continue
-            if prior and prior.get("status") == "pending_approval" and not HUMAN_APPROVAL:
-                record["signal"] = signal
-                record["analyst"] = analyst
-                record["copy"] = copy
-            else:
-                results["signals"] += 1
-            # Persist a pending record before network calls to reduce duplicate posts on retries.
+            record.update({
+                "signal": signal, "analyst": analyst, "copy": copy,
+                "chart_path": str(chart_path), "card_path": str(card_path),
+            })
             state["signals"][signal_id] = record
+            if GENERATE_ONLY:
+                record["status"] = "generated"
+                save_state(state)
+                log.info("Generated chart/card/copy for %s; publishing deferred until after commit.", signal_id)
+                results["signals"] += 1
+                continue
             save_state(state)
             updated = publish(signal, copy, card_path, record, dry_run=DRY_RUN)
             state["signals"][signal_id] = updated
             state.setdefault("runs", []).append({
                 "at": datetime.now(timezone.utc).isoformat(),
-                "signal_id": signal_id, "status": updated.get("status"),
-                "dry_run": DRY_RUN,
+                "signal_id": signal_id, "status": updated.get("status"), "dry_run": DRY_RUN,
             })
             save_state(state)
+            results["signals"] += 1
             log.info("Completed %s with status=%s.", signal_id, updated.get("status"))
         except Exception:
             results["errors"] += 1
             log.exception("Signal %s failed; other symbols continue.", signal_id)
             if signal_id in state.get("signals", {}):
+                state["signals"][signal_id]["status"] = "publish_failed"
                 state["signals"][signal_id]["last_error"] = "See workflow logs for details."
                 save_state(state)
-    log.info("Run summary: %s; dry_run=%s; human_approval=%s", results, DRY_RUN, HUMAN_APPROVAL)
+    log.info("Run summary: %s; dry_run=%s; generate_only=%s; human_approval=%s",
+             results, DRY_RUN, GENERATE_ONLY, HUMAN_APPROVAL)
     if results["errors"] and results["signals"] == 0:
         return 1
     return 0
