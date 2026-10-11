@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: telegram-updates
+  group: market-state
   cancel-in-progress: true
 
 permissions:
