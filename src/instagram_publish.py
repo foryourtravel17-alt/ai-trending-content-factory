@@ -194,18 +194,73 @@ def save_state(content_path, approved):
     )
 
 
+def retry_telegram_mirror(content_path, approved):
+    """Retry only Telegram after a confirmed Instagram success; never republish Instagram."""
+    publishing = approved.setdefault("publishing", {})
+    telegram_state = publishing.setdefault("telegram", {})
+    if telegram_state.get("status") == "published":
+        print("Telegram mirror already published; no-op.")
+        return
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    if not token:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN is required to retry the Telegram mirror.")
+    content_id = str(approved.get("content_id", ""))
+    supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+    object_path = f"reels/{content_id}.mp4"
+    video_url = f"{supabase_url}/storage/v1/object/public/REELS/{urllib.parse.quote(object_path, safe='/')}"
+    social = approved.get("social", {}) or {}
+    caption = str(social.get("caption", ""))
+    hashtags = social.get("hashtags", [])
+    if isinstance(hashtags, list):
+        caption = (caption + "\\n\\n" + " ".join(hashtags)).strip()
+    telegram_url = f"https://api.telegram.org/bot{token}/sendVideo"
+    params = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHANNEL,
+        "video": video_url,
+        "caption": (caption + "\\n\\n🎯 Bullseye Theory\\nLearn | Trade | Earn").strip()[:1024],
+    }).encode()
+    request_obj = urllib.request.Request(telegram_url, data=params, method="POST")
+    try:
+        with urllib.request.urlopen(request_obj, timeout=120) as response:
+            result = json.loads(response.read().decode())
+    except urllib.error.HTTPError as exc:
+        raise RuntimeError(f"Telegram mirror retry failed HTTP {exc.code}; bot token redacted.") from None
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Telegram mirror retry failed ({type(exc).__name__}); bot token redacted.") from None
+    if not result.get("ok"):
+        raise RuntimeError("Telegram mirror retry failed; Telegram did not confirm the message.")
+    message_id = (result.get("result") or {}).get("message_id")
+    if not message_id:
+        raise RuntimeError("Telegram mirror retry returned no message ID.")
+    telegram_state.update({
+        "status": "published",
+        "message_id": message_id,
+        "published_at": datetime.now(timezone.utc).isoformat(),
+    })
+    save_state(content_path, approved)
+    print(f"Telegram mirror retry succeeded for {content_id}; message_id={message_id}.")
+
 def main():
     content_path, approved = load_newest_unpublished_approved()
     if not approved:
         print("No unpublished approved content. Nothing to publish.")
         return
 
-    print(f"Selected newest unpublished approved content: {content_path.name}")
+    print(f"Selected eligible content: {content_path.name}")
+    if is_already_published(approved):
+        retry_telegram_mirror(content_path, approved)
+        return
     ig_user_id = resolve_instagram_user_id()
     print(f"Using Instagram account ID: {ig_user_id}")
 
     content_id = approved["content_id"]
     video_path = Path("output/media") / f"{content_id}.mp4"
+    sidecar_path = Path("output/media") / f"{content_id}.publish.json"
+    if not sidecar_path.exists():
+        raise RuntimeError(f"Publish metadata sidecar is missing: {sidecar_path}")
+    sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+    if sidecar.get("content_id") != content_id or Path(str(sidecar.get("video", ""))).name != video_path.name:
+        raise RuntimeError(f"Publish metadata sidecar does not match approved content: {sidecar_path}")
 
     supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
     supabase_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
@@ -241,8 +296,8 @@ def main():
     print(f"Public Reel URL: {video_url}")
 
     social = approved.get("social", {}) or {}
-    caption = social.get("caption", "")
-    hashtags = social.get("hashtags", [])
+    caption = sidecar.get("caption", social.get("caption", ""))
+    hashtags = sidecar.get("hashtags", social.get("hashtags", []))
     if isinstance(hashtags, list):
         caption = (caption + "\n\n" + " ".join(hashtags)).strip()
 
@@ -289,6 +344,7 @@ def main():
     instagram = publishing.setdefault("instagram", {})
     instagram["status"] = "published_to_instagram"
     instagram["media_id"] = media_id
+    instagram["published_at"] = approved["published_at"]
     save_state(content_path, approved)
 
     telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN")
