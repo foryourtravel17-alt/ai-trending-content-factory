@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: telegram-updates
+  group: market-state
   cancel-in-progress: false
 
 jobs:
