@@ -89,8 +89,8 @@ def _meta_request(method: str, url: str, **kwargs):
 
 
 def _instagram_publish(image_url: str, caption: str) -> str:
-    token = os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip()
-    user_id = os.getenv("IG_USER_ID", os.getenv("INSTAGRAM_USER_ID", "")).strip()
+    token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
+    user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
     if not token or not user_id:
         raise RuntimeError("Instagram credentials missing (IG_ACCESS_TOKEN and IG_USER_ID).")
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
@@ -171,8 +171,8 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         else:
             log.warning("Telegram skipped: TELEGRAM_BOT_TOKEN is not configured.")
     if platforms.get("instagram", {}).get("status") != "published":
-        token = os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip()
-        user_id = os.getenv("IG_USER_ID", os.getenv("INSTAGRAM_USER_ID", "")).strip()
+        token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
+        user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
         if token and user_id:
             try:
                 media_id = _instagram_publish(image_url, copy["instagram_caption"])
