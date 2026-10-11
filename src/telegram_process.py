@@ -93,51 +93,76 @@ def main():
                 print(f"Callback received: {data}")
 
                 if data.startswith("market_approve:") or data.startswith("market_reject:"):
-                    action, signal_id = data.split(":", 1)
-                    record = market_state["signals"].get(signal_id)
-                    if record:
-                        if action == "market_approve":
-                            record["status"] = "generated"
-                            record["approval_status"] = "approved"
-                            record["approved_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-                            if signal_id not in market_approved_ids:
-                                market_approved_ids.append(signal_id)
-                            print(f"Market scenario approved: {signal_id}")
-                        else:
-                            record["status"] = "rejected"
-                            record["approval_status"] = "rejected"
-                            record["rejected_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-                            print(f"Market scenario rejected: {signal_id}")
-                        save_json(MARKET_STATE_FILE, market_state)
-                        try:
-                            api("answerCallbackQuery", {
-                                "callback_query_id": callback_id,
-                                "text": "Approved — publishing will start." if action == "market_approve" else "Rejected — no public post.",
-                                "show_alert": "false",
-                            })
-                        except Exception as exc:
-                            print(f"Callback acknowledgement skipped: {exc}")
-                        message = callback.get("message") or {}
-                        chat_id = message.get("chat", {}).get("id")
-                        message_id = message.get("message_id")
-                        if chat_id and message_id:
+                    parts = data.split(":")
+                    if len(parts) != 4:
+                        print("Rejected unbound market approval callback.")
+                    else:
+                        action, signal_id, version_text, fingerprint = parts
+                        record = market_state["signals"].get(signal_id)
+                        if record:
+                            signal = record.get("signal") or {}
+                            binding_payload = {key: signal.get(key) for key in (
+                                "signal_id", "as_of", "symbol", "direction", "entry", "stop_loss", "tp1", "tp2", "tp3"
+                            )}
+                            expected_hash = hashlib.sha256(
+                                json.dumps(binding_payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+                            ).hexdigest()
+                            binding = record.get("approval_binding") or {}
+                            valid = (
+                                version_text == str(binding.get("version", ""))
+                                and fingerprint == expected_hash[:16]
+                                and binding.get("hash") == expected_hash
+                            )
+                            if not valid:
+                                print(f"Rejected stale or mismatched market callback: {signal_id}")
+                                response_text = "This market draft is stale. Request a fresh draft."
+                            elif record.get("approval_status") in {"approved", "rejected"}:
+                                print(f"Duplicate market callback ignored: {signal_id}")
+                                response_text = "This decision has already been recorded."
+                            elif action == "market_approve":
+                                record["status"] = "generated"
+                                record["approval_status"] = "approved"
+                                record["approved_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                                if signal_id not in market_approved_ids:
+                                    market_approved_ids.append(signal_id)
+                                response_text = "Approved — publishing will start."
+                                print(f"Market scenario approved: {signal_id}")
+                            else:
+                                record["status"] = "rejected"
+                                record["approval_status"] = "rejected"
+                                record["rejected_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                                response_text = "Rejected — no public post."
+                                print(f"Market scenario rejected: {signal_id}")
+                            save_json(MARKET_STATE_FILE, market_state)
                             try:
-                                api("editMessageReplyMarkup", {
-                                    "chat_id": chat_id, "message_id": message_id,
-                                    "reply_markup": json.dumps({"inline_keyboard": []}),
+                                api("answerCallbackQuery", {
+                                    "callback_query_id": callback_id,
+                                    "text": response_text,
+                                    "show_alert": "false",
                                 })
                             except Exception as exc:
-                                print(f"Button removal skipped: {exc}")
-                    else:
-                        print(f"Market signal not found in state: {signal_id}")
-                        try:
-                            api("answerCallbackQuery", {
-                                "callback_query_id": callback_id,
-                                "text": "This draft is no longer available.",
-                                "show_alert": "false",
-                            })
-                        except Exception:
-                            pass
+                                print(f"Callback acknowledgement skipped: {type(exc).__name__}")
+                            message = callback.get("message") or {}
+                            chat_id = message.get("chat", {}).get("id")
+                            message_id = message.get("message_id")
+                            if chat_id and message_id:
+                                try:
+                                    api("editMessageReplyMarkup", {
+                                        "chat_id": chat_id, "message_id": message_id,
+                                        "reply_markup": json.dumps({"inline_keyboard": []}),
+                                    })
+                                except Exception as exc:
+                                    print(f"Button removal skipped: {type(exc).__name__}")
+                        else:
+                            print(f"Market signal not found in state: {signal_id}")
+                            try:
+                                api("answerCallbackQuery", {
+                                    "callback_query_id": callback_id,
+                                    "text": "This draft is no longer available.",
+                                    "show_alert": "false",
+                                })
+                            except Exception:
+                                pass
                 else:
                     parts = data.split(":")
                     if len(parts) == 4 and parts[0] in ("approve", "reject"):
