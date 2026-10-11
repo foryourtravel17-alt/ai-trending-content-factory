@@ -24,6 +24,7 @@ DRY_RUN = os.getenv("DRY_RUN", "0").strip().lower() in {"1", "true", "yes"}
 HUMAN_APPROVAL = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
 GENERATE_ONLY = os.getenv("GENERATE_ONLY", "false").strip().lower() == "true"
 PUBLISH_ONLY = os.getenv("PUBLISH_ONLY", "false").strip().lower() == "true"
+PUBLISH_ONLY_SIGNAL_ID = os.getenv("PUBLISH_ONLY_SIGNAL_ID", "").strip()
 
 
 def save_state(state: dict) -> None:
@@ -34,7 +35,6 @@ def save_state(state: dict) -> None:
 
 
 def _retry_pending(state: dict) -> None:
-    """When approval mode is switched off, publish prior DM drafts without regenerating."""
     if HUMAN_APPROVAL or DRY_RUN:
         return
     for signal_id, record in list(state.get("signals", {}).items()):
@@ -57,7 +57,9 @@ def _retry_pending(state: dict) -> None:
 def _publish_prepared(state: dict) -> int:
     errors = 0
     for signal_id, record in list(state.get("signals", {}).items()):
-        if record.get("status") not in {"generated", "publish_failed"}:
+        if PUBLISH_ONLY_SIGNAL_ID and signal_id != PUBLISH_ONLY_SIGNAL_ID:
+            continue
+        if record.get("status") not in {"generated", "publish_failed", "partial"}:
             continue
         try:
             card_path = Path(record.get("card_path", ""))
