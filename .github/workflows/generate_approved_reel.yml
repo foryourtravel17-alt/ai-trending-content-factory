@@ -79,12 +79,16 @@ jobs:
                   and not data.get("reel_generated", False)
                   and not video.exists()
               ):
-                  found = True
-                  break
+                  found_ids.append(content_id)
 
+          found = bool(found_ids)
+          Path("output/latest_reel_generated.json").write_text(
+              json.dumps({"content_ids": found_ids, "checked_at": datetime.now(timezone.utc).isoformat()}, indent=2) + "\n",
+              encoding="utf-8",
+          )
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"has_approved={str(found).lower()}\n")
-          print(f"Newly approved content found: {found}")
+          print(f"Newly approved content found: {found}; candidate count={len(found_ids)}")
           PY
 
       - name: Commit candidate manifest
