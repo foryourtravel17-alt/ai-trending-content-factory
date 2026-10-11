@@ -58,7 +58,7 @@ def _expire_if_stale(signal_id: str, record: dict) -> bool:
 
 
 def _retry_pending(state: dict) -> None:
-    if HUMAN_APPROVAL or DRY_RUN:
+    if DRY_RUN:
         return
     for signal_id, record in list(state.get("signals", {}).items()):
         if record.get("status") != "pending_approval":
@@ -66,6 +66,8 @@ def _retry_pending(state: dict) -> None:
         try:
             if _expire_if_stale(signal_id, record):
                 save_state(state)
+                continue
+            if HUMAN_APPROVAL:
                 continue
             card_path = Path(record.get("card_path", ""))
             if not card_path.exists():
