@@ -31,6 +31,8 @@ def api(method, params):
             result = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         raise RuntimeError(f"Telegram API HTTP {exc.code}; response redacted to protect bot token.") from None
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Telegram API request failed ({type(exc).__name__}); bot token redacted.") from None
 
     if not result.get("ok"):
         raise RuntimeError(f"Telegram API error in {method}: {result}")
