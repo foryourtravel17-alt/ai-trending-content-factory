@@ -40,6 +40,13 @@ class AdsPreflightTests(unittest.TestCase):
                     "instagram": {"status": "published_to_instagram", "media_id": "ig-1"}
                 },
             }
+            failed_with_media_id = {
+                "content_id": "failed-1",
+                "created_at": (now - timedelta(hours=1)).isoformat(),
+                "status": "publish_failed",
+                "topic": {"title": "Must not be ranked"},
+                "publishing": {"instagram": {"status": "failed", "media_id": "ig-failed"}},
+            }
             unposted = {
                 "content_id": "draft-1",
                 "created_at": (now - timedelta(hours=2)).isoformat(),
@@ -56,6 +63,7 @@ class AdsPreflightTests(unittest.TestCase):
             (root / "content_1.json").write_text(json.dumps(published), encoding="utf-8")
             (root / "content_2.json").write_text(json.dumps(unposted), encoding="utf-8")
             (root / "content_3.json").write_text(json.dumps(stale), encoding="utf-8")
+            (root / "content_4.json").write_text(json.dumps(failed_with_media_id), encoding="utf-8")
 
             result = load_published_posts(root, now=now)
             self.assertEqual(len(result), 1)
@@ -81,6 +89,17 @@ class AdsPreflightTests(unittest.TestCase):
         )
         self.assertEqual(get.call_args.args[0], "https://graph.facebook.com/v23.0/media-1/insights")
         self.assertEqual(get.call_args.kwargs["timeout"], 20)
+
+    def test_early_data_does_not_recommend_boosting(self):
+        now = datetime(2026, 10, 12, 4, 0, tzinfo=timezone.utc)
+        post = {
+            "media_id": "ig-early", "title": "One early post", "created_at": now.isoformat(),
+            "permalink": "", "hook": "", "content_role": "educational", "content_id": "early",
+        }
+        message = build_report([post], {"ig-early": {"reach": 100, "likes": 10}}, now=now)
+        self.assertIn("Readiness: EARLY DATA", message)
+        self.assertIn("no boost is recommended yet", message)
+        self.assertIn("does not establish course sales", message)
 
     def test_report_never_says_campaign_was_launched(self):
         now = datetime(2026, 10, 12, 4, 0, tzinfo=timezone.utc)
