@@ -29,8 +29,8 @@ jobs:
       DRY_RUN: ${{ inputs.dry_run || '0' }}
       HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'false' }}
       LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
-      LLM_BASE: ${{ vars.LLM_BASE || 'https://api.venice.ai/api/v1' }}
-      LLM_MODEL: ${{ vars.LLM_MODEL || 'llama-3.3-70b' }}
+      LLM_BASE: ${{ vars.LLM_BASE || secrets.LLM_BASE || 'https://api.venice.ai/api/v1' }}
+      LLM_MODEL: ${{ vars.LLM_MODEL || secrets.LLM_MODEL || 'llama-3.3-70b' }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
