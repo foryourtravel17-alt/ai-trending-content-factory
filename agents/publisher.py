@@ -25,8 +25,11 @@ def public_image_url(image_path: Path) -> str:
         return f"https://{gh_user}.github.io/{gh_repo}/output/{quote(image_path.name)}"
     repository = os.getenv("GITHUB_REPOSITORY", "").strip()
     if repository:
+        owner, separator, repo = repository.partition("/")
+        if separator:
+            return f"https://{owner}.github.io/{repo}/output/{quote(image_path.name)}"
         return f"https://raw.githubusercontent.com/{repository}/main/output/{quote(image_path.name)}"
-    raise RuntimeError("Set GH_USER and GH_REPO, or IMAGE_BASE_URL, to create a public image URL.")
+    raise RuntimeError("Set GITHUB_REPOSITORY, GH_USER/GH_REPO, or IMAGE_BASE_URL to create a public image URL.")
 
 
 def _accessible_image_url(image_path: Path) -> str:
@@ -41,7 +44,14 @@ def _accessible_image_url(image_path: Path) -> str:
         candidates.append(f"https://{gh_user}.github.io/{gh_repo}/output/{quote(image_path.name)}")
     repository = os.getenv("GITHUB_REPOSITORY", "").strip()
     if repository:
-        candidates.append(f"https://raw.githubusercontent.com/{repository}/main/output/{quote(image_path.name)}")
+        owner, separator, repo = repository.partition("/")
+        if separator:
+            pages_candidate = f"https://{owner}.github.io/{repo}/output/{quote(image_path.name)}"
+            if pages_candidate not in candidates:
+                candidates.append(pages_candidate)
+        raw_candidate = f"https://raw.githubusercontent.com/{repository}/main/output/{quote(image_path.name)}"
+        if raw_candidate not in candidates:
+            candidates.append(raw_candidate)
     if not candidates:
         raise RuntimeError("Set GH_USER and GH_REPO, or IMAGE_BASE_URL, to create a public image URL.")
     for candidate in candidates:
