@@ -1,6 +1,7 @@
 """Idempotent Telegram and Instagram publishing for generated signal cards."""
 from __future__ import annotations
 
+import json
 import logging
 import os
 import time
@@ -118,13 +119,18 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             chat_id = os.getenv("TELEGRAM_CHAT_ID", "").strip()
             if not chat_id:
                 raise RuntimeError("HUMAN_APPROVAL=true requires TELEGRAM_CHAT_ID for draft delivery.")
+            keyboard = {"inline_keyboard": [[
+                {"text": "✅ APPROVE & PUBLISH", "callback_data": f"market_approve:{signal['signal_id']}"},
+                {"text": "❌ REJECT", "callback_data": f"market_reject:{signal['signal_id']}"},
+            ]]}
             result = _telegram("sendPhoto", {
                 "chat_id": chat_id, "photo": image_url,
-                "caption": ("📝 DRAFT — approval mode is ON\n\n" + telegram_caption)[:1024],
+                "caption": ("📝 DRAFT — choose approve or reject\n\n" + telegram_caption)[:1024],
                 "parse_mode": "HTML",
+                "reply_markup": json.dumps(keyboard, separators=(",", ":")),
             })
             platforms["telegram_dm"] = {"status": "sent", "message_id": result.get("message_id")}
-            log.info("Draft sent to Telegram DM for %s; public publishing withheld.", signal["signal_id"])
+            log.info("Draft sent to Telegram DM for %s; waiting for button approval.", signal["signal_id"])
         record["status"] = "pending_approval"
         record["image_url"] = image_url
         return record
