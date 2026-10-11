@@ -92,7 +92,6 @@ def compute_indicators(frame: pd.DataFrame) -> pd.DataFrame:
     typical = (df["High"] + df["Low"] + df["Close"]) / 3
     vol = pd.to_numeric(df["Volume"], errors="coerce").fillna(0)
     if vol.sum() > 0:
-        # Intraday VWAP resets each trading date; this also works for 24/7 crypto.
         sessions = pd.Index(df.index.date)
         numerator = (typical * vol).groupby(sessions).cumsum()
         denominator = vol.groupby(sessions).cumsum().replace(0, np.nan)
@@ -131,8 +130,7 @@ def make_signal(symbol: str, label: str, region: str, frame: pd.DataFrame) -> di
     if getattr(timestamp, "tzinfo", None) is None:
         timestamp = timestamp.tz_localize("UTC")
     timestamp_utc = timestamp.tz_convert("UTC").to_pydatetime()
-    # Refuse stale candles. Weekends/holidays can legitimately leave the last bar older.
-    max_age_hours = 96 if symbol.endswith("=X") or symbol in {"^NSEI", "^NSEBANK", "SPY", "^NDX", "GC=F"} else 36
+    max_age_hours = 36 if symbol in {"BTC-USD", "ETH-USD"} else 96
     age_hours = (datetime.now(timezone.utc) - timestamp_utc).total_seconds() / 3600
     if age_hours > max_age_hours:
         raise ValueError(f"Latest candle is stale ({age_hours:.1f} hours old).")
