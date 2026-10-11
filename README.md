@@ -59,6 +59,7 @@ Required for Instagram publishing:
 
 Optional/compatibility:
 - `LLM_API_KEY` — Venice/OpenAI-compatible API key; deterministic fallback works without it
+- `LLM_BASE`, `LLM_MODEL` — optional LLM endpoint/model settings; these are non-secret configuration and are best stored as Variables, but the workflow also accepts them as Secrets
 - `GH_USER`, `GH_REPO` — public GitHub username and repository name (these are public metadata; repository Variables are also supported by the approval workflow)
 - `META_SYSTEM_USER_TOKEN`, `INSTAGRAM_USER_ID` — compatibility names for the existing legacy publisher
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — required by the existing Reel publishing workflow, not the new market-card publisher
