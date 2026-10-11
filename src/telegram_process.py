@@ -64,7 +64,7 @@ def main():
     queue_by_id = {item.get("content_id"): item for item in queue.get("items", [])}
     deadline = time.time() + max(5, int(os.getenv("POLL_SECONDS", "240")))
     processed_any = False
-    market_approved = None
+    market_approved_ids = []
 
     while time.time() < deadline:
         result = api(
@@ -98,7 +98,8 @@ def main():
                             record["status"] = "generated"
                             record["approval_status"] = "approved"
                             record["approved_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-                            market_approved = signal_id
+                            if signal_id not in market_approved_ids:
+                                market_approved_ids.append(signal_id)
                             print(f"Market scenario approved: {signal_id}")
                         else:
                             record["status"] = "rejected"
@@ -183,10 +184,11 @@ def main():
     queue["items"] = list(queue_by_id.values())
     save_json(QUEUE_FILE, queue)
     save_json(STATE_FILE, state)
-    if market_approved:
-        write_output({"market_approved": "true", "market_signal_id": market_approved})
-    else:
-        write_output({"market_approved": "false", "market_signal_id": ""})
+    write_output({
+        "market_approved": "true" if market_approved_ids else "false",
+        "market_signal_id": market_approved_ids[0] if market_approved_ids else "",
+        "market_approved_ids": ",".join(market_approved_ids),
+    })
 
     if processed_any:
         print(f"Saved next offset: {state['update_offset']}")
