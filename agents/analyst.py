@@ -23,22 +23,35 @@ def analyze(signal: dict) -> dict:
     key = os.getenv("LLM_API_KEY", "").strip()
     model = os.getenv("LLM_MODEL", DEFAULT_MODEL).strip()
     enabled = os.getenv("LLM_ENABLED", "true" if key else "false").strip().lower() == "true"
-    fallback = {
-        "view": (
-            f"I’m watching {signal['label']} through structure, momentum, and defined risk. "
-            f"EMA20 is {'above' if signal['ema20'] > signal['ema50'] else 'below'} EMA50, "
-            f"while RSI(14) is {signal['rsi14']:.1f}. My {signal['direction'].lower()} scenario "
-            "only stays relevant while the underlying structure holds; the stop is an invalidation level, not a promise."
-        ),
-        "hook": "Structure first. Risk always.",
-        "caveat": "A rule-based screen is not a prediction; price can invalidate this scenario.",
-    }
+    if signal.get("region") == "INDIA":
+        fallback = {
+            "view": (
+                f"Main {signal['label']} par {signal['direction'].lower()} scenario dekh raha hoon. "
+                f"EMA20 EMA50 ke {'upar' if signal['ema20'] > signal['ema50'] else 'neeche'} hai; "
+                f"RSI(14) {signal['rsi14']:.1f} hai. Structure hold nahi hua toh setup invalid ho sakta hai."
+            ),
+            "hook": "Structure first. Risk always.",
+            "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.",
+        }
+    else:
+        fallback = {
+            "view": (
+                f"I’m watching {signal['label']} through structure, momentum, and defined risk. "
+                f"EMA20 is {'above' if signal['ema20'] > signal['ema50'] else 'below'} EMA50, "
+                f"while RSI(14) is {signal['rsi14']:.1f}. The scenario is invalid if structure fails."
+            ),
+            "hook": "Structure first. Risk always.",
+            "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario.",
+        }
     if not enabled or not key:
         return fallback
     system = _voice().replace("{CHANNEL}", os.getenv("CHANNEL", "Bullseye Theory"))
     system += (
         "\nReturn JSON with keys view, hook, caveat. Use only supplied fields; "
-        "do not claim a live news catalyst or guarantee a target."
+        "do not claim a live news catalyst or guarantee a target. "
+        "For signal.language='Hinglish', write view and caveat in natural Roman-script Hinglish "
+        "mixed with common English trading terms. For English, write natural English. "
+        "The hook must be a short simple English line understood by both Indian and global audiences."
     )
     payload = {
         "model": model, "temperature": 0.35, "response_format": {"type": "json_object"},
@@ -60,10 +73,10 @@ def analyze(signal: dict) -> dict:
         if not isinstance(result, dict) or not result.get("view"):
             raise ValueError("LLM response missing view")
         return {
-            "view": str(result["view"]).strip(),
-            "hook": str(result.get("hook") or fallback["hook"]).strip(),
-            "caveat": str(result.get("caveat") or fallback["caveat"]).strip(),
+            "view": str(result["view"]).strip()[:260],
+            "hook": str(result.get("hook") or fallback["hook"]).strip()[:100],
+            "caveat": str(result.get("caveat") or fallback["caveat"]).strip()[:130],
         }
     except Exception as exc:
-        log.warning("LLM analysis failed; using deterministic analyst fallback: %s", exc)
+        log.warning("LLM analysis failed; using deterministic analyst fallback (%s).", type(exc).__name__)
         return fallback
