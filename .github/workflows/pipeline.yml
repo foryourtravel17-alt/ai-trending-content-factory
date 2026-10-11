@@ -29,7 +29,9 @@ jobs:
       - name: Run content pipeline
         env:
           MOCK_MODE: "true"
+          # Auto-process only content that has already passed the approval gate.
           AUTO_PUBLISH_ENABLED: "true"
+          HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'true' }}
           CONTENT_BATCH_SIZE: "1"
           # Optional free-first LLM layer; remains disabled unless explicitly enabled.
           LLM_ENABLED: ${{ vars.LLM_ENABLED || 'false' }}
