@@ -12,7 +12,7 @@ A free-tier-first GitHub Actions content factory for Bullseye Theory. The origin
 - `src/instagram_publish.py`: existing Reel publisher through Meta Graph API and Supabase.
 - Existing workflows continue to run independently: `pipeline.yml`, `generate_approved_reel.yml`, `instagram_publish.yml`, token health, failure watchdog, daily report, and Ritu workflow.
 
-The legacy workflow currently uses Python 3.12 and its existing Meta/Supabase secrets. The new market workflow uses Python 3.11 and does not rewrite the legacy Reel pipeline.
+The legacy workflow uses Python 3.12 and the market workflow uses Python 3.11. Both use `config/env.py` to resolve supported Instagram credential aliases. If `HUMAN_APPROVAL` is unset or ambiguous, approval is required.
 
 ## New market-content factory
 
@@ -39,7 +39,7 @@ The legacy workflow currently uses Python 3.12 and its existing Meta/Supabase se
 
 The workflow first generates and commits PNGs/state, then publishes. That order allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. It also supports manual dispatch with `dry_run=true`.
 
-**Important hosting prerequisite:** the repository is currently private. Instagram cannot fetch a private-repository raw GitHub URL. Before live Instagram posting, enable a publicly reachable GitHub Pages site if your GitHub plan supports it, or set `IMAGE_BASE_URL` to another public HTTPS image host. The publisher checks URL reachability and fails rather than posting a broken image.
+**Public image hosting:** this repository is public. The market publisher checks candidate image URLs with HTTP HEAD and fails closed if the card is not reachable. `IMAGE_BASE_URL` should point to the public GitHub Pages `/output` path or another public HTTPS image host. Confirm the exact generated card URL is reachable before enabling public publishing.
 
 `.github/workflows/market_approval_poll.yml` checks Telegram approval buttons every 30 minutes. If `HUMAN_APPROVAL=true`, market drafts go to the Telegram chat with **APPROVE & PUBLISH** and **REJECT** buttons. The existing Telegram callback processor handles both legacy Reel approvals and new market approvals. Both callback workflows share a concurrency group so they do not poll Telegram updates at the same time.
 
@@ -56,19 +56,19 @@ Required for Telegram:
 - `TELEGRAM_CHAT_ID` — your private Telegram chat ID for drafts/reports
 
 Required for Instagram publishing:
-- `IG_USER_ID` — Instagram professional account ID
-- `IG_ACCESS_TOKEN` — valid long-lived token with content-publishing permission
+- `IG_USER_ID` — optional canonical Instagram professional account ID; aliases are supported below
+- `IG_ACCESS_TOKEN` — optional canonical token; aliases are supported below
 
 Optional/compatibility:
 - `LLM_API_KEY` — Venice/OpenAI-compatible API key; deterministic fallback works without it
 - `LLM_BASE`, `LLM_MODEL` — optional LLM endpoint/model settings; these are non-secret configuration and are best stored as Variables, but the workflow also accepts them as Secrets
 - `GH_USER`, `GH_REPO` — public GitHub username and repository name (these are public metadata; repository Variables are also supported by the approval workflow)
-- `META_SYSTEM_USER_TOKEN`, `INSTAGRAM_USER_ID` — compatibility names for the existing legacy publisher
+- `META_SYSTEM_USER_TOKEN`, `INSTAGRAM_USER_ID`, `INSTAGRAM_ACCESS_TOKEN` — supported credential aliases for both pipelines; the alias layer resolves `IG_USER_ID` before `INSTAGRAM_USER_ID`, and `IG_ACCESS_TOKEN` before `META_SYSTEM_USER_TOKEN` before `INSTAGRAM_ACCESS_TOKEN`
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — required by the existing Reel publishing workflow, not the new market-card publisher
 - `META_APP_ID`, `META_APP_SECRET` — only needed locally by the token refresh helper; never commit them
 
 Recommended repository **Variables** (Settings → Secrets and variables → Actions → Variables):
-- `HUMAN_APPROVAL` = `false` for full auto, or `true` to DM drafts first
+- `HUMAN_APPROVAL` = `true` (recommended and fail-closed default). Public publishing requires an explicit callback bound to the exact content/signal ID and version/hash. Set `false` only for an intentional, explicitly configured automation mode after testing
 - `LLM_ENABLED` = `true` to use the configured LLM; fallback copy works if unavailable
 - `LLM_BASE` = `https://api.venice.ai/api/v1` (or your OpenAI-compatible base URL)
 - `LLM_MODEL` = your selected model, default `llama-3.3-70b`
