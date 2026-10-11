@@ -54,7 +54,6 @@ jobs:
           GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
           GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
           IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
         run: python -m src.orchestrator
 
       - name: Commit approval and publish state
