@@ -683,7 +683,7 @@ def main():
         json.dumps({
             "content_ids": [content.get("content_id")],
             "generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-        }, indent=2) + "\\n",
+        }, indent=2) + "\n",
         encoding="utf-8",
     )
 
