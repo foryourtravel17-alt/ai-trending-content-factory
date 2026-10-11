@@ -41,7 +41,7 @@ The workflow first generates and commits PNGs/state, then publishes. That order 
 
 `.github/workflows/market_approval_poll.yml` checks Telegram approval buttons every 30 minutes. If `HUMAN_APPROVAL=true`, market drafts go to the Telegram chat with **APPROVE & PUBLISH** and **REJECT** buttons. The existing Telegram callback processor handles both legacy Reel approvals and new market approvals. Both callback workflows share a concurrency group so they do not poll Telegram updates at the same time.
 
-`.github/workflows/weekly_report.yml` sends a Friday Telegram report. It reports publishing counts and only computes an R summary when explicit outcome records exist. It does not claim target hits, P&L, reach, or engagement metrics that were not actually recorded. Instagram reach/likes require a separate Insights permission/integration.
+`.github/workflows/weekly_report.yml` sends a Friday Telegram report. It estimates hypothetical signal outcomes from post-signal hourly OHLC (conservatively counting same-candle stop/target ambiguity as a stop) and fetches Instagram Insights when permissions allow. This is not actual broker P&L; the report clearly labels it as scenario analysis.
 
 ## Setup checklist
 
