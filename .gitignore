@@ -1,0 +1,13 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Generated animation frame intermediates: keep MP4 and publish/state JSON
+output/media/_frames/

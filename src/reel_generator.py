@@ -339,10 +339,15 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
 
 def approved_items():
     items = []
+    allowed_ids = None
+    if "GENERATED_CONTENT_IDS" in os.environ:
+        allowed_ids = {value.strip() for value in os.getenv("GENERATED_CONTENT_IDS", "").split(",") if value.strip()}
     for path in OUTPUT_DIR.glob("content_*.json"):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
+            continue
+        if allowed_ids is not None and data.get("content_id") not in allowed_ids:
             continue
         if (
             data.get("status") == "approved_for_publishing"
@@ -673,6 +678,14 @@ def main():
     path, content = items[0]
     print(f"Using approved content: {path}")
     build(content)
+    manifest_path = OUTPUT_DIR / "latest_reel_generated.json"
+    manifest_path.write_text(
+        json.dumps({
+            "content_ids": [content.get("content_id")],
+            "generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        }, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

@@ -44,7 +44,16 @@ jobs:
           from datetime import datetime, timezone, timedelta
           from pathlib import Path
 
-          found = False
+          found_ids = []
+          eligible_ids = None
+          if os.getenv("GITHUB_EVENT_NAME") == "workflow_run":
+              try:
+                  manifest = json.loads(Path("output/latest_generated.json").read_text(encoding="utf-8"))
+                  eligible_ids = set(manifest.get("content_ids", []))
+              except (OSError, json.JSONDecodeError, AttributeError):
+                  eligible_ids = set()
+              with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+                  env_file.write("GENERATED_CONTENT_IDS=" + ",".join(sorted(eligible_ids)) + "\\n")
           now = datetime.now(timezone.utc)
           for path in sorted(Path("output").glob("content_*.json")):
               try:
@@ -60,6 +69,8 @@ jobs:
                   continue
               fact_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
               content_id = data.get("content_id", path.stem)
+              if eligible_ids is not None and content_id not in eligible_ids:
+                  continue
               video = Path("output/media") / f"{content_id}.mp4"
               if (
                   data.get("status") == "approved_for_publishing"
@@ -68,13 +79,30 @@ jobs:
                   and not data.get("reel_generated", False)
                   and not video.exists()
               ):
-                  found = True
-                  break
+                  found_ids.append(content_id)
 
+          found = bool(found_ids)
+          Path("output/latest_reel_generated.json").write_text(
+              json.dumps({"content_ids": found_ids, "checked_at": datetime.now(timezone.utc).isoformat()}, indent=2) + "\n",
+              encoding="utf-8",
+          )
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"has_approved={str(found).lower()}\n")
-          print(f"Newly approved content found: {found}")
+          print(f"Newly approved content found: {found}; candidate count={len(found_ids)}")
           PY
+
+      - name: Commit candidate manifest
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/latest_reel_generated.json
+          if git diff --cached --quiet; then
+            echo "Candidate manifest unchanged."
+          else
+            git commit -m "chore: record approved Reel candidates for this run"
+            git push
+          fi
 
       - name: Generate approved Reel
         if: steps.approval_check.outputs.has_approved == 'true'
@@ -109,7 +137,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/media/ output/content_*.json
+          git add output/media/ output/content_*.json output/latest_reel_generated.json
           if git diff --cached --quiet; then
             echo "No Reel/state changes to commit."
           else

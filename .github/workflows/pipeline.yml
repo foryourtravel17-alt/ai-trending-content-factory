@@ -29,7 +29,9 @@ jobs:
       - name: Run content pipeline
         env:
           MOCK_MODE: "true"
+          # Auto-process only content that has already passed the approval gate.
           AUTO_PUBLISH_ENABLED: "true"
+          HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'true' }}
           CONTENT_BATCH_SIZE: "1"
           # Optional free-first LLM layer; remains disabled unless explicitly enabled.
           LLM_ENABLED: ${{ vars.LLM_ENABLED || 'false' }}
@@ -48,6 +50,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Remove previously committed procedural frame intermediates; keep MP4s and state JSON.
+          git rm -r --ignore-unmatch output/media/_frames
           git add output/
           if git diff --cached --quiet; then
             echo "No output changes to commit."

@@ -23,12 +23,13 @@ concurrency:
 
 jobs:
   generate-and-publish:
+    if: github.ref == 'refs/heads/main' || inputs.dry_run == true
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
       DRY_RUN: ${{ inputs.dry_run || '0' }}
-      HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'false' }}
-      LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
+      HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'true' }}
+      LLM_ENABLED: ${{ vars.LLM_ENABLED || 'false' }}
       LLM_BASE: ${{ vars.LLM_BASE || secrets.LLM_BASE || 'https://api.venice.ai/api/v1' }}
       LLM_MODEL: ${{ vars.LLM_MODEL || secrets.LLM_MODEL || 'llama-3.3-70b' }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
@@ -37,6 +38,7 @@ jobs:
       IG_USER_ID: ${{ secrets.IG_USER_ID }}
       IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
       INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+      INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
       META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
       META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
       GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
@@ -65,6 +67,7 @@ jobs:
         run: python -m src.orchestrator
 
       - name: Commit generated images and state before publishing
+        if: inputs.dry_run != true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -83,8 +86,19 @@ jobs:
           PUBLISH_ONLY: "true"
         run: python -m src.orchestrator
 
+      - name: Upload dry-run cards and state for inspection
+        if: inputs.dry_run == true
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-dry-run-${{ github.run_id }}
+          path: |
+            output/*.png
+            data/state.json
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Commit publish results
-        if: always()
+        if: always() && inputs.dry_run != true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

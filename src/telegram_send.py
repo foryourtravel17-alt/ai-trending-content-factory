@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone, timedelta
 
 OUTPUT = Path("output")
 QUEUE_FILE = OUTPUT / "approval_queue.json"
@@ -77,7 +78,29 @@ for item in items:
         continue
 
     approval = content.get("approval", {})
+    fact_status = str((content.get("fact_check") or {}).get("status", "")).lower()
+    if fact_status not in {"passed", "verified", "approved"}:
+        print(f"Not sending approval button for fact-check review item: {content_id} ({fact_status or 'missing status'}).")
+        continue
     if approval.get("status") != "pending":
+        continue
+    try:
+        created_at = datetime.fromisoformat(str(content.get("created_at", "")).replace("Z", "+00:00"))
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+        age = datetime.now(timezone.utc) - created_at.astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        age = timedelta(days=999)
+    if age < timedelta(0) or age > timedelta(hours=24):
+        content["status"] = "expired"
+        approval["status"] = "expired"
+        content["approval"] = approval
+        content["expired_at"] = datetime.now(timezone.utc).isoformat()
+        content["expiration_reason"] = "Approval request expired before delivery; content is older than 24 hours."
+        save_json(OUTPUT / f"{content_id}.json", content)
+        item["status"] = "expired"
+        item["processed"] = True
+        print(f"Marked stale approval request expired: {content_id}.")
         continue
 
     topic = content.get("topic", {})
@@ -105,10 +128,17 @@ for item in items:
     if len(text) > 3900:
         text = text[:3900] + "\n\n<i>[Message shortened]</i>"
 
+    approval_meta = content.get("approval") or {}
+    version = int(approval_meta.get("version", content.get("content_version", 1)))
+    content_hash = str(approval_meta.get("content_hash", ""))
+    if not content_hash:
+        print(f"Skipping approval request without a version/hash binding: {content_id}")
+        continue
+    fingerprint = content_hash[:16]
     keyboard = {
         "inline_keyboard": [[
-            {"text": "✅ APPROVE", "callback_data": f"approve:{content_id}"},
-            {"text": "❌ REJECT", "callback_data": f"reject:{content_id}"},
+            {"text": "✅ APPROVE", "callback_data": f"approve:{content_id}:{version}:{fingerprint}"},
+            {"text": "❌ REJECT", "callback_data": f"reject:{content_id}:{version}:{fingerprint}"},
         ]]
     }
 

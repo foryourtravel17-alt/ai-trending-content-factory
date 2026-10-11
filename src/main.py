@@ -11,8 +11,11 @@ financial advice, trade signals, or guaranteed-return claims.
 
 import json
 import os
-from datetime import datetime, timezone
+import hashlib
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+from config.env import human_approval_required
 
 from free_llm_router import generate_json
 
@@ -20,6 +23,9 @@ BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
 MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
 AUTO_PUBLISH_ENABLED = os.getenv("AUTO_PUBLISH_ENABLED", "false").lower() == "true"
+HUMAN_APPROVAL = human_approval_required()
+TOPIC_HISTORY_PATH = OUTPUT_DIR / "recent_topics.json"
+TOPIC_REPEAT_DAYS = 10
 CONTENT_BATCH_SIZE = max(1, min(int(os.getenv("CONTENT_BATCH_SIZE", "1")), 3))
 
 PHILOSOPHY = "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN"
@@ -354,6 +360,47 @@ TOPICS = [
 
 
 
+# Additional evergreen topics keep the ten-day no-repeat policy feasible at three runs/day.
+_ADDITIONAL_TOPIC_SEEDS = [
+    ("Why Backtesting Needs Out-of-Sample Validation", "Process", "A strategy that only works on the data you tested may be overfit.", "Separate the data used to develop a trading idea from the data used to evaluate it. Out-of-sample checks can reveal whether a pattern generalizes, though they cannot guarantee future performance."),
+    ("The Difference Between Volatility and Direction", "Market Context", "A market can move a lot without giving a clear direction.", "Volatility describes the scale of price movement, not whether the next move will be up or down. Keep directional bias separate from the question of how quickly prices are changing."),
+    ("Why Candlestick Patterns Need Context", "Price Action", "A candle pattern without context is only a shape.", "Candlestick formations are observations, not guarantees. Interpret them alongside market structure, timeframe, location, and follow-through rather than treating a single candle as a complete trading thesis."),
+    ("How Timeframes Can Tell Different Stories", "Market Structure", "The five-minute chart and daily chart can disagree without either being broken.", "Different timeframes show different parts of market behavior. Define which timeframe provides context and which provides detail before drawing conclusions from conflicting signals."),
+    ("What Slippage Means in Fast Markets", "Risk Management", "The price you expect is not always the price you receive.", "Slippage is the difference between an expected execution price and the actual fill. Fast markets, thin liquidity, and order type can affect execution, so plans should account for uncertainty."),
+    ("Why Stop Placement Is About Invalidation", "Risk Management", "A stop should relate to the idea becoming invalid, not to hope.", "A risk limit should be connected to the assumptions behind an analysis. No placement method guarantees a small loss in every market condition, especially when gaps or slippage occur."),
+    ("How to Recognize Confirmation Bias on a Chart", "Trading Psychology", "If you only notice evidence that supports your idea, pause.", "Confirmation bias makes people favor information that agrees with an existing belief. Deliberately write down what would disprove a thesis and review opposing evidence before deciding how strong the idea is."),
+    ("Why a Missed Move Is Not a Trading Failure", "Trading Psychology", "Missing a move can be better than breaking your process.", "A disciplined process cannot capture every market move. Chasing after price has moved can create decisions that were never part of a plan. Review the process, not the emotional urge to catch up."),
+    ("What a Trading Drawdown Actually Measures", "Risk Management", "A drawdown describes a decline from a previous equity peak.", "Drawdown helps describe the depth of a decline from a prior peak. It is not a prediction of recovery time, and hypothetical drawdowns should never be confused with a real broker record."),
+    ("Why Correlated Markets Can Increase Exposure", "Risk Management", "Different tickers do not always mean different risks.", "Assets can move together during particular regimes. Multiple positions may share exposure to the same underlying driver, so diversification should be assessed by risk behavior rather than by counting symbols."),
+    ("The Difference Between a Breakout and Follow-Through", "Price Action", "A level can break once and still fail to establish direction.", "A breakout is an event; follow-through is additional behavior after that event. Neither removes uncertainty. Observe closes, subsequent price action, and the broader structure before describing a move."),
+    ("How to Build a Pre-Analysis Checklist", "Process", "A checklist helps you slow down before forming a market view.", "A useful checklist can cover context, structure, volatility, key levels, risk assumptions, and invalidation. It should help identify missing information, not mechanically force a trade idea."),
+    ("Why Trading Costs Belong in Every Review", "Risk Management", "Fees and spreads can change the result of a strategy.", "Spreads, commissions, financing, and slippage affect realized outcomes. Backtests that omit trading costs can overstate results, so any evaluation should document assumptions and limitations."),
+    ("What Market Regimes Mean for Strategy Evaluation", "Market Context", "A method tested in one market regime may behave differently in another.", "Markets can alternate between trending, ranging, volatile, and quiet conditions. Compare strategy behavior across different regimes and avoid assuming that one historical period represents all future environments."),
+    ("Why Journaling the Decision Matters More Than the Screenshot", "Process", "A chart screenshot shows price; a journal explains your reasoning.", "Record the context, assumptions, risk, emotions, and outcome of a decision. A useful journal helps identify repeated process errors instead of merely collecting attractive chart images."),
+    ("How to Separate Observation From Interpretation", "Technical Analysis", "Price made a move; your explanation of that move is a separate claim.", "Observation describes what the chart shows. Interpretation explains what it might mean. Keeping those separate helps avoid presenting uncertain narratives as facts and makes analysis easier to review."),
+    ("Why One Winning Example Does Not Prove an Edge", "Process", "One successful example is not enough to validate a method.", "A single outcome can occur by chance. Evaluating an approach requires a defined method, a meaningful sample, realistic costs, and attention to selection bias. Past examples do not guarantee future results."),
+    ("What to Do When the Market Is Unclear", "Trading Psychology", "Unclear is a valid market assessment.", "A responsible analysis can conclude that the available evidence is mixed. Label uncertainty explicitly, define what information would change the assessment, and avoid forcing a directional narrative."),
+    ("Why Risk Limits Need to Be Defined Beforehand", "Risk Management", "Rules written after a loss are harder to follow consistently.", "Predefined risk limits reduce the temptation to change rules under pressure. They cannot eliminate losses, but they create a consistent framework for reviewing decisions and limiting discretionary escalation."),
+    ("How to Review a Strategy Without Cherry-Picking", "Process", "Review the full sample, not only the examples that look convincing.", "A balanced review includes losing periods, flat periods, costs, and failed setups. Selecting only favorable examples can create a misleading impression of reliability and should not be used as evidence of guaranteed performance."),
+]
+for _title, _category, _hook, _body in _ADDITIONAL_TOPIC_SEEDS:
+    TOPICS.append({
+        "title": _title,
+        "market": "Multi-Market",
+        "category": _category,
+        "hook": _hook,
+        "body": _body,
+        "visuals": [
+            ("OBSERVE", f"Illustrate the core concept: {_title}."),
+            ("ADD CONTEXT", "Show market structure and relevant assumptions without live-price claims."),
+            ("TEST THE IDEA", "Contrast supporting evidence with a possible failure case."),
+            ("DISCIPLINE", "Finish with a practical checklist and an uncertainty reminder."),
+        ],
+        "hashtags": ["#BullseyeTheory", "#TradingEducation", "#RiskManagement", "#TechnicalAnalysis"],
+    })
+
+
+
 def now_utc():
     return datetime.now(timezone.utc).isoformat()
 
@@ -369,24 +416,38 @@ def save_json(filename, data):
 
 
 def trend_discovery():
-    # Three daily publishing windows are scheduled in GitHub Actions.
-    # The slot-aware rotation keeps consecutive posts varied without inventing
-    # live market data when no live data feed is configured.
+    """Choose topics not used in the previous ten days, persisted across runs."""
     now = datetime.now(timezone.utc)
-    day_number = now.timetuple().tm_yday
-    slot = now.hour // 6
-    start = ((day_number * 7) + slot * 3) % len(TOPICS)
-    selected = [
-        TOPICS[(start + i) % len(TOPICS)]
-        for i in range(CONTENT_BATCH_SIZE)
-    ]
-    return [
-        {
-            **topic,
-            "score": round(0.84 + ((day_number + slot + i) % 8) / 100, 2),
-        }
-        for i, topic in enumerate(selected)
-    ]
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        history = json.loads(TOPIC_HISTORY_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        history = []
+    cutoff = now - timedelta(days=TOPIC_REPEAT_DAYS)
+    recent = []
+    for row in history if isinstance(history, list) else []:
+        try:
+            used = datetime.fromisoformat(str(row["used_at"]).replace("Z", "+00:00"))
+            if used.tzinfo is None:
+                used = used.replace(tzinfo=timezone.utc)
+            if used >= cutoff:
+                recent.append(row)
+        except (KeyError, TypeError, ValueError):
+            continue
+    used_titles = {str(row.get("title", "")) for row in recent}
+    offset = int(now.timestamp()) % len(TOPICS)
+    ordered = TOPICS[offset:] + TOPICS[:offset]
+    available = [topic for topic in ordered if topic["title"] not in used_titles]
+    if not available:
+        print("No unused topics remain inside the ten-day repeat window.")
+        return []
+    selected = [dict(topic) for topic in available[:CONTENT_BATCH_SIZE]]
+    day_number, slot = now.timetuple().tm_yday, now.hour // 6
+    for i, topic in enumerate(selected):
+        topic["score"] = round(0.84 + ((day_number + slot + i) % 8) / 100, 2)
+        recent.append({"title": topic["title"], "used_at": now.isoformat()})
+    TOPIC_HISTORY_PATH.write_text(json.dumps(recent, indent=2, ensure_ascii=False) + chr(10), encoding="utf-8")
+    return selected
 
 
 def research(item):
@@ -572,10 +633,23 @@ def build_content(item, index, content_id=None, content_role="education"):
     visuals = visual_plan(item)
     social = caption_and_hashtags(item)
 
-    status = "approved_for_publishing" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else ("pending_approval" if safety["passed"] else "safety_review_required")
+    fact_check_passed = str(fact_check_data.get("status", "")).lower() in {"passed", "verified", "approved"}
+    safety_passed = safety.get("passed") is True
+    review_blocked = not fact_check_passed
+    if not safety_passed:
+        status = "safety_review_required"
+    elif review_blocked:
+        status = "fact_check_review_required"
+    elif HUMAN_APPROVAL:
+        status = "pending_approval"
+    elif AUTO_PUBLISH_ENABLED:
+        status = "approved_for_publishing"
+    else:
+        status = "pending_approval"
 
-    return {
+    content = {
         "content_id": content_id or f"content_{index}",
+        "content_version": 1,
         "created_at": now_utc(),
         "brand": BRAND,
         "language": "English",
@@ -604,11 +678,21 @@ def build_content(item, index, content_id=None, content_role="education"):
             "telegram": {"status": "not_published"},
         },
         "approval": {
-            "required": not AUTO_PUBLISH_ENABLED,
-            "status": "approved" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else "pending",
-            "mode": "automatic" if AUTO_PUBLISH_ENABLED else "manual",
+            "required": HUMAN_APPROVAL or not AUTO_PUBLISH_ENABLED,
+            "status": "pending" if (HUMAN_APPROVAL or not AUTO_PUBLISH_ENABLED or review_blocked or not safety_passed) else "approved",
+            "mode": "manual" if HUMAN_APPROVAL or not AUTO_PUBLISH_ENABLED else "automatic",
+            "version": 1,
         },
     }
+    approval_basis = {
+        "content_id": content["content_id"], "version": content["content_version"],
+        "created_at": content["created_at"], "title": content["topic"]["title"],
+        "hook": content["script"]["hook"], "body": content["script"]["body"],
+    }
+    content["approval"]["content_hash"] = hashlib.sha256(
+        json.dumps(approval_basis, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+    return content
 
 
 def load_json(filename, default=None):
@@ -634,6 +718,8 @@ def create_approval_queue(contents):
     for content in contents:
         existing_items[content["content_id"]] = {
             "content_id": content["content_id"],
+            "content_version": content.get("content_version", 1),
+            "content_hash": (content.get("approval") or {}).get("content_hash", ""),
             "topic": content["topic"]["title"],
             "status": content["status"],
             "approval_required": content["approval"].get("required", True),
@@ -658,6 +744,10 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     topics = trend_discovery()
+    if not topics:
+        save_json("latest_generated.json", {"content_ids": [], "generated_at": now_utc()})
+        print("No fresh topic available. No-op run: nothing to publish.")
+        return
     contents = []
 
     run_stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -677,6 +767,10 @@ def main():
         print(f"Saved: {content_id}.json")
 
     save_json("approval_queue.json", create_approval_queue(contents))
+    save_json("latest_generated.json", {
+        "content_ids": [item["content_id"] for item in contents],
+        "generated_at": now_utc(),
+    })
 
     print("---------------------------------------------")
     print(f"Generated: {len(contents)} English educational Reel drafts")

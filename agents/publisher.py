@@ -3,12 +3,16 @@ from __future__ import annotations
 
 import json
 import logging
+import hashlib
 import os
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
 import requests
+
+from config.env import instagram_access_token, instagram_user_id, human_approval_required
 
 log = logging.getLogger(__name__)
 API_VERSION = os.getenv("META_GRAPH_API_VERSION", "v23.0")
@@ -99,8 +103,8 @@ def _meta_request(method: str, url: str, **kwargs):
 
 
 def _instagram_publish(image_url: str, caption: str) -> str:
-    token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
-    user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
+    token = instagram_access_token()
+    user_id = instagram_user_id()
     if not token or not user_id:
         raise RuntimeError("Instagram credentials missing (IG_ACCESS_TOKEN and IG_USER_ID).")
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
@@ -139,7 +143,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         record["last_run_mode"] = "dry_run"
         return record
 
-    human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
+    human_approval = human_approval_required()
     image_url = record.get("image_url")
     telegram_caption = copy["telegram_html"][:1000]
     if human_approval:
@@ -147,9 +151,17 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             chat_id = os.getenv("TELEGRAM_CHAT_ID", "").strip()
             if not chat_id:
                 raise RuntimeError("HUMAN_APPROVAL=true requires TELEGRAM_CHAT_ID for draft delivery.")
+            binding_payload = {key: signal.get(key) for key in (
+                "signal_id", "as_of", "symbol", "direction", "entry", "stop_loss", "tp1", "tp2", "tp3"
+            )}
+            binding_hash = hashlib.sha256(
+                json.dumps(binding_payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest()
+            binding = {"version": 1, "hash": binding_hash}
+            record["approval_binding"] = binding
             keyboard = {"inline_keyboard": [[
-                {"text": "✅ APPROVE & PUBLISH", "callback_data": f"market_approve:{signal['signal_id']}"},
-                {"text": "❌ REJECT", "callback_data": f"market_reject:{signal['signal_id']}"},
+                {"text": "✅ APPROVE & PUBLISH", "callback_data": f"market_approve:{signal['signal_id']}:1:{binding_hash[:16]}"},
+                {"text": "❌ REJECT", "callback_data": f"market_reject:{signal['signal_id']}:1:{binding_hash[:16]}"},
             ]]}
             with card_path.open("rb") as photo:
                 result = _telegram("sendPhoto", {
@@ -173,7 +185,10 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                         "chat_id": TELEGRAM_CHANNEL,
                         "caption": telegram_caption, "parse_mode": "HTML",
                     }, files={"photo": photo})
-                platforms["telegram"] = {"status": "published", "message_id": result.get("message_id")}
+                platforms["telegram"] = {
+                    "status": "published", "message_id": result.get("message_id"),
+                    "published_at": datetime.now(timezone.utc).isoformat(),
+                }
                 log.info("Telegram published %s (message %s).", signal["signal_id"], result.get("message_id"))
             except Exception as exc:
                 platforms["telegram"] = {"status": "failed", "error": str(exc)[:300]}
@@ -191,7 +206,10 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             try:
                 image_url = _accessible_image_url(card_path)
                 media_id = _instagram_publish(image_url, copy["instagram_caption"])
-                platforms["instagram"] = {"status": "published", "media_id": media_id}
+                platforms["instagram"] = {
+                    "status": "published", "media_id": media_id,
+                    "published_at": datetime.now(timezone.utc).isoformat(),
+                }
                 log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
             except Exception as exc:
                 platforms["instagram"] = {"status": "failed", "error": str(exc)[:300]}

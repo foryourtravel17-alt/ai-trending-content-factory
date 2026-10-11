@@ -14,6 +14,7 @@ from agents.copy import build_copy
 from agents.qa import STATE_PATH, load_state, validate
 from agents.publisher import publish
 from agents.scout import SYMBOLS, MAX_PER_REGION, scout_symbol
+from config.env import human_approval_required
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO),
@@ -21,7 +22,7 @@ logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO),
 log = logging.getLogger("orchestrator")
 OUTPUT = Path("output")
 DRY_RUN = os.getenv("DRY_RUN", "0").strip().lower() in {"1", "true", "yes"}
-HUMAN_APPROVAL = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
+HUMAN_APPROVAL = human_approval_required()
 GENERATE_ONLY = os.getenv("GENERATE_ONLY", "false").strip().lower() == "true"
 PUBLISH_ONLY = os.getenv("PUBLISH_ONLY", "false").strip().lower() == "true"
 PUBLISH_ONLY_SIGNAL_ID = os.getenv("PUBLISH_ONLY_SIGNAL_ID", "").strip()
