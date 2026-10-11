@@ -1,5 +1,6 @@
 import importlib
 import os
+import sys
 import tempfile
 import io
 from datetime import datetime, timezone, timedelta
@@ -7,6 +8,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch, Mock
 from urllib.error import URLError
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 
 from config import env
 
