@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone, timedelta
 
 OUTPUT = Path("output")
 QUEUE_FILE = OUTPUT / "approval_queue.json"
@@ -79,6 +80,24 @@ for item in items:
     approval = content.get("approval", {})
     if approval.get("status") != "pending":
         continue
+    try:
+        created_at = datetime.fromisoformat(str(content.get("created_at", "")).replace("Z", "+00:00"))
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+        age = datetime.now(timezone.utc) - created_at.astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        age = timedelta(days=999)
+    if age < timedelta(0) or age > timedelta(hours=24):
+        content["status"] = "expired"
+        approval["status"] = "expired"
+        content["approval"] = approval
+        content["expired_at"] = datetime.now(timezone.utc).isoformat()
+        content["expiration_reason"] = "Approval request expired before delivery; content is older than 24 hours."
+        save_json(OUTPUT / f"{content_id}.json", content)
+        item["status"] = "expired"
+        item["processed"] = True
+        print(f"Marked stale approval request expired: {content_id}.")
+        continue
 
     topic = content.get("topic", {})
     script = content.get("script", {})
@@ -109,7 +128,8 @@ for item in items:
     version = int(approval_meta.get("version", content.get("content_version", 1)))
     content_hash = str(approval_meta.get("content_hash", ""))
     if not content_hash:
-        raise RuntimeError(f"Refusing approval request without a content hash: {content_id}")
+        print(f"Skipping approval request without a version/hash binding: {content_id}")
+        continue
     fingerprint = content_hash[:16]
     keyboard = {
         "inline_keyboard": [[
