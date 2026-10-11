@@ -61,7 +61,7 @@ def main():
     print(f"Starting offset: {offset}")
 
     queue_by_id = {item.get("content_id"): item for item in queue.get("items", [])}
-    deadline = time.time() + 240
+    deadline = time.time() + max(5, int(os.getenv("POLL_SECONDS", "240")))
     processed_any = False
     market_approved = None
 
