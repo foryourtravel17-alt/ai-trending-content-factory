@@ -12,6 +12,7 @@ on:
       - "Market Signal Approval Poller"
       - "Market Factory Tests"
       - "Bullseye Weekly P&L and Engagement Summary"
+      - "Market Factory Schedule Watchdog"
     types: [completed]
 
 permissions:
