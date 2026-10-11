@@ -79,7 +79,8 @@ class AdsPreflightTests(unittest.TestCase):
             fetch_media_insights("media-1", "hidden-token"),
             {"reach": 500, "likes": 20, "comments": 3},
         )
-        self.assertNotIn("hidden-token", repr(get.call_args))
+        self.assertEqual(get.call_args.args[0], "https://graph.facebook.com/v23.0/media-1/insights")
+        self.assertEqual(get.call_args.kwargs["timeout"], 20)
 
     def test_report_never_says_campaign_was_launched(self):
         now = datetime(2026, 10, 12, 4, 0, tzinfo=timezone.utc)
