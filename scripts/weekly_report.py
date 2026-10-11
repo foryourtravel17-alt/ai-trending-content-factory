@@ -29,7 +29,7 @@ def fetch_engagement(media_id: str, token: str, version: str) -> dict | None:
                 metrics[item.get("name", "unknown")] = int(value)
         return metrics
     except (requests.RequestException, ValueError, TypeError) as exc:
-        print(f"Insights unavailable for media {media_id}: {exc}")
+        print(f"Insights unavailable for media {media_id} ({type(exc).__name__}); request details redacted.")
         return None
 
 def fetch_weekly_ohlc(symbol: str) -> pd.DataFrame | None:
@@ -180,9 +180,13 @@ def main():
         "Educational market scenarios only — not financial advice.",
     ])
     message = "\n".join(lines)
-    response = requests.post(f"https://api.telegram.org/bot{token}/sendMessage",
-                             data={"chat_id": chat, "text": message}, timeout=30)
-    response.raise_for_status()
+    try:
+        response = requests.post(f"https://api.telegram.org/bot{token}/sendMessage",
+                                 data={"chat_id": chat, "text": message}, timeout=30)
+    except requests.RequestException as exc:
+        raise SystemExit(f"Telegram report request failed ({type(exc).__name__}); bot token redacted.") from None
+    if not response.ok:
+        raise SystemExit(f"Telegram report failed with HTTP {response.status_code}; response redacted.")
     if not response.json().get("ok"):
         raise RuntimeError(f"Telegram rejected report: {response.text[:400]}")
     print(message)
