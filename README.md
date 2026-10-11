@@ -39,6 +39,8 @@ The legacy workflow currently uses Python 3.12 and its existing Meta/Supabase se
 
 The workflow first generates and commits PNGs/state, then publishes. That order allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. It also supports manual dispatch with `dry_run=true`.
 
+**Important hosting prerequisite:** the repository is currently private. Instagram cannot fetch a private-repository raw GitHub URL. Before live Instagram posting, enable a publicly reachable GitHub Pages site if your GitHub plan supports it, or set `IMAGE_BASE_URL` to another public HTTPS image host. The publisher checks URL reachability and fails rather than posting a broken image.
+
 `.github/workflows/market_approval_poll.yml` checks Telegram approval buttons every 30 minutes. If `HUMAN_APPROVAL=true`, market drafts go to the Telegram chat with **APPROVE & PUBLISH** and **REJECT** buttons. The existing Telegram callback processor handles both legacy Reel approvals and new market approvals. Both callback workflows share a concurrency group so they do not poll Telegram updates at the same time.
 
 `.github/workflows/weekly_report.yml` sends a Friday Telegram report. It estimates hypothetical signal outcomes from post-signal hourly OHLC (conservatively counting same-candle stop/target ambiguity as a stop) and fetches Instagram Insights when permissions allow. This is not actual broker P&L; the report clearly labels it as scenario analysis. `.github/workflows/market_stall_watchdog.yml` checks weekday evening for a recent successful market-content run and sends an alert only if the scheduled factory appears stalled. The failure watchdog also monitors the new market workflows.
