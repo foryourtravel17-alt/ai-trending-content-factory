@@ -11,8 +11,11 @@ financial advice, trade signals, or guaranteed-return claims.
 
 import json
 import os
-from datetime import datetime, timezone
+import hashlib
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+from config.env import human_approval_required
 
 from free_llm_router import generate_json
 
@@ -20,6 +23,9 @@ BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
 MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
 AUTO_PUBLISH_ENABLED = os.getenv("AUTO_PUBLISH_ENABLED", "false").lower() == "true"
+HUMAN_APPROVAL = human_approval_required()
+TOPIC_HISTORY_PATH = OUTPUT_DIR / "recent_topics.json"
+TOPIC_REPEAT_DAYS = 10
 CONTENT_BATCH_SIZE = max(1, min(int(os.getenv("CONTENT_BATCH_SIZE", "1")), 3))
 
 PHILOSOPHY = "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN"
@@ -369,24 +375,38 @@ def save_json(filename, data):
 
 
 def trend_discovery():
-    # Three daily publishing windows are scheduled in GitHub Actions.
-    # The slot-aware rotation keeps consecutive posts varied without inventing
-    # live market data when no live data feed is configured.
+    """Choose topics not used in the previous ten days, persisted across runs."""
     now = datetime.now(timezone.utc)
-    day_number = now.timetuple().tm_yday
-    slot = now.hour // 6
-    start = ((day_number * 7) + slot * 3) % len(TOPICS)
-    selected = [
-        TOPICS[(start + i) % len(TOPICS)]
-        for i in range(CONTENT_BATCH_SIZE)
-    ]
-    return [
-        {
-            **topic,
-            "score": round(0.84 + ((day_number + slot + i) % 8) / 100, 2),
-        }
-        for i, topic in enumerate(selected)
-    ]
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        history = json.loads(TOPIC_HISTORY_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        history = []
+    cutoff = now - timedelta(days=TOPIC_REPEAT_DAYS)
+    recent = []
+    for row in history if isinstance(history, list) else []:
+        try:
+            used = datetime.fromisoformat(str(row["used_at"]).replace("Z", "+00:00"))
+            if used.tzinfo is None:
+                used = used.replace(tzinfo=timezone.utc)
+            if used >= cutoff:
+                recent.append(row)
+        except (KeyError, TypeError, ValueError):
+            continue
+    used_titles = {str(row.get("title", "")) for row in recent}
+    offset = int(now.timestamp()) % len(TOPICS)
+    ordered = TOPICS[offset:] + TOPICS[:offset]
+    available = [topic for topic in ordered if topic["title"] not in used_titles]
+    if not available:
+        print("No unused topics remain inside the ten-day repeat window.")
+        return []
+    selected = [dict(topic) for topic in available[:CONTENT_BATCH_SIZE]]
+    day_number, slot = now.timetuple().tm_yday, now.hour // 6
+    for i, topic in enumerate(selected):
+        topic["score"] = round(0.84 + ((day_number + slot + i) % 8) / 100, 2)
+        recent.append({"title": topic["title"], "used_at": now.isoformat()})
+    TOPIC_HISTORY_PATH.write_text(json.dumps(recent, indent=2, ensure_ascii=False) + chr(10), encoding="utf-8")
+    return selected
 
 
 def research(item):
@@ -572,10 +592,23 @@ def build_content(item, index, content_id=None, content_role="education"):
     visuals = visual_plan(item)
     social = caption_and_hashtags(item)
 
-    status = "approved_for_publishing" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else ("pending_approval" if safety["passed"] else "safety_review_required")
+    fact_check_passed = str(fact_check_data.get("status", "")).lower() in {"passed", "verified", "approved"}
+    safety_passed = safety.get("passed") is True
+    review_blocked = not fact_check_passed
+    if not safety_passed:
+        status = "safety_review_required"
+    elif review_blocked:
+        status = "fact_check_review_required"
+    elif HUMAN_APPROVAL:
+        status = "pending_approval"
+    elif AUTO_PUBLISH_ENABLED:
+        status = "approved_for_publishing"
+    else:
+        status = "pending_approval"
 
-    return {
+    content = {
         "content_id": content_id or f"content_{index}",
+        "content_version": 1,
         "created_at": now_utc(),
         "brand": BRAND,
         "language": "English",
@@ -604,11 +637,21 @@ def build_content(item, index, content_id=None, content_role="education"):
             "telegram": {"status": "not_published"},
         },
         "approval": {
-            "required": not AUTO_PUBLISH_ENABLED,
-            "status": "approved" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else "pending",
-            "mode": "automatic" if AUTO_PUBLISH_ENABLED else "manual",
+            "required": HUMAN_APPROVAL or not AUTO_PUBLISH_ENABLED,
+            "status": "pending" if (HUMAN_APPROVAL or not AUTO_PUBLISH_ENABLED or review_blocked or not safety_passed) else "approved",
+            "mode": "manual" if HUMAN_APPROVAL or not AUTO_PUBLISH_ENABLED else "automatic",
+            "version": 1,
         },
     }
+    approval_basis = {
+        "content_id": content["content_id"], "version": content["content_version"],
+        "created_at": content["created_at"], "title": content["topic"]["title"],
+        "hook": content["script"]["hook"], "body": content["script"]["body"],
+    }
+    content["approval"]["content_hash"] = hashlib.sha256(
+        json.dumps(approval_basis, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+    return content
 
 
 def load_json(filename, default=None):
@@ -634,6 +677,8 @@ def create_approval_queue(contents):
     for content in contents:
         existing_items[content["content_id"]] = {
             "content_id": content["content_id"],
+            "content_version": content.get("content_version", 1),
+            "content_hash": (content.get("approval") or {}).get("content_hash", ""),
             "topic": content["topic"]["title"],
             "status": content["status"],
             "approval_required": content["approval"].get("required", True),
@@ -658,6 +703,9 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     topics = trend_discovery()
+    if not topics:
+        print("No fresh topic available. No-op run: nothing to publish.")
+        return
     contents = []
 
     run_stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
