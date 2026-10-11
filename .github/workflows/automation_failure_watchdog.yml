@@ -41,7 +41,7 @@ jobs:
             echo "Previous run of ${WORKFLOW_NAME} also failed; suppressing duplicate Telegram alert."
             exit 0
           fi
-          message="⚠️ Bullseye Theory automation alert%0A%0AWorkflow: ${WORKFLOW_NAME}%0AStatus: ${WORKFLOW_STATUS}%0A%0AOpen run: ${RUN_URL}"
+          message="$(printf '⚠️ Bullseye Theory automation alert\n\nWorkflow: %s\nStatus: %s\n\nOpen run: %s' "$WORKFLOW_NAME" "$WORKFLOW_STATUS" "$RUN_URL")"
           curl -sS --fail-with-body -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
             --data-urlencode "text=${message}"
