@@ -1,6 +1,7 @@
 """Synthetic end-to-end smoke tests: render images/copy and prove DRY_RUN never posts."""
 import os
 import tempfile
+from datetime import datetime, timedelta, timezone
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -33,6 +34,16 @@ def synthetic_market():
 
 
 class DryRunSmokeTest(unittest.TestCase):
+    def test_stale_prepared_signals_are_not_publishable(self):
+        now = datetime.now(timezone.utc)
+        self.assertTrue(orchestrator._signal_is_fresh({
+            "symbol": "BTC-USD", "as_of": now.isoformat()
+        }))
+        self.assertFalse(orchestrator._signal_is_fresh({
+            "symbol": "BTC-USD", "as_of": (now - timedelta(hours=50)).isoformat()
+        }))
+        self.assertFalse(orchestrator._signal_is_fresh({"symbol": "TEST"}))
+
     def test_agent_chain_renders_without_network_posts(self):
         os.environ["DRY_RUN"] = "1"
         indicators, signal = synthetic_market()
