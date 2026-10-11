@@ -169,7 +169,10 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                 errors.append(f"Telegram: {exc}")
                 log.error("Telegram publish failed for %s; still attempting Instagram: %s", signal["signal_id"], exc)
         else:
-            log.warning("Telegram skipped: TELEGRAM_BOT_TOKEN is not configured.")
+            message = "TELEGRAM_BOT_TOKEN is not configured."
+            platforms["telegram"] = {"status": "failed", "error": message}
+            errors.append(f"Telegram: {message}")
+            log.error("Telegram publishing cannot run because its bot token is missing.")
     if platforms.get("instagram", {}).get("status") != "published":
         token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
         user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
@@ -183,7 +186,10 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                 errors.append(f"Instagram: {exc}")
                 log.error("Instagram publish failed for %s: %s", signal["signal_id"], exc)
         else:
-            log.warning("Instagram skipped: IG_ACCESS_TOKEN/IG_USER_ID are not configured.")
+            message = "IG_ACCESS_TOKEN and/or IG_USER_ID are not configured."
+            platforms["instagram"] = {"status": "failed", "error": message}
+            errors.append(f"Instagram: {message}")
+            log.error("Instagram publishing cannot run because its credentials are missing.")
     statuses = [platforms.get(k, {}).get("status") for k in ("telegram", "instagram")]
     if all(status == "published" for status in statuses):
         record["status"] = "published"
