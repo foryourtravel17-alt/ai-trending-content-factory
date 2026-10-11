@@ -2,6 +2,7 @@ import importlib
 import os
 import tempfile
 import io
+from datetime import datetime, timezone, timedelta
 import unittest
 from pathlib import Path
 from unittest.mock import patch, Mock
@@ -70,6 +71,14 @@ class ApprovalGateTests(unittest.TestCase):
             approval={"required": False, "status": "approved", "version": 1, "content_hash": "a" * 64},
         )))
 
+    def test_stale_approval_is_not_fresh(self):
+        stale = (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
+        self.assertFalse(env.is_content_fresh(stale, max_age_hours=24))
+
+    def test_fresh_approval_timestamp_is_accepted(self):
+        fresh = datetime.now(timezone.utc).isoformat()
+        self.assertTrue(env.is_content_fresh(fresh, max_age_hours=24))
+
     def test_credential_alias_precedence(self):
         os.environ["INSTAGRAM_USER_ID"] = "legacy-user"
         os.environ["META_SYSTEM_USER_TOKEN"] = "legacy-token"
@@ -131,6 +140,32 @@ class PublisherSafetyTests(unittest.TestCase):
             self.assertTrue(first)
             self.assertTrue(second)
             self.assertNotEqual(first[0]["title"], second[0]["title"])
+
+    def test_supabase_upload_failure_is_reported(self):
+        import src.instagram_publish as instagram
+        with tempfile.TemporaryDirectory() as directory:
+            video = Path(directory) / "clip.mp4"
+            video.write_bytes(b"fake-video")
+            error = __import__("urllib.error", fromlist=["HTTPError"]).HTTPError(
+                "https://example.test", 503, "unavailable", {}, io.BytesIO(b"failure")
+            )
+            with patch("urllib.request.urlopen", side_effect=error):
+                with self.assertRaisesRegex(RuntimeError, "Supabase upload failed HTTP 503"):
+                    instagram.upload_to_supabase(video, "https://example.test", "fake-key", "reels/clip.mp4")
+
+    def test_instagram_media_create_failure_is_reported(self):
+        import src.instagram_publish as instagram
+        with patch.object(instagram, "request", side_effect=RuntimeError("media create failed")):
+            with self.assertRaisesRegex(RuntimeError, "media create failed"):
+                instagram.publish_instagram_reel("user", "https://example.test/clip.mp4", "caption")
+
+    def test_instagram_media_publish_failure_is_reported(self):
+        import src.instagram_publish as instagram
+        with patch.object(instagram, "request", side_effect=[
+            {"id": "container-1"}, {"status_code": "FINISHED"}, RuntimeError("publish failed")
+        ]), patch.object(instagram.time, "sleep"):
+            with self.assertRaisesRegex(RuntimeError, "publish failed"):
+                instagram.publish_instagram_reel("user", "https://example.test/clip.mp4", "caption")
 
     def test_meta_api_failure_does_not_leak_token(self):
         import src.instagram_publish as instagram
