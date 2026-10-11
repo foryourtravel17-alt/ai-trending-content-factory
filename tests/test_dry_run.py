@@ -41,7 +41,7 @@ class DryRunSmokeTest(unittest.TestCase):
             ok, reason = validate(signal, {"signals": {}})
             self.assertTrue(ok, reason)
             record = {"signal": signal, "copy": copy, "publishing": {}}
-            result = publish(signal, copy, Path(card), record, dry_run=True)
+            result = publish(signal, copy, Path(card), record, dry_run=os.getenv("DRY_RUN", "0") == "1")
             self.assertEqual(result["status"], "generated")
             self.assertEqual(result["last_run_mode"], "dry_run")
             self.assertEqual(result["publishing"], {})
