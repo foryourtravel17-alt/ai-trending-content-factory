@@ -49,6 +49,9 @@ def main() -> int:
     url = f"https://api.github.com/repos/{repository}/actions/workflows/market_content.yml/runs?{query}"
     payload = request_json(url, github_token)
     now = datetime.now(timezone.utc)
+    if now.weekday() >= 5:
+        print("Weekend: no scheduled market run expected. No alert sent.")
+        return 0
     cutoff = now - timedelta(hours=8)
     recent_success = None
     for run in payload.get("workflow_runs", []):
