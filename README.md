@@ -134,5 +134,5 @@ Useful environment flags:
 
 - yfinance is a convenient public data source, not an exchange-grade feed; some tickers may be delayed, have missing volume, or temporarily fail.
 - The rule-based EMA/RSI/MACD screen is intentionally simple and is not evidence of profitability.
-- The weekly report does not invent P&L. Closed scenario outcomes must be explicitly logged before an R/P&L summary can be calculated. Instagram engagement requires Insights API permissions and metrics retrieval.
+- The weekly report estimates hypothetical R outcomes from public OHLC and labels them as non-executed scenario analysis. It does not represent broker P&L or guarantee that a trade was filled. Instagram engagement requires Insights API permissions; if unavailable, the report says so.
 - This project does not connect to a broker and does not execute trades.
