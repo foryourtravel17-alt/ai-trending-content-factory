@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+import hashlib
 import os
 import time
 from pathlib import Path
@@ -149,9 +150,17 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             chat_id = os.getenv("TELEGRAM_CHAT_ID", "").strip()
             if not chat_id:
                 raise RuntimeError("HUMAN_APPROVAL=true requires TELEGRAM_CHAT_ID for draft delivery.")
+            binding_payload = {key: signal.get(key) for key in (
+                "signal_id", "as_of", "symbol", "direction", "entry", "stop_loss", "tp1", "tp2", "tp3"
+            )}
+            binding_hash = hashlib.sha256(
+                json.dumps(binding_payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest()
+            binding = {"version": 1, "hash": binding_hash}
+            record["approval_binding"] = binding
             keyboard = {"inline_keyboard": [[
-                {"text": "✅ APPROVE & PUBLISH", "callback_data": f"market_approve:{signal['signal_id']}"},
-                {"text": "❌ REJECT", "callback_data": f"market_reject:{signal['signal_id']}"},
+                {"text": "✅ APPROVE & PUBLISH", "callback_data": f"market_approve:{signal['signal_id']}:1:{binding_hash[:16]}"},
+                {"text": "❌ REJECT", "callback_data": f"market_reject:{signal['signal_id']}:1:{binding_hash[:16]}"},
             ]]}
             with card_path.open("rb") as photo:
                 result = _telegram("sendPhoto", {
