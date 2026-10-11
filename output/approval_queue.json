@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T07:38:28.789160+00:00",
+  "updated_at": "2026-10-11T13:39:26.787217+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -239,6 +239,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-11T07:38:28.788733+00:00"
+    },
+    {
+      "content_id": "content_20261011_133926_1",
+      "topic": "Why a Trading Journal Can Improve Your Learning Loop",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-11T13:39:26.786772+00:00"
     }
   ],
   "telegram_sent": [
