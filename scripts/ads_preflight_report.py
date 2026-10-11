@@ -57,13 +57,19 @@ def load_published_posts(
         if created is None or created < cutoff or created > now_utc + timedelta(minutes=5):
             continue
 
+        if not isinstance(record, dict):
+            continue
         publishing = record.get("publishing") or {}
+        if not isinstance(publishing, dict):
+            publishing = {}
         instagram = publishing.get("instagram") or {}
+        if not isinstance(instagram, dict):
+            instagram = {}
         media_id = str(instagram.get("media_id") or record.get("instagram_media_id") or "").strip()
         status = str(instagram.get("status") or record.get("status") or "").lower()
         published_status = status in {
             "published", "success", "published_to_instagram",
-        } or bool(media_id)
+        }
         if not published_status or not media_id or media_id in seen_media:
             continue
         seen_media.add(media_id)
@@ -172,10 +178,19 @@ def build_report(
     ]
 
     if ranked:
-        lines.extend([
-            "",
-            "Best organic engagement candidates (not proof of sales):",
-        ])
+        if len(ranked) < 3:
+            lines.extend([
+                "",
+                f"Readiness: EARLY DATA — only {len(ranked)} post(s) have usable Insights. "
+                "Keep organic-first and collect a baseline of at least 3 posts; no boost is recommended yet.",
+                "Informational engagement candidates (not proof of sales):",
+            ])
+        else:
+            lines.extend([
+                "",
+                "Readiness: CANDIDATES FOR OWNER REVIEW — three or more posts have usable Insights.",
+                "Best organic engagement candidates (not proof of sales):",
+            ])
         for index, item in enumerate(ranked[:3], start=1):
             m = item["metrics"]
             title = item["title"][:100]
@@ -186,11 +201,18 @@ def build_report(
             )
             if item.get("permalink"):
                 lines.append(f"   Post: {item['permalink']}")
-        lines.extend([
-            "",
-            "AI recommendation: review the top post as a candidate for a small, approval-gated test. "
-            "Engagement efficiency alone does not establish course sales or return on ad spend.",
-        ])
+        if len(ranked) < 3:
+            lines.extend([
+                "",
+                "AI recommendation: continue organic publishing until a larger baseline is available. "
+                "Engagement efficiency does not establish course sales or return on ad spend.",
+            ])
+        else:
+            lines.extend([
+                "",
+                "AI recommendation: manually review the top post as a candidate for a small, approval-gated test. "
+                "Engagement efficiency does not establish course sales or return on ad spend.",
+            ])
     else:
         lines.extend([
             "",
