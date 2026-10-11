@@ -6,6 +6,8 @@ import urllib.parse
 import urllib.request
 import urllib.error
 
+from config.env import is_content_fresh
+
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 API = f"https://api.telegram.org/bot{TOKEN}"
 STATE_FILE = "output/telegram_state.json"
@@ -219,7 +221,8 @@ def main():
                                     age = datetime.now(timezone.utc) - created_dt.astimezone(timezone.utc)
                                 except (TypeError, ValueError):
                                     age = timedelta(days=999)
-                                if action == "approve" and (age < timedelta(0) or age > timedelta(hours=24)):
+                                fresh = is_content_fresh(created, max_age_hours=24)
+                                if action == "approve" and not fresh:
                                     content["status"] = "expired"
                                     approval["status"] = "expired"
                                     content["expired_at"] = datetime.now(timezone.utc).isoformat()
