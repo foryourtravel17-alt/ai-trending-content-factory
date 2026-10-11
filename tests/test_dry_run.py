@@ -22,7 +22,7 @@ def synthetic_market():
     count = 240
     idx = pd.date_range(end=pd.Timestamp.now(tz="UTC").floor("h"), periods=count, freq="h")
     t = np.arange(count, dtype=float)
-    close = 100 + 0.03 * t + 0.5 * np.sin((t + 20.0) / 8.0)
+    close = 100 + 0.015 * t + 0.5 * np.sin((t - 195.0) / 8.0)
     frame = pd.DataFrame({
         "Open": close - 0.03, "High": close + 0.35, "Low": close - 0.35,
         "Close": close, "Volume": np.full(count, 1000.0),
