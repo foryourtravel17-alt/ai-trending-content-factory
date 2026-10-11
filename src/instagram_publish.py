@@ -194,6 +194,52 @@ def save_state(content_path, approved):
     )
 
 
+
+def upload_to_supabase(video_path: Path, supabase_url: str, supabase_key: str, object_path: str) -> None:
+    upload_url = f"{supabase_url}/storage/v1/object/REELS/{urllib.parse.quote(object_path, safe='/')}"
+    upload_req = urllib.request.Request(
+        upload_url, data=video_path.read_bytes(), method="PUT",
+        headers={
+            "Authorization": f"Bearer {supabase_key}", "apikey": supabase_key,
+            "Content-Type": "video/mp4", "x-upsert": "true",
+        },
+    )
+    try:
+        with urllib.request.urlopen(upload_req, timeout=180) as response:
+            response.read()
+    except urllib.error.HTTPError as exc:
+        raise RuntimeError(f"Supabase upload failed HTTP {exc.code}; response redacted to protect credentials.") from None
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Supabase upload failed ({type(exc).__name__}); credentials redacted.") from None
+
+
+def publish_instagram_reel(ig_user_id: str, video_url: str, caption: str) -> str:
+    container = request("POST", f"{API}/{ig_user_id}/media", {
+        "media_type": "REELS", "video_url": video_url, "caption": caption,
+        "share_to_feed": "true", "access_token": TOKEN,
+    })
+    creation_id = container.get("id")
+    if not creation_id:
+        raise RuntimeError("Instagram media-create response had no container ID.")
+    for _ in range(20):
+        status = request("GET", f"{API}/{creation_id}", {
+            "fields": "status_code,status", "access_token": TOKEN,
+        })
+        if status.get("status_code") == "FINISHED":
+            break
+        if status.get("status_code") in {"ERROR", "EXPIRED"}:
+            raise RuntimeError("Instagram media container failed; details redacted.")
+        time.sleep(15)
+    else:
+        raise RuntimeError("Instagram media container did not finish in the expected time.")
+    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
+        "creation_id": creation_id, "access_token": TOKEN,
+    })
+    media_id = published.get("id")
+    if not media_id:
+        raise RuntimeError("Instagram publish response had no media ID.")
+    return str(media_id)
+
 def retry_telegram_mirror(content_path, approved):
     """Retry only Telegram after a confirmed Instagram success; never republish Instagram."""
     publishing = approved.setdefault("publishing", {})
@@ -265,29 +311,8 @@ def main():
     supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
     supabase_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
     object_path = f"reels/{content_id}.mp4"
-    upload_url = (
-        f"{supabase_url}/storage/v1/object/REELS/"
-        f"{urllib.parse.quote(object_path, safe='/')}"
-    )
     print(f"Uploading Reel to Supabase: {object_path}")
-
-    upload_req = urllib.request.Request(
-        upload_url,
-        data=video_path.read_bytes(),
-        method="PUT",
-        headers={
-            "Authorization": f"Bearer {supabase_key}",
-            "apikey": supabase_key,
-            "Content-Type": "video/mp4",
-            "x-upsert": "true",
-        },
-    )
-    try:
-        with urllib.request.urlopen(upload_req, timeout=180) as response:
-            response.read()
-    except urllib.error.HTTPError as e:
-        body = e.read().decode(errors="replace")
-        raise RuntimeError(f"Supabase upload failed HTTP {e.code}: {body}") from e
+    upload_to_supabase(video_path, supabase_url, supabase_key, object_path)
 
     video_url = (
         f"{supabase_url}/storage/v1/object/public/REELS/"
@@ -302,39 +327,8 @@ def main():
         caption = (caption + "\n\n" + " ".join(hashtags)).strip()
 
     print(f"Creating Instagram Reel container for {content_path.name}")
-    container = request("POST", f"{API}/{ig_user_id}/media", {
-        "media_type": "REELS",
-        "video_url": video_url,
-        "caption": caption,
-        "share_to_feed": "true",
-        "access_token": TOKEN,
-    })
-    creation_id = container["id"]
-    print(f"Instagram container: {creation_id}")
-
-    for attempt in range(20):
-        status = request("GET", f"{API}/{creation_id}", {
-            "fields": "status_code,status",
-            "access_token": TOKEN,
-        })
-        print(f"Upload status: {status}")
-        if status.get("status_code") == "FINISHED":
-            break
-        if status.get("status_code") in {"ERROR", "EXPIRED"}:
-            raise RuntimeError(f"Instagram container failed: {status}")
-        time.sleep(15)
-    else:
-        raise RuntimeError("Instagram container did not finish in the expected time.")
-
-    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
-        "creation_id": creation_id,
-        "access_token": TOKEN,
-    })
-    print(f"Instagram published media: {published}")
-
-    media_id = published.get("id")
-    if not media_id:
-        raise RuntimeError(f"Instagram publish returned no media id: {published}")
+    media_id = publish_instagram_reel(ig_user_id, video_url, caption)
+    print(f"Instagram published media ID: {media_id}")
 
     approved["status"] = "published_to_instagram"
     approved["instagram_media_id"] = media_id
