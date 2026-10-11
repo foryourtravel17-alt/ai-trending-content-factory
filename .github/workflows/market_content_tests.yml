@@ -39,7 +39,7 @@ jobs:
       - name: Import-check agents and orchestration modules
         run: |
           python -c "import agents.scout, agents.charts, agents.card, agents.analyst, agents.copy, agents.qa, agents.publisher, src.orchestrator"
-          python -m py_compile agents/*.py src/orchestrator.py src/telegram_process.py scripts/weekly_report.py scripts/refresh_ig_token.py
+          python -m py_compile agents/*.py src/*.py scripts/*.py
       - name: Validate workflow YAML syntax
         run: |
           python - <<'PY'
