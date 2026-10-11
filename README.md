@@ -68,7 +68,7 @@ Optional/compatibility:
 - `META_APP_ID`, `META_APP_SECRET` — only needed locally by the token refresh helper; never commit them
 
 Recommended repository **Variables** (Settings → Secrets and variables → Actions → Variables):
-- `HUMAN_APPROVAL` = `true` (safe default; drafts go to Telegram DM and require an explicit approval button). Set `false` only if you deliberately want unattended public publishing.
+- Market publishing has a workflow-enforced `HUMAN_APPROVAL=true` gate: drafts go to Telegram DM and require an explicit approval button. The repository variable cannot disable this safety gate.
 - `LLM_ENABLED` = `true` to use the configured LLM; fallback copy works if unavailable
 - `LLM_BASE` = `https://api.venice.ai/api/v1` (or your OpenAI-compatible base URL)
 - `LLM_MODEL` = your selected model, default `llama-3.3-70b`
@@ -84,7 +84,7 @@ The workflow accepts `GH_USER` and `GH_REPO` as secrets. They are not sensitive,
 3. Create or open the Bullseye Theory channel (`@bullseye_theory`) and add the bot as an administrator with permission to post.
 4. Start a private chat with your bot and send `/start`.
 5. Obtain your private chat ID using the bot's `getUpdates` response or a trusted Telegram ID helper, then set `TELEGRAM_CHAT_ID`. The bot must be able to message you before draft delivery works.
-6. Keep `HUMAN_APPROVAL=true` for the safe default. Drafts go to your private Telegram chat; approve/reject buttons are polled every 30 minutes. Do not switch to unattended publishing until you have reviewed successful dry runs.
+6. Market publishing is configured to require `HUMAN_APPROVAL=true`; the workflow enforces this even if a repository variable has an older value. Drafts go to your private Telegram chat; approve/reject buttons are polled every 30 minutes.
 
 ### 3. Set up Instagram Graph API
 
