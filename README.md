@@ -45,6 +45,8 @@ The workflow first generates and commits PNGs/state, then publishes. That order 
 
 `.github/workflows/weekly_report.yml` sends a Friday Telegram report. It estimates hypothetical signal outcomes from post-signal hourly OHLC (conservatively counting same-candle stop/target ambiguity as a stop) and fetches Instagram Insights when permissions allow. This is not actual broker P&L; the report clearly labels it as scenario analysis. `.github/workflows/market_stall_watchdog.yml` checks weekday evening for a recent successful market-content run and sends an alert only if the scheduled factory appears stalled. The failure watchdog also monitors the new market workflows.
 
+`.github/workflows/ads_preflight_report.yml` runs every Monday at 10:00 IST and can also be run manually. It reviews up to 12 recent published Instagram posts, reads available Insights, and sends a private Telegram preflight note. This is **read-only**: it never creates, activates, edits, or budgets ads. With fewer than three posts with readable reach/engagement metrics, it labels the data early and does not recommend a boost. It requires `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and either `IG_ACCESS_TOKEN` or `META_SYSTEM_USER_TOKEN`.
+
 ## Setup checklist
 
 ### 1. Add GitHub Actions secrets
@@ -120,6 +122,14 @@ By default, the script exchanges the token and updates the repository secret `IG
 4. Review the Action log and committed image output. For the next run, use `dry_run=false` to send drafts to Telegram when `HUMAN_APPROVAL=true`; public posting still requires pressing **APPROVE & PUBLISH**. Instagram/Telegram credentials and public image hosting must be configured first.
 5. Watch **Actions** for per-symbol warnings and platform status. A weak/neutral setup is skipped. If Yahoo Finance has no valid candles or every symbol fails, inspect the logs; the system does not fabricate a signal. Stale hourly data is rejected after 20 hours for non-crypto instruments and 36 hours for crypto. Missing publishing credentials now fail the publish step rather than silently claiming success.
 6. Run the QA unit tests locally or in CI with `python -m unittest discover -s tests`.
+
+## Organic-to-paid preflight review (read-only)
+
+`.github/workflows/ads_preflight_report.yml` runs each Monday at 10:00 IST and can also be dispatched manually. It reads recent published Instagram content records, requests available media Insights, and sends a private Telegram report ranking posts by a transparent weighted-engagement-per-reach heuristic (likes + 2×comments + 3×saves + 3×shares, divided by reach). This is only an organic-engagement signal, not evidence of leads, sales, or return on ad spend.
+
+The report does not call advertising write APIs, create/edit/enable campaigns, change budgets, or spend money. It does not commit private performance metrics into this public repository. If Insights are unavailable or reach is missing, it deliberately makes no winner recommendation.
+
+Before any paid campaign can be launched, the owner must confirm the exact Meta ad account, course/lead destination, tracking event, objective, audience, campaign dates, and daily/total spending limit, then provide explicit final approval. Do not claim guaranteed trading results or fabricate testimonials, social proof, or performance statistics.
 
 ## Environment and dependencies
 
