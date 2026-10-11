@@ -77,8 +77,9 @@ def compute_indicators(frame: pd.DataFrame) -> pd.DataFrame:
     df["EMA20"] = close.ewm(span=20, adjust=False).mean()
     df["EMA50"] = close.ewm(span=50, adjust=False).mean()
     delta = close.diff()
-    gain = delta.clip(lower=0).rolling(14).mean()
-    loss = (-delta.clip(upper=0)).rolling(14).mean()
+    # Wilder-style smoothing is the standard convention for RSI(14).
+    gain = delta.clip(lower=0).ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
+    loss = (-delta.clip(upper=0)).ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
     rs = gain / loss.replace(0, np.nan)
     df["RSI14"] = (100 - (100 / (1 + rs))).fillna(50)
     ema12 = close.ewm(span=12, adjust=False).mean()
@@ -92,7 +93,8 @@ def compute_indicators(frame: pd.DataFrame) -> pd.DataFrame:
         (df["High"] - prev_close).abs(),
         (df["Low"] - prev_close).abs(),
     ], axis=1).max(axis=1)
-    df["ATR14"] = true_range.rolling(14).mean()
+    # Wilder-style ATR(14), rather than a simple moving average of true range.
+    df["ATR14"] = true_range.ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
     typical = (df["High"] + df["Low"] + df["Close"]) / 3
     vol = pd.to_numeric(df["Volume"], errors="coerce").fillna(0)
     if vol.sum() > 0:
