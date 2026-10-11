@@ -1,0 +1,96 @@
+name: Autonomous Market Content Factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Generate charts and captions without publishing"
+        type: boolean
+        required: false
+        default: false
+  schedule:
+    - cron: "45 3 * * 1-5"  # 09:15 IST pre-market/open check
+    - cron: "45 5 * * 1-5"  # 11:15 IST intraday
+    - cron: "0 8 * * 1-5"   # 13:30 IST intraday
+    - cron: "15 10 * * 1-5" # 15:45 IST end-of-day check
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-content-factory
+  cancel-in-progress: false
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      DRY_RUN: ${{ inputs.dry_run || '0' }}
+      HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'false' }}
+      LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
+      LLM_BASE: ${{ vars.LLM_BASE || 'https://api.venice.ai/api/v1' }}
+      LLM_MODEL: ${{ vars.LLM_MODEL || 'llama-3.3-70b' }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+      META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
+      META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+      GH_USER: ${{ secrets.GH_USER }}
+      GH_REPO: ${{ secrets.GH_REPO }}
+      IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      LOG_LEVEL: INFO
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Generate market data, charts, cards, copy and QA
+        env:
+          GENERATE_ONLY: "true"
+        run: python -m src.orchestrator
+
+      - name: Commit generated images and state before publishing
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/*.png data/state.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No generated image/state changes to commit."
+          else
+            git commit -m "market: generate educational analysis cards"
+            git push
+          fi
+
+      - name: Publish committed cards to Telegram and Instagram
+        env:
+          PUBLISH_ONLY: "true"
+        run: python -m src.orchestrator
+
+      - name: Commit publish results
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          if git diff --cached --quiet; then
+            echo "No publish-state changes to commit."
+          else
+            git commit -m "market: record publishing results"
+            git push
+          fi
