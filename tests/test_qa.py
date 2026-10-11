@@ -14,9 +14,15 @@ class QATests(unittest.TestCase):
         self.assertTrue(ok, reason)
     def test_rejects_low_rr(self):
         signal = self.valid()
-        signal.update(tp2=105.0)
+        signal.update(tp2=105.0, rr_tp2=1.25)
         ok, _ = validate(signal, {"signals": {}})
         self.assertFalse(ok)
+    def test_rejects_inconsistent_rr(self):
+        signal = self.valid()
+        signal["rr_tp2"] = 2.5
+        ok, reason = validate(signal, {"signals": {}})
+        self.assertFalse(ok)
+        self.assertIn("does not match", reason)
     def test_rejects_duplicate(self):
         signal = self.valid()
         ok, _ = validate(signal, {"signals": {signal["signal_id"]: signal}})
