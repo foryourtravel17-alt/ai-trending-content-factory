@@ -9,7 +9,7 @@ on:
       - "scripts/**"
       - "tests/**"
       - "requirements.txt"
-      - ".github/workflows/market_content_tests.yml"
+      - ".github/workflows/**"
   pull_request:
     paths:
       - "agents/**"
