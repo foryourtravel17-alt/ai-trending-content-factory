@@ -28,6 +28,33 @@ def public_image_url(image_path: Path) -> str:
     raise RuntimeError("Set GH_USER and GH_REPO, or IMAGE_BASE_URL, to create a public image URL.")
 
 
+def _accessible_image_url(image_path: Path) -> str:
+    """Prefer GitHub Pages; fall back to raw GitHub if Pages is not deployed yet."""
+    gh_user = os.getenv("GH_USER", "").strip()
+    gh_repo = os.getenv("GH_REPO", "").strip()
+    custom_base = os.getenv("IMAGE_BASE_URL", "").strip().rstrip("/")
+    candidates = []
+    if custom_base:
+        candidates.append(f"{custom_base}/{quote(image_path.name)}")
+    if gh_user and gh_repo:
+        candidates.append(f"https://{gh_user}.github.io/{gh_repo}/output/{quote(image_path.name)}")
+    repository = os.getenv("GITHUB_REPOSITORY", "").strip()
+    if repository:
+        candidates.append(f"https://raw.githubusercontent.com/{repository}/main/output/{quote(image_path.name)}")
+    if not candidates:
+        raise RuntimeError("Set GH_USER and GH_REPO, or IMAGE_BASE_URL, to create a public image URL.")
+    for candidate in candidates:
+        try:
+            response = requests.head(candidate, allow_redirects=True, timeout=12)
+            if response.status_code == 200:
+                log.info("Public image URL verified: %s", candidate)
+                return candidate
+            log.warning("Image URL not ready (%s): %s", response.status_code, candidate)
+        except requests.RequestException as exc:
+            log.warning("Could not verify image URL %s: %s", candidate, exc)
+    raise RuntimeError("Generated card is not publicly reachable. Enable GitHub Pages or check the raw GitHub URL.")
+
+
 def _telegram(method: str, data: dict) -> dict:
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
@@ -53,7 +80,6 @@ def _instagram_publish(image_url: str, caption: str) -> str:
     creation_id = response.json().get("id")
     if not creation_id:
         raise RuntimeError(f"Instagram media container response had no id: {response.text[:400]}")
-    # IMAGE containers normally become available quickly; poll briefly for status if exposed.
     for _ in range(6):
         status = requests.get(f"https://graph.facebook.com/{API_VERSION}/{creation_id}", params={
             "fields": "status_code", "access_token": token,
@@ -85,8 +111,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         return record
 
     human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
-    image_url = public_image_url(card_path)
-    # Telegram HTML caption has a 1024-character limit for media captions.
+    image_url = _accessible_image_url(card_path)
     telegram_caption = copy["telegram_html"][:1000]
     if human_approval:
         if platforms.get("telegram_dm", {}).get("status") != "sent":
@@ -101,9 +126,9 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             platforms["telegram_dm"] = {"status": "sent", "message_id": result.get("message_id")}
             log.info("Draft sent to Telegram DM for %s; public publishing withheld.", signal["signal_id"])
         record["status"] = "pending_approval"
+        record["image_url"] = image_url
         return record
 
-    # A successful platform is never sent again if another platform fails.
     if platforms.get("telegram", {}).get("status") != "published":
         token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
         if token:
@@ -117,13 +142,20 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         else:
             log.warning("Telegram skipped: TELEGRAM_BOT_TOKEN is not configured.")
     if platforms.get("instagram", {}).get("status") != "published":
-        if os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip() and os.getenv("IG_USER_ID", os.getenv("INSTAGRAM_USER_ID", "")).strip():
+        token = os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip()
+        user_id = os.getenv("IG_USER_ID", os.getenv("INSTAGRAM_USER_ID", "")).strip()
+        if token and user_id:
             media_id = _instagram_publish(image_url, copy["instagram_caption"])
             platforms["instagram"] = {"status": "published", "media_id": media_id}
             log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
         else:
             log.warning("Instagram skipped: IG_ACCESS_TOKEN/IG_USER_ID are not configured.")
-    statuses = [v.get("status") for k, v in platforms.items() if k in {"telegram", "instagram"}]
-    record["status"] = "published" if "published" in statuses else "generated"
+    statuses = [platforms.get(k, {}).get("status") for k in ("telegram", "instagram")]
+    if all(status == "published" for status in statuses):
+        record["status"] = "published"
+    elif "published" in statuses:
+        record["status"] = "partial"
+    else:
+        record["status"] = "generated"
     record["image_url"] = image_url
     return record
