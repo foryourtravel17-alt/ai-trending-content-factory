@@ -704,6 +704,7 @@ def main():
 
     topics = trend_discovery()
     if not topics:
+        save_json("latest_generated.json", {"content_ids": [], "generated_at": now_utc()})
         print("No fresh topic available. No-op run: nothing to publish.")
         return
     contents = []
@@ -725,6 +726,10 @@ def main():
         print(f"Saved: {content_id}.json")
 
     save_json("approval_queue.json", create_approval_queue(contents))
+    save_json("latest_generated.json", {
+        "content_ids": [item["content_id"] for item in contents],
+        "generated_at": now_utc(),
+    })
 
     print("---------------------------------------------")
     print(f"Generated: {len(contents)} English educational Reel drafts")
