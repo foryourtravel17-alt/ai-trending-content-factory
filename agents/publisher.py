@@ -108,7 +108,8 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
     platforms = record["publishing"]
     if dry_run:
         log.info("DRY_RUN: not posting %s to Telegram or Instagram.", signal["signal_id"])
-        record["status"] = "dry_run"
+        record["status"] = "generated"
+        record["last_run_mode"] = "dry_run"
         return record
 
     human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
