@@ -2,39 +2,53 @@
 from html import escape
 
 def build_copy(signal: dict, analyst: dict) -> dict:
+    symbol = signal.get("symbol", "")
     is_global = signal.get("region") == "GLOBAL"
+    ema_relation = "above" if signal["ema20"] > signal["ema50"] else "below"
     if is_global:
         body = (
-            f"I’m watching {signal['label']} through structure, momentum, and defined risk. "
-            f"EMA20 is {'above' if signal['ema20'] > signal['ema50'] else 'below'} EMA50; "
-            f"RSI(14) is {signal['rsi14']:.1f}. The setup can fail, and a risk/reward ratio is not a win probability."
+            f"{signal['label']}: EMA20 is {ema_relation} EMA50 and RSI(14) is {signal['rsi14']:.1f}. "
+            "This is a rule-based scenario, not a prediction."
         )
-        hook = analyst.get("hook") or "Structure first. Risk always."
-        tags = "#TradingEducation #TechnicalAnalysis #RiskManagement #BullseyeTheory"
+        hook = "Structure first. Risk always."
+        if symbol == "GC=F":
+            tags = "#GoldTrading #TechnicalAnalysis #RiskManagement #BullseyeTheory"
+        elif symbol == "BTC-USD":
+            tags = "#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory"
+        elif symbol == "ETH-USD":
+            tags = "#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory"
+        elif symbol == "EURUSD=X":
+            tags = "#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory"
+        elif symbol == "^NDX":
+            tags = "#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory"
+        else:
+            tags = "#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory"
     else:
+        relation_hi = "EMA50 ke upar" if signal["ema20"] > signal["ema50"] else "EMA50 ke neeche"
         body = (
-            f"Main {signal['label']} ko structure, momentum aur defined risk ke saath dekh raha hoon. "
-            f"EMA20 {'EMA50 ke upar' if signal['ema20'] > signal['ema50'] else 'EMA50 ke neeche'} hai; "
-            f"RSI(14) {signal['rsi14']:.1f} hai. Setup fail ho sakta hai — R:R win ki guarantee nahi."
+            f"{signal['label']}: EMA20 {relation_hi} hai aur RSI(14) {signal['rsi14']:.1f} hai. "
+            "Ye rule-based scenario hai, prediction nahi."
         )
-        hook = analyst.get("hook") or "Pehle structure, phir risk — no blind entries."
-        tags = "#TradingEducation #Nifty #PriceAction #RiskManagement #BullseyeTheory"
-    hook = str(hook).strip()[:100]
+        hook = "Structure first. Risk always."
+        if symbol == "^NSEI":
+            tags = "#Nifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory"
+        elif symbol == "^NSEBANK":
+            tags = "#BankNifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory"
+        else:
+            tags = "#IndianStocks #PriceAction #RiskManagement #BullseyeTheory"
     view = str(analyst.get("view", "")).strip()[:260]
     caveat = str(analyst.get("caveat", "")).strip()[:130]
     caption = (
-        f"{hook}\n\n{view}\n\n"
-        f"Scenario: {signal['symbol']} · {signal['direction']}\n"
-        f"RSI(14): {signal['rsi14']:.1f} | EMA20/50 structure\n\n"
+        f"{hook}\n\n{view}\n\n{body}\n\n"
+        f"Scenario: {signal['symbol']} · {signal['direction']}\n\n"
         f"{caveat}\n"
         "Educational market commentary only. Not financial advice."
     )
     instagram = f"{caption}\n\n{tags}"
     telegram_html = (
         f"<b>🎯 Bullseye Theory · {escape(signal['label'])}</b>\n\n"
-        f"<b>{escape(hook)}</b>\n\n{escape(view)}\n\n"
-        f"<b>Scenario:</b> {escape(signal['symbol'])} · {signal['direction']}\n"
-        f"<b>RSI(14):</b> {signal['rsi14']:.1f} · EMA20/50 structure aligned\n\n"
+        f"<b>{escape(hook)}</b>\n\n{escape(view)}\n\n{escape(body)}\n\n"
+        f"<b>Scenario:</b> {escape(signal['symbol'])} · {signal['direction']}\n\n"
         f"{escape(caveat)}\n\n"
         "<i>Educational scenario only. Not financial advice; levels can fail.</i>"
     )
