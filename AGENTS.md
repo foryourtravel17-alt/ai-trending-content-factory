@@ -44,3 +44,13 @@
 - GitHub repository is the source of truth for the content factory.
 - Replit hosts the separate D3 project.
 - Supabase REELS bucket provides public media URLs for Instagram/Telegram delivery.
+
+
+## Autonomous market-content extension
+
+- New market-analysis code lives in `agents/` and `src/orchestrator.py`; it is additive and must not replace the legacy Reel pipeline.
+- The market workflow uses Python 3.11, yfinance OHLC, transparent EMA/RSI/MACD/ATR rules, image cards, and `data/state.json` for deduplication.
+- Market cards are educational scenarios, not personalized trade advice. Never imply a guaranteed result or count targets as hits without an explicitly recorded outcome.
+- `HUMAN_APPROVAL=false` is the requested default for the new market workflow; `true` sends a private Telegram draft and requires an explicit approve/reject callback. This toggle does not remove the existing approval gate for legacy Reels.
+- Commit generated images before publishing so public image URLs can be fetched by Instagram. Prefer GitHub Pages; verify reachability and use the public raw-GitHub URL as a fallback.
+- Run the market pipeline's synthetic dry-run tests and never use live publishing credentials in a test job.
