@@ -1,0 +1,23 @@
+name: Market Factory Schedule Watchdog
+
+on:
+  schedule:
+    - cron: "0 13 * * 1-5" # 18:30 IST, after the last scheduled market-content slot
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  check-recent-success:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check recent market workflow success
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/market_stall_check.py
