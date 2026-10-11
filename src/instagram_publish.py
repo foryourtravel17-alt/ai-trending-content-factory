@@ -8,10 +8,12 @@ from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from pathlib import Path
 
+from config.env import instagram_access_token, instagram_user_id
+
 API_VERSION = os.environ.get("META_GRAPH_API_VERSION", "v23.0")
-SYSTEM_USER_TOKEN = os.environ.get("META_SYSTEM_USER_TOKEN", "").strip()
+SYSTEM_USER_TOKEN = instagram_access_token()
 TOKEN = SYSTEM_USER_TOKEN
-CONFIGURED_INSTAGRAM_USER_ID = os.environ.get("INSTAGRAM_USER_ID", "").strip()
+CONFIGURED_INSTAGRAM_USER_ID = instagram_user_id()
 
 API = f"https://graph.facebook.com/{API_VERSION}"
 TELEGRAM_CHANNEL = "@bullseye_theory"
@@ -156,7 +158,12 @@ def load_newest_unpublished_approved():
             continue
         age = now - created_at
         if age < timedelta(seconds=0) or age > MAX_CONTENT_AGE:
-            print(f"Skipping stale/future-dated draft ({age} old): {p.name}")
+            data["status"] = "expired"
+            data["approval"] = {**(data.get("approval") or {}), "status": "expired"}
+            data["expired_at"] = datetime.now(timezone.utc).isoformat()
+            data["expiration_reason"] = f"Content exceeded the {MAX_CONTENT_AGE} freshness limit."
+            p.write_text(json.dumps(data, indent=2, ensure_ascii=False) + chr(10), encoding="utf-8")
+            print(f"Marked stale/future-dated draft expired ({age} old): {p.name}")
             continue
 
         content_id = str(data.get("content_id", ""))
