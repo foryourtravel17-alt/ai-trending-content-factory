@@ -134,7 +134,9 @@ def make_signal(symbol: str, label: str, region: str, frame: pd.DataFrame) -> di
     if getattr(timestamp, "tzinfo", None) is None:
         timestamp = timestamp.tz_localize("UTC")
     timestamp_utc = timestamp.tz_convert("UTC").to_pydatetime()
-    max_age_hours = 36 if symbol in {"BTC-USD", "ETH-USD"} else 96
+    # Scheduled posts must be based on recent prices, not several-session-old candles.
+    # Crypto trades continuously; other markets can have a short overnight gap.
+    max_age_hours = 36 if symbol in {"BTC-USD", "ETH-USD"} else 20
     age_hours = (datetime.now(timezone.utc) - timestamp_utc).total_seconds() / 3600
     if age_hours > max_age_hours:
         raise ValueError(f"Latest candle is stale ({age_hours:.1f} hours old).")
