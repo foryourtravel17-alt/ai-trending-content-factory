@@ -125,7 +125,7 @@ class PublisherSafetyTests(unittest.TestCase):
             importlib.reload(processor)
             with patch("urllib.request.urlopen", side_effect=URLError("offline")):
                 with self.assertRaisesRegex(RuntimeError, "credentials redacted|bot token redacted"):
-                    processor.api("getUpdates", {"offset": 0}, timeout=1)
+                    processor.api("answerCallbackQuery", {"callback_query_id": "callback-test"}, timeout=1)
 
  
     def test_no_op_run_does_not_process_old_output(self):
