@@ -121,6 +121,14 @@ By default, the script exchanges the token and updates the repository secret `IG
 5. Watch **Actions** for per-symbol warnings and platform status. A weak/neutral setup is skipped. If Yahoo Finance has no valid candles or every symbol fails, inspect the logs; the system does not fabricate a signal. Stale hourly data is rejected after 20 hours for non-crypto instruments and 36 hours for crypto. Missing publishing credentials now fail the publish step rather than silently claiming success.
 6. Run the QA unit tests locally or in CI with `python -m unittest discover -s tests`.
 
+## Organic-to-paid preflight review (read-only)
+
+`.github/workflows/ads_preflight_report.yml` runs each Monday at 10:00 IST and can also be dispatched manually. It reads recent published Instagram content records, requests available media Insights, and sends a private Telegram report ranking posts by a transparent weighted-engagement-per-reach heuristic (likes + 2×comments + 3×saves + 3×shares, divided by reach). This is only an organic-engagement signal, not evidence of leads, sales, or return on ad spend.
+
+The report does not call advertising write APIs, create/edit/enable campaigns, change budgets, or spend money. It does not commit private performance metrics into this public repository. If Insights are unavailable or reach is missing, it deliberately makes no winner recommendation.
+
+Before any paid campaign can be launched, the owner must confirm the exact Meta ad account, course/lead destination, tracking event, objective, audience, campaign dates, and daily/total spending limit, then provide explicit final approval. Do not claim guaranteed trading results or fabricate testimonials, social proof, or performance statistics.
+
 ## Environment and dependencies
 
 Python 3.11 for the new market workflow. Requirements include yfinance, pandas, NumPy, mplfinance, Pillow, requests, and the existing PyYAML dependency. Secrets are read from environment variables only.
