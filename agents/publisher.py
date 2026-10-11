@@ -52,7 +52,7 @@ def _accessible_image_url(image_path: Path) -> str:
                 return candidate
             log.warning("Image URL not ready (%s): %s", response.status_code, candidate)
         except requests.RequestException as exc:
-            log.warning("Could not verify image URL %s: %s", candidate, exc)
+            log.warning("Could not verify image URL (%s).", type(exc).__name__)
     raise RuntimeError("Generated card is not publicly reachable. Enable GitHub Pages or check the raw GitHub URL.")
 
 
@@ -60,12 +60,32 @@ def _telegram(method: str, data: dict) -> dict:
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured.")
-    response = requests.post(f"https://api.telegram.org/bot{token}/{method}", data=data, timeout=45)
-    response.raise_for_status()
-    body = response.json()
+    try:
+        response = requests.post(f"https://api.telegram.org/bot{token}/{method}", data=data, timeout=45)
+    except requests.RequestException as exc:
+        raise RuntimeError(f"Telegram {method} request failed ({type(exc).__name__}); bot token redacted.") from None
+    if not response.ok:
+        raise RuntimeError(f"Telegram {method} failed with HTTP {response.status_code}; response redacted.")
+    try:
+        body = response.json()
+    except ValueError:
+        raise RuntimeError(f"Telegram {method} returned invalid JSON; response redacted.") from None
     if not body.get("ok"):
         raise RuntimeError(f"Telegram {method} failed: {body.get('description', 'unknown error')}")
     return body["result"]
+
+
+def _meta_request(method: str, url: str, **kwargs):
+    try:
+        response = requests.request(method, url, **kwargs)
+    except requests.RequestException as exc:
+        raise RuntimeError(f"Meta API request failed ({type(exc).__name__}); credentials redacted.") from None
+    if not response.ok:
+        raise RuntimeError(f"Meta API request failed with HTTP {response.status_code}; response redacted.")
+    try:
+        return response.json()
+    except ValueError:
+        raise RuntimeError("Meta API returned invalid JSON; response redacted.") from None
 
 
 def _instagram_publish(image_url: str, caption: str) -> str:
@@ -74,31 +94,28 @@ def _instagram_publish(image_url: str, caption: str) -> str:
     if not token or not user_id:
         raise RuntimeError("Instagram credentials missing (IG_ACCESS_TOKEN and IG_USER_ID).")
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
-    response = requests.post(f"{api}/media", data={
+    container = _meta_request("POST", f"{api}/media", data={
         "image_url": image_url, "caption": caption[:2200], "access_token": token,
     }, timeout=60)
-    response.raise_for_status()
-    creation_id = response.json().get("id")
+    creation_id = container.get("id")
     if not creation_id:
-        raise RuntimeError(f"Instagram media container response had no id: {response.text[:400]}")
+        raise RuntimeError("Instagram media container response had no id.")
     for _ in range(6):
-        status = requests.get(f"https://graph.facebook.com/{API_VERSION}/{creation_id}", params={
+        status = _meta_request("GET", f"https://graph.facebook.com/{API_VERSION}/{creation_id}", params={
             "fields": "status_code", "access_token": token,
         }, timeout=30)
-        if status.ok:
-            code = status.json().get("status_code")
-            if code == "ERROR":
-                raise RuntimeError("Instagram image container entered ERROR status.")
-            if code in (None, "FINISHED"):
-                break
+        code = status.get("status_code")
+        if code == "ERROR":
+            raise RuntimeError("Instagram image container entered ERROR status.")
+        if code in (None, "FINISHED"):
+            break
         time.sleep(5)
-    response = requests.post(f"{api}/media_publish", data={
+    published = _meta_request("POST", f"{api}/media_publish", data={
         "creation_id": creation_id, "access_token": token,
     }, timeout=60)
-    response.raise_for_status()
-    media_id = response.json().get("id")
+    media_id = published.get("id")
     if not media_id:
-        raise RuntimeError(f"Instagram publish response had no media id: {response.text[:400]}")
+        raise RuntimeError("Instagram publish response had no media id.")
     return str(media_id)
 
 
@@ -150,7 +167,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             except Exception as exc:
                 platforms["telegram"] = {"status": "failed", "error": str(exc)[:300]}
                 errors.append(f"Telegram: {exc}")
-                log.exception("Telegram publish failed for %s; still attempting Instagram.", signal["signal_id"])
+                log.error("Telegram publish failed for %s; still attempting Instagram: %s", signal["signal_id"], exc)
         else:
             log.warning("Telegram skipped: TELEGRAM_BOT_TOKEN is not configured.")
     if platforms.get("instagram", {}).get("status") != "published":
@@ -164,7 +181,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             except Exception as exc:
                 platforms["instagram"] = {"status": "failed", "error": str(exc)[:300]}
                 errors.append(f"Instagram: {exc}")
-                log.exception("Instagram publish failed for %s.", signal["signal_id"])
+                log.error("Instagram publish failed for %s: %s", signal["signal_id"], exc)
         else:
             log.warning("Instagram skipped: IG_ACCESS_TOKEN/IG_USER_ID are not configured.")
     statuses = [platforms.get(k, {}).get("status") for k in ("telegram", "instagram")]
