@@ -31,9 +31,9 @@ class ApprovalGateTests(unittest.TestCase):
         item.update(overrides)
         return item
 
-    def test_missing_human_approval_setting_fails_closed(self):
+    def test_missing_approval_record_fails_closed(self):
         self.assertTrue(env.human_approval_required())
-        self.assertFalse(env.content_is_approved(self.content()))
+        self.assertFalse(env.content_is_approved(self.content(approval={})))
 
     def test_pending_approval_is_blocked(self):
         self.assertFalse(env.content_is_approved(self.content(
@@ -113,7 +113,7 @@ class PublisherSafetyTests(unittest.TestCase):
         from urllib.error import HTTPError
         error = HTTPError("https://example.test", 500, "failure", {}, None)
         with patch("urllib.request.urlopen", side_effect=error):
-            with self.assertRaisesRegex(RuntimeError, "credentials redacted"):
+            with self.assertRaisesRegex(RuntimeError, "response redacted to protect credentials"):
                 instagram.request("POST", "https://example.test", {"access_token": "never-print-this"})
 
 
