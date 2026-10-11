@@ -12,6 +12,8 @@ from urllib.error import URLError
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 
 from config import env
+from config.workflow_yaml import UniqueKeyLoader, validate_workflows
+import yaml
 
 
 class ApprovalGateTests(unittest.TestCase):
@@ -185,6 +187,23 @@ class PublisherSafetyTests(unittest.TestCase):
         with patch("urllib.request.urlopen", side_effect=error):
             with self.assertRaisesRegex(RuntimeError, "response redacted to protect credentials"):
                 instagram.request("POST", "https://example.test", {"access_token": "never-print-this"})
+
+
+class WorkflowYamlRegressionTests(unittest.TestCase):
+    def test_duplicate_key_loader_rejects_the_previous_ig_user_id_bug(self):
+        # This reproduces the exact failure shape that yaml.safe_load silently accepted.
+        broken_workflow = (
+            "jobs:\\n"
+            "  publish:\\n"
+            "    env:\\n"
+            "      IG_USER_ID: first-value\\n"
+            "      IG_USER_ID: second-value\\n"
+        )
+        with self.assertRaises(yaml.constructor.ConstructorError):
+            yaml.load(broken_workflow, Loader=UniqueKeyLoader)
+
+    def test_all_workflow_files_have_no_duplicate_mapping_keys(self):
+        validate_workflows()
 
 
 if __name__ == "__main__":
