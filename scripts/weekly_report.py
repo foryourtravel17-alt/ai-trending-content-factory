@@ -157,7 +157,7 @@ def main():
         lines.append("Scenario outcome estimate: no resolved post-signal levels available yet.")
     lines.append(f"Open/unavailable scenarios: {open_count}.")
 
-    ig_token = os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip()
+    ig_token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
     version = os.getenv("META_GRAPH_API_VERSION", "v23.0")
     engagement = []
     if ig_token:
