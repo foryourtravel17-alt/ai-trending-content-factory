@@ -38,9 +38,13 @@ def _normalize_frame(frame: pd.DataFrame, symbol: str) -> pd.DataFrame:
     if frame is None or frame.empty:
         raise ValueError("Yahoo Finance returned no OHLC candles.")
     if isinstance(frame.columns, pd.MultiIndex):
-        if symbol in frame.columns.get_level_values(-1):
-            frame = frame.xs(symbol, axis=1, level=-1, drop_level=True)
-        else:
+        matched = False
+        for level in range(frame.columns.nlevels):
+            if symbol in frame.columns.get_level_values(level):
+                frame = frame.xs(symbol, axis=1, level=level, drop_level=True)
+                matched = True
+                break
+        if not matched:
             frame.columns = frame.columns.get_level_values(0)
     frame.columns = [str(c).title() for c in frame.columns]
     required = {"Open", "High", "Low", "Close"}
