@@ -129,10 +129,6 @@ def published_today_count():
 
 def load_newest_unpublished_approved():
     today_count = published_today_count()
-    if today_count >= DAILY_PUBLISH_LIMIT:
-        print(f"Daily publishing cap reached: {today_count}/{DAILY_PUBLISH_LIMIT} Instagram Reels in Asia/Kolkata. Nothing to publish.")
-        return None, None
-
     now = datetime.now(timezone.utc)
     candidates = []
     for p in Path("output").glob("content_*.json"):
@@ -141,15 +137,23 @@ def load_newest_unpublished_approved():
         except Exception:
             continue
 
+        content_id = str(data.get("content_id", ""))
+        video_path = Path("output/media") / f"{content_id}.mp4"
+        if is_already_published(data):
+            telegram = (data.get("publishing") or {}).get("telegram") or {}
+            instagram = (data.get("publishing") or {}).get("instagram") or {}
+            if (instagram.get("media_id") or data.get("instagram_media_id")) and telegram.get("status") != "published":
+                created_at = parse_timestamp(data.get("created_at")) or now
+                if video_path.exists():
+                    candidates.append((created_at.isoformat(), content_id, p, data))
+                    print(f"Queued Telegram-only retry for already-published Instagram content: {p.name}")
+            continue
+
         if data.get("status") != "approved_for_publishing":
             continue
         if not content_is_approved(data):
             print(f"Skipping content without a valid human approval binding: {p.name}")
             continue
-        if is_already_published(data):
-            print(f"Skipping already-published draft: {p.name}")
-            continue
-
         fact_check_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
         if fact_check_status not in {"passed", "verified", "approved"}:
             print(f"Skipping draft requiring fact-check review ({fact_check_status or 'missing status'}): {p.name}")
@@ -168,23 +172,20 @@ def load_newest_unpublished_approved():
             p.write_text(json.dumps(data, indent=2, ensure_ascii=False) + chr(10), encoding="utf-8")
             print(f"Marked stale/future-dated draft expired ({age} old): {p.name}")
             continue
-
-        content_id = str(data.get("content_id", ""))
-        video_path = Path("output/media") / f"{content_id}.mp4"
+        if today_count >= DAILY_PUBLISH_LIMIT:
+            print(f"Daily publishing cap reached: {today_count}/{DAILY_PUBLISH_LIMIT}; skipping new Instagram post.")
+            continue
         if not video_path.exists():
             print(f"Skipping approved draft without Reel file: {p.name}")
             continue
-
         candidates.append((created_at.isoformat(), content_id, p, data))
 
     if not candidates:
-        print("No fresh, fact-checked, unpublished approved content is eligible.")
+        print("No fresh, fact-checked, unpublished approved content or pending Telegram mirror is eligible.")
         return None, None
-
     candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
     _, _, content_path, approved = candidates[0]
     return content_path, approved
-
 
 def save_state(content_path, approved):
     content_path.write_text(
