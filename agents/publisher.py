@@ -10,6 +10,8 @@ from urllib.parse import quote
 
 import requests
 
+from config.env import instagram_access_token, instagram_user_id, human_approval_required
+
 log = logging.getLogger(__name__)
 API_VERSION = os.getenv("META_GRAPH_API_VERSION", "v23.0")
 TELEGRAM_CHANNEL = os.getenv("TELEGRAM_CHANNEL", "@bullseye_theory")
@@ -99,8 +101,8 @@ def _meta_request(method: str, url: str, **kwargs):
 
 
 def _instagram_publish(image_url: str, caption: str) -> str:
-    token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
-    user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
+    token = instagram_access_token()
+    user_id = instagram_user_id()
     if not token or not user_id:
         raise RuntimeError("Instagram credentials missing (IG_ACCESS_TOKEN and IG_USER_ID).")
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
@@ -139,7 +141,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         record["last_run_mode"] = "dry_run"
         return record
 
-    human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
+    human_approval = human_approval_required()
     image_url = record.get("image_url")
     telegram_caption = copy["telegram_html"][:1000]
     if human_approval:
