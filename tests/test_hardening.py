@@ -61,6 +61,12 @@ class ApprovalGateTests(unittest.TestCase):
     def test_bound_approved_content_is_allowed(self):
         self.assertTrue(env.content_is_approved(self.content()))
 
+    def test_content_mutation_invalidates_approval_hash(self):
+        item = self.content()
+        self.assertTrue(env.content_is_approved(item))
+        item["script"]["body"] = "Changed after approval"
+        self.assertFalse(env.content_is_approved(item))
+
     def test_already_published_duplicate_is_blocked(self):
         self.assertFalse(env.content_is_approved(self.content(status="published_to_instagram")))
 
