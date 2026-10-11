@@ -37,11 +37,11 @@ jobs:
           POLL_SECONDS: "10"
         run: python src/telegram_process.py
 
-      - name: Publish the approved market scenario
-        if: steps.approval.outputs.market_approved == 'true'
+      - name: Publish approved market scenarios
+        if: steps.approval.outputs.market_approved_ids != ''
         env:
+          APPROVED_SIGNAL_IDS: ${{ steps.approval.outputs.market_approved_ids }}
           PUBLISH_ONLY: "true"
-          PUBLISH_ONLY_SIGNAL_ID: ${{ steps.approval.outputs.market_signal_id }}
           HUMAN_APPROVAL: "false"
           DRY_RUN: "0"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -54,7 +54,15 @@ jobs:
           GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
           GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
           IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
-        run: python -m src.orchestrator
+        run: |
+          set +e
+          IFS=',' read -r -a signal_ids <<< "$APPROVED_SIGNAL_IDS"
+          failed=0
+          for signal_id in "${signal_ids[@]}"; do
+            echo "Publishing approved signal: $signal_id"
+            PUBLISH_ONLY_SIGNAL_ID="$signal_id" python -m src.orchestrator || failed=1
+          done
+          exit "$failed"
 
       - name: Commit approval and publish state
         if: always()
