@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: market-content-factory
+  group: market-state
   cancel-in-progress: false
 
 jobs:
@@ -74,6 +74,7 @@ jobs:
             echo "No generated image/state changes to commit."
           else
             git commit -m "market: generate educational analysis cards"
+            git pull --rebase origin main
             git push
           fi
 
@@ -92,5 +93,6 @@ jobs:
             echo "No publish-state changes to commit."
           else
             git commit -m "market: record publishing results"
+            git pull --rebase origin main
             git push
           fi
