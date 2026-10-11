@@ -7,7 +7,7 @@ on:
         description: "Generate charts and captions without publishing"
         type: boolean
         required: false
-        default: false
+        default: true
   schedule:
     - cron: "45 3 * * 1-5"  # 09:15 IST pre-market/open check
     - cron: "45 5 * * 1-5"  # 11:15 IST intraday
@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 35
     env:
       DRY_RUN: ${{ inputs.dry_run || '0' }}
-      HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'false' }}
+      HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'true' }}
       LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
       LLM_BASE: ${{ vars.LLM_BASE || secrets.LLM_BASE || 'https://api.venice.ai/api/v1' }}
       LLM_MODEL: ${{ vars.LLM_MODEL || secrets.LLM_MODEL || 'llama-3.3-70b' }}

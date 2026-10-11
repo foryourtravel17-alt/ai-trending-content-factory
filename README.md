@@ -37,9 +37,9 @@ The legacy workflow currently uses Python 3.12 and its existing Meta/Supabase se
 - 13:30 IST (08:00 UTC)
 - 15:45 IST (10:15 UTC)
 
-The workflow first generates and commits PNGs/state, then publishes. That order allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. It also supports manual dispatch with `dry_run=true`.
+The workflow first generates and commits PNGs/state, then publishes. That order allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. Manual dispatch defaults to `dry_run=true` so the first manual run is safe; set it to `false` only after reviewing generated output and confirming credentials and hosting.
 
-**Important hosting prerequisite:** the repository is currently private. Instagram cannot fetch a private-repository raw GitHub URL. Before live Instagram posting, enable a publicly reachable GitHub Pages site if your GitHub plan supports it, or set `IMAGE_BASE_URL` to another public HTTPS image host. The publisher checks URL reachability and fails rather than posting a broken image.
+**Important hosting and visibility note:** this repository is currently **public** (verified on GitHub). Instagram needs a publicly reachable HTTPS image URL; the publisher checks URL reachability and fails rather than posting a broken image. Keep secrets and private account data out of source, commits, generated output, and logs. GitHub Pages or `IMAGE_BASE_URL` can serve generated cards. Do not change repository visibility as part of this workflow without first reviewing the image-hosting impact.
 
 `.github/workflows/market_approval_poll.yml` checks Telegram approval buttons every 30 minutes. If `HUMAN_APPROVAL=true`, market drafts go to the Telegram chat with **APPROVE & PUBLISH** and **REJECT** buttons. The existing Telegram callback processor handles both legacy Reel approvals and new market approvals. Both callback workflows share a concurrency group so they do not poll Telegram updates at the same time.
 
@@ -68,7 +68,7 @@ Optional/compatibility:
 - `META_APP_ID`, `META_APP_SECRET` — only needed locally by the token refresh helper; never commit them
 
 Recommended repository **Variables** (Settings → Secrets and variables → Actions → Variables):
-- `HUMAN_APPROVAL` = `false` for full auto, or `true` to DM drafts first
+- `HUMAN_APPROVAL` = `true` (safe default; drafts go to Telegram DM and require an explicit approval button). Set `false` only if you deliberately want unattended public publishing.
 - `LLM_ENABLED` = `true` to use the configured LLM; fallback copy works if unavailable
 - `LLM_BASE` = `https://api.venice.ai/api/v1` (or your OpenAI-compatible base URL)
 - `LLM_MODEL` = your selected model, default `llama-3.3-70b`
@@ -84,7 +84,7 @@ The workflow accepts `GH_USER` and `GH_REPO` as secrets. They are not sensitive,
 3. Create or open the Bullseye Theory channel (`@bullseye_theory`) and add the bot as an administrator with permission to post.
 4. Start a private chat with your bot and send `/start`.
 5. Obtain your private chat ID using the bot's `getUpdates` response or a trusted Telegram ID helper, then set `TELEGRAM_CHAT_ID`. The bot must be able to message you before draft delivery works.
-6. For full auto, set `HUMAN_APPROVAL=false`. For a review gate, set it to `true`; approve/reject buttons are polled every 30 minutes.
+6. Keep `HUMAN_APPROVAL=true` for the safe default. Drafts go to your private Telegram chat; approve/reject buttons are polled every 30 minutes. Do not switch to unattended publishing until you have reviewed successful dry runs.
 
 ### 3. Set up Instagram Graph API
 
@@ -116,8 +116,8 @@ By default, the script exchanges the token and updates the repository secret `IG
 
 1. Confirm the secrets/variables above are configured.
 2. Open **Actions → Autonomous Market Content Factory → Run workflow**.
-3. Select `dry_run=true` first. It should generate charts, cards, copy, and QA/state records but must not post to Telegram or Instagram.
-4. Review the Action log and committed image output. Then run with `dry_run=false` to enable publishing.
+3. The manual workflow defaults to `dry_run=true`. It should generate charts, cards, copy, and QA/state records but must not post to Telegram or Instagram.
+4. Review the Action log and committed image output. For the next run, use `dry_run=false` to send drafts to Telegram when `HUMAN_APPROVAL=true`; public posting still requires pressing **APPROVE & PUBLISH**. Instagram/Telegram credentials and public image hosting must be configured first.
 5. Watch **Actions** for per-symbol warnings and platform status. A weak/neutral setup is skipped. If Yahoo Finance has no valid candles or every symbol fails, inspect the logs; the system does not fabricate a signal. Stale hourly data is rejected after 20 hours for non-crypto instruments and 36 hours for crypto. Missing publishing credentials now fail the publish step rather than silently claiming success.
 6. Run the QA unit tests locally or in CI with `python -m unittest discover -s tests`.
 
