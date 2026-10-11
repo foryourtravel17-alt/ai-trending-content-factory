@@ -20,7 +20,7 @@
       "never use guaranteed returns, fake P&L, fake scarcity, or personalized trade instructions"
     ]
   },
-  "status": "approved_for_publishing",
+  "status": "published_to_instagram",
   "topic": {
     "title": "Why a Trading Journal Can Improve Your Learning Loop",
     "source": "daily_rotating_educational_topic",
@@ -125,10 +125,13 @@
   },
   "publishing": {
     "instagram": {
-      "status": "ready_for_publish"
+      "status": "published_to_instagram",
+      "media_id": "18155025160531979"
     },
     "telegram": {
-      "status": "not_published"
+      "status": "published",
+      "message_id": 60,
+      "published_at": "2026-10-11T13:41:59Z"
     },
     "reel_file": "output/media/content_20261011_133926_1.mp4"
   },
@@ -138,5 +141,7 @@
     "mode": "automatic"
   },
   "reel_generated": true,
-  "reel_generated_at": "2026-10-11T13:40:35.968806+00:00"
+  "reel_generated_at": "2026-10-11T13:40:35.968806+00:00",
+  "instagram_media_id": "18155025160531979",
+  "published_at": "2026-10-11T13:41:55Z"
 }
