@@ -40,6 +40,16 @@ jobs:
         run: |
           python -c "import agents.scout, agents.charts, agents.card, agents.analyst, agents.copy, agents.qa, agents.publisher, src.orchestrator"
           python -m py_compile agents/*.py src/orchestrator.py src/telegram_process.py scripts/weekly_report.py scripts/refresh_ig_token.py
+      - name: Validate workflow YAML syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+          files = sorted(Path(".github/workflows").glob("*.yml"))
+          for path in files:
+              yaml.safe_load(path.read_text(encoding="utf-8"))
+              print(f"YAML OK: {path}")
+          PY
       - name: Run QA unit tests
         run: python -m unittest discover -s tests -v
       - name: Run synthetic DRY_RUN smoke test
