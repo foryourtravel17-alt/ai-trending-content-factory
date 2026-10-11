@@ -34,6 +34,29 @@ def save_state(state: dict) -> None:
     temp.replace(STATE_PATH)
 
 
+def _signal_is_fresh(signal: dict) -> bool:
+    """Never publish an old prepared/draft signal after an outage or delayed approval."""
+    try:
+        as_of = datetime.fromisoformat(str(signal["as_of"]).replace("Z", "+00:00"))
+        if as_of.tzinfo is None:
+            as_of = as_of.replace(tzinfo=timezone.utc)
+        age_hours = (datetime.now(timezone.utc) - as_of.astimezone(timezone.utc)).total_seconds() / 3600
+    except (KeyError, TypeError, ValueError):
+        return False
+    max_age = 36 if signal.get("symbol") in {"BTC-USD", "ETH-USD"} else 20
+    return -0.0833 <= age_hours <= max_age
+
+
+def _expire_if_stale(signal_id: str, record: dict) -> bool:
+    if _signal_is_fresh(record.get("signal", {})):
+        return False
+    record["status"] = "expired"
+    record["expired_at"] = datetime.now(timezone.utc).isoformat()
+    record["last_error"] = "Signal expired before publishing; a fresh market candle is required."
+    log.warning("Signal %s expired before publishing; stale levels will not be posted.", signal_id)
+    return True
+
+
 def _retry_pending(state: dict) -> None:
     if HUMAN_APPROVAL or DRY_RUN:
         return
@@ -41,6 +64,9 @@ def _retry_pending(state: dict) -> None:
         if record.get("status") != "pending_approval":
             continue
         try:
+            if _expire_if_stale(signal_id, record):
+                save_state(state)
+                continue
             card_path = Path(record.get("card_path", ""))
             if not card_path.exists():
                 log.warning("Pending draft %s has no card image; skipping retry.", signal_id)
@@ -62,6 +88,9 @@ def _publish_prepared(state: dict) -> int:
         if record.get("status") not in {"generated", "publish_failed", "partial"}:
             continue
         try:
+            if _expire_if_stale(signal_id, record):
+                save_state(state)
+                continue
             card_path = Path(record.get("card_path", ""))
             if not card_path.exists():
                 raise FileNotFoundError(f"Card image missing for {signal_id}: {card_path}")
