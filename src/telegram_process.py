@@ -167,6 +167,9 @@ def main():
                                 and version == expected_version
                                 and fingerprint == expected_hash[:16]
                                 and approval.get("content_hash") == expected_hash
+                                and str((content.get("fact_check") or {}).get("status", "")).lower() in {"passed", "verified", "approved"}
+                                and (content.get("safety_check") or {}).get("passed") is True
+                                and approval.get("required") is True
                             )
                             if not valid_binding:
                                 print(f"Rejected stale or mismatched approval callback for {content_id}.")
