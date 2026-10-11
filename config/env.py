@@ -53,6 +53,8 @@ def is_content_fresh(created_at: str, max_age_hours: int = 24, now: datetime | N
 def content_is_approved(content: dict) -> bool:
     fact = (content.get("fact_check") or {}).get("status")
     safety = (content.get("safety_check") or {}).get("passed") is True
+    if content.get("status") != "approved_for_publishing":
+        return False
     if fact not in {"passed", "verified", "approved"} or not safety:
         return False
     if human_approval_required():
