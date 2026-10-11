@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import hashlib
 import json
+from datetime import datetime, timezone, timedelta
 
 def first_nonempty(*names: str, default: str = "") -> str:
     for name in names:
@@ -32,6 +33,21 @@ def approval_hash(content: dict) -> str:
         "body": (content.get("script") or {}).get("body"),
     }
     return hashlib.sha256(json.dumps(basis, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
+
+def is_content_fresh(created_at: str, max_age_hours: int = 24, now: datetime | None = None) -> bool:
+    try:
+        created = datetime.fromisoformat(str(created_at).replace("Z", "+00:00"))
+        if created.tzinfo is None:
+            created = created.replace(tzinfo=timezone.utc)
+        current = now or datetime.now(timezone.utc)
+        if current.tzinfo is None:
+            current = current.replace(tzinfo=timezone.utc)
+        age = current.astimezone(timezone.utc) - created.astimezone(timezone.utc)
+        return timedelta(0) <= age <= timedelta(hours=max_age_hours)
+    except (TypeError, ValueError):
+        return False
 
 
 def content_is_approved(content: dict) -> bool:
