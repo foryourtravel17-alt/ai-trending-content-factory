@@ -137,7 +137,9 @@ class PublisherSafetyTests(unittest.TestCase):
             with patch.object(main_module, "OUTPUT_DIR", Path(directory)):
                 with patch.object(main_module, "trend_discovery", return_value=[]):
                     main_module.main()
-            self.assertEqual(list(Path(directory).iterdir()), [])
+            manifest = __import__("json").loads((Path(directory) / "latest_generated.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["content_ids"], [])
+            self.assertEqual(list(Path(directory).glob("content_*.json")), [])
 
     def test_topic_history_prevents_immediate_repeat(self):
         import src.main as main_module
