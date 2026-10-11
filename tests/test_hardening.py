@@ -193,11 +193,11 @@ class WorkflowYamlRegressionTests(unittest.TestCase):
     def test_duplicate_key_loader_rejects_the_previous_ig_user_id_bug(self):
         # This reproduces the exact failure shape that yaml.safe_load silently accepted.
         broken_workflow = (
-            "jobs:\\n"
-            "  publish:\\n"
-            "    env:\\n"
-            "      IG_USER_ID: first-value\\n"
-            "      IG_USER_ID: second-value\\n"
+            "jobs:\n"
+            "  publish:\n"
+            "    env:\n"
+            "      IG_USER_ID: first-value\n"
+            "      IG_USER_ID: second-value\n"
         )
         with self.assertRaises(yaml.constructor.ConstructorError):
             yaml.load(broken_workflow, Loader=UniqueKeyLoader)
