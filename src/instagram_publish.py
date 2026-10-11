@@ -130,6 +130,9 @@ def published_today_count():
 def load_newest_unpublished_approved():
     today_count = published_today_count()
     now = datetime.now(timezone.utc)
+    allowed_ids = None
+    if "PUBLISH_CONTENT_IDS" in os.environ:
+        allowed_ids = {value.strip() for value in os.getenv("PUBLISH_CONTENT_IDS", "").split(",") if value.strip()}
     candidates = []
     for p in Path("output").glob("content_*.json"):
         try:
@@ -138,6 +141,8 @@ def load_newest_unpublished_approved():
             continue
 
         content_id = str(data.get("content_id", ""))
+        if allowed_ids is not None and content_id not in allowed_ids:
+            continue
         video_path = Path("output/media") / f"{content_id}.mp4"
         if is_already_published(data):
             telegram = (data.get("publishing") or {}).get("telegram") or {}
