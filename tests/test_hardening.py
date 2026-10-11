@@ -1,6 +1,7 @@
 import importlib
 import os
 import tempfile
+import io
 import unittest
 from pathlib import Path
 from unittest.mock import patch, Mock
@@ -108,10 +109,30 @@ class PublisherSafetyTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "credentials redacted|bot token redacted"):
                     processor.api("getUpdates", {"offset": 0}, timeout=1)
 
+ 
+    def test_no_op_run_does_not_process_old_output(self):
+        import src.main as main_module
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(main_module, "OUTPUT_DIR", Path(directory)):
+                with patch.object(main_module, "trend_discovery", return_value=[]):
+                    main_module.main()
+            self.assertEqual(list(Path(directory).iterdir()), [])
+
+    def test_topic_history_prevents_immediate_repeat(self):
+        import src.main as main_module
+        with tempfile.TemporaryDirectory() as directory:
+            history_path = Path(directory) / "recent_topics.json"
+            with patch.object(main_module, "OUTPUT_DIR", Path(directory)), patch.object(main_module, "TOPIC_HISTORY_PATH", history_path):
+                first = main_module.trend_discovery()
+                second = main_module.trend_discovery()
+            self.assertTrue(first)
+            self.assertTrue(second)
+            self.assertNotEqual(first[0]["title"], second[0]["title"])
+
     def test_meta_api_failure_does_not_leak_token(self):
         import src.instagram_publish as instagram
         from urllib.error import HTTPError
-        error = HTTPError("https://example.test", 500, "failure", {}, None)
+        error = HTTPError("https://example.test", 500, "failure", {}, io.BytesIO(b"failure"))
         with patch("urllib.request.urlopen", side_effect=error):
             with self.assertRaisesRegex(RuntimeError, "response redacted to protect credentials"):
                 instagram.request("POST", "https://example.test", {"access_token": "never-print-this"})
