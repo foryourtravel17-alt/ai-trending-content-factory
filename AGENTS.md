@@ -54,3 +54,8 @@
 - `HUMAN_APPROVAL=false` is the requested default for the new market workflow; `true` sends a private Telegram draft and requires an explicit approve/reject callback. This toggle does not remove the existing approval gate for legacy Reels.
 - Commit generated images before publishing so public image URLs can be fetched by Instagram. Prefer GitHub Pages; verify reachability and use the public raw-GitHub URL as a fallback.
 - Run the market pipeline's synthetic dry-run tests and never use live publishing credentials in a test job.
+
+
+- The failure watchdog covers the market-content, approval, test, weekly-report, and schedule-watchdog workflows. The weekday schedule watchdog checks for a recent successful market-content run and sends a Telegram alert only when it detects a stall.
+- Missing Telegram or Instagram credentials must fail publishing loudly; do not report success when both channels were skipped.
+- Stale OHLC candles are rejected before publishing: 20 hours for non-crypto instruments and 36 hours for crypto.
