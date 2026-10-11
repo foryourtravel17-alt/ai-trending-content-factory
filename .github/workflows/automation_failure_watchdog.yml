@@ -8,6 +8,10 @@ on:
       - "Publish Approved Reel to Instagram"
       - "Telegram Approval"
       - "Instagram Token Health Check"
+      - "Autonomous Market Content Factory"
+      - "Market Signal Approval Poller"
+      - "Market Factory Tests"
+      - "Bullseye Weekly P&L and Engagement Summary"
     types: [completed]
 
 permissions:
