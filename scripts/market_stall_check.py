@@ -52,7 +52,7 @@ def main() -> int:
     if now.weekday() >= 5:
         print("Weekend: no scheduled market run expected. No alert sent.")
         return 0
-    cutoff = now - timedelta(hours=8)
+    cutoff = now - timedelta(hours=4)
     recent_success = None
     for run in payload.get("workflow_runs", []):
         if run.get("status") != "completed" or run.get("conclusion") != "success":
@@ -74,14 +74,14 @@ def main() -> int:
     latest_state = f"{latest.get('status', 'no run')} / {latest.get('conclusion', 'no conclusion')}"
     message = (
         "⚠️ Bullseye Theory market-content stall alert\n\n"
-        "No successful Autonomous Market Content Factory run was recorded in the last 8 hours "
+        "No successful Autonomous Market Content Factory run was recorded in the last 4 hours "
         "during the weekday monitoring window.\n"
         f"Latest run: {latest_state}\n"
         f"Open Actions: {latest_url}\n\n"
         "Check Yahoo Finance availability, GitHub Actions status, image hosting, and publishing secrets."
     )
     send_alert(tg_token, chat_id, message)
-    print("Stall alert sent because no successful market workflow run was found in the last 8 hours.")
+    print("Stall alert sent because no successful market workflow run was found in the last 4 hours.")
     return 0
 
 
