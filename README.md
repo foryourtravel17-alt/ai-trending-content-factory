@@ -45,6 +45,8 @@ The workflow first generates and commits PNGs/state, then publishes. That order 
 
 `.github/workflows/weekly_report.yml` sends a Friday Telegram report. It estimates hypothetical signal outcomes from post-signal hourly OHLC (conservatively counting same-candle stop/target ambiguity as a stop) and fetches Instagram Insights when permissions allow. This is not actual broker P&L; the report clearly labels it as scenario analysis. `.github/workflows/market_stall_watchdog.yml` checks weekday evening for a recent successful market-content run and sends an alert only if the scheduled factory appears stalled. The failure watchdog also monitors the new market workflows.
 
+`.github/workflows/ads_preflight_report.yml` runs every Monday at 10:00 IST and can also be run manually. It reviews up to 12 recent published Instagram posts, reads available Insights, and sends a private Telegram preflight note. This is **read-only**: it never creates, activates, edits, or budgets ads. With fewer than three posts with readable reach/engagement metrics, it labels the data early and does not recommend a boost. It requires `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and either `IG_ACCESS_TOKEN` or `META_SYSTEM_USER_TOKEN`.
+
 ## Setup checklist
 
 ### 1. Add GitHub Actions secrets
