@@ -212,12 +212,12 @@ def retry_telegram_mirror(content_path, approved):
     caption = str(social.get("caption", ""))
     hashtags = social.get("hashtags", [])
     if isinstance(hashtags, list):
-        caption = (caption + "\\n\\n" + " ".join(hashtags)).strip()
+        caption = (caption + "\n\n" + " ".join(hashtags)).strip()
     telegram_url = f"https://api.telegram.org/bot{token}/sendVideo"
     params = urllib.parse.urlencode({
         "chat_id": TELEGRAM_CHANNEL,
         "video": video_url,
-        "caption": (caption + "\\n\\n🎯 Bullseye Theory\\nLearn | Trade | Earn").strip()[:1024],
+        "caption": (caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Earn").strip()[:1024],
     }).encode()
     request_obj = urllib.request.Request(telegram_url, data=params, method="POST")
     try:
