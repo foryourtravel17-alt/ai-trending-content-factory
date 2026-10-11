@@ -105,10 +105,16 @@ for item in items:
     if len(text) > 3900:
         text = text[:3900] + "\n\n<i>[Message shortened]</i>"
 
+    approval_meta = content.get("approval") or {}
+    version = int(approval_meta.get("version", content.get("content_version", 1)))
+    content_hash = str(approval_meta.get("content_hash", ""))
+    if not content_hash:
+        raise RuntimeError(f"Refusing approval request without a content hash: {content_id}")
+    fingerprint = content_hash[:16]
     keyboard = {
         "inline_keyboard": [[
-            {"text": "✅ APPROVE", "callback_data": f"approve:{content_id}"},
-            {"text": "❌ REJECT", "callback_data": f"reject:{content_id}"},
+            {"text": "✅ APPROVE", "callback_data": f"approve:{content_id}:{version}:{fingerprint}"},
+            {"text": "❌ REJECT", "callback_data": f"reject:{content_id}:{version}:{fingerprint}"},
         ]]
     }
 
