@@ -35,6 +35,8 @@ def request(method, url, params):
                 "and the Bullseye Theory Page/Instagram asset assignment."
             ) from None
         raise RuntimeError(f"Meta API HTTP {e.code}; response redacted to protect credentials.") from None
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Meta API request failed ({type(exc).__name__}); credentials redacted.") from None
 
 
 def resolve_instagram_user_id():
@@ -312,10 +314,13 @@ def main():
                 )
                 save_state(content_path, approved)
             except urllib.error.HTTPError as e:
-                body = e.read().decode(errors="replace")
                 raise RuntimeError(
-                    f"Telegram channel post failed HTTP {e.code}: {body}"
-                ) from e
+                    f"Telegram channel post failed HTTP {e.code}; response redacted to protect bot token."
+                ) from None
+            except urllib.error.URLError as exc:
+                raise RuntimeError(
+                    f"Telegram channel request failed ({type(exc).__name__}); bot token redacted."
+                ) from None
 
 
 if __name__ == "__main__":
