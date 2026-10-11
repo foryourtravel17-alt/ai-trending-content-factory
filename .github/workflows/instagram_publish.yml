@@ -44,7 +44,10 @@ jobs:
           else:
               try:
                   manifest = json.loads(Path("output/latest_reel_generated.json").read_text(encoding="utf-8"))
-                  has_candidate = bool(manifest.get("content_ids"))
+                  content_ids = [str(value) for value in manifest.get("content_ids", []) if value]
+                  has_candidate = bool(content_ids)
+                  with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+                      env_file.write("PUBLISH_CONTENT_IDS=" + ",".join(content_ids) + "\n")
               except (OSError, json.JSONDecodeError, AttributeError):
                   has_candidate = False
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
