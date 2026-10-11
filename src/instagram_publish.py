@@ -33,8 +33,8 @@ def request(method, url, params):
                 "META_ACCESS_TOKEN_INVALID: Meta rejected the current System User credential "
                 "(OAuth error 190). No Reel was published. Check META_SYSTEM_USER_TOKEN "
                 "and the Bullseye Theory Page/Instagram asset assignment."
-            ) from e
-        raise RuntimeError(f"Meta API HTTP {e.code}: {body}") from e
+            ) from None
+        raise RuntimeError(f"Meta API HTTP {e.code}; response redacted to protect credentials.") from None
 
 
 def resolve_instagram_user_id():
