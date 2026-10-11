@@ -86,6 +86,17 @@ jobs:
           PUBLISH_ONLY: "true"
         run: python -m src.orchestrator
 
+      - name: Upload dry-run cards and state for inspection
+        if: inputs.dry_run == true
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-dry-run-${{ github.run_id }}
+          path: |
+            output/*.png
+            data/state.json
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Commit publish results
         if: always() && inputs.dry_run != true
         run: |
