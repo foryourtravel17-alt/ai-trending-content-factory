@@ -69,7 +69,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/telegram_state.json output/approval_queue.json data/state.json output/content_*.json
+          git add output/telegram_state.json output/approval_queue.json data/state.json
+          find output -maxdepth 1 -type f -name "content_*.json" -print0 | xargs -0 -r git add --
           if git diff --cached --quiet; then
             echo "No approval-state changes to commit."
           else
