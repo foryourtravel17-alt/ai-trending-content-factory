@@ -140,7 +140,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         return record
 
     human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
-    image_url = None
+    image_url = record.get("image_url")
     telegram_caption = copy["telegram_html"][:1000]
     if human_approval:
         if platforms.get("telegram_dm", {}).get("status") != "sent":
