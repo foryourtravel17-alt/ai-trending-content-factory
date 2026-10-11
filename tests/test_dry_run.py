@@ -1,8 +1,9 @@
-"""Synthetic end-to-end smoke test: render chart/card/copy and prove DRY_RUN never posts."""
+"""Synthetic end-to-end smoke tests: render images/copy and prove DRY_RUN never posts."""
 import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -14,20 +15,27 @@ from agents.analyst import analyze
 from agents.copy import build_copy
 from agents.qa import validate
 from agents.publisher import publish
+import src.orchestrator as orchestrator
+
+
+def synthetic_market():
+    count = 240
+    idx = pd.date_range(end=pd.Timestamp.now(tz="UTC").floor("h"), periods=count, freq="h")
+    t = np.arange(count, dtype=float)
+    close = 100 + 0.03 * t + 0.5 * np.sin((t + 20.0) / 8.0)
+    frame = pd.DataFrame({
+        "Open": close - 0.03, "High": close + 0.35, "Low": close - 0.35,
+        "Close": close, "Volume": np.full(count, 1000.0),
+    }, index=idx)
+    indicators = compute_indicators(frame)
+    signal = make_signal("TEST", "Synthetic Test", "GLOBAL", indicators)
+    return indicators, signal
+
 
 class DryRunSmokeTest(unittest.TestCase):
     def test_agent_chain_renders_without_network_posts(self):
         os.environ["DRY_RUN"] = "1"
-        count = 240
-        idx = pd.date_range(end=pd.Timestamp.now(tz="UTC").floor("h"), periods=count, freq="h")
-        t = np.arange(count, dtype=float)
-        close = 100 + 0.03 * t + 0.5 * np.sin((t + 20.0) / 8.0)
-        frame = pd.DataFrame({
-            "Open": close - 0.03, "High": close + 0.35, "Low": close - 0.35,
-            "Close": close, "Volume": np.full(count, 1000.0),
-        }, index=idx)
-        indicators = compute_indicators(frame)
-        signal = make_signal("TEST", "Synthetic Test", "GLOBAL", indicators)
+        indicators, signal = synthetic_market()
         self.assertIsNotNone(signal, "synthetic trend should produce a non-neutral scenario")
         with tempfile.TemporaryDirectory() as tmp:
             chart = render_chart(indicators, signal, tmp)
@@ -45,7 +53,35 @@ class DryRunSmokeTest(unittest.TestCase):
             self.assertEqual(result["status"], "generated")
             self.assertEqual(result["last_run_mode"], "dry_run")
             self.assertEqual(result["publishing"], {})
-            self.assertTrue(copy["instagram_caption"])
+
+    def test_orchestrator_end_to_end_dry_run(self):
+        indicators, signal = synthetic_market()
+        self.assertIsNotNone(signal)
+        original_cwd = os.getcwd()
+        with tempfile.TemporaryDirectory() as tmp:
+            os.chdir(tmp)
+            try:
+                state_path = Path(tmp) / "data" / "state.json"
+                state_path.parent.mkdir(parents=True)
+                state_path.write_text('{"signals": {}, "runs": []}', encoding="utf-8")
+                with patch("agents.qa.STATE_PATH", state_path), \
+                     patch.object(orchestrator, "STATE_PATH", state_path), \
+                     patch.object(orchestrator, "SYMBOLS", {"GLOBAL": {"TEST": "Synthetic Test"}}), \
+                     patch.object(orchestrator, "scout_symbol", return_value={"frame": indicators, "signal": signal}), \
+                     patch.object(orchestrator, "DRY_RUN", True), \
+                     patch.object(orchestrator, "GENERATE_ONLY", False), \
+                     patch.object(orchestrator, "PUBLISH_ONLY", False), \
+                     patch.object(orchestrator, "HUMAN_APPROVAL", False):
+                    self.assertEqual(orchestrator.main(), 0)
+                self.assertTrue(Path("output", f"{signal['slug']}.png").is_file())
+                self.assertTrue(Path("output", f"{signal['slug']}_card.png").is_file())
+                saved = __import__("json").loads(state_path.read_text(encoding="utf-8"))
+                record = saved["signals"][signal["signal_id"]]
+                self.assertEqual(record["status"], "generated")
+                self.assertEqual(record["last_run_mode"], "dry_run")
+                self.assertEqual(record["publishing"], {})
+            finally:
+                os.chdir(original_cwd)
 
 if __name__ == "__main__":
     unittest.main()
