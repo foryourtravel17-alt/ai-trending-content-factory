@@ -103,7 +103,7 @@ def _instagram_publish(image_url: str, caption: str) -> str:
 
 
 def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bool = False) -> dict:
-    """Publish one signal; persist each platform result into record before returning."""
+    """Publish one signal; each platform is isolated and successful posts are never repeated."""
     record.setdefault("publishing", {})
     platforms = record["publishing"]
     if dry_run:
@@ -136,25 +136,35 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         record["image_url"] = image_url
         return record
 
+    errors = []
     if platforms.get("telegram", {}).get("status") != "published":
         token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
         if token:
-            result = _telegram("sendPhoto", {
-                "chat_id": TELEGRAM_CHANNEL, "photo": image_url,
-                "caption": telegram_caption,
-                "parse_mode": "HTML",
-            })
-            platforms["telegram"] = {"status": "published", "message_id": result.get("message_id")}
-            log.info("Telegram published %s (message %s).", signal["signal_id"], result.get("message_id"))
+            try:
+                result = _telegram("sendPhoto", {
+                    "chat_id": TELEGRAM_CHANNEL, "photo": image_url,
+                    "caption": telegram_caption, "parse_mode": "HTML",
+                })
+                platforms["telegram"] = {"status": "published", "message_id": result.get("message_id")}
+                log.info("Telegram published %s (message %s).", signal["signal_id"], result.get("message_id"))
+            except Exception as exc:
+                platforms["telegram"] = {"status": "failed", "error": str(exc)[:300]}
+                errors.append(f"Telegram: {exc}")
+                log.exception("Telegram publish failed for %s; still attempting Instagram.", signal["signal_id"])
         else:
             log.warning("Telegram skipped: TELEGRAM_BOT_TOKEN is not configured.")
     if platforms.get("instagram", {}).get("status") != "published":
         token = os.getenv("IG_ACCESS_TOKEN", os.getenv("META_SYSTEM_USER_TOKEN", "")).strip()
         user_id = os.getenv("IG_USER_ID", os.getenv("INSTAGRAM_USER_ID", "")).strip()
         if token and user_id:
-            media_id = _instagram_publish(image_url, copy["instagram_caption"])
-            platforms["instagram"] = {"status": "published", "media_id": media_id}
-            log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
+            try:
+                media_id = _instagram_publish(image_url, copy["instagram_caption"])
+                platforms["instagram"] = {"status": "published", "media_id": media_id}
+                log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
+            except Exception as exc:
+                platforms["instagram"] = {"status": "failed", "error": str(exc)[:300]}
+                errors.append(f"Instagram: {exc}")
+                log.exception("Instagram publish failed for %s.", signal["signal_id"])
         else:
             log.warning("Instagram skipped: IG_ACCESS_TOKEN/IG_USER_ID are not configured.")
     statuses = [platforms.get(k, {}).get("status") for k in ("telegram", "instagram")]
@@ -162,7 +172,11 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         record["status"] = "published"
     elif "published" in statuses:
         record["status"] = "partial"
+    elif errors:
+        record["status"] = "publish_failed"
     else:
         record["status"] = "generated"
     record["image_url"] = image_url
+    if errors:
+        raise RuntimeError("One or more publishing platforms failed: " + " | ".join(errors))
     return record
