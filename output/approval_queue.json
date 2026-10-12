@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T07:45:12.667468+00:00",
+  "updated_at": "2026-10-12T13:55:08.809136+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -260,6 +260,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-12T07:45:12.667031+00:00"
+    },
+    {
+      "content_id": "content_20261012_135508_1",
+      "topic": "Market Structure: Higher Highs, Lower Lows, and Real Direction",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-12T13:55:08.808863+00:00"
     }
   ],
   "telegram_sent": [
