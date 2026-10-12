@@ -298,8 +298,13 @@
       "chart_path": "output/btc-usd-2026101205-long.png",
       "card_path": "output/btc-usd-2026101205-long_card.png",
       "created_at": "2026-10-12T05:56:19.977678+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 136
+        }
+      },
+      "status": "pending_approval"
     },
     "tcs-ns-2026101205-long": {
       "signal": {
@@ -354,8 +359,13 @@
       "chart_path": "output/tcs-ns-2026101205-long.png",
       "card_path": "output/tcs-ns-2026101205-long_card.png",
       "created_at": "2026-10-12T05:56:20.320530+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 137
+        }
+      },
+      "status": "pending_approval"
     },
     "infy-ns-2026101205-long": {
       "signal": {
@@ -410,8 +420,13 @@
       "chart_path": "output/infy-ns-2026101205-long.png",
       "card_path": "output/infy-ns-2026101205-long_card.png",
       "created_at": "2026-10-12T05:56:20.671145+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 138
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026101205-short": {
       "signal": {
@@ -467,8 +482,13 @@
       "chart_path": "output/nsebank-2026101205-short.png",
       "card_path": "output/nsebank-2026101205-short_card.png",
       "created_at": "2026-10-12T05:56:21.024712+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 139
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -493,6 +513,30 @@
     {
       "at": "2026-10-12T04:01:20.209292+00:00",
       "signal_id": "nsebank-2026101203-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T05:56:25.680985+00:00",
+      "signal_id": "btc-usd-2026101205-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T05:56:27.463567+00:00",
+      "signal_id": "tcs-ns-2026101205-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T05:56:28.732637+00:00",
+      "signal_id": "infy-ns-2026101205-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T05:56:30.502053+00:00",
+      "signal_id": "nsebank-2026101205-short",
       "status": "pending_approval",
       "dry_run": false
     }
