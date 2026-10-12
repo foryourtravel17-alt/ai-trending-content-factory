@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T01:43:32.397609+00:00",
+  "updated_at": "2026-10-12T07:45:12.667468+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -253,6 +253,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-12T01:43:32.397193+00:00"
+    },
+    {
+      "content_id": "content_20261012_074512_1",
+      "topic": "What You Actually Learn Inside Bullseye Theory",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-12T07:45:12.667031+00:00"
     }
   ],
   "telegram_sent": [
