@@ -850,8 +850,13 @@
       "chart_path": "output/eth-usd-2026101210-long.png",
       "card_path": "output/eth-usd-2026101210-long_card.png",
       "created_at": "2026-10-12T10:30:22.892031+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 145
+        }
+      },
+      "status": "pending_approval"
     },
     "eurusd-x-2026101210-short": {
       "signal": {
@@ -906,8 +911,13 @@
       "chart_path": "output/eurusd-x-2026101210-short.png",
       "card_path": "output/eurusd-x-2026101210-short_card.png",
       "created_at": "2026-10-12T10:30:23.377921+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 146
+        }
+      },
+      "status": "pending_approval"
     },
     "nsei-2026101209-short": {
       "signal": {
@@ -963,8 +973,13 @@
       "chart_path": "output/nsei-2026101209-short.png",
       "card_path": "output/nsei-2026101209-short_card.png",
       "created_at": "2026-10-12T10:30:23.873432+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 147
+        }
+      },
+      "status": "pending_approval"
     },
     "sbin-ns-2026101209-short": {
       "signal": {
@@ -1019,8 +1034,13 @@
       "chart_path": "output/sbin-ns-2026101209-short.png",
       "card_path": "output/sbin-ns-2026101209-short_card.png",
       "created_at": "2026-10-12T10:30:24.371074+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 148
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026101209-short": {
       "signal": {
@@ -1076,8 +1096,13 @@
       "chart_path": "output/nsebank-2026101209-short.png",
       "card_path": "output/nsebank-2026101209-short_card.png",
       "created_at": "2026-10-12T10:30:24.930497+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 149
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -1156,6 +1181,36 @@
     {
       "at": "2026-10-12T08:16:33.112002+00:00",
       "signal_id": "nsebank-2026101207-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T10:30:30.076953+00:00",
+      "signal_id": "eth-usd-2026101210-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T10:30:31.850333+00:00",
+      "signal_id": "eurusd-x-2026101210-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T10:30:33.876979+00:00",
+      "signal_id": "nsei-2026101209-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T10:30:35.680457+00:00",
+      "signal_id": "sbin-ns-2026101209-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-12T10:30:36.998663+00:00",
+      "signal_id": "nsebank-2026101209-short",
       "status": "pending_approval",
       "dry_run": false
     }
