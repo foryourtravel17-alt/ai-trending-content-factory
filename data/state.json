@@ -1,4 +1,230 @@
 {
-  "signals": {},
+  "signals": {
+    "eth-usd-2026101204-long": {
+      "signal": {
+        "signal_id": "eth-usd-2026101204-long",
+        "slug": "eth-usd-2026101204-long",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 2543.360107421875,
+        "stop_loss": 2527.682709683911,
+        "targets": [
+          2559.037505159839,
+          2566.876204028821,
+          2574.7149028978033
+        ],
+        "tp1": 2559.037505159839,
+        "tp2": 2566.876204028821,
+        "tp3": 2574.7149028978033,
+        "rr_tp2": 1.5000000000000144,
+        "rsi14": 64.22386783166577,
+        "ema20": 2529.4968700441727,
+        "ema50": 2518.3984202170013,
+        "macd": 10.045621309103808,
+        "macd_signal": 9.077232631830903,
+        "macd_hist": 0.9683886772729053,
+        "atr14": 10.451598491976089,
+        "vwap": 2547.026122295107,
+        "support": 2495.35009765625,
+        "resistance": 2559.7099609375,
+        "as_of": "2026-10-12T04:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 64.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 64.2. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 64.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 64.2. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 64.2. This is a rule-based scenario, not a prediction.\n\nScenario: ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026101204-long.png",
+      "card_path": "output/eth-usd-2026101204-long_card.png",
+      "created_at": "2026-10-12T04:01:08.500379+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "tcs-ns-2026101203-long": {
+      "signal": {
+        "signal_id": "tcs-ns-2026101203-long",
+        "slug": "tcs-ns-2026101203-long",
+        "symbol": "TCS.NS",
+        "label": "TCS",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 2155.800048828125,
+        "stop_loss": 2118.524799681504,
+        "targets": [
+          2193.075297974746,
+          2211.712922548056,
+          2230.350547121367
+        ],
+        "tp1": 2193.075297974746,
+        "tp2": 2211.712922548056,
+        "tp3": 2230.350547121367,
+        "rr_tp2": 1.5,
+        "rsi14": 58.16810339822545,
+        "ema20": 2133.901884370754,
+        "ema50": 2112.722454535077,
+        "macd": 20.15735486002677,
+        "macd_signal": 16.75671817974496,
+        "macd_hist": 3.40063668028181,
+        "atr14": 24.8501660977473,
+        "vwap": 2166.5332845052085,
+        "support": 2060.0,
+        "resistance": 2202.0,
+        "as_of": "2026-10-12T03:45:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 58.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · TCS</b>\n\n<b>Structure first. Risk always.</b>\n\nMain TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 58.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke upar hai aur RSI(14) 58.2 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> TCS.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 58.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke upar hai aur RSI(14) 58.2 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: TCS.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/tcs-ns-2026101203-long.png",
+      "card_path": "output/tcs-ns-2026101203-long_card.png",
+      "created_at": "2026-10-12T04:01:08.990729+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "infy-ns-2026101203-long": {
+      "signal": {
+        "signal_id": "infy-ns-2026101203-long",
+        "slug": "infy-ns-2026101203-long",
+        "symbol": "INFY.NS",
+        "label": "Infosys",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 1023.4500122070312,
+        "stop_loss": 1010.7256474291527,
+        "targets": [
+          1036.1743769849097,
+          1042.536559373849,
+          1048.8987417627884
+        ],
+        "tp1": 1036.1743769849097,
+        "tp2": 1042.536559373849,
+        "tp3": 1048.8987417627884,
+        "rr_tp2": 1.4999999999999956,
+        "rsi14": 58.79392330400882,
+        "ema20": 1013.6065686593772,
+        "ema50": 1011.4907539766801,
+        "macd": 4.486805584667536,
+        "macd_signal": 2.196323924649256,
+        "macd_hist": 2.2904816600182802,
+        "atr14": 8.482909851919016,
+        "vwap": 1025.9500122070312,
+        "support": 990.2000122070312,
+        "resistance": 1030.800048828125,
+        "as_of": "2026-10-12T03:45:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 58.8 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Infosys</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 58.8 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nInfosys: EMA20 EMA50 ke upar hai aur RSI(14) 58.8 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> INFY.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 58.8 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nInfosys: EMA20 EMA50 ke upar hai aur RSI(14) 58.8 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: INFY.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/infy-ns-2026101203-long.png",
+      "card_path": "output/infy-ns-2026101203-long_card.png",
+      "created_at": "2026-10-12T04:01:09.483853+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "nsebank-2026101203-long": {
+      "signal": {
+        "signal_id": "nsebank-2026101203-long",
+        "slug": "nsebank-2026101203-long",
+        "symbol": "^NSEBANK",
+        "label": "Bank Nifty",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 55121.1484375,
+        "stop_loss": 54769.27503874184,
+        "targets": [
+          55473.02183625816,
+          55648.95853563723,
+          55824.895235016316
+        ],
+        "tp1": 55473.02183625816,
+        "tp2": 55648.95853563723,
+        "tp3": 55824.895235016316,
+        "rr_tp2": 1.4999999999999896,
+        "rsi14": 54.09721242114591,
+        "ema20": 55019.43965474582,
+        "ema50": 54995.52303034356,
+        "macd": 87.01516816772346,
+        "macd_signal": 50.592270908922416,
+        "macd_hist": 36.422897258801044,
+        "atr14": 234.5822658387716,
+        "vwap": null,
+        "support": 54383.69921875,
+        "resistance": 55418.75,
+        "as_of": "2026-10-12T03:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 54.1 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bank Nifty</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 54.1 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 54.1 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 54.1 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 54.1 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#BankNifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#BankNifty",
+          "#IndianMarkets",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/nsebank-2026101203-long.png",
+      "card_path": "output/nsebank-2026101203-long_card.png",
+      "created_at": "2026-10-12T04:01:09.980699+00:00",
+      "publishing": {},
+      "status": "generated"
+    }
+  },
   "runs": []
 }
