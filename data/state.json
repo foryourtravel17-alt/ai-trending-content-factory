@@ -1252,7 +1252,7 @@
           "message_id": 153
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "sbin-ns-2026101303-short": {
       "signal": {
@@ -2041,8 +2041,13 @@
       "chart_path": "output/gc-f-2026101310-long.png",
       "card_path": "output/gc-f-2026101310-long_card.png",
       "created_at": "2026-10-13T10:30:20.422144+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 166
+        }
+      },
+      "status": "pending_approval"
     },
     "btc-usd-2026101310-long": {
       "signal": {
@@ -2097,8 +2102,13 @@
       "chart_path": "output/btc-usd-2026101310-long.png",
       "card_path": "output/btc-usd-2026101310-long_card.png",
       "created_at": "2026-10-13T10:30:20.920139+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 167
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026101309-long": {
       "signal": {
@@ -2154,8 +2164,13 @@
       "chart_path": "output/nsebank-2026101309-long.png",
       "card_path": "output/nsebank-2026101309-long_card.png",
       "created_at": "2026-10-13T10:30:21.748647+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 168
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -2360,6 +2375,30 @@
     {
       "at": "2026-10-13T08:15:48.240726+00:00",
       "signal_id": "infy-ns-2026101307-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T10:30:24.973473+00:00",
+      "signal_id": "ndx-2026101219-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T10:30:26.716993+00:00",
+      "signal_id": "gc-f-2026101310-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T10:30:28.480067+00:00",
+      "signal_id": "btc-usd-2026101310-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T10:30:30.187046+00:00",
+      "signal_id": "nsebank-2026101309-long",
       "status": "pending_approval",
       "dry_run": false
     }
