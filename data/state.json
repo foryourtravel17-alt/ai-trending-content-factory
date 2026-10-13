@@ -1175,8 +1175,13 @@
       "chart_path": "output/gc-f-2026101303-long.png",
       "card_path": "output/gc-f-2026101303-long_card.png",
       "created_at": "2026-10-13T03:59:48.923304+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 152
+        }
+      },
+      "status": "pending_approval"
     },
     "ndx-2026101219-short": {
       "signal": {
@@ -1231,8 +1236,13 @@
       "chart_path": "output/ndx-2026101219-short.png",
       "card_path": "output/ndx-2026101219-short_card.png",
       "created_at": "2026-10-13T03:59:49.345256+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 153
+        }
+      },
+      "status": "pending_approval"
     },
     "sbin-ns-2026101303-short": {
       "signal": {
@@ -1287,8 +1297,13 @@
       "chart_path": "output/sbin-ns-2026101303-short.png",
       "card_path": "output/sbin-ns-2026101303-short_card.png",
       "created_at": "2026-10-13T03:59:49.709595+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 154
+        }
+      },
+      "status": "pending_approval"
     },
     "reliance-ns-2026101303-short": {
       "signal": {
@@ -1343,8 +1358,13 @@
       "chart_path": "output/reliance-ns-2026101303-short.png",
       "card_path": "output/reliance-ns-2026101303-short_card.png",
       "created_at": "2026-10-13T03:59:50.054421+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 155
+        }
+      },
+      "status": "pending_approval"
     },
     "infy-ns-2026101303-long": {
       "signal": {
@@ -1399,8 +1419,13 @@
       "chart_path": "output/infy-ns-2026101303-long.png",
       "card_path": "output/infy-ns-2026101303-long_card.png",
       "created_at": "2026-10-13T03:59:50.460407+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 156
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -1509,6 +1534,36 @@
     {
       "at": "2026-10-12T10:30:36.998663+00:00",
       "signal_id": "nsebank-2026101209-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T03:59:55.119728+00:00",
+      "signal_id": "gc-f-2026101303-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T03:59:56.842090+00:00",
+      "signal_id": "ndx-2026101219-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T03:59:58.486475+00:00",
+      "signal_id": "sbin-ns-2026101303-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T04:00:00.098438+00:00",
+      "signal_id": "reliance-ns-2026101303-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-13T04:00:01.298701+00:00",
+      "signal_id": "infy-ns-2026101303-long",
       "status": "pending_approval",
       "dry_run": false
     }
