@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-13T01:44:22.781692+00:00",
+  "updated_at": "2026-10-13T07:45:13.737676+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -274,6 +274,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-13T01:44:22.781325+00:00"
+    },
+    {
+      "content_id": "content_20261013_074513_1",
+      "topic": "Risk-to-Reward: What It Actually Tells You",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-13T07:45:13.737135+00:00"
     }
   ],
   "telegram_sent": [
