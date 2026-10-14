@@ -2391,7 +2391,7 @@
           "message_id": 173
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "nsebank-2026101403-long": {
       "signal": {
@@ -3060,8 +3060,13 @@
       "chart_path": "output/gc-f-2026101410-short.png",
       "card_path": "output/gc-f-2026101410-short_card.png",
       "created_at": "2026-10-14T10:39:58.399278+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 184
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026101410-short": {
       "signal": {
@@ -3116,8 +3121,13 @@
       "chart_path": "output/eth-usd-2026101410-short.png",
       "card_path": "output/eth-usd-2026101410-short_card.png",
       "created_at": "2026-10-14T10:39:58.852396+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 185
+        }
+      },
+      "status": "pending_approval"
     },
     "nsei-2026101409-long": {
       "signal": {
@@ -3173,8 +3183,13 @@
       "chart_path": "output/nsei-2026101409-long.png",
       "card_path": "output/nsei-2026101409-long_card.png",
       "created_at": "2026-10-14T10:39:59.308668+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 186
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026101409-long": {
       "signal": {
@@ -3230,8 +3245,13 @@
       "chart_path": "output/nsebank-2026101409-long.png",
       "card_path": "output/nsebank-2026101409-long_card.png",
       "created_at": "2026-10-14T10:39:59.870794+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 187
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -3550,6 +3570,36 @@
     {
       "at": "2026-10-14T08:26:08.567773+00:00",
       "signal_id": "nsei-2026101407-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T10:40:03.030304+00:00",
+      "signal_id": "ndx-2026101319-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T10:40:04.651448+00:00",
+      "signal_id": "gc-f-2026101410-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T10:40:06.198459+00:00",
+      "signal_id": "eth-usd-2026101410-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T10:40:07.772894+00:00",
+      "signal_id": "nsei-2026101409-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T10:40:09.033731+00:00",
+      "signal_id": "nsebank-2026101409-long",
       "status": "pending_approval",
       "dry_run": false
     }
