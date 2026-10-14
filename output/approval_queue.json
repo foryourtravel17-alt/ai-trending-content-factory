@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-13T13:49:18.941953+00:00",
+  "updated_at": "2026-10-14T01:53:08.445293+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -288,6 +288,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-13T13:49:18.941615+00:00"
+    },
+    {
+      "content_id": "content_20261014_015308_1",
+      "topic": "Patience Is a Trading Skill, Not Dead Time",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-14T01:53:08.444805+00:00"
     }
   ],
   "telegram_sent": [
