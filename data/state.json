@@ -2259,8 +2259,13 @@
       "chart_path": "output/gc-f-2026101404-short.png",
       "card_path": "output/gc-f-2026101404-short_card.png",
       "created_at": "2026-10-14T04:11:51.168447+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 171
+        }
+      },
+      "status": "pending_approval"
     },
     "btc-usd-2026101404-long": {
       "signal": {
@@ -2315,8 +2320,13 @@
       "chart_path": "output/btc-usd-2026101404-long.png",
       "card_path": "output/btc-usd-2026101404-long_card.png",
       "created_at": "2026-10-14T04:11:51.749931+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 172
+        }
+      },
+      "status": "pending_approval"
     },
     "ndx-2026101319-short": {
       "signal": {
@@ -2371,8 +2381,13 @@
       "chart_path": "output/ndx-2026101319-short.png",
       "card_path": "output/ndx-2026101319-short_card.png",
       "created_at": "2026-10-14T04:11:52.241890+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 173
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026101403-long": {
       "signal": {
@@ -2428,8 +2443,13 @@
       "chart_path": "output/nsebank-2026101403-long.png",
       "card_path": "output/nsebank-2026101403-long_card.png",
       "created_at": "2026-10-14T04:11:52.738961+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 174
+        }
+      },
+      "status": "pending_approval"
     },
     "hdfcbank-ns-2026101403-long": {
       "signal": {
@@ -2484,8 +2504,13 @@
       "chart_path": "output/hdfcbank-ns-2026101403-long.png",
       "card_path": "output/hdfcbank-ns-2026101403-long_card.png",
       "created_at": "2026-10-14T04:11:53.289105+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 175
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -2714,6 +2739,36 @@
     {
       "at": "2026-10-13T10:30:30.187046+00:00",
       "signal_id": "nsebank-2026101309-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T04:11:57.577923+00:00",
+      "signal_id": "gc-f-2026101404-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T04:11:59.036225+00:00",
+      "signal_id": "btc-usd-2026101404-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T04:12:00.059169+00:00",
+      "signal_id": "ndx-2026101319-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T04:12:01.615256+00:00",
+      "signal_id": "nsebank-2026101403-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-14T04:12:03.262135+00:00",
+      "signal_id": "hdfcbank-ns-2026101403-long",
       "status": "pending_approval",
       "dry_run": false
     }
