@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T10:28:34.581151+05:30",
+  "generated_at": "2026-10-15T10:27:25.063988+05:30",
   "mode": "free-first",
   "status": "ready_for_asset_generation",
   "manual_required": [
@@ -9,16 +9,6 @@
   "posts": [
     {
       "slot": 1,
-      "type": "photo",
-      "theme": "Travel",
-      "hook": "A little escape changes everything.",
-      "caption": "If I disappear for a weekend, where should I go? 🌴",
-      "visual": "Photorealistic adult Ritu, recognizable face, tasteful resort outfit with cover-up, tropical destination, natural sunlight, realistic travel photography, vertical 4:5.",
-      "approval": "pending",
-      "publishing": "not_connected"
-    },
-    {
-      "slot": 2,
       "type": "reel",
       "theme": "Romance",
       "hook": "Raat meri hai… attention tumhari. 😉🌙",
@@ -28,12 +18,22 @@
       "publishing": "not_connected"
     },
     {
-      "slot": 3,
+      "slot": 2,
       "type": "reel",
       "theme": "Attraction",
       "hook": "Dekhna allowed hai… approach karna optional. 😉",
       "caption": "Confidence looks better when it feels natural. 🖤 What catches your attention first — eyes, energy, or attitude?",
       "visual": "Photorealistic adult Ritu, consistent identity, elegant fitted outfit, premium lifestyle setting, natural skin texture, subtle confident expression, cinematic vertical 9:16.",
+      "approval": "pending",
+      "publishing": "not_connected"
+    },
+    {
+      "slot": 3,
+      "type": "photo",
+      "theme": "Lifestyle",
+      "hook": "Soft look. Strong energy.",
+      "caption": "Some moods don't need an explanation. ✨",
+      "visual": "Photorealistic adult Ritu, recognizable face, fuller curvy silhouette, tasteful fashion, luxury café or rooftop setting, natural daylight, realistic photography, vertical 4:5.",
       "approval": "pending",
       "publishing": "not_connected"
     }
