@@ -173,8 +173,9 @@ def draw_ticker(draw, topic, category):
         y += 28
 
 
-def draw_chart(draw, area, style="trend"):
+def draw_chart(draw, area, style="trend", accent=None):
     left, top, right, bottom = area
+    accent_color = accent or GOLD
     draw.rounded_rectangle(
         area, radius=28, fill=(10, 18, 31), outline=GRID, width=2
     )
@@ -190,10 +191,10 @@ def draw_chart(draw, area, style="trend"):
         zone_y = top + int((bottom - top) * 0.46)
         draw.rectangle(
             (left + 34, zone_y, right - 34, zone_y + 90),
-            outline=GOLD,
+            outline=accent_color,
             width=2,
         )
-        draw.text((left + 48, zone_y + 20), "RANGE", font=TINY, fill=GOLD)
+        draw.text((left + 48, zone_y + 20), "RANGE", font=TINY, fill=accent_color)
     elif style == "break":
         trend = [22, 35, 30, 48, 46, 62, 55, 74, 70, 86, 82, 95, 155, 48]
         bx = left + 44 + 12 * step
@@ -202,24 +203,24 @@ def draw_chart(draw, area, style="trend"):
     elif style == "risk":
         trend = [10, 18, 15, 26, 40, 34, 48, 45, 60, 54, 72, 66, 82, 76]
         risk_y = bottom - 170
-        draw.line((left + 34, risk_y, right - 34, risk_y), fill=GOLD, width=3)
-        draw.text((left + 48, risk_y - 34), "EXPOSURE", font=TINY, fill=GOLD)
+        draw.line((left + 34, risk_y, right - 34, risk_y), fill=accent_color, width=3)
+        draw.text((left + 48, risk_y - 34), "EXPOSURE", font=TINY, fill=accent_color)
     elif style == "sweep":
         trend = [25, 50, 32, 64, 44, 80, 42, 28, 55, 92, 76, 112, 94, 132]
         sweep_y = top + int((bottom - top) * 0.55)
-        draw.line((left + 30, sweep_y, right - 30, sweep_y), fill=GOLD, width=3)
-        draw.text((left + 42, sweep_y - 32), "LIQUIDITY SWEEP", font=TINY, fill=GOLD)
+        draw.line((left + 30, sweep_y, right - 30, sweep_y), fill=accent_color, width=3)
+        draw.text((left + 42, sweep_y - 32), "LIQUIDITY SWEEP", font=TINY, fill=accent_color)
     elif style == "choch":
         trend = [28, 52, 34, 68, 50, 85, 62, 38, 58, 95, 78, 122, 106, 145]
         choch_x = left + 44 + 9 * step
-        draw.line((left + 28, top + 180, right - 28, top + 180), fill=GOLD, width=3)
-        draw.line((choch_x, top + 70, choch_x, bottom - 35), fill=LIME, width=3)
-        draw.text((left + 42, top + 190), "CHOCH", font=TINY, fill=GOLD)
+        draw.line((left + 28, top + 180, right - 28, top + 180), fill=accent_color, width=3)
+        draw.line((choch_x, top + 70, choch_x, bottom - 35), fill=accent_color, width=3)
+        draw.text((left + 42, top + 190), "CHOCH", font=TINY, fill=accent_color)
     elif style == "retest":
         trend = [24, 44, 36, 64, 55, 82, 70, 102, 88, 72, 96, 118, 105, 138]
         retest_y = top + int((bottom - top) * 0.42)
-        draw.line((left + 30, retest_y, right - 30, retest_y), fill=LIME, width=3)
-        draw.text((left + 42, retest_y - 32), "RETEST ZONE", font=TINY, fill=LIME)
+        draw.line((left + 30, retest_y, right - 30, retest_y), fill=accent_color, width=3)
+        draw.text((left + 42, retest_y - 32), "RETEST ZONE", font=TINY, fill=accent_color)
     elif style == "break":
         trend = [22, 35, 30, 48, 46, 62, 55, 74, 70, 86, 82, 95, 155, 48]
 
@@ -233,7 +234,7 @@ def draw_chart(draw, area, style="trend"):
         body_top = min(open_, close)
         body_bottom = max(open_, close)
         up = close < open_
-        fill = LIME if not up else RED
+        fill = accent_color if not up else MUTED
         draw.line((x, high, x, low), fill=MUTED, width=3)
         draw.rounded_rectangle(
             (x - 9, body_top, x + 9, body_bottom),
@@ -303,7 +304,7 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
         font_size = int(archetype_data.get("font_sizes", {}).get("hook", 64))
         hook_font = load_font(font_size, True)
         centered(d, body or title, y + h * 0.52, hook_font, max(220, w - 110), fill=WHITE)
-        draw_chart(d, (105, 1260, 975, 1570), archetype_data.get("chart_style", "trend"))
+        draw_chart(d, (105, 1260, 975, 1570), archetype_data.get("chart_style", "trend"), accent=accent)
     elif scene_index in (1, 2, 3, 4):
         d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=GOLD)
         add_emphasis_panel(d, title, body)
