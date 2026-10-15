@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -28,6 +29,11 @@ class ReelArchetypeTests(unittest.TestCase):
         mix = data["target_mix"]
         self.assertEqual(sum(mix.values()), 100)
         self.assertEqual(mix, {"education": 70, "authority": 20, "conversion": 10})
+        archetypes = json.loads(Path("config/card_archetypes.json").read_text(encoding="utf-8"))["archetypes"]
+        actual = {"education": 0, "authority": 0, "conversion": 0}
+        for name in data["archetype_order"]:
+            actual[archetypes[name]["role"]] += 1
+        self.assertEqual(actual, {"education": 21, "authority": 6, "conversion": 3})
 
     def test_all_eight_archetypes_have_required_fields(self):
         data = json.loads(Path("config/card_archetypes.json").read_text(encoding="utf-8"))
@@ -42,8 +48,10 @@ class ReelArchetypeTests(unittest.TestCase):
     def test_hook_frame_renders_from_body(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "hook.png"
-            reel.make_frame(path, "Structure", "education", "THE HOOK",
-                            "REAL HOOK TEXT", 0, "", archetype="hook")
+            with patch("src.reel_generator.centered") as centered_mock:
+                reel.make_frame(path, "Structure", "education", "THE HOOK",
+                                "REAL HOOK TEXT", 0, "", archetype="hook")
+                self.assertTrue(any(call.args[1] == "REAL HOOK TEXT" for call in centered_mock.call_args_list))
             self.assertTrue(path.exists())
             self.assertGreater(path.stat().st_size, 1000)
             image = Image.open(path).convert("RGB")
