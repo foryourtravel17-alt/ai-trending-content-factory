@@ -1,3 +1,4 @@
+import hashlib
 import json
 import math
 import os
@@ -203,10 +204,24 @@ def draw_chart(draw, area, style="trend"):
         risk_y = bottom - 170
         draw.line((left + 34, risk_y, right - 34, risk_y), fill=GOLD, width=3)
         draw.text((left + 48, risk_y - 34), "EXPOSURE", font=TINY, fill=GOLD)
+    elif style == "sweep":
+        trend = [25, 50, 32, 64, 44, 80, 42, 28, 55, 92, 76, 112, 94, 132]
+        sweep_y = top + int((bottom - top) * 0.55)
+        draw.line((left + 30, sweep_y, right - 30, sweep_y), fill=GOLD, width=3)
+        draw.text((left + 42, sweep_y - 32), "LIQUIDITY SWEEP", font=TINY, fill=GOLD)
+    elif style == "choch":
+        trend = [28, 52, 34, 68, 50, 85, 62, 38, 58, 95, 78, 122, 106, 145]
+        choch_x = left + 44 + 9 * step
+        draw.line((left + 28, top + 180, right - 28, top + 180), fill=GOLD, width=3)
+        draw.line((choch_x, top + 70, choch_x, bottom - 35), fill=LIME, width=3)
+        draw.text((left + 42, top + 190), "CHOCH", font=TINY, fill=GOLD)
+    elif style == "retest":
+        trend = [24, 44, 36, 64, 55, 82, 70, 102, 88, 72, 96, 118, 105, 138]
+        retest_y = top + int((bottom - top) * 0.42)
+        draw.line((left + 30, retest_y, right - 30, retest_y), fill=LIME, width=3)
+        draw.text((left + 42, retest_y - 32), "RETEST ZONE", font=TINY, fill=LIME)
     elif style == "break":
         trend = [22, 35, 30, 48, 46, 62, 55, 74, 70, 86, 82, 95, 155, 48]
-    elif style == "risk":
-        trend = [10, 18, 15, 26, 40, 34, 48, 45, 60, 54, 72, 66, 82, 76]
 
     for i in range(n):
         x = left + 44 + i * step
@@ -247,7 +262,28 @@ def add_emphasis_panel(draw, label, text):
     centered(draw, text, 860, BODY, WIDTH - 260)
 
 
-def make_frame(path, topic, category, title, body, scene_index, scene_visual):
+def load_archetypes():
+    try:
+        return json.loads(Path("config/card_archetypes.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"archetypes": {}}
+
+
+def choose_archetype(content_id, previous=None):
+    """Stable hash-based archetype selection with an optional repeat guard."""
+    archetypes = load_archetypes().get("archetypes", {})
+    names = sorted(archetypes)
+    if not names:
+        return "hook"
+    digest = hashlib.sha256(str(content_id).encode("utf-8")).hexdigest()
+    index = int(digest[:12], 16) % len(names)
+    chosen = names[index]
+    if previous == chosen and len(names) > 1:
+        chosen = names[(index + 1) % len(names)]
+    return chosen
+
+
+def make_frame(path, topic, category, title, body, scene_index, scene_visual, archetype=None):
     img = gradient_background()
     d = ImageDraw.Draw(img)
 
@@ -256,16 +292,18 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
     draw_skyline(d)
 
     if scene_index == 0:
-        d.rounded_rectangle(
-            (70, 570, WIDTH - 70, 1190),
-            radius=40,
-            fill=PANEL,
-            outline=GOLD,
-            width=2,
-        )
-        d.text((108, 625), "THE HOOK", font=SMALL, fill=GOLD)
-        centered(d, title, 870, TITLE, WIDTH - 260)
-        draw_chart(d, (105, 1260, 975, 1570), "trend")
+        archetype_data = load_archetypes().get("archetypes", {}).get(archetype or "hook", {})
+        accent_hex = archetype_data.get("accent", "#D3AF58").lstrip("#")
+        accent = tuple(int(accent_hex[i:i + 2], 16) for i in (0, 2, 4))
+        zone = archetype_data.get("zones", {}).get("hook", {"x": 70, "y": 570, "w": 940, "h": 620})
+        x, y, w, h = zone["x"], zone["y"], zone["w"], zone["h"]
+        d.rounded_rectangle((x, y, x + w, y + h), radius=40, fill=PANEL, outline=accent, width=2)
+        label = archetype_data.get("label", (archetype or "hook").replace("_", " ").upper())
+        d.text((x + 38, y + 42), label.upper(), font=SMALL, fill=accent)
+        font_size = int(archetype_data.get("font_sizes", {}).get("hook", 64))
+        hook_font = load_font(font_size, True)
+        centered(d, body or title, y + h * 0.52, hook_font, max(220, w - 110), fill=WHITE)
+        draw_chart(d, (105, 1260, 975, 1570), archetype_data.get("chart_style", "trend"))
     elif scene_index in (1, 2, 3, 4):
         d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=GOLD)
         add_emphasis_panel(d, title, body)
@@ -287,25 +325,10 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
             (70, 570, WIDTH - 70, 1180),
             radius=40,
             fill=PANEL,
-            outline=LIME,
+            outline=GOLD,
             width=2,
         )
-        centered(
-            d,
-            "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.",
-            800,
-            TITLE,
-            WIDTH - 250,
-            fill=GOLD,
-        )
-        centered(
-            d,
-            "LEARN  |  TRADE  |  EARN",
-            1035,
-            BIG,
-            WIDTH - 220,
-            fill=WHITE,
-        )
+        centered(d, body or "LEARN | TRADE | GROW", 875, BIG, WIDTH - 220, fill=WHITE)
         draw_chart(d, (105, 1260, 975, 1570), "range")
     else:
         d.rounded_rectangle(
@@ -321,18 +344,12 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual):
             font=SMALL,
             fill=GOLD,
         )
-        centered(
-            d,
-            "Educational content only.\nThis is not financial advice.\nTrading involves substantial risk, and losses are possible.",
-            875,
-            BODY,
-            WIDTH - 250,
-            fill=WHITE,
-        )
+        short_notice = " ".join(str(body or "").split()[:8]) or "Education only. Not financial advice. Trading involves risk."
+        centered(d, short_notice, 875, BODY, WIDTH - 250, fill=WHITE)
         draw_chart(d, (105, 1260, 975, 1570), "risk")
 
     d.text((80, 1645), "BULLSEYE THEORY", font=SMALL, fill=WHITE)
-    d.text((80, 1683), "LEARN  |  TRADE  |  EARN", font=TINY, fill=MUTED)
+    d.text((80, 1683), "LEARN  |  TRADE  |  GROW", font=TINY, fill=MUTED)
 
     img.save(path, format="PNG")
 
@@ -554,6 +571,7 @@ def build(content):
     MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
     frame_specs = []
+    archetype = choose_archetype(content_id)
     frame_specs.append(("THE HOOK", script.get("hook", topic), 0, ""))
     for i, scene in enumerate(scenes[:4], start=1):
         frame_specs.append((
@@ -563,12 +581,12 @@ def build(content):
             scene.get("visual", ""),
         ))
     frame_specs.append(("KEY TAKEAWAY", script.get("body", topic), 5, ""))
-    frame_specs.append(("BULLSEYE THEORY", "Learn | Trade | Earn", 6, ""))
+    frame_specs.append(("BULLSEYE THEORY", script.get("tagline", "LEARN | TRADE | GROW"), 6, ""))
     frame_specs.append(("EDUCATIONAL NOTICE", script.get("disclaimer", ""), 7, ""))
 
     for i, (title, body, index, visual_text) in enumerate(frame_specs):
         path = TMP_DIR / f"frame_{i:03d}.png"
-        make_frame(path, topic, category, title, body, index, visual_text)
+        make_frame(path, topic, category, title, body, index, visual_text, archetype=archetype)
 
     voice, segments = make_voiceover(script)
     voice_durations = []
