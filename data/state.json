@@ -3403,7 +3403,7 @@
           "message_id": 190
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "nsebank-2026101503-long": {
       "signal": {
@@ -3643,8 +3643,13 @@
       "chart_path": "output/btc-usd-2026101506-short.png",
       "card_path": "output/btc-usd-2026101506-short_card.png",
       "created_at": "2026-10-15T06:08:05.780386+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 194
+        }
+      },
+      "status": "pending_approval"
     },
     "eurusd-x-2026101506-long": {
       "signal": {
@@ -3699,8 +3704,13 @@
       "chart_path": "output/eurusd-x-2026101506-long.png",
       "card_path": "output/eurusd-x-2026101506-long_card.png",
       "created_at": "2026-10-15T06:08:06.278285+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 195
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026101505-long": {
       "signal": {
@@ -3756,8 +3766,13 @@
       "chart_path": "output/nsebank-2026101505-long.png",
       "card_path": "output/nsebank-2026101505-long_card.png",
       "created_at": "2026-10-15T06:08:07.270079+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 196
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -4136,6 +4151,30 @@
     {
       "at": "2026-10-15T04:12:32.976824+00:00",
       "signal_id": "hdfcbank-ns-2026101503-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-15T06:08:10.559999+00:00",
+      "signal_id": "spy-2026101419-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-15T06:08:12.364792+00:00",
+      "signal_id": "btc-usd-2026101506-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-15T06:08:13.689461+00:00",
+      "signal_id": "eurusd-x-2026101506-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-15T06:08:15.555945+00:00",
+      "signal_id": "nsebank-2026101505-long",
       "status": "pending_approval",
       "dry_run": false
     }
