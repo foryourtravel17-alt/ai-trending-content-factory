@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T01:54:58.468614+00:00",
+  "updated_at": "2026-10-15T07:58:55.572348+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -316,6 +316,13 @@
       "status": "approved_for_publishing",
       "approval_required": false,
       "created_at": "2026-10-15T01:54:58.468150+00:00"
+    },
+    {
+      "content_id": "content_20261015_075855_1",
+      "topic": "The Difference Between a Setup and a Guarantee",
+      "status": "approved_for_publishing",
+      "approval_required": false,
+      "created_at": "2026-10-15T07:58:55.571915+00:00"
     }
   ],
   "telegram_sent": [
