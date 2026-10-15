@@ -5,7 +5,7 @@
 - Positioning: serious trading education; never present the product as easy money, guaranteed profits, signal selling, or personalized financial advice.
 - Voice: professional, institutional, confident, educational, disciplined.
 - Primary language: English.
-- Core philosophy: "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE. LEARN | TRADE | EARN"
+- Core philosophy: "LEARN | TRADE | GROW"
 
 ## Visual system
 - Background: Dark Obsidian Navy.
