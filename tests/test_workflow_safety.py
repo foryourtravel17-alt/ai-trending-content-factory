@@ -13,6 +13,10 @@ class WorkflowSafetyTests(unittest.TestCase):
         workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
         self.assertIn('HUMAN_APPROVAL: "true"', workflow)
 
+    def test_legacy_reel_pipeline_does_not_auto_approve_for_publishing(self):
+        workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
+        self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
