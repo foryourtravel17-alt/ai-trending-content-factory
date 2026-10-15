@@ -5,7 +5,10 @@ on:
     paths:
       - "agents/**"
       - "src/orchestrator.py"
+      - "src/reel_generator.py"
+      - "src/main.py"
       - "src/telegram_process.py"
+      - "config/**"
       - "scripts/**"
       - "tests/**"
       - "requirements.txt"
@@ -14,7 +17,10 @@ on:
     paths:
       - "agents/**"
       - "src/orchestrator.py"
+      - "src/reel_generator.py"
+      - "src/main.py"
       - "src/telegram_process.py"
+      - "config/**"
       - "scripts/**"
       - "tests/**"
       - "requirements.txt"
