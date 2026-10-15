@@ -270,6 +270,17 @@ def load_archetypes():
         return {"archetypes": {}}
 
 
+def limit_text(text, max_chars=72, max_words=12):
+    """Keep headline copy inside the configured visual text budget."""
+    words = str(text or "").split()
+    limited = " ".join(words[:max_words])
+    if len(limited) > max_chars:
+        limited = limited[:max_chars].rsplit(" ", 1)[0].rstrip(" ,.;:-")
+    if len(words) > max_words or len(" ".join(words[:max_words])) > max_chars:
+        limited = limited.rstrip(" .") + "…"
+    return limited
+
+
 def choose_archetype(content_id, previous=None):
     """Stable hash-based archetype selection with an optional repeat guard."""
     archetypes = load_archetypes().get("archetypes", {})
@@ -303,7 +314,9 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
         d.text((x + 38, y + 42), label.upper(), font=SMALL, fill=accent)
         font_size = int(archetype_data.get("font_sizes", {}).get("hook", 64))
         hook_font = load_font(font_size, True)
-        centered(d, body or title, y + h * 0.52, hook_font, max(220, w - 110), fill=WHITE)
+        limits = archetype_data.get("text_max", {})
+        hook_text = limit_text(body or title, limits.get("hook_chars", 72), limits.get("hook_words", 12))
+        centered(d, hook_text, y + h * 0.52, hook_font, max(220, w - 110), fill=WHITE)
         draw_chart(d, (105, 1260, 975, 1570), archetype_data.get("chart_style", "trend"), accent=accent)
     elif scene_index in (1, 2, 3, 4):
         d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=GOLD)
