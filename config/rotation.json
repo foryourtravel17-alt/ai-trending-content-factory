@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "cycle_days": 30,
+  "target_mix": {
+    "education": 70,
+    "authority": 20,
+    "conversion": 10
+  },
+  "repeat_policy": "never_same_archetype_twice_in_a_row",
+  "archetype_order": [
+    "hook",
+    "chartproof",
+    "wrongright",
+    "list",
+    "myth",
+    "rule",
+    "term",
+    "cta",
+    "chartproof",
+    "hook",
+    "rule",
+    "myth",
+    "wrongright",
+    "chartproof",
+    "list",
+    "chartproof",
+    "hook",
+    "cta",
+    "rule",
+    "list",
+    "myth",
+    "wrongright",
+    "chartproof",
+    "list",
+    "hook",
+    "rule",
+    "term",
+    "myth",
+    "wrongright",
+    "cta"
+  ],
+  "notes": "The schedule is a 30-post rotation template. Content-id hash selects a stable base archetype; when previous_archetype is supplied, choose_archetype advances one slot to prevent an immediate repeat."
+}

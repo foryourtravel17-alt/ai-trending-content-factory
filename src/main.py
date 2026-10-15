@@ -22,12 +22,9 @@ MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
 AUTO_PUBLISH_ENABLED = os.getenv("AUTO_PUBLISH_ENABLED", "false").lower() == "true"
 CONTENT_BATCH_SIZE = max(1, min(int(os.getenv("CONTENT_BATCH_SIZE", "1")), 3))
 
-PHILOSOPHY = "TRADING IS NOT FOR THOSE WHO DON'T HAVE PATIENCE.  LEARN | TRADE | EARN"
+PHILOSOPHY = "LEARN | TRADE | GROW"
 
-DISCLAIMER = (
-    "Educational content only. This is not financial advice. "
-    "Trading involves substantial risk, and losses are possible."
-)
+DISCLAIMER = "Education only. Not financial advice. Trading involves risk."
 
 REFERENCE_DNA_PATH = Path("config/reference_content_dna.json")
 
