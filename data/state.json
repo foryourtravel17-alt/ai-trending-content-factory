@@ -1830,7 +1830,9 @@
           "message_id": 162
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.818020+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsebank-2026101307-long": {
       "signal": {
@@ -2144,7 +2146,9 @@
           "message_id": 167
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.829873+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsebank-2026101309-long": {
       "signal": {
@@ -2269,7 +2273,9 @@
           "message_id": 171
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.836217+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026101404-long": {
       "signal": {
@@ -2391,7 +2397,9 @@
           "message_id": 173
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.840480+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsebank-2026101403-long": {
       "signal": {
@@ -2453,7 +2461,9 @@
           "message_id": 174
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.844682+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "hdfcbank-ns-2026101403-long": {
       "signal": {
@@ -2514,7 +2524,9 @@
           "message_id": 175
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.848904+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101406-long": {
       "signal": {
@@ -2575,7 +2587,9 @@
           "message_id": 176
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.853104+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026101406-long": {
       "signal": {
@@ -2698,7 +2712,9 @@
           "message_id": 178
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.857252+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "hdfcbank-ns-2026101405-long": {
       "signal": {
@@ -2759,7 +2775,9 @@
           "message_id": 179
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.861479+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026101408-short": {
       "signal": {
@@ -2820,7 +2838,9 @@
           "message_id": 180
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.865692+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026101408-long": {
       "signal": {
@@ -2943,7 +2963,9 @@
           "message_id": 182
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.869924+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsei-2026101407-long": {
       "signal": {
@@ -3005,7 +3027,9 @@
           "message_id": 183
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-15T04:12:15.874245+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026101410-short": {
       "signal": {
@@ -3252,6 +3276,288 @@
         }
       },
       "status": "pending_approval"
+    },
+    "eurusd-x-2026101504-long": {
+      "signal": {
+        "signal_id": "eurusd-x-2026101504-long",
+        "slug": "eurusd-x-2026101504-long",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 1.1225864887237549,
+        "stop_loss": 1.1203678742219034,
+        "targets": [
+          1.1248051032256063,
+          1.1259144104765322,
+          1.1270237177274578
+        ],
+        "tp1": 1.1248051032256063,
+        "tp2": 1.1259144104765322,
+        "tp3": 1.1270237177274578,
+        "rr_tp2": 1.50000000000005,
+        "rsi14": 65.04992213981802,
+        "ema20": 1.1190235655448635,
+        "ema50": 1.118701082541403,
+        "macd": 0.0010668016665436042,
+        "macd_signal": 6.467849223883436e-05,
+        "macd_hist": 0.0010021231743047698,
+        "atr14": 0.0014790763345676502,
+        "vwap": null,
+        "support": 1.1117286682128906,
+        "resistance": 1.1243535280227661,
+        "as_of": "2026-10-15T04:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 65.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 65.0. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 65.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 65.0. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 65.0. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026101504-long.png",
+      "card_path": "output/eurusd-x-2026101504-long_card.png",
+      "created_at": "2026-10-15T04:12:18.396235+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "spy-2026101419-short": {
+      "signal": {
+        "signal_id": "spy-2026101419-short",
+        "slug": "spy-2026101419-short",
+        "symbol": "SPY",
+        "label": "S&P 500 ETF",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 769.6099853515625,
+        "stop_loss": 772.4035378606535,
+        "targets": [
+          766.8164328424715,
+          765.4196565879259,
+          764.0228803333805
+        ],
+        "tp1": 766.8164328424715,
+        "tp2": 765.4196565879259,
+        "tp3": 764.0228803333805,
+        "rr_tp2": 1.5000000000000204,
+        "rsi14": 33.17099893355389,
+        "ema20": 773.458130689066,
+        "ema50": 774.1886609980623,
+        "macd": -1.9786729306192683,
+        "macd_signal": -1.007380188777196,
+        "macd_hist": -0.9712927418420723,
+        "atr14": 1.8623683393940023,
+        "vwap": 770.1799639303174,
+        "support": 766.7100219726562,
+        "resistance": 779.39697265625,
+        "as_of": "2026-10-14T19:30:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 33.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · S&amp;P 500 ETF</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching S&amp;P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 33.2. The scenario is invalid if structure fails.\n\nS&amp;P 500 ETF: EMA20 is below EMA50 and RSI(14) is 33.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 33.2. The scenario is invalid if structure fails.\n\nS&P 500 ETF: EMA20 is below EMA50 and RSI(14) is 33.2. This is a rule-based scenario, not a prediction.\n\nScenario: SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#SPY",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/spy-2026101419-short.png",
+      "card_path": "output/spy-2026101419-short_card.png",
+      "created_at": "2026-10-15T04:12:18.956613+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "nsebank-2026101503-long": {
+      "signal": {
+        "signal_id": "nsebank-2026101503-long",
+        "slug": "nsebank-2026101503-long",
+        "symbol": "^NSEBANK",
+        "label": "Bank Nifty",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 55424.25,
+        "stop_loss": 55083.73734880146,
+        "targets": [
+          55764.76265119854,
+          55935.01897679781,
+          56105.27530239708
+        ],
+        "tp1": 55764.76265119854,
+        "tp2": 55935.01897679781,
+        "tp3": 56105.27530239708,
+        "rr_tp2": 1.4999999999999787,
+        "rsi14": 57.335624746458706,
+        "ema20": 55249.740812716664,
+        "ema50": 55125.183653237254,
+        "macd": 106.95912226706423,
+        "macd_signal": 104.08623577463281,
+        "macd_hist": 2.8728864924314195,
+        "atr14": 227.00843413236038,
+        "vwap": null,
+        "support": 54709.05078125,
+        "resistance": 55644.44921875,
+        "as_of": "2026-10-15T03:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 57.3 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bank Nifty</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 57.3 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 57.3 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 57.3 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 57.3 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#BankNifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#BankNifty",
+          "#IndianMarkets",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/nsebank-2026101503-long.png",
+      "card_path": "output/nsebank-2026101503-long_card.png",
+      "created_at": "2026-10-15T04:12:19.457174+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "nsei-2026101503-long": {
+      "signal": {
+        "signal_id": "nsei-2026101503-long",
+        "slug": "nsei-2026101503-long",
+        "symbol": "^NSEI",
+        "label": "Nifty 50",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 22751.30078125,
+        "stop_loss": 22619.942241877317,
+        "targets": [
+          22882.659320622683,
+          22948.338590309024,
+          23014.01785999537
+        ],
+        "tp1": 22882.659320622683,
+        "tp2": 22948.338590309024,
+        "tp3": 23014.01785999537,
+        "rr_tp2": 1.5,
+        "rsi14": 62.178338743172105,
+        "ema20": 22597.21421866615,
+        "ema50": 22581.758767894316,
+        "macd": 52.18312301254991,
+        "macd_signal": 40.90601809988473,
+        "macd_hist": 11.27710491266518,
+        "atr14": 87.5723595817891,
+        "vwap": null,
+        "support": 22288.69921875,
+        "resistance": 22757.80078125,
+        "as_of": "2026-10-15T03:45:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Nifty 50 par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 62.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nifty 50</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Nifty 50 par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 62.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nNifty 50: EMA20 EMA50 ke upar hai aur RSI(14) 62.2 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> ^NSEI · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Nifty 50 par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 62.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nNifty 50: EMA20 EMA50 ke upar hai aur RSI(14) 62.2 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: ^NSEI · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#Nifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nifty",
+          "#IndianMarkets",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/nsei-2026101503-long.png",
+      "card_path": "output/nsei-2026101503-long_card.png",
+      "created_at": "2026-10-15T04:12:19.949972+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "hdfcbank-ns-2026101503-long": {
+      "signal": {
+        "signal_id": "hdfcbank-ns-2026101503-long",
+        "slug": "hdfcbank-ns-2026101503-long",
+        "symbol": "HDFCBANK.NS",
+        "label": "HDFC Bank",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 717.8499755859375,
+        "stop_loss": 712.050218064497,
+        "targets": [
+          723.649733107378,
+          726.5496118680982,
+          729.4494906288185
+        ],
+        "tp1": 723.649733107378,
+        "tp2": 726.5496118680982,
+        "tp3": 729.4494906288185,
+        "rr_tp2": 1.4999999999999902,
+        "rsi14": 65.6089441769924,
+        "ema20": 710.4323338417881,
+        "ema50": 709.391415782856,
+        "macd": 1.955536543038761,
+        "macd_signal": 1.806103486486716,
+        "macd_hist": 0.14943305655204497,
+        "atr14": 3.8665050142936455,
+        "vwap": 716.0,
+        "support": 700.3499755859375,
+        "resistance": 718.5,
+        "as_of": "2026-10-15T03:45:00+00:00",
+        "score": 40,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main HDFC Bank par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 65.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · HDFC Bank</b>\n\n<b>Structure first. Risk always.</b>\n\nMain HDFC Bank par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 65.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nHDFC Bank: EMA20 EMA50 ke upar hai aur RSI(14) 65.6 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> HDFCBANK.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain HDFC Bank par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 65.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nHDFC Bank: EMA20 EMA50 ke upar hai aur RSI(14) 65.6 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: HDFCBANK.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/hdfcbank-ns-2026101503-long.png",
+      "card_path": "output/hdfcbank-ns-2026101503-long_card.png",
+      "created_at": "2026-10-15T04:12:20.495278+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
