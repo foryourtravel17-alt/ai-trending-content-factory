@@ -572,7 +572,27 @@ def build(content):
     MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
     frame_specs = []
-    archetype = choose_archetype(content_id)
+    # Reuse a previously assigned archetype for stable reruns; otherwise avoid
+    # repeating the most recently generated archetype in the output queue.
+    archetype = content.get("selected_archetype")
+    if archetype not in load_archetypes().get("archetypes", {}):
+        previous_archetype = None
+        prior_files = sorted(
+            (p for p in OUTPUT_DIR.glob("content_*.json") if p.name != f"{content_id}.json"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        for prior_path in prior_files:
+            try:
+                prior_content = json.loads(prior_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            candidate = prior_content.get("selected_archetype")
+            if candidate in load_archetypes().get("archetypes", {}):
+                previous_archetype = candidate
+                break
+        archetype = choose_archetype(content_id, previous=previous_archetype)
+    content["selected_archetype"] = archetype
     frame_specs.append(("THE HOOK", script.get("hook", topic), 0, ""))
     for i, scene in enumerate(scenes[:4], start=1):
         frame_specs.append((
