@@ -1,6 +1,8 @@
 """Render six review-only PNGs using the production Reel frame renderer."""
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.reel_generator import make_frame
 
 OUT = Path("output/archetype_samples")
