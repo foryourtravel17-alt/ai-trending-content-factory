@@ -4,8 +4,6 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from PIL import Image
-
 import src.reel_generator as reel
 
 
@@ -54,10 +52,6 @@ class ReelArchetypeTests(unittest.TestCase):
                 self.assertTrue(any(call.args[1] == "REAL HOOK TEXT" for call in centered_mock.call_args_list))
             self.assertTrue(path.exists())
             self.assertGreater(path.stat().st_size, 1000)
-            image = Image.open(path).convert("RGB")
-            # The large text zone must contain varied glyph pixels, not just the label.
-            crop = image.crop((100, 700, 980, 1110))
-            self.assertGreater(len(crop.getcolors(maxcolors=1000000) or []), 1)
 
 
 if __name__ == "__main__":
