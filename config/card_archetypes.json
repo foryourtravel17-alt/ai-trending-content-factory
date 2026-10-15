@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1080,
+    "height": 1920
+  },
+  "colors": {
+    "navy": "#080E1B",
+    "panel": "#0E1626",
+    "gold": "#D3AF58",
+    "lime": "#B5FF4A",
+    "white": "#F5F7FA",
+    "down_red": "#FF6B64"
+  },
+  "archetypes": {
+    "hook": {
+      "label": "THE HOOK",
+      "role": "education",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 620
+        }
+      },
+      "font_sizes": {
+        "hook": 64,
+        "label": 28
+      },
+      "accent": "#D3AF58",
+      "chart_style": "trend",
+      "text_max": {
+        "hook_chars": 72,
+        "hook_words": 12
+      }
+    },
+    "chartproof": {
+      "label": "CHART PROOF",
+      "role": "education",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 560
+        }
+      },
+      "font_sizes": {
+        "hook": 58,
+        "label": 28
+      },
+      "accent": "#B5FF4A",
+      "chart_style": "choch",
+      "text_max": {
+        "hook_chars": 66,
+        "hook_words": 11
+      }
+    },
+    "wrongright": {
+      "label": "WRONG / RIGHT",
+      "role": "education",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 550,
+          "w": 940,
+          "h": 600
+        }
+      },
+      "font_sizes": {
+        "hook": 56,
+        "label": 28
+      },
+      "accent": "#FF6B64",
+      "chart_style": "retest",
+      "text_max": {
+        "hook_chars": 64,
+        "hook_words": 10
+      }
+    },
+    "list": {
+      "label": "THE CHECKLIST",
+      "role": "education",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 620
+        }
+      },
+      "font_sizes": {
+        "hook": 60,
+        "label": 28
+      },
+      "accent": "#D3AF58",
+      "chart_style": "sweep",
+      "text_max": {
+        "hook_chars": 70,
+        "hook_words": 12
+      }
+    },
+    "myth": {
+      "label": "MYTH CHECK",
+      "role": "authority",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 620
+        }
+      },
+      "font_sizes": {
+        "hook": 60,
+        "label": 28
+      },
+      "accent": "#B5FF4A",
+      "chart_style": "range",
+      "text_max": {
+        "hook_chars": 68,
+        "hook_words": 11
+      }
+    },
+    "rule": {
+      "label": "TRADING RULE",
+      "role": "education",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 620
+        }
+      },
+      "font_sizes": {
+        "hook": 62,
+        "label": 28
+      },
+      "accent": "#D3AF58",
+      "chart_style": "risk",
+      "text_max": {
+        "hook_chars": 68,
+        "hook_words": 11
+      }
+    },
+    "term": {
+      "label": "KEY TERM",
+      "role": "authority",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 620
+        }
+      },
+      "font_sizes": {
+        "hook": 64,
+        "label": 28
+      },
+      "accent": "#B5FF4A",
+      "chart_style": "choch",
+      "text_max": {
+        "hook_chars": 70,
+        "hook_words": 12
+      }
+    },
+    "cta": {
+      "label": "NEXT STEP",
+      "role": "conversion",
+      "zones": {
+        "hook": {
+          "x": 70,
+          "y": 570,
+          "w": 940,
+          "h": 620
+        }
+      },
+      "font_sizes": {
+        "hook": 60,
+        "label": 28
+      },
+      "accent": "#D3AF58",
+      "chart_style": "retest",
+      "text_max": {
+        "hook_chars": 70,
+        "hook_words": 12
+      }
+    }
+  }
+}
