@@ -1,0 +1,132 @@
+name: Generate Educational Reel Draft (No Publish)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: educational-reel-draft
+  cancel-in-progress: false
+
+jobs:
+  generate-draft:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install free rendering tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng
+          python -m pip install --upgrade pip pillow edge-tts
+
+      - name: Create fresh evergreen educational script
+        run: |
+          mkdir -p output
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          now = datetime.now(timezone.utc)
+          content_id = "draft_ema20_ema50_" + now.strftime("%Y%m%d_%H%M%S")
+          content = {
+            "content_id": content_id,
+            "created_at": now.isoformat(),
+            "brand": "Bullseye Theory",
+            "language": "English",
+            "market": "Education",
+            "audience": "Beginner to intermediate traders",
+            "content_category": "Technical Analysis Education",
+            "content_role": "education",
+            "status": "draft_only",
+            "topic": {
+              "title": "EMA 20 vs EMA 50: What They Can—and Cannot—Tell You",
+              "source": "evergreen educational brief",
+              "score": 1.0
+            },
+            "research": {
+              "summary": "Moving averages smooth past prices. A shorter EMA generally reacts faster than a longer EMA, but both lag price and can give repeated whipsaws in sideways markets.",
+              "sources": [
+                {"name": "CME Group education", "url": "https://www.cmegroup.com/education.html", "type": "general_education_reference"}
+              ],
+              "verification_scope": "evergreen concepts only; no live market data or trading signal"
+            },
+            "fact_check": {
+              "status": "passed",
+              "notes": ["Evergreen concept only; no current price, forecast, performance claim, or trade instruction."],
+              "source_count": 1,
+              "verification_scope": "educational wording screen only"
+            },
+            "safety_check": {
+              "passed": True,
+              "blocked_phrases": [],
+              "notes": "Draft-only educational content; no financial promises or personalized advice."
+            },
+            "script": {
+              "hook": "EMA 20 crossed EMA 50. Does that automatically mean buy? No.",
+              "body": "The 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. When they cross, traders may read it as a trend clue—not proof of what happens next. In sideways markets, crosses can reverse again and again. Check the broader market structure, define what would invalidate your idea, and manage risk before considering any setup. Moving averages lag because they are calculated from past prices.",
+              "cta": "Follow Bullseye Theory for clear, risk-aware trading education.",
+              "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+              "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+            },
+            "visual_plan": {
+              "format": "short_video",
+              "style": "Premium institutional trading terminal, deep obsidian navy, restrained metallic gold and neon lime, clean typography, illustrative chart only; no live price claims.",
+              "scenes": [
+                {"scene": 1, "text": "EMA CROSS ≠ GUARANTEE", "visual": "Illustrative price chart with two moving-average lines crossing."},
+                {"scene": 2, "text": "EMA 20", "visual": "Highlight the faster-reacting average and label it shorter-period."},
+                {"scene": 3, "text": "EMA 50", "visual": "Compare the smoother, slower-reacting average."},
+                {"scene": 4, "text": "WATCH FOR WHIPSAWS", "visual": "Show an illustrative sideways range with repeated crosses."}
+              ]
+            },
+            "social": {
+              "caption": "EMA 20 crossing EMA 50 is a clue—not a guarantee. Moving averages lag, and sideways markets can produce repeated false starts. Use context, invalidation, and risk management.\n\nEducational content only; not financial advice.",
+              "hashtags": ["#BullseyeTheory", "#TradingEducation", "#TechnicalAnalysis", "#RiskManagement"]
+            },
+            "approval": {"required": True, "status": "draft_only", "mode": "human_review"},
+            "reel_generated": False
+          }
+          Path("output/draft_seed.json").write_text(json.dumps(content, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          print(f"Prepared draft seed: {content_id}")
+          PY
+
+      - name: Render MP4 draft locally in runner
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from src.reel_generator import build
+          content = json.loads(Path("output/draft_seed.json").read_text(encoding="utf-8"))
+          build(content)
+          Path("output/draft_seed.json").unlink(missing_ok=True)
+          PY
+
+      - name: Validate generated MP4
+        run: |
+          set -e
+          FILE="$(find output/media -maxdepth 1 -type f -name 'draft_ema20_ema50_*.mp4' -print -quit)"
+          test -n "$FILE"
+          test -s "$FILE"
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$FILE"
+          echo "Draft rendered successfully: $FILE"
+
+      - name: Upload draft for review (no publishing)
+        uses: actions/upload-artifact@v4
+        with:
+          name: bullseye-educational-reel-draft
+          path: |
+            output/media/draft_ema20_ema50_*.mp4
+            output/media/draft_ema20_ema50_*.publish.json
+            output/content_draft_ema20_ema50_*.json
+          if-no-files-found: error
+          retention-days: 7
