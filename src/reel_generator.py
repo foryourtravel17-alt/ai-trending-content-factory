@@ -358,8 +358,12 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             font=SMALL,
             fill=GOLD,
         )
-        short_notice = " ".join(str(body or "").split()[:8]) or "Education only. Not financial advice. Trading involves risk."
-        centered(d, short_notice, 875, BODY, WIDTH - 250, fill=WHITE)
+        # Preserve the essential disclaimer instead of truncating it to eight words.
+        short_notice = (
+            "Educational only. Not financial advice. Illustrative chart—not a live signal. "
+            "Trading involves risk."
+        )
+        centered(d, short_notice, 875, load_font(36, True), WIDTH - 250, fill=WHITE, gap=10)
         draw_chart(d, (105, 1260, 975, 1570), "risk")
 
     d.text((80, 1645), "BULLSEYE THEORY", font=SMALL, fill=WHITE)
@@ -607,14 +611,28 @@ def build(content):
         archetype = choose_archetype(content_id, previous=previous_archetype)
     content["selected_archetype"] = archetype
     frame_specs.append(("THE HOOK", script.get("hook", topic), 0, ""))
+    # Separate on-screen explanatory copy from art direction. Previously the
+    # visual instruction (e.g. "Highlight the faster-reacting average") was
+    # rendered as the scene's main body text instead of teaching the concept.
+    import re
+    body_sentences = [
+        part.strip() for part in re.split(r"(?<=[.!?])\s+", str(script.get("body", "")))
+        if part.strip()
+    ]
+    scene_count = max(1, min(4, len(scenes)))
     for i, scene in enumerate(scenes[:4], start=1):
+        scene_sentences = body_sentences[(i - 1)::scene_count]
+        scene_body = scene.get("narration") or " ".join(scene_sentences)
+        if not scene_body:
+            scene_body = scene.get("text", "Trading is probabilistic; manage risk.")
         frame_specs.append((
             scene.get("text", f"Market concept {i}"),
-            scene.get("visual", "Educational trading concept."),
+            scene_body,
             i,
             scene.get("visual", ""),
         ))
-    frame_specs.append(("KEY TAKEAWAY", script.get("body", topic), 5, ""))
+    takeaway = "A crossover is a clue, not a guarantee. Check market context and manage risk."
+    frame_specs.append(("KEY TAKEAWAY", takeaway, 5, ""))
     frame_specs.append(("BULLSEYE THEORY", script.get("tagline", "LEARN | TRADE | GROW"), 6, ""))
     frame_specs.append(("EDUCATIONAL NOTICE", script.get("disclaimer", ""), 7, ""))
 
