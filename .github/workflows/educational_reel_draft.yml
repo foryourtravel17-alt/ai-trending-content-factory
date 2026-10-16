@@ -2,6 +2,9 @@ name: Generate Educational Reel Draft (No Publish)
 
 on:
   workflow_dispatch:
+  schedule:
+    # 10:15 AM India time (04:45 UTC) daily; creates drafts only.
+    - cron: '45 4 * * *'
 
 permissions:
   contents: read
