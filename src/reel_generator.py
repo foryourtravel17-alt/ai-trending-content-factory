@@ -195,6 +195,20 @@ def draw_chart(draw, area, style="trend", accent=None):
             width=2,
         )
         draw.text((left + 48, zone_y + 20), "RANGE", font=TINY, fill=accent_color)
+    elif style == "zones":
+        trend = [40, 65, 32, 70, 42, 78, 38, 73, 35, 68, 30, 75, 44, 62]
+        support_y = top + int((bottom - top) * 0.68)
+        resistance_y = top + int((bottom - top) * 0.32)
+        draw.rounded_rectangle(
+            (left + 30, resistance_y - 18, right - 30, resistance_y + 28),
+            radius=10, outline=accent_color, width=3
+        )
+        draw.rounded_rectangle(
+            (left + 30, support_y - 18, right - 30, support_y + 28),
+            radius=10, outline=LIME, width=3
+        )
+        draw.text((left + 44, resistance_y - 48), "RESISTANCE ZONE", font=TINY, fill=accent_color)
+        draw.text((left + 44, support_y + 32), "SUPPORT ZONE", font=TINY, fill=LIME)
     elif style == "break":
         trend = [22, 35, 30, 48, 46, 62, 55, 74, 70, 86, 82, 95, 155, 48]
         bx = left + 44 + 12 * step
@@ -323,7 +337,9 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
         add_emphasis_panel(d, title, body)
         style = "trend"
         lower = f"{title} {body} {scene_visual}".lower()
-        if "range" in lower:
+        if any(term in lower for term in ("support", "resistance", "zone", "level")):
+            style = "zones"
+        elif "range" in lower:
             style = "range"
         elif "break" in lower or "false" in lower or "invalid" in lower:
             style = "break"
@@ -631,7 +647,12 @@ def build(content):
             i,
             scene.get("visual", ""),
         ))
-    takeaway = "A crossover is a clue, not a guarantee. Check market context and manage risk."
+    # Never hard-code an indicator-specific takeaway into unrelated topics.
+    takeaway = (
+        content.get("takeaway")
+        or script.get("takeaway")
+        or "Use market context, define invalidation, and manage risk."
+    )
     frame_specs.append(("KEY TAKEAWAY", takeaway, 5, ""))
     frame_specs.append(("BULLSEYE THEORY", script.get("tagline", "LEARN | TRADE | GROW"), 6, ""))
     frame_specs.append(("EDUCATIONAL NOTICE", script.get("disclaimer", ""), 7, ""))
