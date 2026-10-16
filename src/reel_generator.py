@@ -329,6 +329,14 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             style = "break"
         elif "risk" in lower or "position" in lower or "leverage" in lower:
             style = "risk"
+        elif "liquidity" in lower or "sweep" in lower or "stop hunt" in lower:
+            style = "sweep"
+        elif "support" in lower or "resistance" in lower or "zone" in lower:
+            style = "range"
+        elif "retest" in lower:
+            style = "retest"
+        elif "structure" in lower or "choch" in lower or "shift" in lower:
+            style = "choch"
         draw_chart(d, (105, 1260, 975, 1570), style)
     elif scene_index == 5:
         d.text((85, 575), "KEY TAKEAWAY", font=SMALL, fill=GOLD)
@@ -631,8 +639,19 @@ def build(content):
             i,
             scene.get("visual", ""),
         ))
-    takeaway = "A crossover is a clue, not a guarantee. Check market context and manage risk."
-    frame_specs.append(("KEY TAKEAWAY", takeaway, 5, ""))
+    # Make the ending topic-aware and action-oriented without promising outcomes.
+    topic_lower = f"{topic} {script.get('body', '')}".lower()
+    if "liquidity" in topic_lower:
+        takeaway = "Liquidity is context—not a buy or sell signal. Mark the zone, wait for confirmation, define invalidation."
+    elif "support" in topic_lower or "resistance" in topic_lower:
+        takeaway = "A zone is an area, not an exact line. Wait for price reaction and define invalidation before acting."
+    elif "risk" in topic_lower or "leverage" in topic_lower:
+        takeaway = "Plan the invalidation first. Position size and risk limits matter more than a perfect entry."
+    elif "structure" in topic_lower or "trend" in topic_lower:
+        takeaway = "Read swings in context. One candle or indicator is not enough to confirm a market shift."
+    else:
+        takeaway = "Pause. Check context, confirmation and invalidation before making a trading decision."
+    frame_specs.append(("TAKEAWAY • SAVE THIS CHECKLIST", takeaway, 5, ""))
     frame_specs.append(("BULLSEYE THEORY", script.get("tagline", "LEARN | TRADE | GROW"), 6, ""))
     frame_specs.append(("EDUCATIONAL NOTICE", script.get("disclaimer", ""), 7, ""))
 
