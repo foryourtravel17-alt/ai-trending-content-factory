@@ -317,7 +317,7 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
         limits = archetype_data.get("text_max", {})
         hook_text = limit_text(body or title, limits.get("hook_chars", 72), limits.get("hook_words", 12))
         centered(d, hook_text, y + h * 0.52, hook_font, max(220, w - 110), fill=WHITE)
-        draw_chart(d, (105, 1260, 975, 1570), archetype_data.get("chart_style", "trend"), accent=accent)
+        draw_chart(d, (80, 1190, 1000, 1595), archetype_data.get("chart_style", "trend"), accent=accent)
     elif scene_index in (1, 2, 3, 4):
         d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=GOLD)
         add_emphasis_panel(d, title, body)
@@ -329,11 +329,11 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             style = "break"
         elif "risk" in lower or "position" in lower or "leverage" in lower:
             style = "risk"
-        draw_chart(d, (105, 1260, 975, 1570), style)
+        draw_chart(d, (80, 1190, 1000, 1595), style)
     elif scene_index == 5:
         d.text((85, 575), "KEY TAKEAWAY", font=SMALL, fill=GOLD)
         centered(d, body, 895, BODY, WIDTH - 250)
-        draw_chart(d, (105, 1260, 975, 1570), "trend")
+        draw_chart(d, (80, 1190, 1000, 1595), "trend")
     elif scene_index == 6:
         d.rounded_rectangle(
             (70, 570, WIDTH - 70, 1180),
@@ -343,7 +343,7 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             width=2,
         )
         centered(d, body or "LEARN | TRADE | GROW", 875, BIG, WIDTH - 220, fill=WHITE)
-        draw_chart(d, (105, 1260, 975, 1570), "range")
+        draw_chart(d, (80, 1190, 1000, 1595), "range")
     else:
         d.rounded_rectangle(
             (70, 570, WIDTH - 70, 1200),
@@ -364,7 +364,7 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             "Trading involves risk."
         )
         centered(d, short_notice, 875, load_font(36, True), WIDTH - 250, fill=WHITE, gap=10)
-        draw_chart(d, (105, 1260, 975, 1570), "risk")
+        draw_chart(d, (80, 1190, 1000, 1595), "risk")
 
     d.text((80, 1645), "BULLSEYE THEORY", font=SMALL, fill=WHITE)
     d.text((80, 1683), "LEARN  |  TRADE  |  GROW", font=TINY, fill=MUTED)
@@ -631,9 +631,9 @@ def build(content):
             i,
             scene.get("visual", ""),
         ))
-    takeaway = "A crossover is a clue, not a guarantee. Check market context and manage risk."
+    takeaway = "Use context. Define invalidation. Manage risk."
     frame_specs.append(("KEY TAKEAWAY", takeaway, 5, ""))
-    frame_specs.append(("BULLSEYE THEORY", script.get("tagline", "LEARN | TRADE | GROW"), 6, ""))
+    frame_specs.append(("BULLSEYE THEORY", "FOLLOW FOR CLEAR, RISK-AWARE CHART BREAKDOWNS", 6, ""))
     frame_specs.append(("EDUCATIONAL NOTICE", script.get("disclaimer", ""), 7, ""))
 
     for i, (title, body, index, visual_text) in enumerate(frame_specs):
