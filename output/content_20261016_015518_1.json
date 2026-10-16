@@ -1,0 +1,139 @@
+{
+  "content_id": "content_20261016_015518_1",
+  "created_at": "2026-10-16T01:55:18.601578+00:00",
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Forex",
+  "audience": "Global",
+  "content_category": "Market Context",
+  "content_role": "authority_and_trust",
+  "content_strategy": {
+    "target_mix": {
+      "education": 70,
+      "authority_and_trust": 20,
+      "course_conversion": 10
+    },
+    "conversion_principles": [
+      "education first, promotion second",
+      "use course previews and curriculum clarity rather than income promises",
+      "build trust through process, risk awareness, and transparent limitations",
+      "never use guaranteed returns, fake P&L, fake scarcity, or personalized trade instructions"
+    ]
+  },
+  "status": "pending_approval",
+  "topic": {
+    "title": "Trend or Range? Stop Using the Same Playbook Everywhere",
+    "source": "daily_rotating_educational_topic",
+    "score": 0.85
+  },
+  "research": {
+    "summary": "Trending markets often create directional swings, while ranging markets rotate between boundaries. The same entry idea can behave very differently in those two environments. Start by asking what the market is doing before choosing your framework. Context first, setup second. Do not force a trend simply because you want one.",
+    "reference_strategy": {
+      "source_type": "six_account_reference_dna",
+      "pillars": [
+        "step_by_step_trading_education",
+        "chart_and_price_action_breakdowns",
+        "market_structure_and_context",
+        "risk_management_and_position_sizing",
+        "trading_psychology_and_discipline",
+        "mistakes_myths_and_corrections",
+        "market_news_and_event_explainers",
+        "learner_journey_and_process",
+        "course_preview_and_curriculum"
+      ],
+      "format_principles": [
+        "strong first-second hook",
+        "one clear learning outcome per reel",
+        "chart/example before abstract explanation",
+        "short structured narrative",
+        "practical takeaway",
+        "soft course CTA after genuine value",
+        "premium institutional visual treatment"
+      ],
+      "rule": "Use reference accounts for patterns and topic research only; generate original Bullseye Theory wording, visuals, and analysis."
+    },
+    "key_points": [
+      "Trending markets often create directional swings, while ranging markets rotate between boundaries. The same entry idea can behave very differently in those two environments. Start by asking what the market is doing before choosing your framework. Context first, setup second. Do not force a trend simply because you want one.",
+      "Educational analysis should distinguish a scenario from a guarantee.",
+      "Risk management and process discipline remain central to responsible trading education."
+    ],
+    "sources": [
+      {
+        "name": "Bullseye Theory educational framework",
+        "url": "",
+        "type": "internal_educational_reference"
+      }
+    ]
+  },
+  "fact_check": {
+    "status": "passed",
+    "notes": [
+      "Evergreen educational-content screen passed.",
+      "No live price/news claims or trade instructions are verified by this screen.",
+      "Keep charts labeled illustrative; do not claim guaranteed outcomes or personalized financial advice."
+    ],
+    "source_count": 1,
+    "verification_scope": "evergreen_educational_screen_only"
+  },
+  "script": {
+    "hook": "One of the fastest ways to misread a chart is to treat every market like a trend.",
+    "body": "Trending markets often create directional swings, while ranging markets rotate between boundaries. The same entry idea can behave very differently in those two environments. Start by asking what the market is doing before choosing your framework. Context first, setup second. Do not force a trend simply because you want one.",
+    "cta": "Follow Bullseye Theory for practical chart analysis, disciplined trading education, and realistic market thinking.",
+    "tagline": "LEARN | TRADE | GROW",
+    "disclaimer": "Education only. Not financial advice. Trading involves risk."
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Content passed basic safety screening."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional forex aesthetic: dark obsidian trading terminal, Dubai-inspired luxury skyline silhouettes, metallic gold accents, restrained neon lime signals, USD/currency motifs, realistic illustrative candlestick charts, cinematic motion, and clean typography. Charts are illustrative and never presented as live signals.",
+    "scenes": [
+      {
+        "scene": 1,
+        "visual": "Show clean directional swings and a rising structure.",
+        "text": "TREND"
+      },
+      {
+        "scene": 2,
+        "visual": "Transition to price rotating between two boundaries.",
+        "text": "RANGE"
+      },
+      {
+        "scene": 3,
+        "visual": "Place the two environments side by side.",
+        "text": "COMPARE"
+      },
+      {
+        "scene": 4,
+        "visual": "Highlight the question: trend, range, or unclear?",
+        "text": "CONTEXT FIRST"
+      }
+    ]
+  },
+  "social": {
+    "caption": "Trend or Range? Stop Using the Same Playbook Everywhere\n\nTrending markets often create directional swings, while ranging markets rotate between boundaries. The same entry idea can behave very differently in those two environments. Start by asking what the market is doing before choosing your framework. Context first, setup second. Do not force a trend simply because you want one.\n\nLEARN | TRADE | GROW\n\nEducation only. Not financial advice. Trading involves risk.",
+    "hashtags": [
+      "#ForexTrading",
+      "#MarketStructure",
+      "#PriceAction",
+      "#TradingEducation",
+      "#BullseyeTheory"
+    ]
+  },
+  "publishing": {
+    "instagram": {
+      "status": "not_published"
+    },
+    "telegram": {
+      "status": "not_published"
+    }
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "manual"
+  }
+}
