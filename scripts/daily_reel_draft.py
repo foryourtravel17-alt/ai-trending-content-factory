@@ -19,7 +19,7 @@ TOPICS = [
         "title": "Market Structure: Higher Highs, Lower Lows, and Real Direction",
         "hook": "Before you call a market bullish, check what its swing points are actually doing.",
         "body": "A sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.",
-        "visuals": ["MARK THE SWINGS", "READ THE SEQUENCE", "ZOOM OUT", "WAIT FOR CONFIRMATION"],
+        "visuals": ["MARK EACH SWING", "TRACE THE SEQUENCE", "ZOOM OUT FOR CONTEXT", "WAIT FOR CONFIRMATION"],
         "chart": "trend",
     },
     {
@@ -27,7 +27,7 @@ TOPICS = [
         "title": "Support and Resistance Are Zones, Not Magic Lines",
         "hook": "If you expect price to respect one perfect line every time, rethink the chart.",
         "body": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
-        "visuals": ["MARK AN AREA", "OBSERVE REACTIONS", "CHECK CONTEXT", "NO LEVEL IS GUARANTEED"],
+        "visuals": ["MARK THE ZONE", "COMPARE REACTIONS", "CHECK HIGHER-TIMEFRAME CONTEXT", "DEFINE INVALIDATION"],
         "chart": "range",
     },
     {
@@ -121,7 +121,7 @@ content = {
     "script": {
         "hook": topic["hook"],
         "body": topic["body"],
-        "cta": "Follow Bullseye Theory for clear, risk-aware trading education.",
+        "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
         "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
         "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
     },
