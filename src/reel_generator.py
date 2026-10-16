@@ -616,7 +616,7 @@ def build(content):
     # rendered as the scene's main body text instead of teaching the concept.
     import re
     body_sentences = [
-        part.strip() for part in re.split(r"(?<=[.!?])\\s+", str(script.get("body", "")))
+        part.strip() for part in re.split(r"(?<=[.!?])\s+", str(script.get("body", "")))
         if part.strip()
     ]
     scene_count = max(1, min(4, len(scenes)))
