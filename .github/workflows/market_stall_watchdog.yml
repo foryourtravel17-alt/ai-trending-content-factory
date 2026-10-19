@@ -12,8 +12,13 @@ permissions:
 jobs:
   check-recent-success:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
+      - name: Checkout stall check script
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/market_stall_check.py
+          sparse-checkout-cone-mode: false
       - name: Check recent market workflow success
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
