@@ -3667,7 +3667,9 @@
           "message_id": 194
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.281457+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101506-long": {
       "signal": {
@@ -3855,7 +3857,9 @@
           "message_id": 197
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.290266+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101508-long": {
       "signal": {
@@ -4233,7 +4237,9 @@
           "message_id": 206
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.298133+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101604-long": {
       "signal": {
@@ -4294,7 +4300,9 @@
           "message_id": 207
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.305879+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026101603-long": {
       "signal": {
@@ -4355,7 +4363,9 @@
           "message_id": 208
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.313684+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsei-2026101603-long": {
       "signal": {
@@ -4417,7 +4427,9 @@
           "message_id": 209
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.321715+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsebank-2026101603-long": {
       "signal": {
@@ -4479,7 +4491,9 @@
           "message_id": 210
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.329555+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026101605-long": {
       "signal": {
@@ -4540,7 +4554,9 @@
           "message_id": 211
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.337461+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101606-long": {
       "signal": {
@@ -4601,7 +4617,9 @@
           "message_id": 212
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.345244+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026101605-long": {
       "signal": {
@@ -4662,7 +4680,9 @@
           "message_id": 213
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.353206+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "sbin-ns-2026101605-long": {
       "signal": {
@@ -4723,7 +4743,9 @@
           "message_id": 214
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.360930+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026101608-long": {
       "signal": {
@@ -4784,7 +4806,9 @@
           "message_id": 216
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.368688+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101608-long": {
       "signal": {
@@ -4845,7 +4869,9 @@
           "message_id": 217
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.376541+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026101607-long": {
       "signal": {
@@ -4906,7 +4932,9 @@
           "message_id": 218
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.384184+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "hdfcbank-ns-2026101607-long": {
       "signal": {
@@ -4967,7 +4995,9 @@
           "message_id": 219
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.391974+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "sbin-ns-2026101607-long": {
       "signal": {
@@ -5028,7 +5058,9 @@
           "message_id": 220
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.399689+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026101610-long": {
       "signal": {
@@ -5089,7 +5121,9 @@
           "message_id": 221
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.407390+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026101610-long": {
       "signal": {
@@ -5150,7 +5184,9 @@
           "message_id": 222
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.415200+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "sbin-ns-2026101609-long": {
       "signal": {
@@ -5211,7 +5247,9 @@
           "message_id": 223
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.423128+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026101609-long": {
       "signal": {
@@ -5272,7 +5310,9 @@
           "message_id": 224
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.431001+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "hdfcbank-ns-2026101609-long": {
       "signal": {
@@ -5331,6 +5371,69 @@
         "telegram_dm": {
           "status": "sent",
           "message_id": 225
+        }
+      },
+      "status": "expired",
+      "expired_at": "2026-10-19T04:16:32.438786+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
+    },
+    "btc-usd-2026101904-long": {
+      "signal": {
+        "signal_id": "btc-usd-2026101904-long",
+        "slug": "btc-usd-2026101904-long",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 82393.6328125,
+        "stop_loss": 81914.57123147357,
+        "targets": [
+          82872.69439352643,
+          83112.22518403965,
+          83351.75597455287
+        ],
+        "tp1": 82872.69439352643,
+        "tp2": 83112.22518403965,
+        "tp3": 83351.75597455287,
+        "rr_tp2": 1.500000000000015,
+        "rsi14": 64.16968885911147,
+        "ema20": 81789.13453743357,
+        "ema50": 81653.56241919479,
+        "macd": 232.2264519901364,
+        "macd_signal": 86.25642005285502,
+        "macd_hist": 145.9700319372814,
+        "atr14": 319.3743873509554,
+        "vwap": 82359.12433423483,
+        "support": 80598.2734375,
+        "resistance": 82715.9375,
+        "as_of": "2026-10-19T04:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 64.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 64.2. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 64.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 64.2. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 64.2. This is a rule-based scenario, not a prediction.\n\nScenario: BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026101904-long.png",
+      "card_path": "output/btc-usd-2026101904-long_card.png",
+      "created_at": "2026-10-19T04:16:35.267071+00:00",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 241
         }
       },
       "status": "pending_approval"
@@ -5898,6 +6001,12 @@
     {
       "at": "2026-10-16T10:39:30.252183+00:00",
       "signal_id": "hdfcbank-ns-2026101609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-19T04:16:36.862061+00:00",
+      "signal_id": "btc-usd-2026101904-long",
       "status": "pending_approval",
       "dry_run": false
     }
