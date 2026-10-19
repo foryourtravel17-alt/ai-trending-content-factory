@@ -5864,6 +5864,189 @@
         }
       },
       "status": "pending_approval"
+    },
+    "btc-usd-2026101910-long": {
+      "signal": {
+        "signal_id": "btc-usd-2026101910-long",
+        "slug": "btc-usd-2026101910-long",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 82325.046875,
+        "stop_loss": 81763.55483298418,
+        "targets": [
+          82886.53891701582,
+          83167.28493802373,
+          83448.03095903165
+        ],
+        "tp1": 82886.53891701582,
+        "tp2": 83167.28493802373,
+        "tp3": 83448.03095903165,
+        "rr_tp2": 1.5000000000000129,
+        "rsi14": 55.99568709081947,
+        "ema20": 82177.63398426796,
+        "ema50": 81870.11900780656,
+        "macd": 313.05561009791563,
+        "macd_signal": 264.52782556974023,
+        "macd_hist": 48.5277845281754,
+        "atr14": 374.3280280105481,
+        "vwap": 82562.15156703147,
+        "support": 80598.2734375,
+        "resistance": 83056.4921875,
+        "as_of": "2026-10-19T10:00:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 56.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 56.0. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 56.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 56.0. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 56.0. This is a rule-based scenario, not a prediction.\n\nScenario: BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026101910-long.png",
+      "card_path": "output/btc-usd-2026101910-long_card.png",
+      "created_at": "2026-10-19T10:39:12.511342+00:00",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 251
+        }
+      },
+      "status": "pending_approval"
+    },
+    "eth-usd-2026101910-long": {
+      "signal": {
+        "signal_id": "eth-usd-2026101910-long",
+        "slug": "eth-usd-2026101910-long",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 2424.6201171875,
+        "stop_loss": 2400.705224514903,
+        "targets": [
+          2448.535009860097,
+          2460.4924561963953,
+          2472.4499025326936
+        ],
+        "tp1": 2448.535009860097,
+        "tp2": 2460.4924561963953,
+        "tp3": 2472.4499025326936,
+        "rr_tp2": 1.4999999999999905,
+        "rsi14": 57.33509283814326,
+        "ema20": 2413.4446108298393,
+        "ema50": 2410.503116331641,
+        "macd": 9.172200546066506,
+        "macd_signal": 5.234108695406218,
+        "macd_hist": 3.938091850660288,
+        "atr14": 15.943261781731227,
+        "vwap": 2428.4837860388693,
+        "support": 2326.830078125,
+        "resistance": 2443.7900390625,
+        "as_of": "2026-10-19T10:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 57.3. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 57.3. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 57.3. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 57.3. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 57.3. This is a rule-based scenario, not a prediction.\n\nScenario: ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026101910-long.png",
+      "card_path": "output/eth-usd-2026101910-long_card.png",
+      "created_at": "2026-10-19T10:39:14.726557+00:00",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 252
+        }
+      },
+      "status": "pending_approval"
+    },
+    "sbin-ns-2026101909-long": {
+      "signal": {
+        "signal_id": "sbin-ns-2026101909-long",
+        "slug": "sbin-ns-2026101909-long",
+        "symbol": "SBIN.NS",
+        "label": "State Bank of India",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 973.7000122070312,
+        "stop_loss": 964.4647025932854,
+        "targets": [
+          982.9353218207771,
+          987.5529766276501,
+          992.170631434523
+        ],
+        "tp1": 982.9353218207771,
+        "tp2": 987.5529766276501,
+        "tp3": 992.170631434523,
+        "rr_tp2": 1.5000000000000122,
+        "rsi14": 64.62719042209913,
+        "ema20": 964.4759440837709,
+        "ema50": 959.0286282826338,
+        "macd": 5.2874631460719,
+        "macd_signal": 4.498448046971562,
+        "macd_hist": 0.7890150991003377,
+        "atr14": 6.156873075830579,
+        "vwap": 971.3458361421848,
+        "support": 947.7999877929688,
+        "resistance": 983.7999877929688,
+        "as_of": "2026-10-19T09:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main State Bank of India par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 64.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · State Bank of India</b>\n\n<b>Structure first. Risk always.</b>\n\nMain State Bank of India par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 64.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nState Bank of India: EMA20 EMA50 ke upar hai aur RSI(14) 64.6 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> SBIN.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain State Bank of India par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 64.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nState Bank of India: EMA20 EMA50 ke upar hai aur RSI(14) 64.6 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: SBIN.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/sbin-ns-2026101909-long.png",
+      "card_path": "output/sbin-ns-2026101909-long_card.png",
+      "created_at": "2026-10-19T10:39:16.910744+00:00",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 253
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -6476,6 +6659,24 @@
     {
       "at": "2026-10-19T08:33:34.417483+00:00",
       "signal_id": "sbin-ns-2026101907-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-19T10:39:14.207303+00:00",
+      "signal_id": "btc-usd-2026101910-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-19T10:39:16.401873+00:00",
+      "signal_id": "eth-usd-2026101910-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-19T10:39:18.083552+00:00",
+      "signal_id": "sbin-ns-2026101909-long",
       "status": "pending_approval",
       "dry_run": false
     }
