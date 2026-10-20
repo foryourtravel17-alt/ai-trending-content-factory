@@ -26,7 +26,7 @@ class ReelVisualTests(unittest.TestCase):
         self.assertIsNotNone(image.getbbox())
 
     def test_topic_takeaway_is_not_hardcoded_to_ema_crossovers(self):
-        takeaway = topic_takeaway("Trading Psychology", "Review the plan, risk and execution.")
+        takeaway = topic_takeaway("Trading Psychology", "Review the plan and execution.")
         self.assertNotIn("crossover", takeaway.lower())
         self.assertIn("context", takeaway.lower())
         self.assertIn("invalidation", takeaway.lower())
