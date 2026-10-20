@@ -30,7 +30,11 @@ jobs:
             exit 1
           fi
           response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
-          if echo "${response}" | grep -q '"error"'; then echo "ERROR: Meta credential or linked-account check failed; response redacted."; exit 1; fi
+          if echo "${response}" | grep -q '"error"'; then
+            safe_error="$(python -c 'import json,sys; e=json.load(sys.stdin).get("error",{}); safe=lambda x: "".join(c for c in str(x if x is not None else "unknown") if c.isalnum() or c in "._-")[:64] or "unknown"; print("code={}, subcode={}, type={}".format(safe(e.get("code")), safe(e.get("error_subcode")), safe(e.get("type"))))' <<<"${response}")"
+            echo "ERROR: Meta credential/account check failed (${safe_error}); error message redacted."
+            exit 1
+          fi
           linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
           if [ -z "${linked}" ]; then
             echo "ERROR: System User has no assigned Page with a linked Instagram account."
