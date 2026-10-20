@@ -24,7 +24,7 @@ jobs:
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
         run: |
           set -euo pipefail
-          token="${INSTAGRAM_ACCESS_TOKEN:-${IG_ACCESS_TOKEN:-${META_SYSTEM_USER_TOKEN:-}}}"
+          token="${META_SYSTEM_USER_TOKEN:-${IG_ACCESS_TOKEN:-${INSTAGRAM_ACCESS_TOKEN:-}}}"
           if [ -z "${token}" ]; then
             echo "ERROR: No Meta System User credential configured."
             exit 1
@@ -36,7 +36,7 @@ jobs:
             echo "ERROR: System User has no assigned Page with a linked Instagram account."
             exit 1
           fi
-          echo "System User credential is valid; linked Instagram account: ${linked}"
+          echo "Meta credential is valid; linked Instagram account found (ID redacted)."
 
       - name: Alert Telegram on invalid token or broken Instagram link
         if: failure()
