@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T10:33:16.847702+05:30",
+  "generated_at": "2026-10-20T10:28:16.686328+05:30",
   "mode": "free-first",
   "status": "ready_for_asset_generation",
   "manual_required": [
@@ -9,16 +9,6 @@
   "posts": [
     {
       "slot": 1,
-      "type": "reel",
-      "theme": "Confidence",
-      "hook": "Maybe you should've been paying attention earlier. 👀",
-      "caption": "Timing matters. So does confidence. 🖤",
-      "visual": "Photorealistic adult Ritu, consistent identity, classy evening look, warm city lights, subtle smile, realistic skin and body proportions, vertical 9:16.",
-      "approval": "pending",
-      "publishing": "not_connected"
-    },
-    {
-      "slot": 2,
       "type": "photo",
       "theme": "Travel",
       "hook": "A little escape changes everything.",
@@ -28,12 +18,22 @@
       "publishing": "not_connected"
     },
     {
-      "slot": 3,
+      "slot": 2,
       "type": "reel",
       "theme": "Romance",
       "hook": "Raat meri hai… attention tumhari. 😉🌙",
       "caption": "Night mood, city lights, and a little mystery. 🌙",
       "visual": "Photorealistic adult Ritu, consistent identity, elegant black evening outfit, luxury bedroom or rooftop ambience, warm cinematic lighting, non-graphic, vertical 9:16.",
+      "approval": "pending",
+      "publishing": "not_connected"
+    },
+    {
+      "slot": 3,
+      "type": "reel",
+      "theme": "Attraction",
+      "hook": "Dekhna allowed hai… approach karna optional. 😉",
+      "caption": "Confidence looks better when it feels natural. 🖤 What catches your attention first — eyes, energy, or attitude?",
+      "visual": "Photorealistic adult Ritu, consistent identity, elegant fitted outfit, premium lifestyle setting, natural skin texture, subtle confident expression, cinematic vertical 9:16.",
       "approval": "pending",
       "publishing": "not_connected"
     }
