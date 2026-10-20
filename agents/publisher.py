@@ -140,7 +140,7 @@ def _instagram_publish(
     """
     state = publish_state if isinstance(publish_state, dict) else {}
     token, token_source = _first_configured_env(
-        ("IG_ACCESS_TOKEN", "INSTAGRAM_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN")
+        ("INSTAGRAM_ACCESS_TOKEN", "IG_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN")
     )
     user_id, user_id_source = _first_configured_env(
         ("IG_USER_ID", "INSTAGRAM_USER_ID")
@@ -262,7 +262,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             log.error("Telegram publishing cannot run because its bot token is missing.")
     if platforms.get("instagram", {}).get("status") != "published":
         token, token_source = _first_configured_env(
-            ("IG_ACCESS_TOKEN", "INSTAGRAM_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN")
+            ("INSTAGRAM_ACCESS_TOKEN", "IG_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN")
         )
         user_id, user_id_source = _first_configured_env(
             ("IG_USER_ID", "INSTAGRAM_USER_ID")
