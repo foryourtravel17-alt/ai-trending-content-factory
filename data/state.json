@@ -6894,7 +6894,7 @@
         },
         "instagram": {
           "status": "failed",
-          "error": "Meta API HTTP 400 (OAuthException, code=190, subcode=467); message redacted, credentials protected."
+          "error": "Meta API HTTP 400 (GraphMethodException, code=100, subcode=33); message redacted, credentials protected."
         }
       },
       "status": "publish_failed",
