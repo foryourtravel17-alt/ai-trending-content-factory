@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-20T11:10:00.000Z",
+  "source": "Bullseye Theory educational market factory",
+  "dataStatus": "human_approved_observations",
+  "maxObservationAgeHours": 8,
+  "disclaimer": "Educational structure observations only. Not a forecast or a recommendation to buy, sell, or hold. Conditions can change; scenarios can fail.",
+  "records": []
+}
