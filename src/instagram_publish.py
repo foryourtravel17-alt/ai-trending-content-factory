@@ -183,6 +183,66 @@ def save_state(content_path, approved):
     )
 
 
+def publish_instagram_reel_container(ig_user_id, video_url, caption, approved, content_path):
+    """Create once, persist the Reel container, and reuse it after an ambiguous failure."""
+    publishing = approved.setdefault("publishing", {})
+    instagram = publishing.setdefault("instagram", {})
+    creation_id = str(instagram.get("creation_id") or "").strip()
+
+    if not creation_id:
+        container = request("POST", f"{API}/{ig_user_id}/media", {
+            "media_type": "REELS",
+            "video_url": video_url,
+            "caption": caption,
+            "share_to_feed": "true",
+            "access_token": TOKEN,
+        })
+        creation_id = str(container.get("id") or "").strip()
+        if not creation_id:
+            raise RuntimeError("Instagram Reel container response had no id.")
+        instagram["creation_id"] = creation_id
+        instagram["status"] = "container_created"
+        instagram["container_created_at"] = time.strftime(
+            "%Y-%m-%dT%H:%M:%SZ", time.gmtime()
+        )
+        # Persist the container before polling or asking Instagram to publish it.
+        save_state(content_path, approved)
+        print("Created and persisted Instagram Reel container ID (ID redacted).")
+    else:
+        print("Reusing persisted Instagram Reel container; no new container will be created.")
+
+    for attempt in range(20):
+        status = request("GET", f"{API}/{creation_id}", {
+            "fields": "status_code,status",
+            "access_token": TOKEN,
+        })
+        print(f"Upload status: {status}")
+        if status.get("status_code") == "FINISHED":
+            break
+        if status.get("status_code") in {"ERROR", "EXPIRED"}:
+            raise RuntimeError(
+                f"Instagram Reel container entered {status.get('status_code')} status; "
+                "container ID retained for manual reconciliation."
+            )
+        time.sleep(15)
+    else:
+        raise RuntimeError(
+            "Instagram Reel container did not finish in the expected time; "
+            "container ID retained for safe retry."
+        )
+
+    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
+        "creation_id": creation_id,
+        "access_token": TOKEN,
+    })
+    media_id = str(published.get("id") or "").strip()
+    if not media_id:
+        raise RuntimeError(
+            "Instagram Reel publish returned no media id; existing container retained."
+        )
+    return media_id
+
+
 def main():
     content_path, approved = load_newest_unpublished_approved()
     if not approved:
@@ -235,36 +295,10 @@ def main():
     if isinstance(hashtags, list):
         caption = (caption + "\n\n" + " ".join(hashtags)).strip()
 
-    print(f"Creating Instagram Reel container for {content_path.name}")
-    container = request("POST", f"{API}/{ig_user_id}/media", {
-        "media_type": "REELS",
-        "video_url": video_url,
-        "caption": caption,
-        "share_to_feed": "true",
-        "access_token": TOKEN,
-    })
-    creation_id = container["id"]
-    print(f"Instagram container: {creation_id}")
-
-    for attempt in range(20):
-        status = request("GET", f"{API}/{creation_id}", {
-            "fields": "status_code,status",
-            "access_token": TOKEN,
-        })
-        print(f"Upload status: {status}")
-        if status.get("status_code") == "FINISHED":
-            break
-        if status.get("status_code") in {"ERROR", "EXPIRED"}:
-            raise RuntimeError(f"Instagram container failed: {status}")
-        time.sleep(15)
-    else:
-        raise RuntimeError("Instagram container did not finish in the expected time.")
-
-    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
-        "creation_id": creation_id,
-        "access_token": TOKEN,
-    })
-    print(f"Instagram published media: {published}")
+    media_id = publish_instagram_reel_container(
+        ig_user_id, video_url, caption, approved, content_path
+    )
+    print(f"Instagram Reel published media ID: {media_id}")
 
     media_id = published.get("id")
     if not media_id:
