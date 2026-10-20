@@ -300,10 +300,6 @@ def main():
     )
     print(f"Instagram Reel published media ID: {media_id}")
 
-    media_id = published.get("id")
-    if not media_id:
-        raise RuntimeError(f"Instagram publish returned no media id: {published}")
-
     approved["status"] = "published_to_instagram"
     approved["instagram_media_id"] = media_id
     approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
