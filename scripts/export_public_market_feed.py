@@ -114,6 +114,18 @@ def export_public_feed(
     if not isinstance(state, dict):
         state = {"signals": {}}
     feed = build_public_feed(state, max_age_hours=max_age_hours)
+    # Keep output stable when the allow-listed content has not changed, avoiding
+    # a no-op Git commit every 30 minutes from the approval poller.
+    if output_path.exists():
+        try:
+            previous = json.loads(output_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            previous = {}
+        stable_keys = ("schemaVersion", "source", "dataStatus", "maxObservationAgeHours", "disclaimer", "records")
+        if isinstance(previous, dict) and all(previous.get(key) == feed.get(key) for key in stable_keys):
+            previous_generated_at = previous.get("generatedAt")
+            if isinstance(previous_generated_at, str) and previous_generated_at:
+                feed["generatedAt"] = previous_generated_at
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = output_path.with_suffix(output_path.suffix + ".tmp")
     temp_path.write_text(json.dumps(feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
