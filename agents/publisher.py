@@ -15,6 +15,22 @@ API_VERSION = os.getenv("META_GRAPH_API_VERSION", "v23.0")
 TELEGRAM_CHANNEL = os.getenv("TELEGRAM_CHANNEL", "@bullseye_theory")
 
 
+def _first_configured_env(names: tuple[str, ...]) -> tuple[str, str]:
+    """Return a configured value and its variable name without logging the value."""
+    for name in names:
+        value = os.getenv(name, "").strip()
+        if value:
+            return value, name
+    return "", ""
+
+
+def _safe_meta_label(value: object) -> str:
+    """Keep Meta error identifiers useful while excluding arbitrary response text."""
+    raw = str(value) if value is not None else "unknown"
+    safe = "".join(char for char in raw if char.isalnum() or char in "._-")
+    return safe[:64] or "unknown"
+
+
 def public_image_url(image_path: Path) -> str:
     gh_user = os.getenv("GH_USER", "").strip()
     gh_repo = os.getenv("GH_REPO", "").strip()
@@ -100,51 +116,92 @@ def _meta_request(method: str, url: str, **kwargs):
     if not response.ok:
         error = body.get("error") if isinstance(body, dict) else {}
         error = error if isinstance(error, dict) else {}
-        code = error.get("code")
-        subcode = error.get("error_subcode")
-        error_type = str(error.get("type") or "unknown")
+        code = _safe_meta_label(error.get("code"))
+        subcode = _safe_meta_label(error.get("error_subcode"))
+        error_type = _safe_meta_label(error.get("type"))
         # Meta's user-facing message can contain identifiers or request details; don't log it.
-        identifiers = []
-        if code is not None:
-            identifiers.append(f"code={code}")
-        if subcode is not None:
-            identifiers.append(f"subcode={subcode}")
-        suffix = (", " + ", ".join(identifiers)) if identifiers else ""
         raise RuntimeError(
-            f"Meta API HTTP {response.status_code} ({error_type}{suffix}); "
-            "message redacted, credentials protected."
+            f"Meta API HTTP {response.status_code}; code={code}, subcode={subcode}, "
+            f"type={error_type}; message redacted, credentials protected."
         )
     return body
 
 
-def _instagram_publish(image_url: str, caption: str) -> str:
-    token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
-    user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
+def _instagram_publish(
+    image_url: str,
+    caption: str,
+    publish_state: dict | None = None,
+) -> str:
+    """Publish an Instagram image, reusing a persisted container on retries.
+
+    The creation ID is stored before media_publish is attempted. If Meta accepts
+    a publish request but the response is lost or fails, a retry must not create
+    a fresh container and risk duplicating the post.
+    """
+    state = publish_state if isinstance(publish_state, dict) else {}
+    token, token_source = _first_configured_env(
+        ("IG_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN", "INSTAGRAM_ACCESS_TOKEN")
+    )
+    user_id, user_id_source = _first_configured_env(
+        ("IG_USER_ID", "INSTAGRAM_USER_ID")
+    )
+    log.info(
+        "Instagram credential sources: token=%s; user_id=%s",
+        token_source or "none", user_id_source or "none",
+    )
     if not token or not user_id:
-        raise RuntimeError("Instagram credentials missing (IG_ACCESS_TOKEN and IG_USER_ID).")
+        raise RuntimeError(
+            "Instagram credentials missing: "
+            f"token source={token_source or 'none'}; "
+            f"user ID source={user_id_source or 'none'}."
+        )
+
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
-    container = _meta_request("POST", f"{api}/media", data={
-        "image_url": image_url, "caption": caption[:2200], "access_token": token,
-    }, timeout=60)
-    creation_id = container.get("id")
+    creation_id = str(state.get("creation_id") or "").strip()
     if not creation_id:
-        raise RuntimeError("Instagram media container response had no id.")
-    for _ in range(6):
-        status = _meta_request("GET", f"https://graph.facebook.com/{API_VERSION}/{creation_id}", params={
-            "fields": "status_code", "access_token": token,
-        }, timeout=30)
+        container = _meta_request("POST", f"{api}/media", data={
+            "image_url": image_url, "caption": caption[:2200], "access_token": token,
+        }, timeout=60)
+        creation_id = str(container.get("id") or "").strip()
+        if not creation_id:
+            raise RuntimeError("Instagram media container response had no id.")
+        # Persist the ID in the record before any publish request can fail.
+        state["creation_id"] = creation_id
+        log.info("Created Instagram media container and retained its ID for safe retries.")
+    else:
+        log.info("Reusing retained Instagram media container for retry; no new container will be created.")
+
+    finished = False
+    for attempt in range(6):
+        status = _meta_request(
+            "GET", f"https://graph.facebook.com/{API_VERSION}/{creation_id}",
+            params={"fields": "status_code", "access_token": token}, timeout=30,
+        )
         code = status.get("status_code")
-        if code == "ERROR":
-            raise RuntimeError("Instagram image container entered ERROR status.")
+        if code in {"ERROR", "EXPIRED"}:
+            raise RuntimeError(
+                f"Instagram image container entered {code} status; "
+                "container retained for manual reconciliation."
+            )
         if code in (None, "FINISHED"):
+            finished = True
             break
-        time.sleep(5)
+        if attempt < 5:
+            time.sleep(5)
+    if not finished:
+        raise RuntimeError(
+            "Instagram image container did not reach FINISHED status after six checks; "
+            "container retained for safe retry."
+        )
+
     published = _meta_request("POST", f"{api}/media_publish", data={
         "creation_id": creation_id, "access_token": token,
     }, timeout=60)
     media_id = published.get("id")
     if not media_id:
-        raise RuntimeError("Instagram publish response had no media id.")
+        raise RuntimeError(
+            "Instagram publish response had no media id; the existing container is retained."
+        )
     return str(media_id)
 
 
@@ -204,23 +261,42 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             errors.append(f"Telegram: {message}")
             log.error("Telegram publishing cannot run because its bot token is missing.")
     if platforms.get("instagram", {}).get("status") != "published":
-        token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
-        user_id = os.getenv("IG_USER_ID", "").strip() or os.getenv("INSTAGRAM_USER_ID", "").strip()
+        token, token_source = _first_configured_env(
+            ("IG_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN", "INSTAGRAM_ACCESS_TOKEN")
+        )
+        user_id, user_id_source = _first_configured_env(
+            ("IG_USER_ID", "INSTAGRAM_USER_ID")
+        )
+        log.info(
+            "Instagram credential sources: token=%s; user_id=%s",
+            token_source or "none", user_id_source or "none",
+        )
+        instagram_state = platforms.setdefault("instagram", {})
         if token and user_id:
             try:
                 image_url = _accessible_image_url(card_path)
-                media_id = _instagram_publish(image_url, copy["instagram_caption"])
-                platforms["instagram"] = {"status": "published", "media_id": media_id}
+                media_id = _instagram_publish(
+                    image_url, copy["instagram_caption"], instagram_state
+                )
+                instagram_state.update({"status": "published", "media_id": media_id})
+                instagram_state.pop("error", None)
                 log.info("Instagram published %s (media %s).", signal["signal_id"], media_id)
             except Exception as exc:
-                platforms["instagram"] = {"status": "failed", "error": str(exc)[:300]}
+                # Keep creation_id: ambiguous publish errors must retry the same container.
+                instagram_state["status"] = "failed"
+                instagram_state["error"] = str(exc)[:300]
                 errors.append(f"Instagram: {exc}")
                 log.error("Instagram publish failed for %s: %s", signal["signal_id"], exc)
         else:
-            message = "IG_ACCESS_TOKEN and/or IG_USER_ID are not configured."
-            platforms["instagram"] = {"status": "failed", "error": message}
+            message = (
+                "Instagram credentials missing: "
+                f"token source={token_source or 'none'}; "
+                f"user ID source={user_id_source or 'none'}."
+            )
+            instagram_state["status"] = "failed"
+            instagram_state["error"] = message
             errors.append(f"Instagram: {message}")
-            log.error("Instagram publishing cannot run because its credentials are missing.")
+            log.error("%s", message)
     statuses = [platforms.get(k, {}).get("status") for k in ("telegram", "instagram")]
     if all(status == "published" for status in statuses):
         record["status"] = "published"
