@@ -85,10 +85,10 @@ class PublicFeedTests(unittest.TestCase):
             output_path = Path(tmp) / "approved_market_feed.json"
             state_path.write_text(json.dumps(state), encoding="utf-8")
             initial = build_public_feed(state, now=now)
-            output_path.write_text(json.dumps(initial, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+            output_path.write_text(json.dumps(initial, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             exported = export_public_feed(state_path, output_path)
             self.assertEqual(exported["generatedAt"], initial["generatedAt"])
-            self.assertEqual(output_path.read_text(encoding="utf-8"), json.dumps(initial, indent=2, ensure_ascii=False) + "\\n")
+            self.assertEqual(output_path.read_text(encoding="utf-8"), json.dumps(initial, indent=2, ensure_ascii=False) + "\n")
 
 
 
