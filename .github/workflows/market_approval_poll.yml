@@ -56,7 +56,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN || secrets.INSTAGRAM_ACCESS_TOKEN }}
-          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID || secrets.IG_USER_ID }}
           META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
           GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
