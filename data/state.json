@@ -6894,7 +6894,7 @@
         },
         "instagram": {
           "status": "failed",
-          "error": "Meta API request failed with HTTP 400; response redacted."
+          "error": "Meta API HTTP 400 (OAuthException, code=190, subcode=467); message redacted, credentials protected."
         }
       },
       "status": "publish_failed",
