@@ -16,7 +16,7 @@ def instagram_user_id() -> str:
     return first_nonempty("IG_USER_ID", "INSTAGRAM_USER_ID")
 
 def instagram_access_token() -> str:
-    return first_nonempty("IG_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN", "INSTAGRAM_ACCESS_TOKEN")
+    return first_nonempty("INSTAGRAM_ACCESS_TOKEN", "IG_ACCESS_TOKEN", "META_SYSTEM_USER_TOKEN")
 
 def human_approval_required() -> bool:
     """Fail closed: unset or ambiguous values require human approval."""
