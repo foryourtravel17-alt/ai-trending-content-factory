@@ -63,16 +63,20 @@ jobs:
           pub = rec.get("publishing", {})
           tg = pub.get("telegram", {}).get("status")
           ig = pub.get("instagram", {}).get("status")
-          if tg == "published" and ig == "published":
-              print("BLOCKED: both platforms already published this signal")
+          if tg != "published":
+              print("BLOCKED: Instagram-only retry requires Telegram to already be published")
               sys.exit(1)
-          print(f"Preflight passed for {sid}; Telegram={tg}, Instagram={ig}")
+          if ig == "published":
+              print("BLOCKED: Instagram already published this signal")
+              sys.exit(1)
+          print(f"Preflight passed for Instagram-only retry {sid}; Telegram={tg}, Instagram={ig}")
           PY
 
       - name: Attempt publishing for exactly one approved signal
         env:
           PUBLISH_ONLY: "true"
           PUBLISH_ONLY_SIGNAL_ID: ${{ inputs.signal_id }}
+          MARKET_RETRY_INSTAGRAM_ONLY: "true"
           HUMAN_APPROVAL: "false"
           DRY_RUN: "0"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

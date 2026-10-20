@@ -183,7 +183,12 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         return record
 
     errors = []
-    if platforms.get("telegram", {}).get("status") != "published":
+    instagram_only_retry = os.getenv("MARKET_RETRY_INSTAGRAM_ONLY", "false").strip().lower() == "true"
+    if instagram_only_retry:
+        if platforms.get("telegram", {}).get("status") != "published":
+            raise RuntimeError("Instagram-only retry blocked: Telegram is not already marked published.")
+        log.info("Instagram-only retry enabled; Telegram publishing is deliberately skipped.")
+    elif platforms.get("telegram", {}).get("status") != "published":
         token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
         if token:
             try:
