@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from agents.publisher import _meta_request, publish
+from agents.publisher import _instagram_publish, _meta_request, publish
 
 
 class PublisherTests(unittest.TestCase):
@@ -13,6 +13,33 @@ class PublisherTests(unittest.TestCase):
 
     def copy(self):
         return {"telegram_html": "<b>Test</b>", "instagram_caption": "Test caption"}
+
+    def test_instagram_token_precedence_matches_retry_workflow(self):
+        env = {
+            "INSTAGRAM_ACCESS_TOKEN": "preferred-token",
+            "IG_ACCESS_TOKEN": "fallback-token",
+            "META_SYSTEM_USER_TOKEN": "system-token",
+            "IG_USER_ID": "123456",
+        }
+
+        def fake_meta_request(method, url, **kwargs):
+            payload = kwargs.get("data") or kwargs.get("params") or {}
+            self.assertEqual(payload.get("access_token"), "preferred-token")
+            if method == "POST" and url.endswith("/media"):
+                return {"id": "container-123"}
+            if method == "GET" and url.endswith("/container-123"):
+                return {"status_code": "FINISHED"}
+            if method == "POST" and url.endswith("/media_publish"):
+                return {"id": "media-456"}
+            raise AssertionError(f"Unexpected Meta request: {method} {url}")
+
+        with patch.dict(os.environ, env, clear=True), \\
+             patch("agents.publisher._meta_request", side_effect=fake_meta_request):
+            media_id = _instagram_publish(
+                "https://example.com/card.png", "Test caption", {}
+            )
+
+        self.assertEqual(media_id, "media-456")
 
     def test_missing_credentials_fail_instead_of_silent_success(self):
         record = {"publishing": {}}
