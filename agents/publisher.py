@@ -86,16 +86,35 @@ def _telegram(method: str, data: dict, files: dict | None = None) -> dict:
 
 
 def _meta_request(method: str, url: str, **kwargs):
+    """Call Meta without leaking tokens; preserve safe error identifiers for diagnosis."""
     try:
         response = requests.request(method, url, **kwargs)
     except requests.RequestException as exc:
         raise RuntimeError(f"Meta API request failed ({type(exc).__name__}); credentials redacted.") from None
-    if not response.ok:
-        raise RuntimeError(f"Meta API request failed with HTTP {response.status_code}; response redacted.")
     try:
-        return response.json()
+        body = response.json()
     except ValueError:
-        raise RuntimeError("Meta API returned invalid JSON; response redacted.") from None
+        if not response.ok:
+            raise RuntimeError(f"Meta API HTTP {response.status_code}; non-JSON error response (credentials redacted).") from None
+        raise RuntimeError("Meta API returned invalid JSON; credentials redacted.") from None
+    if not response.ok:
+        error = body.get("error") if isinstance(body, dict) else {}
+        error = error if isinstance(error, dict) else {}
+        code = error.get("code")
+        subcode = error.get("error_subcode")
+        error_type = str(error.get("type") or "unknown")
+        # Meta's user-facing message can contain identifiers or request details; don't log it.
+        identifiers = []
+        if code is not None:
+            identifiers.append(f"code={code}")
+        if subcode is not None:
+            identifiers.append(f"subcode={subcode}")
+        suffix = (", " + ", ".join(identifiers)) if identifiers else ""
+        raise RuntimeError(
+            f"Meta API HTTP {response.status_code} ({error_type}{suffix}); "
+            "message redacted, credentials protected."
+        )
+    return body
 
 
 def _instagram_publish(image_url: str, caption: str) -> str:
