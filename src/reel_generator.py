@@ -312,12 +312,12 @@ def choose_archetype(content_id, previous=None):
 def chart_style_for_scene(title, body, scene_visual=""):
     """Choose an illustrative chart treatment from the educational topic."""
     lower = f"{title} {body} {scene_visual}".lower()
-    if any(term in lower for term in ("support", "resistance", "zone", "level")):
-        return "zones"
     if any(term in lower for term in ("liquidity sweep", "sweep", "stop hunt")):
         return "sweep"
     if any(term in lower for term in ("retest", "re-testing")):
         return "retest"
+    if any(term in lower for term in ("support", "resistance", "zone", "level")):
+        return "zones"
     if any(term in lower for term in ("risk", "position size", "leverage", "exposure")):
         return "risk"
     if any(term in lower for term in ("false breakout", "breakout", "structure break", "failed break", "break of structure")):
