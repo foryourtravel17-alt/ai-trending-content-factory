@@ -181,7 +181,7 @@ class PublisherTests(unittest.TestCase):
                 }}
 
         with patch("agents.publisher.requests.request", return_value=FakeResponse()):
-            with self.assertRaisesRegex(RuntimeError, r"HTTP 400 .*code=100, subcode=36003"):
+            with self.assertRaisesRegex(RuntimeError, r"HTTP 400; code=100, subcode=36003, type=OAuthException"):
                 _meta_request("POST", "https://graph.facebook.com/test", data={"access_token": "DO_NOT_LEAK"})
         # The raised message must not include Meta's untrusted message or any token.
         try:
