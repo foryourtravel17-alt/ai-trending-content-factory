@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from agents.publisher import _instagram_publish, _meta_request, publish
+from config.env import instagram_access_token
 
 
 class PublisherTests(unittest.TestCase):
@@ -13,6 +14,15 @@ class PublisherTests(unittest.TestCase):
 
     def copy(self):
         return {"telegram_html": "<b>Test</b>", "instagram_caption": "Test caption"}
+
+    def test_canonical_env_helper_matches_retry_token_precedence(self):
+        env = {
+            "INSTAGRAM_ACCESS_TOKEN": "preferred-token",
+            "IG_ACCESS_TOKEN": "fallback-token",
+            "META_SYSTEM_USER_TOKEN": "system-token",
+        }
+        with patch.dict(os.environ, env, clear=True):
+            self.assertEqual(instagram_access_token(), "preferred-token")
 
     def test_instagram_token_precedence_matches_retry_workflow(self):
         env = {
