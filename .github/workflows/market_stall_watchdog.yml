@@ -1,6 +1,11 @@
 name: Market Factory Schedule Watchdog
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/market_stall_watchdog.yml
+      - scripts/market_stall_check.py
   schedule:
     - cron: "0 13 * * 1-5" # 18:30 IST, after the last scheduled market-content slot
   workflow_dispatch:
