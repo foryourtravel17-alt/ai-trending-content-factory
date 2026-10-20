@@ -186,7 +186,21 @@ def draw_chart(draw, area, style="trend", accent=None):
     base = bottom - 46
     trend = [0, 22, 10, 48, 30, 64, 40, 82, 68, 106, 96, 128, 110, 150]
 
-    if style == "range":
+    if style == "zones":
+        trend = [42, 70, 25, 65, 35, 75, 30, 68, 28, 72, 34, 64, 40, 58]
+        resistance_y = top + int((bottom - top) * 0.32)
+        support_y = top + int((bottom - top) * 0.68)
+        draw.rounded_rectangle(
+            (left + 34, resistance_y - 18, right - 34, resistance_y + 28),
+            radius=10, outline=accent_color, width=3,
+        )
+        draw.rounded_rectangle(
+            (left + 34, support_y - 18, right - 34, support_y + 28),
+            radius=10, outline=LIME, width=3,
+        )
+        draw.text((left + 44, resistance_y - 48), "RESISTANCE ZONE", font=TINY, fill=accent_color)
+        draw.text((left + 44, support_y + 32), "SUPPORT ZONE", font=TINY, fill=LIME)
+    elif style == "range":
         trend = [42, 70, 25, 65, 35, 75, 30, 68, 28, 72, 34, 64, 40, 58]
         zone_y = top + int((bottom - top) * 0.46)
         draw.rectangle(
@@ -295,6 +309,26 @@ def choose_archetype(content_id, previous=None):
     return chosen
 
 
+def chart_style_for_scene(title, body, scene_visual=""):
+    """Choose an illustrative chart treatment from the educational topic."""
+    lower = f"{title} {body} {scene_visual}".lower()
+    if any(term in lower for term in ("liquidity sweep", "sweep", "stop hunt")):
+        return "sweep"
+    if any(term in lower for term in ("retest", "re-testing")):
+        return "retest"
+    if any(term in lower for term in ("support", "resistance", "zone", "level")):
+        return "zones"
+    if any(term in lower for term in ("risk", "position size", "leverage", "exposure")):
+        return "risk"
+    if any(term in lower for term in ("false breakout", "breakout", "structure break", "failed break", "break of structure")):
+        return "break"
+    if any(term in lower for term in ("choch", "change of character", "structure shift", "market structure", "trend structure")):
+        return "choch"
+    if "range" in lower or "sideways" in lower:
+        return "range"
+    return "trend"
+
+
 def make_frame(path, topic, category, title, body, scene_index, scene_visual, archetype=None):
     img = gradient_background()
     d = ImageDraw.Draw(img)
@@ -317,23 +351,16 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
         limits = archetype_data.get("text_max", {})
         hook_text = limit_text(body or title, limits.get("hook_chars", 72), limits.get("hook_words", 12))
         centered(d, hook_text, y + h * 0.52, hook_font, max(220, w - 110), fill=WHITE)
-        draw_chart(d, (105, 1260, 975, 1570), archetype_data.get("chart_style", "trend"), accent=accent)
+        draw_chart(d, (80, 1230, 1000, 1595), archetype_data.get("chart_style", "trend"), accent=accent)
     elif scene_index in (1, 2, 3, 4):
         d.text((85, 570), f"SCENE {scene_index}", font=SMALL, fill=GOLD)
         add_emphasis_panel(d, title, body)
-        style = "trend"
-        lower = f"{title} {body} {scene_visual}".lower()
-        if "range" in lower:
-            style = "range"
-        elif "break" in lower or "false" in lower or "invalid" in lower:
-            style = "break"
-        elif "risk" in lower or "position" in lower or "leverage" in lower:
-            style = "risk"
-        draw_chart(d, (105, 1260, 975, 1570), style)
+        style = chart_style_for_scene(title, body, scene_visual)
+        draw_chart(d, (80, 1230, 1000, 1595), style)
     elif scene_index == 5:
         d.text((85, 575), "KEY TAKEAWAY", font=SMALL, fill=GOLD)
         centered(d, body, 895, BODY, WIDTH - 250)
-        draw_chart(d, (105, 1260, 975, 1570), "trend")
+        draw_chart(d, (80, 1230, 1000, 1595), "trend")
     elif scene_index == 6:
         d.rounded_rectangle(
             (70, 570, WIDTH - 70, 1180),
@@ -342,8 +369,14 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             outline=GOLD,
             width=2,
         )
-        centered(d, body or "LEARN | TRADE | GROW", 875, BIG, WIDTH - 220, fill=WHITE)
-        draw_chart(d, (105, 1260, 975, 1570), "range")
+        centered(d, body or "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.", 845, BIG, WIDTH - 220, fill=WHITE)
+        d.text(
+            (100, 1100),
+            "FOLLOW FOR CLEAR, RISK-AWARE CHART BREAKDOWNS",
+            font=SMALL,
+            fill=LIME,
+        )
+        draw_chart(d, (80, 1230, 1000, 1595), "range")
     else:
         d.rounded_rectangle(
             (70, 570, WIDTH - 70, 1200),
@@ -364,7 +397,7 @@ def make_frame(path, topic, category, title, body, scene_index, scene_visual, ar
             "Trading involves risk."
         )
         centered(d, short_notice, 875, load_font(36, True), WIDTH - 250, fill=WHITE, gap=10)
-        draw_chart(d, (105, 1260, 975, 1570), "risk")
+        draw_chart(d, (80, 1230, 1000, 1595), "risk")
 
     d.text((80, 1645), "BULLSEYE THEORY", font=SMALL, fill=WHITE)
     d.text((80, 1683), "LEARN  |  TRADE  |  GROW", font=TINY, fill=MUTED)
@@ -575,6 +608,24 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     return ass
 
 
+def topic_takeaway(topic, body=""):
+    """Return a topic-aware educational takeaway without generic indicator claims."""
+    lower = f"{topic} {body}".lower()
+    if any(term in lower for term in ("liquidity sweep", "sweep", "stop hunt")):
+        return "A sweep is context, not an automatic entry. Wait for evidence and define invalidation."
+    if any(term in lower for term in ("support", "resistance", "zone", "level")):
+        return "A zone is an area, not an exact line. Observe the reaction and define invalidation."
+    if any(term in lower for term in ("risk", "leverage", "position size", "exposure")):
+        return "Plan invalidation first. Position size and risk limits matter more than a perfect entry."
+    if any(term in lower for term in ("breakout", "false break")):
+        return "Check the close, follow-through and context. A wick alone does not confirm a breakout."
+    if any(term in lower for term in ("structure", "choch", "bos", "trend")):
+        return "Read swing points in context. One candle or label cannot confirm a market shift."
+    if any(term in lower for term in ("ema", "indicator", "moving average", "crossover")):
+        return "Indicators are clues, not guarantees. Check market context and manage risk."
+    return "Pause. Check context, confirmation and invalidation before making a trading decision."
+
+
 def build(content):
     content_id = content["content_id"]
     topic = content.get("topic", {}).get("title", "Trading Education")
@@ -631,8 +682,8 @@ def build(content):
             i,
             scene.get("visual", ""),
         ))
-    takeaway = "A crossover is a clue, not a guarantee. Check market context and manage risk."
-    frame_specs.append(("KEY TAKEAWAY", takeaway, 5, ""))
+    takeaway = topic_takeaway(topic, script.get("body", ""))
+    frame_specs.append(("TAKEAWAY • SAVE THIS CHECKLIST", takeaway, 5, ""))
     frame_specs.append(("BULLSEYE THEORY", script.get("tagline", "LEARN | TRADE | GROW"), 6, ""))
     frame_specs.append(("EDUCATIONAL NOTICE", script.get("disclaimer", ""), 7, ""))
 
