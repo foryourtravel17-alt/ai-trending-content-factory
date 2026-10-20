@@ -21,6 +21,13 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertNotIn("Publish committed cards to Telegram and Instagram", workflow)
         self.assertNotIn("HUMAN_APPROVAL: \"false\"", workflow)
 
+    def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):
+        workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
+        self.assertIn('cron: "*/5 * * * *"', workflow)
+        self.assertIn('POLL_SECONDS: "15"', workflow)
+        self.assertIn("id: approval", workflow)
+        self.assertIn("market_approve:", Path("src/telegram_process.py").read_text(encoding="utf-8"))
+
     def test_legacy_reel_pipeline_does_not_auto_approve_for_publishing(self):
         workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
         self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)

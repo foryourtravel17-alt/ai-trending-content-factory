@@ -2,7 +2,7 @@ name: Market Signal Approval Poller
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -31,7 +31,7 @@ jobs:
         id: approval
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          POLL_SECONDS: "10"
+          POLL_SECONDS: "15"
         run: python src/telegram_process.py
 
       - name: Install market dependencies only when publishing is required
