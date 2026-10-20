@@ -1,0 +1,102 @@
+name: Controlled Single Market Signal Retry
+
+on:
+  workflow_dispatch:
+    inputs:
+      signal_id:
+        description: "Exact approved signal ID to retry"
+        required: true
+        type: string
+      confirm:
+        description: "Type RETRY to authorize one controlled publish attempt"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-state
+  cancel-in-progress: false
+
+jobs:
+  retry-one:
+    if: ${{ inputs.confirm == 'RETRY' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Preflight approval, freshness and duplicate state
+        env:
+          SIGNAL_ID: ${{ inputs.signal_id }}
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          from src.orchestrator import _signal_is_fresh
+          sid = os.environ["SIGNAL_ID"].strip()
+          if not sid or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for c in sid):
+              print("BLOCKED: invalid signal ID")
+              sys.exit(1)
+          state = json.load(open("data/state.json", encoding="utf-8"))
+          rec = state.get("signals", {}).get(sid)
+          if not rec:
+              print("BLOCKED: signal not found")
+              sys.exit(1)
+          if rec.get("approval_status") != "approved":
+              print("BLOCKED: signal lacks explicit human approval")
+              sys.exit(1)
+          if not _signal_is_fresh(rec.get("signal", {})):
+              print("BLOCKED: signal is stale; generate a fresh market observation")
+              sys.exit(1)
+          pub = rec.get("publishing", {})
+          tg = pub.get("telegram", {}).get("status")
+          ig = pub.get("instagram", {}).get("status")
+          if tg == "published" and ig == "published":
+              print("BLOCKED: both platforms already published this signal")
+              sys.exit(1)
+          print(f"Preflight passed for {sid}; Telegram={tg}, Instagram={ig}")
+          PY
+
+      - name: Attempt publishing for exactly one approved signal
+        env:
+          PUBLISH_ONLY: "true"
+          PUBLISH_ONLY_SIGNAL_ID: ${{ inputs.signal_id }}
+          HUMAN_APPROVAL: "false"
+          DRY_RUN: "0"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN || secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
+          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+          GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
+          GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
+          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
+        run: python -m src.orchestrator
+
+      - name: Commit updated state
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json data/approved_market_feed.json
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+          else
+            git commit -m "market: record controlled single-signal retry"
+            git pull --rebase origin main
+            git push
+          fi
