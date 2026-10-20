@@ -1,9 +1,20 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-20T11:10:00.000Z",
+  "generatedAt": "2026-10-20T12:39:31.631806+00:00",
   "source": "Bullseye Theory educational market factory",
   "dataStatus": "human_approved_observations",
   "maxObservationAgeHours": 8,
   "disclaimer": "Educational structure observations only. Not a forecast or a recommendation to buy, sell, or hold. Conditions can change; scenarios can fail.",
-  "records": []
+  "records": [
+    {
+      "id": "eth-usd-2026102010-short",
+      "symbol": "ETH-USD",
+      "label": "Ethereum",
+      "direction": "SHORT",
+      "as_of": "2026-10-20T10:00:00+00:00",
+      "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 40.0. The scenario is invalid if structure fails.",
+      "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario.",
+      "approvalStatus": "approved"
+    }
+  ]
 }

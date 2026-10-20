@@ -6887,9 +6887,21 @@
         "telegram_dm": {
           "status": "sent",
           "message_id": 268
+        },
+        "telegram": {
+          "status": "published",
+          "message_id": 73
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API request failed with HTTP 400; response redacted."
         }
       },
-      "status": "pending_approval"
+      "status": "publish_failed",
+      "approval_status": "approved",
+      "approved_at": "2026-10-20T12:39:13Z",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/eth-usd-2026102010-short_card.png",
+      "last_error": "See workflow logs for details."
     }
   },
   "runs": [
