@@ -1,6 +1,12 @@
 name: Market Signal Approval Poller
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/market_approval_poll.yml
+      - src/telegram_process.py
+      - scripts/export_public_market_feed.py
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
