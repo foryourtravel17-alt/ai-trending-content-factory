@@ -24,7 +24,7 @@ jobs:
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
         run: |
           set -euo pipefail
-          token="${META_SYSTEM_USER_TOKEN:-${IG_ACCESS_TOKEN:-${INSTAGRAM_ACCESS_TOKEN:-}}}"
+          token="${INSTAGRAM_ACCESS_TOKEN:-${IG_ACCESS_TOKEN:-${META_SYSTEM_USER_TOKEN:-}}}"
           if [ -z "${token}" ]; then
             echo "ERROR: No Meta System User credential configured."
             exit 1
