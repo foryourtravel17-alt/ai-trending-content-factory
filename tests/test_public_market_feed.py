@@ -1,10 +1,13 @@
 """Tests for the safe, approved-only public Market Lab feed."""
 from __future__ import annotations
 
+import json
+import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
-from scripts.export_public_market_feed import build_public_feed
+from scripts.export_public_market_feed import build_public_feed, export_public_feed
 
 
 NOW = datetime(2026, 10, 20, 12, 0, tzinfo=timezone.utc)
@@ -72,6 +75,21 @@ class PublicFeedTests(unittest.TestCase):
     def test_age_window_is_bounded(self):
         with self.assertRaises(ValueError):
             build_public_feed({"signals": {}}, now=NOW, max_age_hours=48)
+
+    def test_export_does_not_change_timestamp_or_create_commit_churn_for_same_feed(self):
+        now = datetime.now(timezone.utc)
+        record = make_record(as_of=(now - timedelta(hours=1)).isoformat())
+        state = {"signals": {"s1": record}}
+        with tempfile.TemporaryDirectory() as tmp:
+            state_path = Path(tmp) / "state.json"
+            output_path = Path(tmp) / "approved_market_feed.json"
+            state_path.write_text(json.dumps(state), encoding="utf-8")
+            initial = build_public_feed(state, now=now)
+            output_path.write_text(json.dumps(initial, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+            exported = export_public_feed(state_path, output_path)
+            self.assertEqual(exported["generatedAt"], initial["generatedAt"])
+            self.assertEqual(output_path.read_text(encoding="utf-8"), json.dumps(initial, indent=2, ensure_ascii=False) + "\\n")
+
 
 
 if __name__ == "__main__":
