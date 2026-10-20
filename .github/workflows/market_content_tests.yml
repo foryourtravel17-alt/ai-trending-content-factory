@@ -31,7 +31,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: market-factory-tests
+  group: market-factory-tests-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
