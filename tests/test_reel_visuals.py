@@ -13,7 +13,7 @@ class ReelVisualTests(unittest.TestCase):
             ("Retest After Breakout", "A retest can fail.", "RETEST ZONE", "retest"),
             ("CHOCH vs BOS", "Market structure labels need context.", "Change of character", "choch"),
             ("False Breakouts", "Wait for the close and follow-through.", "Define invalidation", "break"),
-            ("Position Sizing Starts With Risk", "Set the amount at risk.", "Exposure", "risk"),
+            ("Position Sizing Starts With Risk", "Set the amount at risk and define the invalidation point.", "KNOW INVALIDATION", "risk"),
         ]
         for title, body, visual, expected in cases:
             with self.subTest(title=title):
