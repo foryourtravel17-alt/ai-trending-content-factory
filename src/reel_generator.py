@@ -318,10 +318,10 @@ def chart_style_for_scene(title, body, scene_visual=""):
         return "sweep"
     if any(term in lower for term in ("retest", "re-testing")):
         return "retest"
-    if any(term in lower for term in ("false breakout", "breakout", "structure break", "invalidation", "invalid")):
-        return "break"
     if any(term in lower for term in ("risk", "position size", "leverage", "exposure")):
         return "risk"
+    if any(term in lower for term in ("false breakout", "breakout", "structure break", "failed break", "break of structure")):
+        return "break"
     if any(term in lower for term in ("choch", "change of character", "structure shift", "market structure", "trend structure")):
         return "choch"
     if "range" in lower or "sideways" in lower:
