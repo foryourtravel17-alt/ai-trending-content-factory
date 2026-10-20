@@ -11,6 +11,23 @@ QUEUE_FILE = "output/approval_queue.json"
 MARKET_STATE_FILE = "data/state.json"
 
 
+def apply_market_decision(record: dict, action: str, now: str) -> bool:
+    """Apply a market decision once; return False for duplicate/stale callbacks."""
+    if record.get("approval_status") in ("approved", "rejected"):
+        return False
+    if action == "market_approve":
+        record["status"] = "generated"
+        record["approval_status"] = "approved"
+        record["approved_at"] = now
+    elif action == "market_reject":
+        record["status"] = "rejected"
+        record["approval_status"] = "rejected"
+        record["rejected_at"] = now
+    else:
+        return False
+    return True
+
+
 def api(method, data=None, timeout=30):
     data = data or {}
     encoded = urllib.parse.urlencode(data).encode()
@@ -24,7 +41,7 @@ def api(method, data=None, timeout=30):
         raise RuntimeError(f"Telegram API request failed ({type(exc).__name__}); bot token redacted.") from None
 
     if not payload.get("ok"):
-        raise RuntimeError(f"Telegram API error: {payload}")
+        raise RuntimeError("Telegram API returned an unsuccessful response; details redacted.")
     return payload["result"]
 
 
@@ -69,11 +86,7 @@ def main():
     while time.time() < deadline:
         result = api(
             "getUpdates",
-            {
-                "offset": offset,
-                "timeout": 5,
-                "allowed_updates": json.dumps(["callback_query"]),
-            },
+            {"offset": offset, "timeout": 5, "allowed_updates": json.dumps(["callback_query"])},
             timeout=15,
         )
         print(f"Telegram updates received: {len(result)}")
@@ -94,27 +107,23 @@ def main():
                     action, signal_id = data.split(":", 1)
                     record = market_state["signals"].get(signal_id)
                     if record:
-                        if action == "market_approve":
-                            record["status"] = "generated"
-                            record["approval_status"] = "approved"
-                            record["approved_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-                            if signal_id not in market_approved_ids:
+                        now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                        changed = apply_market_decision(record, action, now)
+                        if changed:
+                            if action == "market_approve" and signal_id not in market_approved_ids:
                                 market_approved_ids.append(signal_id)
-                            print(f"Market scenario approved: {signal_id}")
+                            print(f"Market scenario {record['approval_status']}: {signal_id}")
+                            save_json(MARKET_STATE_FILE, market_state)
+                            answer = "Approved — publishing will start." if action == "market_approve" else "Rejected — no public post."
                         else:
-                            record["status"] = "rejected"
-                            record["approval_status"] = "rejected"
-                            record["rejected_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-                            print(f"Market scenario rejected: {signal_id}")
-                        save_json(MARKET_STATE_FILE, market_state)
+                            print(f"Duplicate/stale market callback ignored: {signal_id}")
+                            answer = "Already decided. No action taken."
                         try:
                             api("answerCallbackQuery", {
-                                "callback_query_id": callback_id,
-                                "text": "Approved — publishing will start." if action == "market_approve" else "Rejected — no public post.",
-                                "show_alert": "false",
+                                "callback_query_id": callback_id, "text": answer, "show_alert": "false",
                             })
                         except Exception as exc:
-                            print(f"Callback acknowledgement skipped: {exc}")
+                            print(f"Callback acknowledgement skipped: {type(exc).__name__}")
                         message = callback.get("message") or {}
                         chat_id = message.get("chat", {}).get("id")
                         message_id = message.get("message_id")
@@ -125,14 +134,13 @@ def main():
                                     "reply_markup": json.dumps({"inline_keyboard": []}),
                                 })
                             except Exception as exc:
-                                print(f"Button removal skipped: {exc}")
+                                print(f"Button removal skipped: {type(exc).__name__}")
                     else:
                         print(f"Market signal not found in state: {signal_id}")
                         try:
                             api("answerCallbackQuery", {
                                 "callback_query_id": callback_id,
-                                "text": "This draft is no longer available.",
-                                "show_alert": "false",
+                                "text": "This draft is no longer available.", "show_alert": "false",
                             })
                         except Exception:
                             pass
@@ -143,21 +151,24 @@ def main():
                         content_path = f"output/{content_id}.json"
                         if os.path.exists(content_path):
                             content = load_json(content_path, {})
-                            content["status"] = "approved_for_publishing" if action == "approve" else "rejected"
-                            content["approval_action"] = action
-                            save_json(content_path, content)
-                            print(f"{action.title()}d {content_id}")
-                            if content_id in queue_by_id:
-                                queue_by_id[content_id]["status"] = "approved" if action == "approve" else "rejected"
-                                queue_by_id[content_id]["processed"] = True
+                            if content.get("status") in ("approved_for_publishing", "rejected"):
+                                answer = "Already decided. No action taken."
+                                print(f"Duplicate/stale content callback ignored: {content_id}")
+                            else:
+                                content["status"] = "approved_for_publishing" if action == "approve" else "rejected"
+                                content["approval_action"] = action
+                                save_json(content_path, content)
+                                print(f"{action.title()}d {content_id}")
+                                if content_id in queue_by_id:
+                                    queue_by_id[content_id]["status"] = "approved" if action == "approve" else "rejected"
+                                    queue_by_id[content_id]["processed"] = True
+                                answer = "Approved" if action == "approve" else "Rejected"
                             try:
                                 api("answerCallbackQuery", {
-                                    "callback_query_id": callback_id,
-                                    "text": "Approved" if action == "approve" else "Rejected",
-                                    "show_alert": "false",
+                                    "callback_query_id": callback_id, "text": answer, "show_alert": "false",
                                 })
                             except Exception as exc:
-                                print(f"Callback acknowledgement skipped: {exc}")
+                                print(f"Callback acknowledgement skipped: {type(exc).__name__}")
                             message = callback.get("message") or {}
                             chat_id = message.get("chat", {}).get("id")
                             message_id = message.get("message_id")
@@ -167,9 +178,8 @@ def main():
                                         "chat_id": chat_id, "message_id": message_id,
                                         "reply_markup": json.dumps({"inline_keyboard": []}),
                                     })
-                                    print("Telegram buttons removed.")
                                 except Exception as exc:
-                                    print(f"Button removal skipped: {exc}")
+                                    print(f"Button removal skipped: {type(exc).__name__}")
                         else:
                             print(f"Content file not found: {content_path}")
                     else:
