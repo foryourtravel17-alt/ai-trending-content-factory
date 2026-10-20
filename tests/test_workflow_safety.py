@@ -25,6 +25,8 @@ class WorkflowSafetyTests(unittest.TestCase):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
         self.assertIn('cron: "*/5 * * * *"', workflow)
         self.assertIn('POLL_SECONDS: "15"', workflow)
+        self.assertIn("push:", workflow)
+        self.assertIn(".github/workflows/market_approval_poll.yml", workflow)
         self.assertIn("id: approval", workflow)
         self.assertIn("market_approve:", Path("src/telegram_process.py").read_text(encoding="utf-8"))
 
