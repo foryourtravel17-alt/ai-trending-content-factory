@@ -14,7 +14,12 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-from free_llm_router import generate_json
+try:
+    # Package import supports unit tests and `python -m src.main`.
+    from .free_llm_router import generate_json
+except ImportError:
+    # Script execution from the existing Actions workflow keeps working too.
+    from free_llm_router import generate_json
 
 BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
@@ -365,6 +370,22 @@ def save_json(filename, data):
     return path
 
 
+# Deliberately broaden the library beyond generic Forex explainers. These are evergreen lessons, not live market calls.
+TOPICS.extend([
+ {"title":"The Dollar Index: What DXY Can and Cannot Tell You","market":"Dollar","category":"Dollar Context","hook":"The dollar is moving—but DXY alone does not tell the whole story.","body":"DXY measures the US dollar against a basket of currencies with a heavy euro weighting. It can add context, but it is not a direct forecast for every dollar pair. Check the instrument, timeframe, and event context before drawing a conclusion.","visuals":[("DXY IS A BASKET","Show a clean dollar index dashboard with a currency basket."),("WEIGHTING MATTERS","Highlight euro weighting in an illustrative ring chart."),("COMPARE CONTEXT","Place DXY beside an illustrative EUR/USD chart."),("NOT A SIGNAL","End with an instrument, timeframe, context checklist.")],"hashtags":["#DXY","#US Dollar".replace(" ",""),"#ForexEducation","#MarketContext","#BullseyeTheory"]},
+ {"title":"Bitcoin Volatility: Why Position Size Matters More Than Excitement","market":"Crypto","category":"Crypto Risk","hook":"Bitcoin can move fast. Your position size should respect that.","body":"Crypto volatility can make a small price move create a large account impact when exposure is excessive. Understand the amount at risk, invalidation point, and whether the position fits a written risk limit before evaluating an entry. Volatility does not guarantee opportunity.","visuals":[("FAST MOVES","Show illustrative BTC candles with changing ranges."),("EXPOSURE","Compare two hypothetical position sizes on the same move."),("DEFINE INVALIDATION","Mark an educational invalidation area without a live entry."),("RISK FIRST","Finish with a position-size checklist.")],"hashtags":["#BitcoinEducation","#CryptoRisk","#RiskManagement","#TradingEducation","#BullseyeTheory"]},
+ {"title":"Forex vs Crypto: Different Markets, Same Need for Risk Rules","market":"Forex & Crypto","category":"Market Basics","hook":"Forex and crypto are different markets—but risk discipline still matters.","body":"Forex and crypto differ in trading hours, liquidity patterns, volatility, and structure. Do not copy assumptions across both. Understand the instrument, typical volatility, fees, and what would invalidate an idea before evaluating a hypothetical setup.","visuals":[("TWO MARKETS","Split screen: currency pair and crypto chart, both labelled illustrative."),("DIFFERENT CONDITIONS","Contrast session-based Forex activity with continuous crypto trading."),("SAME DISCIPLINE","Show exposure, invalidation, and fees checklist."),("LEARN THE INSTRUMENT","Close with market-specific research steps.")],"hashtags":["#ForexVsCrypto","#CryptoEducation","#ForexEducation","#RiskManagement","#BullseyeTheory"]},
+ {"title":"Liquidity Sweep: A Chart Concept, Not an Automatic Entry","market":"Forex","category":"Price Action","hook":"A liquidity sweep is a clue to investigate—not a button to press.","body":"Price can move beyond a prior high or low and then return, but the shape alone does not confirm what happens next. Study the close, surrounding structure, timeframe, and follow-through. Treat the pattern as a hypothesis and define what evidence would contradict it.","visuals":[("MARK THE SWING","Mark a prior high on an illustrative chart."),("PRICE MOVES THROUGH","Show a wick beyond the swing high."),("WAIT FOR EVIDENCE","Highlight the close and subsequent candles."),("NO AUTOMATIC ENTRY","End with a confirmation and invalidation checklist.")],"hashtags":["#LiquiditySweep","#PriceAction","#MarketStructure","#ForexEducation","#BullseyeTheory"]},
+ {"title":"CHOCH vs BOS: Stop Mixing Up Two Structure Labels","market":"Forex","category":"Market Structure","hook":"BOS and CHOCH are not interchangeable labels.","body":"Traders use break of structure and change of character for different price-structure events, though definitions vary by framework. State the swing points and timeframe you use, then explain the evidence. A label alone does not predict continuation or reversal.","visuals":[("DEFINE YOUR SWINGS","Label two swing points on an illustrative chart."),("BOS","Show a structure break and name the chosen framework."),("CHOCH","Show a possible character shift without a forecast."),("CONTEXT FIRST","Finish with timeframe and confirmation notes.")],"hashtags":["#BOS","#CHOCH","#MarketStructure","#PriceAction","#BullseyeTheory"]},
+ {"title":"Three Questions Before You Trust a Breakout","market":"Forex","category":"Trading Checklist","hook":"Before trusting a breakout, ask these three questions.","body":"Where did price close relative to the level? Is there meaningful follow-through, or did price immediately return? Does the move fit higher-timeframe context? These questions cannot remove uncertainty, but they can stop a single candle becoming an unsupported conclusion.","visuals":[("QUESTION 1","Highlight candle close relative to an illustrative zone."),("QUESTION 2","Compare follow-through with an immediate return."),("QUESTION 3","Zoom out to show higher-timeframe context."),("CHECK, THEN DECIDE","Present the three-question checklist.")],"hashtags":["#BreakoutTrading","#TechnicalAnalysis","#ForexEducation","#TradingChecklist","#BullseyeTheory"]},
+ {"title":"A Winning Trade Can Still Break Your Rules","market":"Trading Psychology","category":"Discipline","hook":"A profitable outcome does not automatically mean it was a good decision.","body":"A trade can finish positively even when the entry ignored a plan or took excessive risk. Judge the decision by whether it followed your process, not only by its outcome. Review execution, risk, and rule adherence across wins and losses.","visuals":[("OUTCOME IS NOT PROCESS","Contrast a green result with an incomplete checklist."),("REVIEW THE DECISION","Show entry plan, exposure, and invalidation fields."),("TRACK CONSISTENCY","Display a simple process journal."),("REPEAT GOOD HABITS","Close on process-based review.")],"hashtags":["#TradingPsychology","#TradingDiscipline","#RiskManagement","#TraderMindset","#BullseyeTheory"]},
+ {"title":"How to Build a Trading Journal That Teaches You Something","market":"Trading Psychology","category":"Trader Process","hook":"If your journal only records profit and loss, you are missing the lesson.","body":"Record setup rationale, timeframe, risk, invalidation, emotions, and whether you followed your rules. Review a meaningful sample instead of drawing conclusions from one trade. A journal helps identify process patterns; it does not guarantee better results.","visuals":[("BEYOND P&L","Show a journal template with no personal account data."),("RECORD THE PLAN","Highlight rationale, risk, and invalidation fields."),("REVIEW A SAMPLE","Show a neutral checklist of recurring behaviours."),("LEARN, DON'T PREDICT","End with a weekly review routine.")],"hashtags":["#TradingJournal","#TradingPsychology","#RiskManagement","#TradingEducation","#BullseyeTheory"]},
+ {"title":"Bullseye Theory Course Preview: Read Structure Before Setups","market":"Course Preview","category":"Course Curriculum","hook":"Before looking for a setup, learn to read the structure around it.","body":"Bullseye Theory is an educational framework built around market structure, trend context, risk management, and disciplined decision-making. This preview explains the learning sequence, not a promise of results. Start with the framework, practise on illustrative charts, and understand the limits of every setup.","visuals":[("START WITH STRUCTURE","Show the course learning path in a premium terminal style."),("READ THE CONTEXT","Mark illustrative swings and a possible structure shift."),("RISK IS PART OF THE PLAN","Show an exposure and invalidation checklist."),("LEARN THE PROCESS","Soft course CTA with no income claims.")],"hashtags":["#BullseyeTheory","#TradingCourse","#MarketStructure","#TradingEducation","#RiskManagement"]},
+ {"title":"Three Signs Your Chart Has Too Many Indicators","market":"Technical Analysis","category":"Chart Clarity","hook":"If your chart needs ten indicators to explain itself, simplify it.","body":"Indicators can summarize price data, but adding more tools does not automatically add useful evidence. If tools repeat information, signals conflict, or you cannot explain a decision without overlays, remove clutter and return to price, timeframe, and risk context.","visuals":[("TOO MUCH NOISE","Show an intentionally cluttered illustrative chart."),("REMOVE DUPLICATES","Fade redundant indicator panels."),("RETURN TO PRICE","Show a clean chart with swing points and zones."),("EXPLAIN YOUR REASON","End with a one-sentence analysis checklist.")],"hashtags":["#TechnicalAnalysis","#ChartAnalysis","#TradingEducation","#PriceAction","#BullseyeTheory"]},
+ {"title":"Why a News Candle Is Not a Complete Trading Plan","market":"Dollar & Macro","category":"News Context","hook":"A huge news candle can look obvious after it has already happened.","body":"Economic releases can create fast moves, spreads can widen, and the first reaction can reverse. A candle after the news does not explain the full event or execution risks. Check the source, timing, instrument, and uncertainty instead of turning a dramatic move into a guaranteed narrative.","visuals":[("THE SPIKE","Show an illustrative event candle labelled hypothetical."),("EXECUTION RISK","Highlight a widened-spread caution panel."),("REACTION CAN CHANGE","Show two possible follow-up paths."),("VERIFY CONTEXT","End with source, timing, and risk checklist.")],"hashtags":["#MarketNews","#DXY","#ForexEducation","#RiskManagement","#BullseyeTheory"]}
+])
+
+
 def trend_discovery():
     # Three daily publishing windows are scheduled in GitHub Actions.
     # The slot-aware rotation keeps consecutive posts varied without inventing
@@ -548,11 +569,16 @@ def visual_plan(item):
     }
 
 
-def caption_and_hashtags(item):
+def caption_and_hashtags(item, script=None):
+    script = script or {}
+    hook = str(script.get("hook") or item.get("hook") or item["title"]).strip()
+    body = str(script.get("body") or item["body"]).strip()
+    cta = str(script.get("cta") or "Save this framework and follow for more structured trading education.").strip()
     caption = (
-        f"{item['title']}\n\n"
-        f"{item['body']}\n\n"
-        f"{PHILOSOPHY}\n\n"
+        f"{hook}\n\n"
+        f"{body}\n\n"
+        f"{cta}\n\n"
+        f"{PHILOSOPHY}\n"
         f"{DISCLAIMER}"
     )
     return {
@@ -567,7 +593,7 @@ def build_content(item, index, content_id=None, content_role="education"):
     script = script_generation(item, research_data)
     safety = safety_check(script)
     visuals = visual_plan(item)
-    social = caption_and_hashtags(item)
+    social = caption_and_hashtags(item, script)
 
     status = "approved_for_publishing" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else ("pending_approval" if safety["passed"] else "safety_review_required")
 
