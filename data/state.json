@@ -6402,6 +6402,128 @@
         }
       },
       "status": "pending_approval"
+    },
+    "eurusd-x-2026102006-long": {
+      "signal": {
+        "signal_id": "eurusd-x-2026102006-long",
+        "slug": "eurusd-x-2026102006-long",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 1.1232168674468994,
+        "stop_loss": 1.1219739925977157,
+        "targets": [
+          1.1244597422960831,
+          1.125081179720675,
+          1.1257026171452669
+        ],
+        "tp1": 1.1244597422960831,
+        "tp2": 1.125081179720675,
+        "tp3": 1.1257026171452669,
+        "rr_tp2": 1.5,
+        "rsi14": 56.02628365292116,
+        "ema20": 1.122520363994416,
+        "ema50": 1.1223748705843748,
+        "macd": 0.0001672198367372868,
+        "macd_signal": -6.582527155411902e-05,
+        "macd_hist": 0.00023304510829140582,
+        "atr14": 0.000828583232789117,
+        "vwap": null,
+        "support": 1.1206992864608765,
+        "resistance": 1.1238480806350708,
+        "as_of": "2026-10-20T06:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 56.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 56.0. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 56.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 56.0. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 56.0. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026102006-long.png",
+      "card_path": "output/eurusd-x-2026102006-long_card.png",
+      "created_at": "2026-10-20T06:09:25.428205+00:00",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 260
+        }
+      },
+      "status": "pending_approval"
+    },
+    "eth-usd-2026102006-short": {
+      "signal": {
+        "signal_id": "eth-usd-2026102006-short",
+        "slug": "eth-usd-2026102006-short",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 2391.72998046875,
+        "stop_loss": 2414.731046536832,
+        "targets": [
+          2368.728914400668,
+          2357.228381366627,
+          2345.7278483325867
+        ],
+        "tp1": 2368.728914400668,
+        "tp2": 2357.228381366627,
+        "tp3": 2345.7278483325867,
+        "rr_tp2": 1.5,
+        "rsi14": 43.645420561007,
+        "ema20": 2402.0164116779024,
+        "ema50": 2405.1537760298665,
+        "macd": -2.1991982027498125,
+        "macd_signal": -1.5102126642183928,
+        "macd_hist": -0.6889855385314196,
+        "atr14": 15.334044045387813,
+        "vwap": 2401.9508171574057,
+        "support": 2371.389892578125,
+        "resistance": 2436.800048828125,
+        "as_of": "2026-10-20T06:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.6. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.6. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 43.6. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.6. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 43.6. This is a rule-based scenario, not a prediction.\n\nScenario: ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026102006-short.png",
+      "card_path": "output/eth-usd-2026102006-short_card.png",
+      "created_at": "2026-10-20T06:09:27.418424+00:00",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 261
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -7074,6 +7196,18 @@
     {
       "at": "2026-10-20T04:14:21.489444+00:00",
       "signal_id": "eurusd-x-2026102004-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-20T06:09:27.078120+00:00",
+      "signal_id": "eurusd-x-2026102006-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-20T06:09:29.172767+00:00",
+      "signal_id": "eth-usd-2026102006-short",
       "status": "pending_approval",
       "dry_run": false
     }
