@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from agents.publisher import publish, _meta_request
+from agents.publisher import _instagram_publish, _meta_request, publish
 
 
 class PublisherTests(unittest.TestCase):
@@ -13,6 +13,82 @@ class PublisherTests(unittest.TestCase):
 
     def copy(self):
         return {"telegram_html": "<b>Test</b>", "instagram_caption": "Test caption"}
+
+    def test_instagram_token_precedence_matches_retry_workflow(self):
+        env = {
+            "INSTAGRAM_ACCESS_TOKEN": "preferred-token",
+            "IG_ACCESS_TOKEN": "fallback-token",
+            "META_SYSTEM_USER_TOKEN": "system-token",
+            "IG_USER_ID": "123456",
+        }
+
+        def fake_meta_request(method, url, **kwargs):
+            payload = kwargs.get("data") or kwargs.get("params") or {}
+            self.assertEqual(payload.get("access_token"), "preferred-token")
+            if method == "POST" and url.endswith("/media"):
+                return {"id": "container-123"}
+            if method == "GET" and url.endswith("/container-123"):
+                return {"status_code": "FINISHED"}
+            if method == "POST" and url.endswith("/media_publish"):
+                return {"id": "media-456"}
+            raise AssertionError(f"Unexpected Meta request: {method} {url}")
+
+        with patch.dict(os.environ, env, clear=True):
+            with patch("agents.publisher._meta_request", side_effect=fake_meta_request):
+                media_id = _instagram_publish(
+                    "https://example.com/card.png", "Test caption", {}
+                )
+
+        self.assertEqual(media_id, "media-456")
+
+    def test_instagram_retry_reuses_creation_id_after_media_publish_error(self):
+        record = {"publishing": {}}
+        env = {
+            "HUMAN_APPROVAL": "false",
+            "TELEGRAM_BOT_TOKEN": "test-token",
+            "INSTAGRAM_ACCESS_TOKEN": "preferred-token",
+            "IG_ACCESS_TOKEN": "fallback-token",
+            "IG_USER_ID": "123456",
+        }
+        container_calls = []
+        publish_creation_ids = []
+
+        def fake_meta_request(method, url, **kwargs):
+            if method == "POST" and url.endswith("/media"):
+                container_calls.append(kwargs.get("data", {}).get("caption"))
+                return {"id": "container-123"}
+            if method == "GET" and url.endswith("/container-123"):
+                return {"status_code": "FINISHED"}
+            if method == "POST" and url.endswith("/media_publish"):
+                publish_creation_ids.append(kwargs.get("data", {}).get("creation_id"))
+                if len(publish_creation_ids) == 1:
+                    raise RuntimeError(
+                        "Meta API HTTP 400; code=190, subcode=460, "
+                        "type=OAuthException; message redacted."
+                    )
+                return {"id": "media-456"}
+            raise AssertionError(f"Unexpected Meta request: {method} {url}")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            card = Path(tmp) / "card.png"
+            card.write_bytes(b"test image bytes")
+            with patch.dict(os.environ, env, clear=True):
+                with patch("agents.publisher._accessible_image_url", return_value="https://example.com/card.png"):
+                    with patch("agents.publisher._telegram", return_value={"message_id": 101}):
+                        with patch("agents.publisher._meta_request", side_effect=fake_meta_request):
+                            with self.assertRaisesRegex(RuntimeError, "publishing platforms failed"):
+                                publish(self.signal(), self.copy(), card, record, dry_run=False)
+                            self.assertEqual(
+                                record["publishing"]["instagram"]["creation_id"],
+                                "container-123",
+                            )
+                            self.assertEqual(record["publishing"]["instagram"]["status"], "failed")
+                            publish(self.signal(), self.copy(), card, record, dry_run=False)
+
+        self.assertEqual(len(container_calls), 1, "retry must not create a second container")
+        self.assertEqual(publish_creation_ids, ["container-123", "container-123"])
+        self.assertEqual(record["publishing"]["instagram"]["status"], "published")
+        self.assertEqual(record["publishing"]["instagram"]["media_id"], "media-456")
 
     def test_missing_credentials_fail_instead_of_silent_success(self):
         record = {"publishing": {}}
