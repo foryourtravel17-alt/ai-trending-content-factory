@@ -24,13 +24,13 @@ jobs:
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
         run: |
           set -euo pipefail
-          token="${META_SYSTEM_USER_TOKEN:-${IG_ACCESS_TOKEN:-${INSTAGRAM_ACCESS_TOKEN:-}}}"
+          token="${INSTAGRAM_ACCESS_TOKEN:-${IG_ACCESS_TOKEN:-${META_SYSTEM_USER_TOKEN:-}}}"
           if [ -z "${token}" ]; then
             echo "ERROR: No Meta System User credential configured."
             exit 1
           fi
           response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
-          if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
+          if echo "${response}" | grep -q '"error"'; then echo "ERROR: Meta credential or linked-account check failed; response redacted."; exit 1; fi
           linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
           if [ -z "${linked}" ]; then
             echo "ERROR: System User has no assigned Page with a linked Instagram account."
