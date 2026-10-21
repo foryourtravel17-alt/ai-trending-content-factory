@@ -5,9 +5,13 @@ on:
     branches: [main]
     paths:
       - .github/workflows/market_approval_poll.yml
+      - .github/workflows/telegram_approval.yml
       - src/telegram_process.py
+      - src/telegram_send.py
+      - scripts/queue_educational_draft.py
       - scripts/export_public_market_feed.py
       - scripts/preflight_publish_guard.py
+      - tests/test_single_telegram_poller.py
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
@@ -38,6 +42,8 @@ jobs:
         id: approval
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_APPROVER_USER_IDS: ${{ secrets.TELEGRAM_APPROVER_USER_IDS }}
           POLL_SECONDS: "15"
         run: python src/telegram_process.py
 
@@ -88,7 +94,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add output/telegram_state.json output/approval_queue.json data/state.json data/approved_market_feed.json
-          find output -maxdepth 1 -type f -name "content_*.json" -print0 | xargs -0 -r git add --
+          find output -maxdepth 1 -type f \( -name "content_*.json" -o -name "draft_*.json" \) -print0 | xargs -0 -r git add --
           if git diff --cached --quiet; then
             echo "No approval-state changes to commit."
           else

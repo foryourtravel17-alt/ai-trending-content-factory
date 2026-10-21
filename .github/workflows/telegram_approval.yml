@@ -1,47 +1,20 @@
-name: Telegram Approval
+name: Telegram Approval (manual info only)
 
+# This workflow intentionally does not poll Telegram. The bot has one global
+# getUpdates offset, so polling here could consume callbacks before the
+# authoritative market_approval_poll.yml workflow processes them.
 on:
   workflow_dispatch:
 
-concurrency:
-  group: market-state
-  cancel-in-progress: false
-
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  telegram-approval:
-    runs-on: ubuntu-24.04
-
+  info:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Send pending approval requests
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python src/telegram_send.py
-
-      - name: Process Telegram approvals
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: python src/telegram_process.py
-
-      - name: Commit Telegram state, queue, and approvals
+      - name: Explain the single-poller setup
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/
-          if git diff --cached --quiet; then
-            echo "No Telegram state or approval changes to commit."
-          else
-            git commit -m "chore: automate Telegram approval loop"
-            git push
-          fi
+          echo "No Telegram updates were polled by this workflow."
+          echo "The single authoritative poller is .github/workflows/market_approval_poll.yml."
+          echo "Educational Reel callbacks use the shared data/state.json market approval state."
