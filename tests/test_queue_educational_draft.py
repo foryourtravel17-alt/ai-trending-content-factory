@@ -20,18 +20,25 @@ class QueueEducationalDraftTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_registers_draft_as_pending_without_publishing(self):
-        source = self.output / "content_draft_sample.json"
-        source.write_text(json.dumps({
-            "content_id": "draft_sample_20261021",
+    def write_rendered_draft(self, content_id="draft_sample_20261021", **overrides):
+        record = {
+            "content_id": content_id,
             "status": "draft_only",
             "approval": {"required": True, "status": "draft_only"},
             "fact_check": {"status": "needs_human_review"},
-        }), encoding="utf-8")
+        }
+        record.update(overrides)
+        source = self.output / f"{content_id}.json"
+        source.write_text(json.dumps(record), encoding="utf-8")
+        return source
 
+    def test_registers_actual_renderer_filename_as_pending_without_publishing(self):
+        # reel_generator.build() writes output/<content_id>.json, where the ID
+        # starts with draft_; it does not write content_draft_<id>.json.
+        source = self.write_rendered_draft()
         MODULE.main()
 
-        record = json.loads((self.output / "draft_sample_20261021.json").read_text(encoding="utf-8"))
+        record = json.loads(source.read_text(encoding="utf-8"))
         queue = json.loads(MODULE.QUEUE_PATH.read_text(encoding="utf-8"))
         self.assertEqual(record["status"], "draft_only")
         self.assertEqual(record["approval"]["status"], "pending")
@@ -39,15 +46,27 @@ class QueueEducationalDraftTests(unittest.TestCase):
         self.assertEqual(queue["items"][0]["content_id"], "draft_sample_20261021")
         self.assertEqual(queue["items"][0]["status"], "pending")
 
-    def test_existing_record_is_not_overwritten(self):
-        source = self.output / "content_draft_sample.json"
-        source.write_text(json.dumps({"content_id": "draft_sample"}), encoding="utf-8")
-        target = self.output / "draft_sample.json"
-        target.write_text(json.dumps({"content_id": "draft_sample", "status": "approved_for_publishing"}), encoding="utf-8")
+    def test_does_not_overwrite_existing_approval_decision(self):
+        source = self.write_rendered_draft(
+            status="approved_for_publishing",
+            approval={"required": True, "status": "approved"},
+        )
+        with self.assertRaises(SystemExit):
+            MODULE.main()
+        record = json.loads(source.read_text(encoding="utf-8"))
+        self.assertEqual(record["status"], "approved_for_publishing")
+        self.assertEqual(record["approval"]["status"], "approved")
 
+    def test_does_not_add_duplicate_queue_entry(self):
+        source = self.write_rendered_draft()
+        MODULE.QUEUE_PATH.write_text(json.dumps({
+            "items": [{"content_id": "draft_sample_20261021", "status": "pending", "processed": False}],
+            "telegram_sent": [],
+        }), encoding="utf-8")
         MODULE.main()
-
-        self.assertEqual(json.loads(target.read_text(encoding="utf-8"))["status"], "approved_for_publishing")
+        queue = json.loads(MODULE.QUEUE_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(len(queue["items"]), 1)
+        self.assertEqual(json.loads(source.read_text(encoding="utf-8"))["approval"]["status"], "draft_only")
 
 
 if __name__ == "__main__":
