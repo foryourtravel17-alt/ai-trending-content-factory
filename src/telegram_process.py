@@ -55,6 +55,26 @@ def _reviewer_label(callback):
     user_id = str(actor.get("id") or "").strip()
     return f"@{username}" if username else (f"id:{user_id}" if user_id else "unknown")
 
+def is_authorized_callback(callback: dict) -> bool:
+    """Accept buttons only from the configured approval chat and owner/allowlist."""
+    expected_chat = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    if not expected_chat or not isinstance(callback, dict):
+        return False
+    message = callback.get("message") or {}
+    chat_id = str((message.get("chat") or {}).get("id") or "").strip()
+    actor_id = str(((callback.get("from") or {}).get("id")) or "").strip()
+    if chat_id != expected_chat or not actor_id:
+        return False
+
+    configured_ids = os.environ.get("TELEGRAM_APPROVER_USER_IDS", "").strip()
+    if configured_ids:
+        allowed_ids = {part.strip() for part in configured_ids.split(",") if part.strip()}
+    else:
+        # In a private Telegram chat, the chat ID equals the owner's user ID.
+        # Group chats must configure TELEGRAM_APPROVER_USER_IDS explicitly.
+        allowed_ids = {expected_chat}
+    return actor_id in allowed_ids
+
 
 def apply_market_decision(record: dict, action: str, now: str, reviewed_by: str = "unknown") -> bool:
     """Apply a single approval decision without allowing conflicting clicks to overwrite it."""
@@ -193,6 +213,18 @@ def main():
         for update in result:
             update_id = int(update["update_id"])
             callback = update.get("callback_query")
+            if callback and not is_authorized_callback(callback):
+                callback_id = str(callback.get("id", ""))
+                try:
+                    api("answerCallbackQuery", {
+                        "callback_query_id": callback_id,
+                        "text": "Not authorized. No decision was saved.",
+                        "show_alert": "true",
+                    })
+                except Exception as exc:
+                    print(f"Unauthorized callback acknowledgement skipped: {type(exc).__name__}")
+                print("Ignored Telegram approval callback from unauthorized chat/user.")
+                callback = None
             if callback:
                 data = str(callback.get("data", ""))
                 callback_id = str(callback.get("id", ""))

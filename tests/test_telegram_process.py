@@ -78,5 +78,33 @@ class TelegramProcessApprovalTests(unittest.TestCase):
                 MODULE.OUTPUT_DIR = old_dir
 
 
+
+    def test_authorizes_only_configured_private_chat_owner(self):
+        from unittest.mock import patch
+        callback = {"message": {"chat": {"id": 123}}, "from": {"id": 123}}
+        with patch.dict(os.environ, {"TELEGRAM_CHAT_ID": "123", "TELEGRAM_APPROVER_USER_IDS": ""}):
+            self.assertTrue(MODULE.is_authorized_callback(callback))
+
+    def test_rejects_callback_from_wrong_chat(self):
+        from unittest.mock import patch
+        callback = {"message": {"chat": {"id": 999}}, "from": {"id": 123}}
+        with patch.dict(os.environ, {"TELEGRAM_CHAT_ID": "123", "TELEGRAM_APPROVER_USER_IDS": ""}):
+            self.assertFalse(MODULE.is_authorized_callback(callback))
+
+    def test_rejects_wrong_user_in_approval_chat(self):
+        from unittest.mock import patch
+        callback = {"message": {"chat": {"id": 123}}, "from": {"id": 999}}
+        with patch.dict(os.environ, {"TELEGRAM_CHAT_ID": "123", "TELEGRAM_APPROVER_USER_IDS": ""}):
+            self.assertFalse(MODULE.is_authorized_callback(callback))
+
+    def test_group_chat_requires_explicit_approver_allowlist(self):
+        from unittest.mock import patch
+        callback = {"message": {"chat": {"id": -100123}}, "from": {"id": 123}}
+        with patch.dict(os.environ, {"TELEGRAM_CHAT_ID": "-100123", "TELEGRAM_APPROVER_USER_IDS": "123,456"}):
+            self.assertTrue(MODULE.is_authorized_callback(callback))
+        with patch.dict(os.environ, {"TELEGRAM_CHAT_ID": "-100123", "TELEGRAM_APPROVER_USER_IDS": ""}):
+            self.assertFalse(MODULE.is_authorized_callback(callback))
+
+
 if __name__ == "__main__":
     unittest.main()
