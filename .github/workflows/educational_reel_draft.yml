@@ -48,12 +48,26 @@ jobs:
 
       - name: Validate generated MP4
         run: |
-          set -e
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          files = sorted(Path("output").glob("draft_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+          files = [p for p in files if p.name != "draft_seed.json"]
+          if not files:
+              raise SystemExit("No rendered draft metadata JSON found.")
+          record = json.loads(files[0].read_text(encoding="utf-8"))
+          content_id = str(record.get("content_id", "")).strip()
+          if not content_id or files[0].stem != content_id:
+              raise SystemExit("Draft metadata filename/content_id mismatch.")
+          video = Path("output/media") / f"{content_id}.mp4"
+          if not video.is_file() or video.stat().st_size == 0:
+              raise SystemExit(f"Matching MP4 missing or empty for {content_id}.")
+          print(f"Validated exact draft MP4: {video}")
+          PY
           FILE="$(find output/media -maxdepth 1 -type f -name 'draft_*.mp4' -print -quit)"
           test -n "$FILE"
-          test -s "$FILE"
           ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$FILE"
-          echo "Draft rendered successfully: $FILE"
 
       - name: Register draft for human approval
         run: python scripts/queue_educational_draft.py
@@ -68,7 +82,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/approval_queue.json output/content_*.json
+          git add output/approval_queue.json output/draft_*.json
           git diff --cached --quiet || git commit -m "content: queue educational Reel for review"
           git push
 
@@ -79,6 +93,6 @@ jobs:
           path: |
             output/media/draft_*.mp4
             output/media/draft_*.publish.json
-            output/content_draft_*.json
+            output/draft_*.json
           if-no-files-found: error
           retention-days: 7
