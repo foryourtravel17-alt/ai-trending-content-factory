@@ -7,7 +7,7 @@ on:
     - cron: '45 4 * * *'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: educational-reel-draft
@@ -54,6 +54,23 @@ jobs:
           test -s "$FILE"
           ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$FILE"
           echo "Draft rendered successfully: $FILE"
+
+      - name: Register draft for human approval
+        run: python scripts/queue_educational_draft.py
+
+      - name: Send Telegram approval request
+        env:
+          TELEGRAM_BOT_TOKEN: \${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: \${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python src/telegram_send.py
+
+      - name: Persist review metadata (video remains an artifact)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/approval_queue.json output/telegram_state.json output/draft_*.json output/content_*.json
+          git diff --cached --quiet || git commit -m "content: queue educational Reel for review"
+          git push
 
       - name: Upload draft for review (no publishing)
         uses: actions/upload-artifact@v4
