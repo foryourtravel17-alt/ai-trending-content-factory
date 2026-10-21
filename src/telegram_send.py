@@ -98,8 +98,11 @@ for item in items:
         f"<b>Script:</b>\n{html.escape(str(body))}\n\n"
         f"<b>Caption:</b>\n{html.escape(str(caption))}\n\n"
         f"<b>Hashtags:</b> {html.escape(hashtags)}\n\n"
-        "<i>For informational and research purposes only. "
-        "This is not financial advice.</i>"
+        "<b>Before approving:</b> review the educational claims, risk wording, "
+        "caption and hashtags. Approval authorizes this draft to proceed to "
+        "publishing eligibility checks; it does not bypass freshness, media-match, "
+        "duplicate or technical checks. Reject if anything is inaccurate.\n\n"
+        "<i>For informational and research purposes only. This is not financial advice.</i>"
     )
 
     if len(text) > 3900:
