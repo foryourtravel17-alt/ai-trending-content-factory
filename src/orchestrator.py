@@ -28,6 +28,10 @@ PUBLISH_ONLY_SIGNAL_ID = os.getenv("PUBLISH_ONLY_SIGNAL_ID", "").strip()
 
 
 def save_state(state: dict) -> None:
+    """Persist state only in live runs; dry-runs must be side-effect-free."""
+    if DRY_RUN:
+        log.info("DRY_RUN enabled: skipping persistent state write.")
+        return
     STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     temp = STATE_PATH.with_suffix(".tmp")
     temp.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
