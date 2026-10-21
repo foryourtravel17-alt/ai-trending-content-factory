@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 os.environ.setdefault("META_SYSTEM_USER_TOKEN", "test-token")
 from src import instagram_publish as MODULE
@@ -90,6 +91,42 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         self.assertIsNone(selected)
         self.assertIsNone(content)
         self.assertIn("Daily publishing cap reached: 3/3", output.getvalue())
+
+
+
+
+    def test_instagram_published_telegram_failed_retry_skips_instagram(self):
+        content_id = "draft_partial_retry_20261022"
+        path = self.write_record(content_id, status="published_to_instagram")
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record["approval"] = {
+            "required": True, "status": "approved",
+            "reviewed_at": record["created_at"], "reviewed_by": "@owner",
+        }
+        record["video_url"] = f"https://example.supabase.co/storage/v1/object/public/REELS/reels/{content_id}.mp4"
+        record["video_content_id"] = content_id
+        record["video_sha256"] = "a" * 64
+        record["video_size_bytes"] = 123
+        record["video_duration_seconds"] = 42.29
+        record["status"] = "published_to_instagram"
+        record["instagram_media_id"] = "ig-media-123"
+        record["publishing"] = {
+            "instagram": {"status": "published_to_instagram", "media_id": "ig-media-123"},
+            "telegram": {"status": "failed", "error": "temporary channel error"},
+        }
+        path.write_text(json.dumps(record), encoding="utf-8")
+        with patch.dict(os.environ, {
+            "SUPABASE_URL": "https://example.supabase.co",
+            "TELEGRAM_BOT_TOKEN": "fake-test-token",
+        }), patch.object(MODULE, "verify_public_video_url", return_value=record["video_url"]), \
+             patch.object(MODULE, "publish_instagram_reel_container") as instagram, \
+             patch.object(MODULE, "_send_telegram_video", return_value=555) as telegram:
+            MODULE.publish_content_record(path, record)
+        instagram.assert_not_called()
+        telegram.assert_called_once()
+        updated = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(updated["instagram_media_id"], "ig-media-123")
+        self.assertEqual(updated["publishing"]["telegram"]["status"], "published")
 
 
 if __name__ == "__main__":

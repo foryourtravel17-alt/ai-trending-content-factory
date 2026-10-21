@@ -69,6 +69,12 @@ jobs:
           test -n "$FILE"
           ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$FILE"
 
+      - name: Upload and verify exact MP4 in Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/upload_educational_reel.py
+
       - name: Register draft in shared approval state
         run: python scripts/queue_educational_draft.py
 

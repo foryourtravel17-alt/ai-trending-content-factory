@@ -1,5 +1,8 @@
+import hashlib
 import json
 import os
+import subprocess
+import tempfile
 import time
 import urllib.parse
 import urllib.request
@@ -136,10 +139,6 @@ def published_today_count():
 
 def load_newest_unpublished_approved():
     today_count = published_today_count()
-    if today_count >= DAILY_PUBLISH_LIMIT:
-        print(f"Daily publishing cap reached: {today_count}/{DAILY_PUBLISH_LIMIT} Instagram Reels in Asia/Kolkata. Nothing to publish.")
-        return None, None
-
     now = datetime.now(timezone.utc)
     candidates = []
     for p in content_record_paths():
@@ -148,15 +147,37 @@ def load_newest_unpublished_approved():
         except Exception:
             continue
 
-        if data.get("status") != "approved_for_publishing":
+        content_id = str(data.get("content_id", "")).strip()
+        if not content_id or p.stem != content_id:
+            print(f"Skipping content ID / filename mismatch: {p.name}")
             continue
-        if is_already_published(data):
-            print(f"Skipping already-published draft: {p.name}")
+        status = str(data.get("status", "")).strip()
+        if status not in {"approved_for_publishing", "published_to_instagram"}:
             continue
+
+        instagram_done = is_already_published(data)
+        publishing = data.get("publishing", {}) if isinstance(data.get("publishing"), dict) else {}
+        telegram_state = publishing.get("telegram", {}) if isinstance(publishing.get("telegram"), dict) else {}
+        telegram_status = str(telegram_state.get("status", "")).strip().lower()
+        if instagram_done:
+            if telegram_status == "published":
+                print(f"Skipping fully published Reel: {p.name}")
+                continue
+            if telegram_status in {"sending", "unknown"}:
+                print(f"Skipping Reel with ambiguous Telegram outcome; manual reconciliation required: {p.name}")
+                continue
+            if telegram_status != "failed":
+                print(f"Skipping Instagram-published Reel without a safe Telegram retry state: {p.name}")
+                continue
 
         fact_check_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
         if fact_check_status not in {"passed", "verified", "approved"}:
             print(f"Skipping draft requiring fact-check review ({fact_check_status or 'missing status'}): {p.name}")
+            continue
+
+        approval = data.get("approval", {}) if isinstance(data.get("approval"), dict) else {}
+        if approval.get("status") != "approved":
+            print(f"Skipping draft without a persisted human approval: {p.name}")
             continue
 
         created_at = parse_timestamp(data.get("created_at"))
@@ -164,24 +185,35 @@ def load_newest_unpublished_approved():
             print(f"Skipping draft with missing/invalid created_at: {p.name}")
             continue
         age = now - created_at
-        if age < timedelta(seconds=0) or age > MAX_CONTENT_AGE:
+        if not instagram_done and (age < timedelta(seconds=0) or age > MAX_CONTENT_AGE):
             print(f"Skipping stale/future-dated draft ({age} old): {p.name}")
             continue
 
-        content_id = str(data.get("content_id", ""))
+        video_url = str(data.get("video_url", "")).strip()
         video_path = OUTPUT_DIR / "media" / f"{content_id}.mp4"
-        if not video_path.exists():
-            print(f"Skipping approved draft without Reel file: {p.name}")
+        if video_url:
+            if data.get("video_content_id") != content_id or not video_url.endswith(f"/{content_id}.mp4"):
+                print(f"Skipping draft with mismatched video URL/content ID: {p.name}")
+                continue
+        elif not video_path.is_file():
+            print(f"Skipping approved draft without verified public video URL or local Reel file: {p.name}")
             continue
 
-        candidates.append((created_at.isoformat(), content_id, p, data))
+        priority = 0 if instagram_done else 1
+        candidates.append((priority, created_at, content_id, p, data))
 
     if not candidates:
-        print("No fresh, fact-checked, unpublished approved content is eligible.")
+        if today_count >= DAILY_PUBLISH_LIMIT:
+            print(f"Daily publishing cap reached: {today_count}/{DAILY_PUBLISH_LIMIT} Instagram Reels in Asia/Kolkata. Nothing to publish.")
+        else:
+            print("No fresh, fact-checked, unpublished approved content is eligible.")
         return None, None
 
-    candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
-    _, _, content_path, approved = candidates[0]
+    candidates.sort(key=lambda item: (item[0], -item[1].timestamp(), item[2]))
+    priority, _, content_id, content_path, approved = candidates[0]
+    if priority != 0 and today_count >= DAILY_PUBLISH_LIMIT:
+        print(f"Daily publishing cap reached: {today_count}/{DAILY_PUBLISH_LIMIT} Instagram Reels in Asia/Kolkata. Nothing to publish.")
+        return None, None
     return content_path, approved
 
 
@@ -252,114 +284,299 @@ def publish_instagram_reel_container(ig_user_id, video_url, caption, approved, c
     return media_id
 
 
+class TelegramPublishRejected(RuntimeError):
+    """Telegram returned an explicit rejection; a deliberate retry is safe."""
+
+
+class TelegramPublishUnknown(RuntimeError):
+    """Telegram outcome is ambiguous; do not automatically send a duplicate."""
+
+
+def sha256_and_size(path: Path):
+    digest = hashlib.sha256()
+    size = 0
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+            size += len(chunk)
+    return digest.hexdigest(), size
+
+
+def probe_duration(path: Path) -> float:
+    try:
+        result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
+            capture_output=True, text=True, check=True, timeout=30,
+        )
+        duration = float(result.stdout.strip())
+    except Exception as exc:
+        raise RuntimeError(f"Could not validate Reel duration with ffprobe ({type(exc).__name__}).") from None
+    if duration <= 0:
+        raise RuntimeError("ffprobe reported a non-positive Reel duration.")
+    return duration
+
+
+def expected_public_video_url(content_id: str) -> str:
+    if not content_id or any(ch not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for ch in content_id):
+        raise RuntimeError("Missing or unsafe content_id for public video URL.")
+    supabase_url = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+    if not supabase_url:
+        raise RuntimeError("SUPABASE_URL is required to verify the approved Reel's public video URL.")
+    return (
+        f"{supabase_url}/storage/v1/object/public/REELS/reels/"
+        f"{urllib.parse.quote(content_id, safe='')}.mp4"
+    )
+
+
+def verify_public_video_url(video_url: str, approved: dict) -> str:
+    """Download the exact Supabase object and verify ID, size, SHA-256, and ffprobe duration."""
+    content_id = str(approved.get("content_id", "")).strip()
+    expected_url = expected_public_video_url(content_id)
+    if video_url != expected_url or approved.get("video_content_id") != content_id:
+        raise RuntimeError("Public video URL/content_id mismatch; publishing blocked.")
+    expected_sha = str(approved.get("video_sha256", "")).strip().lower()
+    try:
+        expected_size = int(approved.get("video_size_bytes", 0))
+        expected_duration = float(approved.get("video_duration_seconds", 0))
+    except (TypeError, ValueError):
+        raise RuntimeError("Approved Reel is missing valid size/duration metadata.") from None
+    if len(expected_sha) != 64 or expected_size <= 0 or expected_duration <= 0:
+        raise RuntimeError("Approved Reel is missing required SHA-256, byte size, or duration metadata.")
+
+    temp_name = None
+    digest = hashlib.sha256()
+    actual_size = 0
+    request_obj = urllib.request.Request(video_url, method="GET")
+    try:
+        with urllib.request.urlopen(request_obj, timeout=180) as response:
+            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp:
+                temp_name = temp.name
+                while True:
+                    chunk = response.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    digest.update(chunk)
+                    actual_size += len(chunk)
+                    temp.write(chunk)
+    except urllib.error.HTTPError as exc:
+        raise RuntimeError(f"Supabase public video URL returned HTTP {exc.code}; publishing blocked.") from None
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Could not retrieve approved Reel from Supabase ({type(exc).__name__}); publishing blocked.") from None
+
+    try:
+        actual_sha = digest.hexdigest()
+        if actual_size != expected_size or actual_sha != expected_sha:
+            raise RuntimeError("Supabase video byte size/SHA-256 differs from the approved metadata; publishing blocked.")
+        actual_duration = probe_duration(Path(temp_name))
+        if abs(actual_duration - expected_duration) > 0.75:
+            raise RuntimeError(
+                f"Supabase video duration mismatch (expected {expected_duration:.2f}s, got {actual_duration:.2f}s); publishing blocked."
+            )
+    finally:
+        if temp_name:
+            try:
+                Path(temp_name).unlink(missing_ok=True)
+            except OSError:
+                pass
+    print(f"Verified exact public MP4 for {content_id}: {actual_size} bytes, {actual_duration:.2f}s, SHA-256 matched.")
+    return video_url
+
+
+def _upload_local_video_to_supabase(video_path: Path, approved: dict) -> str:
+    """Fallback for older approved records that do not already have a public video URL."""
+    supabase_url = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+    supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    if not supabase_url or not supabase_key:
+        raise RuntimeError("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for Reel media upload.")
+    content_id = str(approved.get("content_id", "")).strip()
+    digest, size = sha256_and_size(video_path)
+    duration = probe_duration(video_path)
+    object_path = f"reels/{content_id}.mp4"
+    upload_url = f"{supabase_url}/storage/v1/object/REELS/{urllib.parse.quote(object_path, safe='/')}"
+    video_url = expected_public_video_url(content_id)
+    request_obj = urllib.request.Request(
+        upload_url, data=video_path.read_bytes(), method="PUT",
+        headers={
+            "Authorization": f"Bearer {supabase_key}", "apikey": supabase_key,
+            "Content-Type": "video/mp4", "x-upsert": "false",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request_obj, timeout=180) as response:
+            response.read()
+    except urllib.error.HTTPError as exc:
+        if exc.code != 409:
+            raise RuntimeError(f"Supabase upload failed HTTP {exc.code}; response redacted.") from None
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Supabase upload failed ({type(exc).__name__}); credentials redacted.") from None
+    approved.update({
+        "video_url": video_url, "video_content_id": content_id,
+        "video_sha256": digest, "video_size_bytes": size, "video_duration_seconds": duration,
+    })
+    verify_public_video_url(video_url, approved)
+    return video_url
+
+
+def _send_telegram_video(token: str, video_url: str, caption: str) -> int:
+    endpoint = f"https://api.telegram.org/bot{token}/sendVideo"
+    payload = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHANNEL, "video": video_url, "caption": caption[:1024],
+    }).encode()
+    req = urllib.request.Request(endpoint, data=payload, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=120) as response:
+            result = json.loads(response.read().decode())
+    except urllib.error.HTTPError as exc:
+        raise TelegramPublishRejected(f"Telegram channel sendVideo failed HTTP {exc.code}; response redacted.") from None
+    except urllib.error.URLError as exc:
+        raise TelegramPublishUnknown(
+            f"Telegram channel sendVideo outcome is unknown ({type(exc).__name__}); automatic retry is blocked to avoid duplicates."
+        ) from None
+    if not result.get("ok"):
+        raise TelegramPublishRejected("Telegram channel rejected sendVideo; response redacted.")
+    message_id = (result.get("result") or {}).get("message_id")
+    if not message_id:
+        raise TelegramPublishUnknown("Telegram sendVideo returned no message ID; automatic retry is blocked.")
+    return int(message_id)
+
+
+def publish_content_record(content_path: Path, approved: dict, ig_user_id: str | None = None) -> dict:
+    """Publish a human-approved Reel with independent, retry-safe Instagram and Telegram state."""
+    content_id = str(approved.get("content_id", "")).strip()
+    if not content_id or content_path.stem != content_id:
+        raise RuntimeError("Publishing metadata filename/content_id mismatch.")
+    if approved.get("status") not in {"approved_for_publishing", "published_to_instagram"}:
+        raise RuntimeError("Publishing blocked: the Reel does not have an approved publishing status.")
+    approval = approved.get("approval", {}) if isinstance(approved.get("approval"), dict) else {}
+    fact_check = approved.get("fact_check", {}) if isinstance(approved.get("fact_check"), dict) else {}
+    if approval.get("status") != "approved" or fact_check.get("status") not in {"approved", "passed", "verified"}:
+        raise RuntimeError("Publishing blocked: explicit human approval and fact-check review are required.")
+    if not approval.get("reviewed_at") or not approval.get("reviewed_by"):
+        raise RuntimeError("Publishing blocked: human review timestamp/user are missing.")
+
+    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    if not telegram_token:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN is required because approved Reels must also post to @bullseye_theory.")
+    video_url = str(approved.get("video_url", "")).strip()
+    if video_url:
+        video_url = verify_public_video_url(video_url, approved)
+    else:
+        video_path = OUTPUT_DIR / "media" / f"{content_id}.mp4"
+        if not video_path.is_file() or video_path.stat().st_size <= 0:
+            raise RuntimeError("Approved Reel has no valid local MP4 or public Supabase video URL.")
+        video_url = _upload_local_video_to_supabase(video_path, approved)
+        save_state(content_path, approved)
+
+    social = approved.get("social", {}) if isinstance(approved.get("social"), dict) else {}
+    caption = str(social.get("caption", approved.get("caption", "")))
+    hashtags = social.get("hashtags", approved.get("hashtags", []))
+    if isinstance(hashtags, list):
+        caption = (caption + "\n\n" + " ".join(str(tag) for tag in hashtags)).strip()
+
+    publishing = approved.setdefault("publishing", {})
+    instagram = publishing.setdefault("instagram", {})
+    if not is_already_published(approved):
+        if not ig_user_id:
+            ig_user_id = resolve_instagram_user_id()
+        media_id = publish_instagram_reel_container(ig_user_id, video_url, caption, approved, content_path)
+        approved["status"] = "published_to_instagram"
+        approved["instagram_media_id"] = media_id
+        approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        instagram["status"] = "published_to_instagram"
+        instagram["media_id"] = media_id
+        instagram["published_at"] = approved["published_at"]
+        save_state(content_path, approved)
+        print(f"Instagram Reel published; media ID saved for {content_id}.")
+    else:
+        print(f"Instagram already published for {content_id}; skipping duplicate Instagram publish.")
+
+    telegram = publishing.setdefault("telegram", {})
+    tg_status = str(telegram.get("status", "")).lower()
+    if tg_status == "published":
+        print(f"Telegram channel already published for {content_id}; skipping duplicate channel post.")
+    elif tg_status in {"sending", "unknown"}:
+        raise TelegramPublishUnknown(
+            f"Telegram channel outcome for {content_id} is ambiguous; automatic resend blocked to prevent duplicates."
+        )
+    else:
+        telegram["status"] = "sending"
+        telegram["attempt_started_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        save_state(content_path, approved)
+        telegram_caption = (caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Earn").strip()
+        try:
+            message_id = _send_telegram_video(telegram_token, video_url, telegram_caption)
+        except TelegramPublishRejected as exc:
+            telegram["status"] = "failed"
+            telegram["error"] = str(exc)[:300]
+            save_state(content_path, approved)
+            raise
+        except TelegramPublishUnknown as exc:
+            telegram["status"] = "unknown"
+            telegram["error"] = str(exc)[:300]
+            save_state(content_path, approved)
+            raise
+        telegram["status"] = "published"
+        telegram["message_id"] = message_id
+        telegram["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        telegram.pop("error", None)
+        save_state(content_path, approved)
+        print(f"Telegram channel post recorded for {content_id}; message ID saved.")
+    return approved
+
+
+def publish_approved_educational_reel(record: dict) -> dict:
+    """PUBLISH_ONLY adapter for the shared data/state.json market approval machine."""
+    content_id = str(record.get("content_id", "")).strip()
+    if record.get("content_type") != "educational_reel":
+        raise RuntimeError("Expected educational_reel content_type.")
+    if record.get("approval_status") != "approved":
+        raise RuntimeError("Publishing blocked: shared state lacks explicit human approval.")
+    fact_check = record.get("fact_check", {}) if isinstance(record.get("fact_check"), dict) else {}
+    if fact_check.get("status") != "approved" or not record.get("reviewed_at") or not record.get("reviewed_by"):
+        raise RuntimeError("Publishing blocked: shared-state human fact-check review is incomplete.")
+    metadata_path = OUTPUT_DIR / f"{content_id}.json"
+    metadata = load_json(metadata_path, None)
+    if not isinstance(metadata, dict) or metadata.get("content_id") != content_id:
+        raise RuntimeError("Publishing blocked: matching Reel metadata file is missing or mismatched.")
+    approval = metadata.get("approval", {}) if isinstance(metadata.get("approval"), dict) else {}
+    metadata_fact = metadata.get("fact_check", {}) if isinstance(metadata.get("fact_check"), dict) else {}
+    if approval.get("status") != "approved" or metadata_fact.get("status") != "approved":
+        raise RuntimeError("Publishing blocked: metadata approval/fact-check does not match shared state.")
+    created_at = parse_timestamp(metadata.get("created_at"))
+    already_ig = is_already_published(metadata)
+    if not created_at:
+        raise RuntimeError("Publishing blocked: metadata created_at is missing or invalid.")
+    if not already_ig and (datetime.now(timezone.utc) - created_at > MAX_CONTENT_AGE):
+        print(f"Skipping stale approved educational Reel ({content_id}); exceeds 24-hour publishing window.")
+        record["status"] = "expired"
+        record["expired_at"] = datetime.now(timezone.utc).isoformat()
+        return record
+
+    try:
+        publish_content_record(metadata_path, metadata)
+    finally:
+        record["publishing"] = metadata.get("publishing", {})
+        record["instagram_media_id"] = metadata.get("instagram_media_id") or record.get("instagram_media_id")
+        record["published_at"] = metadata.get("published_at") or record.get("published_at")
+        ig_state = (record.get("publishing", {}).get("instagram", {}) or {}).get("status")
+        tg_state = (record.get("publishing", {}).get("telegram", {}) or {}).get("status")
+        if ig_state in {"published", "published_to_instagram"} and tg_state == "published":
+            record["status"] = "published"
+        elif ig_state in {"published", "published_to_instagram"}:
+            record["status"] = "partial"
+        elif record.get("approval_status") == "approved":
+            record["status"] = "publish_failed"
+    return record
+
+
 def main():
     content_path, approved = load_newest_unpublished_approved()
     if not approved:
         print("No unpublished approved content. Nothing to publish.")
         return
-
-    print(f"Selected newest unpublished approved content: {content_path.name}")
-    ig_user_id = resolve_instagram_user_id()
-    print(f"Using Instagram account ID: {ig_user_id}")
-
-    content_id = approved["content_id"]
-    video_path = Path("output/media") / f"{content_id}.mp4"
-
-    supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
-    supabase_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
-    object_path = f"reels/{content_id}.mp4"
-    upload_url = (
-        f"{supabase_url}/storage/v1/object/REELS/"
-        f"{urllib.parse.quote(object_path, safe='/')}"
-    )
-    print(f"Uploading Reel to Supabase: {object_path}")
-
-    upload_req = urllib.request.Request(
-        upload_url,
-        data=video_path.read_bytes(),
-        method="PUT",
-        headers={
-            "Authorization": f"Bearer {supabase_key}",
-            "apikey": supabase_key,
-            "Content-Type": "video/mp4",
-            "x-upsert": "true",
-        },
-    )
-    try:
-        with urllib.request.urlopen(upload_req, timeout=180) as response:
-            response.read()
-    except urllib.error.HTTPError as e:
-        body = e.read().decode(errors="replace")
-        raise RuntimeError(f"Supabase upload failed HTTP {e.code}: {body}") from e
-
-    video_url = (
-        f"{supabase_url}/storage/v1/object/public/REELS/"
-        f"{urllib.parse.quote(object_path, safe='/')}"
-    )
-    print(f"Public Reel URL: {video_url}")
-
-    social = approved.get("social", {}) or {}
-    caption = social.get("caption", "")
-    hashtags = social.get("hashtags", [])
-    if isinstance(hashtags, list):
-        caption = (caption + "\n\n" + " ".join(hashtags)).strip()
-
-    media_id = publish_instagram_reel_container(
-        ig_user_id, video_url, caption, approved, content_path
-    )
-    print(f"Instagram Reel published media ID: {media_id}")
-
-    approved["status"] = "published_to_instagram"
-    approved["instagram_media_id"] = media_id
-    approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-
-    publishing = approved.setdefault("publishing", {})
-    instagram = publishing.setdefault("instagram", {})
-    instagram["status"] = "published_to_instagram"
-    instagram["media_id"] = media_id
-    save_state(content_path, approved)
-
-    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    if telegram_token:
-        telegram_state = publishing.setdefault("telegram", {})
-        if telegram_state.get("status") == "published":
-            print("Telegram already marked as published. Skipping Telegram duplicate.")
-        else:
-            telegram_caption = (
-                caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Earn"
-            ).strip()
-            telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendVideo"
-            telegram_params = urllib.parse.urlencode({
-                "chat_id": TELEGRAM_CHANNEL,
-                "video": video_url,
-                "caption": telegram_caption[:1024],
-            }).encode()
-            telegram_req = urllib.request.Request(
-                telegram_url,
-                data=telegram_params,
-                method="POST",
-            )
-            try:
-                with urllib.request.urlopen(telegram_req, timeout=120) as response:
-                    telegram_result = json.loads(response.read().decode())
-                if not telegram_result.get("ok"):
-                    raise RuntimeError(f"Telegram API error: {telegram_result}")
-                message_id = telegram_result["result"].get("message_id")
-                print(f"Telegram channel post sent: {message_id}")
-                telegram_state["status"] = "published"
-                telegram_state["message_id"] = message_id
-                telegram_state["published_at"] = time.strftime(
-                    "%Y-%m-%dT%H:%M:%SZ", time.gmtime()
-                )
-                save_state(content_path, approved)
-            except urllib.error.HTTPError as e:
-                raise RuntimeError(
-                    f"Telegram channel post failed HTTP {e.code}; response redacted to protect bot token."
-                ) from None
-            except urllib.error.URLError as exc:
-                raise RuntimeError(
-                    f"Telegram channel request failed ({type(exc).__name__}); bot token redacted."
-                ) from None
+    print(f"Selected approved Reel: {content_path.name}")
+    publish_content_record(content_path, approved)
 
 
 if __name__ == "__main__":
