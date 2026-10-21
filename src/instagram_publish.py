@@ -97,6 +97,15 @@ def is_already_published(data):
 MAX_CONTENT_AGE = timedelta(hours=24)
 DAILY_PUBLISH_LIMIT = 3
 LOCAL_TZ = ZoneInfo("Asia/Kolkata")
+OUTPUT_DIR = Path("output")
+
+
+def content_record_paths():
+    """Return legacy and daily-educational metadata without duplicate paths."""
+    paths = set()
+    for pattern in ("content_*.json", "draft_*.json"):
+        paths.update(OUTPUT_DIR.glob(pattern))
+    return sorted(paths, key=lambda path: path.name)
 
 
 def parse_timestamp(value):
@@ -112,7 +121,7 @@ def parse_timestamp(value):
 def published_today_count():
     today_local = datetime.now(LOCAL_TZ).date()
     count = 0
-    for p in Path("output").glob("content_*.json"):
+    for p in content_record_paths():
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
@@ -133,7 +142,7 @@ def load_newest_unpublished_approved():
 
     now = datetime.now(timezone.utc)
     candidates = []
-    for p in Path("output").glob("content_*.json"):
+    for p in content_record_paths():
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
@@ -160,7 +169,7 @@ def load_newest_unpublished_approved():
             continue
 
         content_id = str(data.get("content_id", ""))
-        video_path = Path("output/media") / f"{content_id}.mp4"
+        video_path = OUTPUT_DIR / "media" / f"{content_id}.mp4"
         if not video_path.exists():
             print(f"Skipping approved draft without Reel file: {p.name}")
             continue
