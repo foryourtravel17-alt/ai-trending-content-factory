@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21T08:03:00.329557+00:00",
+  "updated_at": "2026-10-21T14:02:06.576579+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -456,6 +456,13 @@
       "status": "pending_approval",
       "approval_required": true,
       "created_at": "2026-10-21T08:03:00.329071+00:00"
+    },
+    {
+      "content_id": "content_20261021_140206_1",
+      "topic": "Position Sizing Starts With Risk, Not With the Lot Button",
+      "status": "pending_approval",
+      "approval_required": true,
+      "created_at": "2026-10-21T14:02:06.576241+00:00"
     }
   ],
   "telegram_sent": [
@@ -479,6 +486,7 @@
     "content_20261020_075933_1",
     "content_20261020_140329_1",
     "content_20261021_015853_1",
-    "content_20261021_080300_1"
+    "content_20261021_080300_1",
+    "content_20261021_140206_1"
   ]
 }
