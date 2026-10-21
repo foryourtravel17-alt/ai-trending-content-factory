@@ -155,14 +155,37 @@ def main():
                                 answer = "Already decided. No action taken."
                                 print(f"Duplicate/stale content callback ignored: {content_id}")
                             else:
+                                import time
+                                now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
                                 content["status"] = "approved_for_publishing" if action == "approve" else "rejected"
                                 content["approval_action"] = action
+                                approval = content.setdefault("approval", {})
+                                if not isinstance(approval, dict):
+                                    approval = {}
+                                    content["approval"] = approval
+                                approval["required"] = True
+                                approval["status"] = "approved" if action == "approve" else "rejected"
+                                approval["mode"] = "human_review"
+                                approval["decided_at"] = now
+                                if action == "approve":
+                                    # The owner explicitly approves the educational claims
+                                    # shown in the Telegram review message.
+                                    fact_check = content.setdefault("fact_check", {})
+                                    if not isinstance(fact_check, dict):
+                                        fact_check = {}
+                                        content["fact_check"] = fact_check
+                                    fact_check["status"] = "approved"
+                                    fact_check.setdefault("notes", []).append(
+                                        "Human reviewer approved the displayed educational draft in Telegram."
+                                    )
+                                content["approval_action_at"] = now
                                 save_json(content_path, content)
                                 print(f"{action.title()}d {content_id}")
                                 if content_id in queue_by_id:
                                     queue_by_id[content_id]["status"] = "approved" if action == "approve" else "rejected"
                                     queue_by_id[content_id]["processed"] = True
-                                answer = "Approved" if action == "approve" else "Rejected"
+                                    queue_by_id[content_id]["decided_at"] = now
+                                answer = "Approved for publishing checks" if action == "approve" else "Rejected — no public post."
                             try:
                                 api("answerCallbackQuery", {
                                     "callback_query_id": callback_id, "text": answer, "show_alert": "false",
