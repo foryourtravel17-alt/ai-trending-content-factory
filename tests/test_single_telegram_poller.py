@@ -1,10 +1,25 @@
 from pathlib import Path
+import shutil
+import subprocess
+import tempfile
 import unittest
+
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 LEGACY = ROOT / ".github" / "workflows" / "telegram_approval.yml"
 POLLER = ROOT / ".github" / "workflows" / "market_approval_poll.yml"
+STAGER = ROOT / "scripts" / "stage_publish_state.sh"
+
+REQUIRED_STAGED = (
+    "data/state.json",
+    "data/approved_market_feed.json",
+    "output/telegram_state.json",
+    "output/approval_queue.json",
+    "output/content_*.json",
+    "output/draft_*.json",
+    "output/media/*.publish.json",
+)
 
 
 def workflow_triggers(text):
@@ -40,8 +55,41 @@ class SingleTelegramPollerTests(unittest.TestCase):
         self.assertIn("group: market-state", text)
         self.assertIn("run: python src/telegram_process.py", text)
         self.assertIn("Guard and publish approved market scenarios", text)
-        self.assertIn("data/state.json", text)
-        self.assertIn("draft_*.json", text)
+        self.assertIn("bash scripts/stage_publish_state.sh", text)
+
+    def test_staging_helper_covers_every_publish_state_file(self):
+        script = STAGER.read_text(encoding="utf-8")
+        self.assertIn("set -euo pipefail", script)
+        self.assertIn("shopt -s nullglob", script)
+        for expected in REQUIRED_STAGED:
+            self.assertIn(expected, script)
+        # Reel MP4s must not be staged by wildcard.
+        self.assertNotIn("output/media/*.mp4", script)
+
+    def test_staging_helper_stages_state_when_content_globs_are_empty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.email", "t@example.com"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.name", "test"], cwd=repo, check=True)
+            (repo / "scripts").mkdir()
+            shutil.copy(STAGER, repo / "scripts" / "stage_publish_state.sh")
+            (repo / "data").mkdir()
+            (repo / "data" / "state.json").write_text("{}\n", encoding="utf-8")
+            (repo / "output").mkdir()
+            (repo / "output" / "draft_x_1.json").write_text("{}\n", encoding="utf-8")
+            # Deliberately NO output/content_*.json and NO output/media/*.publish.json.
+            result = subprocess.run(
+                ["bash", "scripts/stage_publish_state.sh"],
+                cwd=repo, capture_output=True, text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            staged = subprocess.run(
+                ["git", "diff", "--cached", "--name-only"],
+                cwd=repo, capture_output=True, text=True, check=True,
+            ).stdout.split()
+            self.assertIn("data/state.json", staged)
+            self.assertIn("output/draft_x_1.json", staged)
 
 
 if __name__ == "__main__":

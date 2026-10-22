@@ -215,9 +215,18 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         return record
 
     human_approval = os.getenv("HUMAN_APPROVAL", "false").strip().lower() == "true"
+    approval_status = str(record.get("approval_status", "")).strip().lower()
+    if approval_status == "rejected":
+        record["status"] = "rejected"
+        log.info("Rejected record %s is blocked from public publishing.", signal["signal_id"])
+        return record
+
+    # A pending record needs a DM; an explicitly approved record must continue
+    # through public publishing even though this poller retains HUMAN_APPROVAL=true.
+    awaiting_decision = human_approval and approval_status != "approved"
     image_url = record.get("image_url")
     telegram_caption = copy["telegram_html"][:1000]
-    if human_approval:
+    if awaiting_decision:
         if platforms.get("telegram_dm", {}).get("status") != "sent":
             chat_id = os.getenv("TELEGRAM_CHAT_ID", "").strip()
             if not chat_id:

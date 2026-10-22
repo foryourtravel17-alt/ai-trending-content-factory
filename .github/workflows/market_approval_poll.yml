@@ -20,6 +20,8 @@ on:
       - scripts/upload_educational_reel.py
       - tests/test_instagram_publish.py
       - tests/test_upload_educational_reel.py
+      - tests/test_agents_publisher_approval.py
+      - tests/test_instagram_publisher.py
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
