@@ -1,0 +1,41 @@
+name: Bullseye Premium Telegram Education Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      lesson_index:
+        description: 'Lesson index: 0=Market Structure, 1=Risk Management, 2=Trading Psychology'
+        type: choice
+        required: true
+        default: '0'
+        options:
+          - '0'
+          - '1'
+          - '2'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: premium-telegram-education-preview
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate Python syntax
+        run: python -m py_compile scripts/premium_telegram.py
+      - name: Generate educational lesson preview (no network calls)
+        env:
+          DRY_RUN: 'true'
+          LESSON_INDEX: ${{ inputs.lesson_index }}
+          PREMIUM_TELEGRAM_AUTOPUBLISH: 'false'
+        run: python scripts/premium_telegram.py
