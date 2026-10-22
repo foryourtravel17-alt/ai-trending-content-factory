@@ -146,7 +146,16 @@ def main() -> int:
     for _, signal, frame in candidates:
         signal_id = signal["signal_id"]
         prior = state.setdefault("signals", {}).get(signal_id)
-        if prior and prior.get("status") not in {"pending_approval", "publish_failed"}:
+        # A previous DRY_RUN records generated signal IDs in shared state. When the
+        # same fresh signal is later run live, allow it through once so it can enter
+        # the normal human-approval queue instead of being permanently deduplicated.
+        resume_dry_run = bool(
+            not DRY_RUN
+            and prior
+            and prior.get("status") == "generated"
+            and prior.get("last_run_mode") == "dry_run"
+        )
+        if prior and prior.get("status") not in {"pending_approval", "publish_failed"} and not resume_dry_run:
             log.info("Duplicate signal %s already recorded with status=%s; skipped.",
                      signal_id, prior.get("status"))
             results["skipped"] += 1
@@ -163,7 +172,12 @@ def main() -> int:
                 "publishing": {},
             }
             ok, reason = validate(signal, state)
-            if not ok and not (prior and prior.get("status") in {"pending_approval", "publish_failed"}):
+            if not ok and not (
+                prior and (
+                    prior.get("status") in {"pending_approval", "publish_failed"}
+                    or resume_dry_run
+                )
+            ):
                 log.info("QA rejected %s: %s", signal_id, reason)
                 results["skipped"] += 1
                 continue
