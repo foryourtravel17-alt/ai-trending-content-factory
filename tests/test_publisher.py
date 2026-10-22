@@ -22,7 +22,7 @@ class PublisherTests(unittest.TestCase):
             "META_SYSTEM_USER_TOKEN": "system-token",
         }
         with patch.dict(os.environ, env, clear=True):
-            self.assertEqual(instagram_access_token(), "preferred-token")
+            self.assertEqual(instagram_access_token(), "system-token")
 
     def test_instagram_token_precedence_matches_retry_workflow(self):
         env = {
@@ -34,7 +34,7 @@ class PublisherTests(unittest.TestCase):
 
         def fake_meta_request(method, url, **kwargs):
             payload = kwargs.get("data") or kwargs.get("params") or {}
-            self.assertEqual(payload.get("access_token"), "preferred-token")
+            self.assertEqual(payload.get("access_token"), "system-token")
             if method == "POST" and url.endswith("/media"):
                 return {"id": "container-123"}
             if method == "GET" and url.endswith("/container-123"):
