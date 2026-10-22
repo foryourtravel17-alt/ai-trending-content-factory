@@ -298,74 +298,15 @@ def main():
                             print(f"Button removal skipped: {type(exc).__name__}")
 
                 else:
-                    parts = data.split(":", 1)
-                    if len(parts) == 2 and parts[0] in ("approve", "reject"):
-                        action, content_id = parts
-                        content_path = OUTPUT_DIR / f"{content_id}.json"
-                        content = load_json(content_path, None)
-                        if not isinstance(content, dict) or content.get("content_id") != content_id:
-                            answer = "This draft is no longer available. No decision was saved."
-                        elif content.get("status") in ("approved_for_publishing", "rejected", "published_to_instagram"):
-                            answer = "Already decided. The earlier decision was preserved."
-                            print(f"Duplicate/conflicting legacy callback ignored: {content_id}")
-                        else:
-                            now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-                            reviewed_by = reviewer
-                            approved = action == "approve"
-                            content["status"] = "approved_for_publishing" if approved else "rejected"
-                            content["approval_action"] = action
-                            approval = content.get("approval")
-                            if not isinstance(approval, dict):
-                                approval = {}
-                                content["approval"] = approval
-                            approval.update({
-                                "required": True, "status": "approved" if approved else "rejected",
-                                "mode": "human_review", "decided_at": now,
-                                "reviewed_at": now, "reviewed_by": reviewed_by,
-                            })
-                            fact_check = content.get("fact_check")
-                            if not isinstance(fact_check, dict):
-                                fact_check = {}
-                                content["fact_check"] = fact_check
-                            fact_check["status"] = "approved" if approved else "rejected"
-                            fact_check["reviewed_at"] = now
-                            fact_check["reviewed_by"] = reviewed_by
-                            notes = fact_check.get("notes")
-                            if not isinstance(notes, list):
-                                notes = []
-                                fact_check["notes"] = notes
-                            note = (
-                                "Human reviewer approved the displayed educational draft in Telegram."
-                                if approved else "Human reviewer rejected the displayed educational draft in Telegram."
-                            )
-                            if note not in notes:
-                                notes.append(note)
-                            content["approval_action_at"] = now
-                            save_json(content_path, content)
-                            if content_id in queue_by_id:
-                                queue_by_id[content_id]["status"] = "approved" if approved else "rejected"
-                                queue_by_id[content_id]["processed"] = True
-                                queue_by_id[content_id]["decided_at"] = now
-                            answer = "Approved for publishing eligibility checks" if approved else "Rejected — no public post."
-                        try:
-                            api("answerCallbackQuery", {
-                                "callback_query_id": callback_id, "text": answer, "show_alert": "false",
-                            })
-                        except Exception as exc:
-                            print(f"Callback acknowledgement skipped: {type(exc).__name__}")
-                        message = callback.get("message") or {}
-                        chat_id = (message.get("chat") or {}).get("id")
-                        message_id = message.get("message_id")
-                        if chat_id and message_id:
-                            try:
-                                api("editMessageReplyMarkup", {
-                                    "chat_id": chat_id, "message_id": message_id,
-                                    "reply_markup": json.dumps({"inline_keyboard": []}),
-                                })
-                            except Exception as exc:
-                                print(f"Button removal skipped: {type(exc).__name__}")
-                    else:
-                        print("Ignoring unsupported Telegram callback type.")
+                    print("Ignoring unsupported Telegram callback type; no decision was saved.")
+                    try:
+                        api("answerCallbackQuery", {
+                            "callback_query_id": callback_id,
+                            "text": "Unsupported approval button. No decision was saved.",
+                            "show_alert": "false",
+                        })
+                    except Exception as exc:
+                        print(f"Callback acknowledgement skipped: {type(exc).__name__}")
 
             offset = update_id + 1
             state["update_offset"] = offset

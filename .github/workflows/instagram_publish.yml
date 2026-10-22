@@ -1,5 +1,8 @@
 name: Publish Approved Reel to Instagram
 
+# Educational Reel approvals publish directly from market_approval_poll.yml.
+# Do not add the poller as a workflow_run trigger here or one approval could
+# launch a second publisher and duplicate public posts.
 on:
   workflow_dispatch:
   workflow_run:
@@ -10,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: instagram-publish
+  group: market-state
   cancel-in-progress: false
 
 jobs:
@@ -24,12 +27,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -48,6 +51,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/content_*.json output/media/*.publish.json 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "chore: save Instagram publish state"
-          git push
+          bash scripts/stage_publish_state.sh
+          if git diff --cached --quiet; then
+            echo "No Instagram publish state changes to commit."
+          else
+            git commit -m "chore: save Instagram publish state"
+            git pull --rebase origin main
+            git push
+          fi
