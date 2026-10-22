@@ -7237,7 +7237,7 @@
           "message_id": 287
         }
       },
-      "status": "generated",
+      "status": "pending_approval",
       "last_run_mode": "dry_run"
     },
     "nsebank-2026102109-short": {
@@ -7300,7 +7300,7 @@
           "message_id": 288
         }
       },
-      "status": "generated",
+      "status": "pending_approval",
       "last_run_mode": "dry_run"
     },
     "gc-f-2026102202-short": {
@@ -7312,25 +7312,25 @@
         "region": "GLOBAL",
         "language": "English",
         "direction": "SHORT",
-        "entry": 4131.5,
-        "stop_loss": 4152.225728536574,
+        "entry": 4132.5,
+        "stop_loss": 4153.343596142601,
         "targets": [
-          4110.774271463426,
-          4100.411407195139,
-          4090.048542926852
+          4111.656403857399,
+          4101.234605786099,
+          4090.8128077147985
         ],
-        "tp1": 4110.774271463426,
-        "tp2": 4100.411407195139,
-        "tp3": 4090.048542926852,
-        "rr_tp2": 1.5,
-        "rsi14": 43.372723358798865,
-        "ema20": 4142.278970986843,
-        "ema50": 4147.9180837789945,
-        "macd": -2.258765560012762,
-        "macd_signal": -0.5569064412954466,
-        "macd_hist": -1.7018591187173153,
-        "atr14": 13.817152357716031,
-        "vwap": 4131.3059978571555,
+        "tp1": 4111.656403857399,
+        "tp2": 4101.234605786099,
+        "tp3": 4090.8128077147985,
+        "rr_tp2": 1.4999999999999782,
+        "rsi14": 43.94665730468132,
+        "ema20": 4142.3742090820815,
+        "ema50": 4147.957299465269,
+        "macd": -2.178993480240024,
+        "macd_signal": -0.540952025340899,
+        "macd_hist": -1.638041454899125,
+        "atr14": 13.895730761733889,
+        "vwap": 4131.362521436738,
         "support": 4122.2998046875,
         "resistance": 4164.2998046875,
         "as_of": "2026-10-22T02:00:00+00:00",
@@ -7338,13 +7338,13 @@
         "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
       },
       "analyst": {
-        "view": "I’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.4. The scenario is invalid if structure fails.",
+        "view": "I’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.9. The scenario is invalid if structure fails.",
         "hook": "Structure first. Risk always.",
         "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
       },
       "copy": {
-        "telegram_html": "<b>🎯 Bullseye Theory · Gold</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.4. The scenario is invalid if structure fails.\n\nGold: EMA20 is below EMA50 and RSI(14) is 43.4. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> GC=F · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
-        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.4. The scenario is invalid if structure fails.\n\nGold: EMA20 is below EMA50 and RSI(14) is 43.4. This is a rule-based scenario, not a prediction.\n\nScenario: GC=F · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#GoldTrading #TechnicalAnalysis #RiskManagement #BullseyeTheory",
+        "telegram_html": "<b>🎯 Bullseye Theory · Gold</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.9. The scenario is invalid if structure fails.\n\nGold: EMA20 is below EMA50 and RSI(14) is 43.9. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> GC=F · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.9. The scenario is invalid if structure fails.\n\nGold: EMA20 is below EMA50 and RSI(14) is 43.9. This is a rule-based scenario, not a prediction.\n\nScenario: GC=F · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#GoldTrading #TechnicalAnalysis #RiskManagement #BullseyeTheory",
         "hook": "Structure first. Risk always.",
         "hashtags": [
           "#GoldTrading",
@@ -7356,8 +7356,13 @@
       "chart_path": "output/gc-f-2026102202-short.png",
       "card_path": "output/gc-f-2026102202-short_card.png",
       "created_at": "2026-10-22T02:28:35.354637+00:00",
-      "publishing": {},
-      "status": "generated",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 293
+        }
+      },
+      "status": "pending_approval",
       "last_run_mode": "dry_run"
     },
     "eurusd-x-2026102202-long": {
@@ -7369,39 +7374,39 @@
         "region": "GLOBAL",
         "language": "English",
         "direction": "LONG",
-        "entry": 1.1238480806350708,
-        "stop_loss": 1.1225311210419893,
+        "entry": 1.1242270469665527,
+        "stop_loss": 1.1228830098348448,
         "targets": [
-          1.1251650402281523,
-          1.1258235200246929,
-          1.1264819998212336
+          1.1255710840982607,
+          1.1262431026641146,
+          1.1269151212299686
         ],
-        "tp1": 1.1251650402281523,
-        "tp2": 1.1258235200246929,
-        "tp3": 1.1264819998212336,
-        "rr_tp2": 1.4999999999998315,
-        "rsi14": 54.70877964206742,
-        "ema20": 1.1233534652707076,
-        "ema50": 1.1230871519198495,
-        "macd": 0.00017208933034229545,
-        "macd_signal": 0.00013557094322533665,
-        "macd_hist": 3.65183871169588e-05,
-        "atr14": 0.0008779730620542866,
+        "tp1": 1.1255710840982607,
+        "tp2": 1.1262431026641146,
+        "tp3": 1.1269151212299686,
+        "rr_tp2": 1.5,
+        "rsi14": 57.21176451362029,
+        "ema20": 1.1233895573022772,
+        "ema50": 1.1231020133446135,
+        "macd": 0.00020232026276811865,
+        "macd_signal": 0.0001416171297105013,
+        "macd_hist": 6.0703133057617365e-05,
+        "atr14": 0.0008960247544719763,
         "vwap": null,
         "support": 1.1217050552368164,
         "resistance": 1.1243535280227661,
         "as_of": "2026-10-22T02:00:00+00:00",
-        "score": 60,
+        "score": 80,
         "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
       },
       "analyst": {
-        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 54.7. The scenario is invalid if structure fails.",
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 57.2. The scenario is invalid if structure fails.",
         "hook": "Structure first. Risk always.",
         "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
       },
       "copy": {
-        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 54.7. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 54.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
-        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 54.7. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 54.7. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 57.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 57.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 57.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 57.2. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
         "hook": "Structure first. Risk always.",
         "hashtags": [
           "#ForexTrading",
@@ -7413,8 +7418,13 @@
       "chart_path": "output/eurusd-x-2026102202-long.png",
       "card_path": "output/eurusd-x-2026102202-long_card.png",
       "created_at": "2026-10-22T02:28:35.905571+00:00",
-      "publishing": {},
-      "status": "generated",
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 294
+        }
+      },
+      "status": "pending_approval",
       "last_run_mode": "dry_run"
     }
   },
@@ -8198,6 +8208,30 @@
       "signal_id": "nsebank-2026102109-short",
       "status": "generated",
       "dry_run": true
+    },
+    {
+      "at": "2026-10-22T02:37:01.800122+00:00",
+      "signal_id": "gc-f-2026102202-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-22T02:37:04.051291+00:00",
+      "signal_id": "eurusd-x-2026102202-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-22T02:37:04.613099+00:00",
+      "signal_id": "hdfcbank-ns-2026102109-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-22T02:37:05.129428+00:00",
+      "signal_id": "nsebank-2026102109-short",
+      "status": "pending_approval",
+      "dry_run": false
     }
   ]
 }
