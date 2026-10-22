@@ -30,6 +30,11 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn("id: approval", workflow)
         self.assertIn("market_approve:", Path("src/telegram_process.py").read_text(encoding="utf-8"))
 
+    def test_legacy_telegram_approve_reject_path_is_removed(self):
+        source = Path("src/telegram_process.py").read_text(encoding="utf-8")
+        self.assertNotIn('parts[0] in ("approve", "reject")', source)
+        self.assertIn("Ignoring unsupported Telegram callback type", source)
+
     def test_legacy_reel_pipeline_does_not_auto_approve_for_publishing(self):
         workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
         self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)

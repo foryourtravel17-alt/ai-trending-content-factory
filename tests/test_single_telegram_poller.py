@@ -21,6 +21,17 @@ class SingleTelegramPollerTests(unittest.TestCase):
         self.assertNotIn("schedule", triggers)
         self.assertNotIn("src/telegram_process.py", text)
 
+    def test_educational_approvals_reach_the_explicit_reel_publisher(self):
+        text = POLLER.read_text(encoding="utf-8")
+        parsed = yaml.safe_load(text)
+        job = parsed["jobs"]["poll-and-publish-approved"]
+        step = next(item for item in job["steps"] if item.get("name") == "Publish approved educational Reels")
+        self.assertIn("educational_approved_ids", step.get("if", ""))
+        self.assertEqual(step["run"], "python scripts/publish_approved_educational_reels.py")
+        self.assertNotIn("src.orchestrator", step["run"])
+        self.assertIn('HUMAN_APPROVAL: "true"', text)
+        self.assertIn("EDUCATIONAL_APPROVED_IDS", step.get("env", {}))
+
     def test_market_poller_is_single_scheduled_callback_consumer(self):
         text = POLLER.read_text(encoding="utf-8")
         triggers = workflow_triggers(text)

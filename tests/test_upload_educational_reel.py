@@ -1,6 +1,7 @@
 import json
 import os
 import tempfile
+import urllib.error
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -63,6 +64,19 @@ class UploadEducationalReelTests(unittest.TestCase):
         with patch.object(MODULE, "probe_duration", return_value=42.29):
             with self.assertRaises(SystemExit):
                 MODULE.upload_latest_draft()
+
+    def test_409_conflict_with_different_existing_object_bytes_fails_closed(self):
+        mismatch = RuntimeError("Supabase public object bytes do not match generated MP4 SHA-256/size.")
+        conflict = urllib.error.HTTPError(
+            "https://example.supabase.co/storage/v1/object/REELS/reels/test.mp4",
+            409, "Conflict", {}, None,
+        )
+        with patch.object(MODULE, "probe_duration", return_value=42.29):
+            with patch.object(MODULE, "verify_public_video", side_effect=[FileNotFoundError(), mismatch]) as verify:
+                with patch.object(MODULE.urllib.request, "urlopen", side_effect=conflict):
+                    with self.assertRaisesRegex(RuntimeError, "do not match"):
+                        MODULE.upload_latest_draft()
+        self.assertEqual(verify.call_count, 2)
 
 
 if __name__ == "__main__":

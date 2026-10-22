@@ -224,10 +224,18 @@ def save_state(content_path, approved):
     )
 
 
+class InstagramPublishUnknown(RuntimeError):
+    """Instagram publish outcome is ambiguous; automatic re-publish is blocked."""
+
+
 def publish_instagram_reel_container(ig_user_id, video_url, caption, approved, content_path):
-    """Create once, persist the Reel container, and reuse it after an ambiguous failure."""
+    """Create once and fail closed when Instagram's final publish outcome is ambiguous."""
     publishing = approved.setdefault("publishing", {})
     instagram = publishing.setdefault("instagram", {})
+    if instagram.get("status") in {"publish_attempt_started", "publish_outcome_unknown"}:
+        raise InstagramPublishUnknown(
+            "Instagram media_publish outcome is unresolved; automatic re-publish is blocked to prevent duplicates."
+        )
     creation_id = str(instagram.get("creation_id") or "").strip()
 
     if not creation_id:
@@ -272,15 +280,36 @@ def publish_instagram_reel_container(ig_user_id, video_url, caption, approved, c
             "container ID retained for safe retry."
         )
 
-    published = request("POST", f"{API}/{ig_user_id}/media_publish", {
-        "creation_id": creation_id,
-        "access_token": TOKEN,
-    })
+    # Persist a one-way attempt marker before the network call. If the runner or
+    # response fails, a later run must reconcile manually rather than POST again.
+    instagram["status"] = "publish_attempt_started"
+    instagram["publish_attempt_started_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    save_state(content_path, approved)
+    try:
+        published = request("POST", f"{API}/{ig_user_id}/media_publish", {
+            "creation_id": creation_id,
+            "access_token": TOKEN,
+        })
+    except Exception as exc:
+        instagram["status"] = "publish_outcome_unknown"
+        instagram["publish_error_type"] = type(exc).__name__
+        save_state(content_path, approved)
+        raise InstagramPublishUnknown(
+            "Instagram media_publish outcome is ambiguous; automatic re-publish is blocked to prevent duplicates."
+        ) from None
     media_id = str(published.get("id") or "").strip()
     if not media_id:
-        raise RuntimeError(
-            "Instagram Reel publish returned no media id; existing container retained."
+        instagram["status"] = "publish_outcome_unknown"
+        instagram["publish_error_type"] = "MissingMediaId"
+        save_state(content_path, approved)
+        raise InstagramPublishUnknown(
+            "Instagram Reel publish returned no media ID; automatic re-publish is blocked for reconciliation."
         )
+    instagram["status"] = "published_to_instagram"
+    instagram["media_id"] = media_id
+    instagram["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    instagram.pop("publish_error_type", None)
+    save_state(content_path, approved)
     return media_id
 
 

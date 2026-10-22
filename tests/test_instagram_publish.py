@@ -128,6 +128,82 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         self.assertEqual(updated["instagram_media_id"], "ig-media-123")
         self.assertEqual(updated["publishing"]["telegram"]["status"], "published")
 
+    def test_duplicate_run_after_instagram_and_telegram_success_sends_nothing(self):
+        content_id = "draft_fully_published_20261022"
+        path = self.write_record(content_id, status="published_to_instagram", published_at=self.now.isoformat())
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record["approval"] = {
+            "required": True, "status": "approved",
+            "reviewed_at": record["created_at"], "reviewed_by": "@owner",
+        }
+        record["video_url"] = f"https://example.supabase.co/storage/v1/object/public/REELS/reels/{content_id}.mp4"
+        record["video_content_id"] = content_id
+        record["video_sha256"] = "a" * 64
+        record["video_size_bytes"] = 123
+        record["video_duration_seconds"] = 42.29
+        record["instagram_media_id"] = "ig-media-already-published"
+        record["publishing"] = {
+            "instagram": {"status": "published_to_instagram", "media_id": "ig-media-already-published"},
+            "telegram": {"status": "published", "message_id": 777},
+        }
+        path.write_text(json.dumps(record), encoding="utf-8")
+        with patch.dict(os.environ, {
+            "SUPABASE_URL": "https://example.supabase.co",
+            "TELEGRAM_BOT_TOKEN": "fake-test-token",
+        }):
+            with patch.object(MODULE, "verify_public_video_url", return_value=record["video_url"]):
+                with patch.object(MODULE, "publish_instagram_reel_container") as instagram:
+                    with patch.object(MODULE, "_send_telegram_video") as telegram:
+                        MODULE.publish_content_record(path, record, ig_user_id="test-ig-user")
+        instagram.assert_not_called()
+        telegram.assert_not_called()
+        updated = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(updated["publishing"]["instagram"]["media_id"], "ig-media-already-published")
+        self.assertEqual(updated["publishing"]["telegram"]["message_id"], 777)
+
+    def test_ambiguous_instagram_publish_attempt_is_not_retried(self):
+        content_id = "draft_ambiguous_publish_20261022"
+        path = self.write_record(content_id)
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record["video_url"] = f"https://example.supabase.co/storage/v1/object/public/REELS/reels/{content_id}.mp4"
+        record["video_content_id"] = content_id
+        record["video_sha256"] = "a" * 64
+        record["video_size_bytes"] = 123
+        record["video_duration_seconds"] = 42.29
+        path.write_text(json.dumps(record), encoding="utf-8")
+
+        def fake_request(method, url, params):
+            if method == "POST" and url.endswith("/media"):
+                return {"id": "creation-test-123"}
+            if method == "GET" and url.endswith("/creation-test-123"):
+                return {"status_code": "FINISHED"}
+            if method == "POST" and url.endswith("/media_publish"):
+                raise RuntimeError("simulated lost response")
+            raise AssertionError(f"Unexpected Meta request: {method} {url}")
+
+        with patch.dict(os.environ, {
+            "SUPABASE_URL": "https://example.supabase.co",
+            "TELEGRAM_BOT_TOKEN": "fake-test-token",
+        }):
+            with patch.object(MODULE, "verify_public_video_url", return_value=record["video_url"]):
+                with patch.object(MODULE, "request", side_effect=fake_request):
+                    with self.assertRaises(MODULE.InstagramPublishUnknown):
+                        MODULE.publish_content_record(path, record, ig_user_id="test-ig-user")
+        first_saved = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(first_saved["publishing"]["instagram"]["status"], "publish_outcome_unknown")
+        self.assertEqual(first_saved["publishing"]["instagram"]["creation_id"], "creation-test-123")
+
+        retry_record = json.loads(path.read_text(encoding="utf-8"))
+        with patch.dict(os.environ, {
+            "SUPABASE_URL": "https://example.supabase.co",
+            "TELEGRAM_BOT_TOKEN": "fake-test-token",
+        }):
+            with patch.object(MODULE, "verify_public_video_url", return_value=retry_record["video_url"]):
+                with patch.object(MODULE, "request") as second_request:
+                    with self.assertRaises(MODULE.InstagramPublishUnknown):
+                        MODULE.publish_content_record(path, retry_record, ig_user_id="test-ig-user")
+        second_request.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
