@@ -25,6 +25,10 @@ on:
       - tests/test_upload_educational_reel.py
       - tests/test_agents_publisher_approval.py
       - tests/test_instagram_publisher.py
+  workflow_run:
+    workflows: ["Autonomous Market Content Factory"]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
@@ -38,6 +42,7 @@ concurrency:
 
 jobs:
   poll-and-publish-approved:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -57,7 +62,9 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_APPROVER_USER_IDS: ${{ secrets.TELEGRAM_APPROVER_USER_IDS }}
-          POLL_SECONDS: "15"
+          # Scheduled checks stay short; a push/manual run or completed draft run
+          # keeps the listener available for the owner to review and approve.
+          POLL_SECONDS: ${{ github.event_name == 'schedule' && '15' || '240' }}
         run: python src/telegram_process.py
 
       - name: Install publisher dependencies only when publishing is required
