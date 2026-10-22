@@ -138,18 +138,18 @@ class DryRunSmokeTest(unittest.TestCase):
                     }
                     return record_arg
 
-                with patch("agents.qa.STATE_PATH", state_path), \\
-                     patch.object(orchestrator, "STATE_PATH", state_path), \\
-                     patch.object(orchestrator, "SYMBOLS", {"GLOBAL": {"TEST": "Synthetic Test"}}), \\
-                     patch.object(orchestrator, "scout_symbol", return_value={"frame": indicators, "signal": signal}), \\
-                     patch.object(orchestrator, "render_chart", return_value=chart_path), \\
-                     patch.object(orchestrator, "render_card", return_value=card_path), \\
-                     patch.object(orchestrator, "analyze", return_value={"view": "fresh view"}), \\
-                     patch.object(orchestrator, "build_copy", return_value={"telegram_html": "draft", "instagram_caption": "caption"}), \\
-                     patch.object(orchestrator, "publish", side_effect=fake_publish), \\
-                     patch.object(orchestrator, "DRY_RUN", False), \\
-                     patch.object(orchestrator, "GENERATE_ONLY", False), \\
-                     patch.object(orchestrator, "PUBLISH_ONLY", False), \\
+                with patch("agents.qa.STATE_PATH", state_path), \
+                     patch.object(orchestrator, "STATE_PATH", state_path), \
+                     patch.object(orchestrator, "SYMBOLS", {"GLOBAL": {"TEST": "Synthetic Test"}}), \
+                     patch.object(orchestrator, "scout_symbol", return_value={"frame": indicators, "signal": signal}), \
+                     patch.object(orchestrator, "render_chart", return_value=chart_path), \
+                     patch.object(orchestrator, "render_card", return_value=card_path), \
+                     patch.object(orchestrator, "analyze", return_value={"view": "fresh view"}), \
+                     patch.object(orchestrator, "build_copy", return_value={"telegram_html": "draft", "instagram_caption": "caption"}), \
+                     patch.object(orchestrator, "publish", side_effect=fake_publish), \
+                     patch.object(orchestrator, "DRY_RUN", False), \
+                     patch.object(orchestrator, "GENERATE_ONLY", False), \
+                     patch.object(orchestrator, "PUBLISH_ONLY", False), \
                      patch.object(orchestrator, "HUMAN_APPROVAL", True):
                     self.assertEqual(orchestrator.main(), 0)
 
