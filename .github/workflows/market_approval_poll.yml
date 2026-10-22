@@ -12,6 +12,14 @@ on:
       - scripts/export_public_market_feed.py
       - scripts/preflight_publish_guard.py
       - tests/test_single_telegram_poller.py
+      - tests/test_educational_approval_publisher.py
+      - tests/test_publish_state_staging.py
+      - scripts/publish_approved_educational_reels.py
+      - scripts/stage_publish_state.sh
+      - src/instagram_publish.py
+      - scripts/upload_educational_reel.py
+      - tests/test_instagram_publish.py
+      - tests/test_upload_educational_reel.py
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
@@ -26,15 +34,15 @@ concurrency:
 jobs:
   poll-and-publish-approved:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -47,8 +55,8 @@ jobs:
           POLL_SECONDS: "15"
         run: python src/telegram_process.py
 
-      - name: Install market dependencies only when publishing is required
-        if: steps.approval.outputs.market_approved_ids != ''
+      - name: Install publisher dependencies only when publishing is required
+        if: steps.approval.outputs.market_approved_ids != '' || steps.approval.outputs.educational_approved_ids != ''
         run: python -m pip install -r requirements.txt
 
       - name: Guard and publish approved market scenarios
@@ -56,7 +64,7 @@ jobs:
         env:
           APPROVED_SIGNAL_IDS: ${{ steps.approval.outputs.market_approved_ids }}
           PUBLISH_ONLY: "true"
-          HUMAN_APPROVAL: "false"
+          HUMAN_APPROVAL: "true"
           DRY_RUN: "0"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -84,6 +92,24 @@ jobs:
           done
           exit "$failed"
 
+      - name: Install FFmpeg for approved educational Reel verification
+        if: steps.approval.outputs.educational_approved_ids != ''
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Publish approved educational Reels
+        if: steps.approval.outputs.educational_approved_ids != ''
+        env:
+          EDUCATIONAL_APPROVED_IDS: ${{ steps.approval.outputs.educational_approved_ids }}
+          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python scripts/publish_approved_educational_reels.py
+
       - name: Export sanitized approved Market Lab feed
         if: always() && steps.approval.outcome == 'success'
         run: python scripts/export_public_market_feed.py
@@ -93,12 +119,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/telegram_state.json output/approval_queue.json data/state.json data/approved_market_feed.json
-          find output -maxdepth 1 -type f \( -name "content_*.json" -o -name "draft_*.json" \) -print0 | xargs -0 -r git add --
+          bash scripts/stage_publish_state.sh
           if git diff --cached --quiet; then
             echo "No approval-state changes to commit."
           else
-            git commit -m "market: record Telegram approval decision"
+            git commit -m "market: record Telegram approval and publishing state"
             git pull --rebase origin main
             git push
           fi

@@ -10,19 +10,21 @@ permissions:
   contents: write
 
 concurrency:
-  group: educational-reel-draft
+  group: market-state
   cancel-in-progress: false
 
 jobs:
   generate-draft:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      TELEGRAM_APPROVER_USER_IDS: ${{ secrets.TELEGRAM_APPROVER_USER_IDS }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -88,12 +90,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/state.json output/approval_queue.json output/draft_*.json
-          git diff --cached --quiet || git commit -m "content: queue educational Reel for human review"
-          git push
+          bash scripts/stage_publish_state.sh
+          if git diff --cached --quiet; then
+            echo "No draft state changes to commit."
+          else
+            git commit -m "content: queue educational Reel for human review"
+            git pull --rebase origin main
+            git push
+          fi
 
       - name: Upload draft for review (no publishing)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bullseye-educational-reel-draft
           path: |
