@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22T08:04:42.444041+00:00",
+  "updated_at": "2026-10-22T14:02:35.287648+00:00",
   "items": [
     {
       "content_id": "content_1",
@@ -477,6 +477,13 @@
       "status": "pending_approval",
       "approval_required": true,
       "created_at": "2026-10-22T08:04:42.443535+00:00"
+    },
+    {
+      "content_id": "content_20261022_140235_1",
+      "topic": "Liquidity Sweep: A Chart Concept, Not an Automatic Entry",
+      "status": "pending_approval",
+      "approval_required": true,
+      "created_at": "2026-10-22T14:02:35.287269+00:00"
     }
   ],
   "telegram_sent": [
