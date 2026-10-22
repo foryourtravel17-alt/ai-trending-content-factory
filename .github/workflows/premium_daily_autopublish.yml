@@ -55,7 +55,7 @@ jobs:
           # Stable daily rotation: market structure, risk management, psychology.
           index = datetime.datetime.now(datetime.timezone.utc).timetuple().tm_yday % 3
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-              f.write(f"index={index}\\n")
+              f.write(f"index={index}\n")
           print(f"Selected lesson index: {index}")
           PY
 
