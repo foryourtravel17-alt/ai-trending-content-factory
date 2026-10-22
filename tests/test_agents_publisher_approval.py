@@ -13,6 +13,39 @@ def _card(tmp):
 
 
 class PublisherApprovalGateTests(unittest.TestCase):
+    def test_instagram_prefers_health_checked_system_user_token(self):
+        calls = []
+
+        def fake_meta_request(method, url, **kwargs):
+            calls.append((method, url, kwargs))
+            if method == "POST" and url.endswith("/media"):
+                return {"id": "container-123"}
+            if method == "GET" and url.endswith("/container-123"):
+                return {"status_code": "FINISHED"}
+            if method == "POST" and url.endswith("/media_publish"):
+                return {"id": "media-456"}
+            raise AssertionError(f"Unexpected Meta request: {method} {url}")
+
+        with patch.dict("os.environ", {
+            "META_SYSTEM_USER_TOKEN": "known-valid-system-token",
+            "INSTAGRAM_ACCESS_TOKEN": "stale-instagram-token",
+            "IG_ACCESS_TOKEN": "older-fallback-token",
+            "IG_USER_ID": "test-ig-user",
+        }):
+            with patch.object(publisher, "_meta_request", side_effect=fake_meta_request):
+                media_id = publisher._instagram_publish(
+                    "https://example.com/card.png", "Educational caption", {}
+                )
+
+        self.assertEqual(media_id, "media-456")
+        tokens = [
+            kwargs.get("data", {}).get("access_token")
+            or kwargs.get("params", {}).get("access_token")
+            for _, _, kwargs in calls
+        ]
+        self.assertTrue(tokens)
+        self.assertTrue(all(token == "known-valid-system-token" for token in tokens))
+
     def test_approved_record_publishes_when_human_approval_env_is_true(self):
         with tempfile.TemporaryDirectory() as tmp:
             record = {

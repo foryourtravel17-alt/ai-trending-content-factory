@@ -1,0 +1,169 @@
+name: Recover approved Instagram-only posts
+
+on:
+  workflow_run:
+    workflows: ["Market Factory Tests"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-state
+  cancel-in-progress: false
+
+jobs:
+  retry-approved-instagram:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout latest main state
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Find one fresh, already-approved Instagram auth failure
+        id: candidate
+        run: python scripts/retry_approved_instagram.py peek
+
+      - name: Validate Meta System User token and linked Instagram account
+        if: steps.candidate.outputs.signal_id != ''
+        env:
+          META_SYSTEM_USER_TOKEN: \${{ secrets.META_SYSTEM_USER_TOKEN }}
+          IG_USER_ID: \${{ secrets.IG_USER_ID }}
+          INSTAGRAM_USER_ID: \${{ secrets.INSTAGRAM_USER_ID }}
+          META_GRAPH_API_VERSION: \${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          from urllib.parse import urlencode
+          from urllib.request import urlopen
+          from urllib.error import HTTPError, URLError
+
+          token = os.environ.get("META_SYSTEM_USER_TOKEN", "").strip()
+          if not token:
+              print("FAIL: META_SYSTEM_USER_TOKEN is missing; recovery stopped.")
+              sys.exit(1)
+          version = os.environ.get("META_GRAPH_API_VERSION", "v23.0").strip() or "v23.0"
+          expected = {
+              x.strip() for x in (
+                  os.environ.get("IG_USER_ID", ""),
+                  os.environ.get("INSTAGRAM_USER_ID", ""),
+              ) if x.strip()
+          }
+          query = urlencode({
+              "fields": "id,name,tasks,instagram_business_account{id,username}",
+              "access_token": token,
+          })
+          url = f"https://graph.facebook.com/{version}/me/accounts?{query}"
+          try:
+              with urlopen(url, timeout=20) as response:
+                  payload = json.loads(response.read().decode("utf-8"))
+          except HTTPError as exc:
+              try:
+                  body = json.loads(exc.read().decode("utf-8"))
+                  error = body.get("error") or {}
+                  code = str(error.get("code", "unknown"))
+              except Exception:
+                  code = "unknown"
+              print(f"FAIL: Meta rejected the System User token (code={code}); credential details hidden.")
+              sys.exit(1)
+          except (URLError, TimeoutError, OSError, ValueError) as exc:
+              print(f"FAIL: Meta credential check could not complete ({type(exc).__name__}).")
+              sys.exit(1)
+          rows = payload.get("data")
+          if not isinstance(rows, list):
+              err = payload.get("error") or {}
+              code = str(err.get("code", "unknown"))
+              print(f"FAIL: Meta credential check returned no page list (code={code}).")
+              sys.exit(1)
+          linked = [
+              str((row.get("instagram_business_account") or {}).get("id") or "")
+              for row in rows if isinstance(row, dict)
+          ]
+          linked = [value for value in linked if value]
+          if not linked or (expected and not (set(linked) & expected)):
+              print("FAIL: the System User token has no matching linked Instagram account.")
+              sys.exit(1)
+          print("PASS: System User token accepted and linked Instagram account matched.")
+          PY
+
+      - name: Reserve this signal's one-time retry before publishing
+        id: reserve
+        if: steps.candidate.outputs.signal_id != ''
+        env:
+          SIGNAL_ID: \${{ steps.candidate.outputs.signal_id }}
+        run: python scripts/retry_approved_instagram.py reserve "$SIGNAL_ID"
+
+      - name: Commit retry reservation so it cannot loop
+        if: steps.reserve.outcome == 'success' && steps.candidate.outputs.signal_id != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          if git diff --cached --quiet; then
+            echo "No recovery reservation changes to commit."
+          else
+            git commit -m "market: reserve one approved Instagram recovery attempt"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Install publishing dependencies
+        if: steps.reserve.outcome == 'success' && steps.candidate.outputs.signal_id != ''
+        run: python -m pip install -r requirements.txt
+
+      - name: Recreate the previously approved card
+        if: steps.reserve.outcome == 'success' && steps.candidate.outputs.signal_id != ''
+        env:
+          SIGNAL_ID: \${{ steps.candidate.outputs.signal_id }}
+        run: python scripts/retry_approved_instagram.py render "$SIGNAL_ID"
+
+      - name: Run publishing preflight guard
+        if: steps.reserve.outcome == 'success' && steps.candidate.outputs.signal_id != ''
+        env:
+          SIGNAL_ID: \${{ steps.candidate.outputs.signal_id }}
+        run: python scripts/preflight_publish_guard.py "$SIGNAL_ID"
+
+      - name: Retry Instagram only for the approved post
+        if: steps.reserve.outcome == 'success' && steps.candidate.outputs.signal_id != ''
+        env:
+          PUBLISH_ONLY: "true"
+          PUBLISH_ONLY_SIGNAL_ID: \${{ steps.candidate.outputs.signal_id }}
+          MARKET_RETRY_INSTAGRAM_ONLY: "true"
+          HUMAN_APPROVAL: "true"
+          DRY_RUN: "0"
+          TELEGRAM_BOT_TOKEN: \${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: \${{ secrets.TELEGRAM_CHAT_ID }}
+          IG_USER_ID: \${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: \${{ secrets.IG_ACCESS_TOKEN }}
+          INSTAGRAM_ACCESS_TOKEN: \${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: \${{ secrets.INSTAGRAM_USER_ID }}
+          META_SYSTEM_USER_TOKEN: \${{ secrets.META_SYSTEM_USER_TOKEN }}
+          META_GRAPH_API_VERSION: \${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+          GH_USER: \${{ vars.GH_USER || secrets.GH_USER }}
+          GH_REPO: \${{ vars.GH_REPO || secrets.GH_REPO }}
+          IMAGE_BASE_URL: \${{ vars.IMAGE_BASE_URL }}
+        run: python -m src.orchestrator
+
+      - name: Commit resulting publish state
+        if: always() && steps.reserve.outcome == 'success' && steps.candidate.outputs.signal_id != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash scripts/stage_publish_state.sh
+          if git diff --cached --quiet; then
+            echo "No publish-state changes to commit."
+          else
+            git commit -m "market: record Instagram recovery result"
+            git pull --rebase origin main
+            git push
+          fi

@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/instagram_token_health.yml'
+      - 'agents/publisher.py'
   workflow_dispatch:
   schedule:
     # Avoid the top of the hour because GitHub documents higher Actions load there.
