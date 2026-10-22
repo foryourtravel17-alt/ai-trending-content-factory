@@ -6539,7 +6539,9 @@
           "message_id": 261
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-22T02:30:16.494427+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026102008-short": {
       "signal": {
@@ -6663,7 +6665,9 @@
           "message_id": 264
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-22T02:30:16.501376+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026102008-short": {
       "signal": {
@@ -6724,7 +6728,9 @@
           "message_id": 265
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-22T02:30:16.507967+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026102010-short": {
       "signal": {
@@ -6848,7 +6854,9 @@
           "message_id": 267
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-22T02:30:16.514362+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026102010-short": {
       "signal": {
@@ -6982,7 +6990,9 @@
           "message_id": 282
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-22T02:30:16.520726+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026102108-long": {
       "signal": {
