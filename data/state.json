@@ -7422,10 +7422,32 @@
         "telegram_dm": {
           "status": "sent",
           "message_id": 294
+        },
+        "telegram": {
+          "status": "published",
+          "message_id": 83
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=190, subcode=unknown, type=OAuthException; message redacted, credentials protected."
         }
       },
-      "status": "pending_approval",
-      "last_run_mode": "dry_run"
+      "status": "publish_failed",
+      "last_run_mode": "dry_run",
+      "approval_status": "approved",
+      "approved_at": "2026-10-22T02:49:20Z",
+      "reviewed_at": "2026-10-22T02:49:20Z",
+      "reviewed_by": "@bullseyetheory",
+      "approval": {
+        "required": true,
+        "status": "approved",
+        "mode": "human_review",
+        "decided_at": "2026-10-22T02:49:20Z",
+        "reviewed_at": "2026-10-22T02:49:20Z",
+        "reviewed_by": "@bullseyetheory"
+      },
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/eurusd-x-2026102202-long_card.png",
+      "last_error": "See workflow logs for details."
     }
   },
   "runs": [
