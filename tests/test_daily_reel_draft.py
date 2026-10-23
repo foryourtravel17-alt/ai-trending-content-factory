@@ -19,11 +19,15 @@ class DailyReelDraftTests(unittest.TestCase):
         self.assertEqual(resolve_slot(datetime(2026, 10, 23, 8, 45, tzinfo=timezone.utc), "auto"), "afternoon")
         self.assertEqual(resolve_slot(datetime(2026, 10, 23, 12, 45, tzinfo=timezone.utc), "auto"), "evening")
 
-    def test_manual_slot_override_is_respected(self):
-        now = datetime(2026, 10, 23, 4, 45, tzinfo=timezone.utc)
+    def test_manual_slot_override_is_respected_even_when_cron_fires_late(self):
+        delayed_morning_run = datetime(2026, 10, 23, 7, 5, tzinfo=timezone.utc)
+        self.assertEqual(resolve_slot(delayed_morning_run, "morning"), "morning")
         for slot in SLOTS:
             with self.subTest(slot=slot):
-                self.assertEqual(resolve_slot(now, slot), slot)
+                self.assertEqual(resolve_slot(delayed_morning_run, slot), slot)
+
+    def test_auto_fallback_chooses_nearest_configured_cron_window(self):
+        self.assertEqual(resolve_slot(datetime(2026, 10, 23, 7, 5, tzinfo=timezone.utc), "auto"), "afternoon")
 
     def test_each_slot_creates_different_topic_and_stays_draft_only(self):
         now = datetime(2026, 10, 23, 4, 45, tzinfo=timezone.utc)
@@ -62,6 +66,10 @@ class DailyReelDraftTests(unittest.TestCase):
         self.assertIn("cron: '47 4 * * *'", workflow)
         self.assertIn("cron: '47 8 * * *'", workflow)
         self.assertIn("cron: '47 12 * * *'", workflow)
+        self.assertIn("SLOT_INPUT:", workflow)
+        self.assertIn("github.event.schedule == '47 4 * * *' && 'morning'", workflow)
+        self.assertIn("github.event.schedule == '47 8 * * *' && 'afternoon'", workflow)
+        self.assertIn("github.event.schedule == '47 12 * * *' && 'evening'", workflow)
         self.assertIn("Send private Telegram approval request (no public publishing)", workflow)
         self.assertIn("run: python src/telegram_send.py", workflow)
         self.assertIn("Register Reel for owner approval", workflow)
