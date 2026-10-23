@@ -55,6 +55,16 @@ class QueueEducationalDraftTests(unittest.TestCase):
         self.assertEqual(record["signal"]["signal_id"], "draft_sample_20261022")
         self.assertEqual(record["fact_check"]["status"], "automated_passed")
 
+    def test_blocks_registration_when_automated_safety_screen_fails(self):
+        source = self.write_draft()
+        record = json.loads(source.read_text(encoding="utf-8"))
+        record["safety_check"]["passed"] = False
+        source.write_text(json.dumps(record), encoding="utf-8")
+        with self.assertRaises(SystemExit):
+            MODULE.main()
+        self.assertFalse(MODULE.STATE_PATH.exists())
+        self.assertFalse(MODULE.QUEUE_PATH.exists())
+
     def test_refuses_to_reset_existing_approval_decision(self):
         source = self.write_draft(status="approved_for_publishing", approval_status="approved")
         with self.assertRaises(SystemExit):
