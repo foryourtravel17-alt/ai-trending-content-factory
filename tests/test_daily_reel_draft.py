@@ -66,7 +66,7 @@ class DailyReelDraftTests(unittest.TestCase):
         self.assertIn("Publish eligible educational Reel to Instagram and Telegram automatically", workflow)
         self.assertIn("id: queue", workflow)
         self.assertIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
-        self.assertIn("Register draft in shared approval state", workflow)
+        self.assertIn("Register Reel for automatic publishing", workflow)
         self.assertIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("Upload draft for review (no publishing)", workflow)
         self.assertIn("if: steps.draft.outputs.skip != 'true'", workflow)
