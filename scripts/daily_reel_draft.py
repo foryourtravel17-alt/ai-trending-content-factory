@@ -6,7 +6,6 @@ Topics rotate deterministically by UTC date; copy is original evergreen educatio
 """
 import json
 import os
-import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -102,6 +101,8 @@ def existing_draft_for_slot(out_dir: Path, utc_date: str, slot_name: str) -> Pat
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(data, dict):
             continue
         slot = data.get("schedule_slot")
         if (
