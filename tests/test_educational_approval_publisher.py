@@ -52,6 +52,28 @@ class EducationalApprovalPublisherTests(unittest.TestCase):
         self.assertEqual(saved["publishing"]["instagram"]["media_id"], "ig-media-test")
         self.assertEqual(saved["publishing"]["telegram"]["message_id"], 321)
 
+    def test_automated_policy_record_reaches_publisher_without_human_review(self):
+        auto = dict(self.record)
+        auto.pop("reviewed_at", None)
+        auto.pop("reviewed_by", None)
+        auto.update({
+            "human_approval_required": False,
+            "approval_mode": "automated_policy",
+            "automated_review_at": "2026-10-22T00:00:00Z",
+            "fact_check": {
+                "status": "automated_passed",
+                "automated_review_at": "2026-10-22T00:00:00Z",
+            },
+        })
+        self.write_state({"signals": {auto["content_id"]: auto}, "runs": []})
+        with patch.object(MODULE, "publish_approved_educational_reel", side_effect=lambda record: dict(record, status="published")) as adapter:
+            result = MODULE.publish_ids(auto["content_id"], self.state_path)
+        self.assertEqual(result, 0)
+        adapter.assert_called_once()
+        saved = self.read_state()["signals"][auto["content_id"]]
+        self.assertEqual(saved["status"], "published")
+        self.assertEqual(saved["approval_mode"], "automated_policy")
+
     def test_pending_or_unapproved_record_is_blocked_before_adapter(self):
         state = self.read_state()
         state["signals"][self.record["content_id"]]["approval_status"] = "pending"
