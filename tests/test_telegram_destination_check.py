@@ -1,10 +1,27 @@
 import unittest
 from unittest.mock import patch
 
-from scripts.telegram_destination_check import check_destination
+from scripts.telegram_destination_check import check_destination, describe_chat_id
 
 
 class TelegramDestinationCheckTests(unittest.TestCase):
+    def test_describe_chat_id_accepts_channel_style_and_hides_value(self):
+        diagnostic = describe_chat_id("-1004254873594")
+        self.assertIn("channel_or_supergroup_style=True", diagnostic)
+        self.assertIn("problems=none", diagnostic)
+        self.assertNotIn("4254873594", diagnostic)
+
+    def test_describe_chat_id_flags_unicode_minus_quotes_spaces_and_links(self):
+        self.assertIn("contains_non_ascii_char", describe_chat_id("\u22121004254873594"))
+        self.assertIn("contains_quote", describe_chat_id('"-1004254873594"'))
+        self.assertIn("contains_inner_space", describe_chat_id("-100 4254873594"))
+        self.assertIn("not_a_plain_signed_integer", describe_chat_id("t.me/c/4254873594/3"))
+
+    def test_describe_chat_id_flags_missing_minus_prefix(self):
+        diagnostic = describe_chat_id("4254873594")
+        self.assertIn("leading_minus=False", diagnostic)
+        self.assertIn("channel_or_supergroup_style=False", diagnostic)
+
     def test_channel_admin_with_post_permission_passes_without_sending(self):
         responses = {
             "getMe": {"result": {"id": 123, "username": "bullseye_test_bot"}},

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -15,6 +16,27 @@ import urllib.request
 from typing import Any
 
 API_BASE = "https://api.telegram.org"
+_SIGNED_INTEGER = re.compile(r"^-?\d+$")
+_CHANNEL_STYLE = re.compile(r"^-100\d+$")
+
+
+def describe_chat_id(chat_id: str) -> str:
+    """Describe the configured chat ID's shape without printing its value."""
+    problems = []
+    if not _SIGNED_INTEGER.fullmatch(chat_id):
+        problems.append("not_a_plain_signed_integer")
+    if any(ord(char) > 127 for char in chat_id):
+        problems.append("contains_non_ascii_char")
+    if any(char in chat_id for char in ('"', "'")):
+        problems.append("contains_quote")
+    if any(char.isspace() for char in chat_id):
+        problems.append("contains_inner_space")
+    return (
+        f"length={len(chat_id)} "
+        f"leading_minus={chat_id.startswith('-')} "
+        f"channel_or_supergroup_style={bool(_CHANNEL_STYLE.fullmatch(chat_id))} "
+        f"problems={','.join(problems) if problems else 'none'}"
+    )
 
 
 def telegram_api(token: str, method: str, params: dict[str, str] | None = None) -> dict[str, Any]:
@@ -56,18 +78,24 @@ def check_destination(token: str, chat_id: str) -> int:
 
     printable_bot = f"@{bot_username}" if bot_username != "(username not returned)" else bot_username
     print(f"Bot token identifies: {printable_bot}")
+    print(f"Configured chat ID fingerprint: {describe_chat_id(chat_id)}")
 
-    # Keep destination lookup separate so failures clearly identify which check failed.
     try:
         chat = telegram_api(token, "getChat", {"chat_id": chat_id})["result"]
     except (RuntimeError, KeyError, TypeError, ValueError) as exc:
         print("CHECK FAILED: Telegram could not find the configured destination for this bot.", file=sys.stderr)
         print(f"Details: {exc}", file=sys.stderr)
+        print("Most likely causes, in order:", file=sys.stderr)
         print(
-            "Next check: confirm the PREMIUM_TELEGRAM_CHAT_ID secret is the private Premium destination's numeric chat ID, "
-            "and that the exact bot named above belongs to that destination. No message was sent.",
+            "  1. This exact bot is not a member/admin of the intended private Premium destination.",
             file=sys.stderr,
         )
+        print(
+            "  2. The configured ID is malformed (see the fingerprint), is a stale value from another secret scope, "
+            "or points to a different destination.",
+            file=sys.stderr,
+        )
+        print("No message was sent.", file=sys.stderr)
         return 1
 
     try:
