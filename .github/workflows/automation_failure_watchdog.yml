@@ -12,7 +12,7 @@ on:
       - "Market Signal Approval Poller"
       - "Bullseye Weekly P&L and Engagement Summary"
       - "Market Factory Schedule Watchdog"
-      - "Generate Educational Reel Draft (No Publish)"
+      - "Bullseye Daily Educational Reel Auto-Publish"
       - "Bullseye Premium Daily Auto-Publish"
     types: [completed]
 
