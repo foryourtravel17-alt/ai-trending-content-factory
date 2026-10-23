@@ -79,18 +79,21 @@ TOPICS = [
     },
 ]
 
+SLOT_CRON_UTC = {"morning": (4, 47), "afternoon": (8, 47), "evening": (12, 47)}
+
+
 def resolve_slot(now: datetime, requested: str | None = None) -> str:
-    """Resolve a daily content slot; schedule inference uses the configured UTC cron windows."""
+    """Use the explicit scheduled slot; auto falls back to the nearest UTC cron window."""
     requested = (requested or "auto").strip().lower()
     if requested in SLOTS:
         return requested
     if requested != "auto":
-        raise ValueError("CONTENT_SLOT must be auto, morning, afternoon, or evening.")
-    if now.hour < 7:
-        return "morning"
-    if now.hour < 11:
-        return "afternoon"
-    return "evening"
+        raise ValueError("SLOT_INPUT must be auto, morning, afternoon, or evening.")
+    current_minute = now.hour * 60 + now.minute
+    return min(
+        SLOTS,
+        key=lambda slot: abs(current_minute - (SLOT_CRON_UTC[slot][0] * 60 + SLOT_CRON_UTC[slot][1])),
+    )
 
 
 def existing_draft_for_slot(out_dir: Path, utc_date: str, slot_name: str) -> Path | None:
@@ -202,7 +205,7 @@ def main() -> int:
     now = datetime.now(timezone.utc)
     OUT.mkdir(parents=True, exist_ok=True)
     try:
-        slot_name = resolve_slot(now, os.getenv("CONTENT_SLOT", "auto"))
+        slot_name = resolve_slot(now, os.getenv("SLOT_INPUT", os.getenv("CONTENT_SLOT", "auto")))
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
