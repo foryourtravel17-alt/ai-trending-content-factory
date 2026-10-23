@@ -32,7 +32,7 @@ jobs:
             echo "ERROR: No Meta System User credential configured."
             exit 1
           fi
-          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
+          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,access_token,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
           if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
           linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id")]; print((rows[0].get("instagram_business_account") or {}).get("id","") if len(rows)==1 else "")' <<<"${response}")"
           page_token="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id")]; print(rows[0].get("access_token","") if len(rows)==1 else "")' <<<"${response}")"
