@@ -14,6 +14,8 @@ A free-tier-first GitHub Actions content factory for Bullseye Theory. The origin
 
 The legacy workflow currently uses Python 3.12 and its existing Meta/Supabase secrets. The new market workflow uses Python 3.11 and does not rewrite the legacy Reel pipeline.
 
+`.github/workflows/educational_reel_draft.yml` produces three draft-only educational Reels per day at 10:15 AM, 2:15 PM, and 6:15 PM India time. Each draft is rendered and uploaded for Telegram review; public posting still requires the existing human approval path. Topic selection varies across the three daily slots, and a persisted draft for the same UTC date/slot makes reruns a successful no-op. This schedule creates review-ready drafts; it does not bypass approval or directly auto-publish the Reel.
+
 ## New market-content factory
 
 ### Agents
