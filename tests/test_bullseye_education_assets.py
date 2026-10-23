@@ -16,7 +16,7 @@ class BullseyeEducationAssetTests(unittest.TestCase):
     def test_telegram_calendar_has_thirty_educational_posts(self):
         text = (BASE / "Telegram_30_Educational_Posts.md").read_text(encoding="utf-8")
         self.assertEqual(len(re.findall(r"^## Day \d+ —", text, re.M)), 30)
-        self.assertIn("not a live signal", text.lower())
+        self.assertIn("not live signals", text.lower())
         self.assertIn("pinned note", text.lower())
 
     def test_marketing_hooks_have_thirty_ideas_and_disclaimers(self):
