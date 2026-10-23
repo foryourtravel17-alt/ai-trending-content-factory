@@ -100,17 +100,12 @@ jobs:
         if: steps.draft.outputs.skip != 'true'
         run: python scripts/queue_educational_draft.py
 
-      - name: Publish eligible educational Reel to Instagram and Telegram automatically
+      - name: Send private Telegram approval request (no public publishing)
         if: steps.draft.outputs.skip != 'true'
         env:
-          EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}
-          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
-          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
-          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: python scripts/publish_approved_educational_reels.py
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python src/telegram_send.py
 
       - name: Persist publishing state and exact Reel metadata
         if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'
