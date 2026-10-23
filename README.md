@@ -140,7 +140,6 @@ Python 3.11 for the new market workflow. Requirements include yfinance, pandas, 
 Useful environment flags:
 - `DRY_RUN=1`: render and validate without posting.
 - `HUMAN_APPROVAL=true`: send draft to Telegram DM; button approval is required before public posting.
-- `AUTO_PUBLISH_ENABLED=false`: keep the legacy manual pipeline draft-only.
 - Approved educational Reels expire after 48 hours; the poller sends one private notice per expired draft.
 - `LLM_ENABLED=true`: use the configured LLM when `LLM_API_KEY` is available.
 - `GENERATE_ONLY=true`: generate and save images/state before the publish phase.
