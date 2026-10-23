@@ -2,7 +2,7 @@
 """Read-only diagnostic for the configured Telegram Premium destination.
 
 This script uses getMe, getChat, and getChatMember only. It never sends a
-Telegram message and never prints the bot token or the chat ID.
+Telegram message and never prints the bot token or configured chat ID.
 """
 from __future__ import annotations
 
@@ -44,18 +44,40 @@ def telegram_api(token: str, method: str, params: dict[str, str] | None = None) 
 
 def check_destination(token: str, chat_id: str) -> int:
     print("READ-ONLY TELEGRAM DESTINATION CHECK — no messages will be sent.")
+
+    # Resolve and display bot identity first, even if the private destination lookup fails.
     try:
         me = telegram_api(token, "getMe")["result"]
         bot_id = int(me["id"])
         bot_username = me.get("username") or "(username not returned)"
+    except (RuntimeError, KeyError, TypeError, ValueError) as exc:
+        print(f"CHECK FAILED: bot token identity could not be verified: {exc}", file=sys.stderr)
+        return 1
+
+    printable_bot = f"@{bot_username}" if bot_username != "(username not returned)" else bot_username
+    print(f"Bot token identifies: {printable_bot}")
+
+    # Keep destination lookup separate so failures clearly identify which check failed.
+    try:
         chat = telegram_api(token, "getChat", {"chat_id": chat_id})["result"]
+    except (RuntimeError, KeyError, TypeError, ValueError) as exc:
+        print("CHECK FAILED: Telegram could not find the configured destination for this bot.", file=sys.stderr)
+        print(f"Details: {exc}", file=sys.stderr)
+        print(
+            "Next check: confirm the PREMIUM_TELEGRAM_CHAT_ID secret is the private Premium destination's numeric chat ID, "
+            "and that the exact bot named above belongs to that destination. No message was sent.",
+            file=sys.stderr,
+        )
+        return 1
+
+    try:
         member = telegram_api(
             token,
             "getChatMember",
             {"chat_id": chat_id, "user_id": str(bot_id)},
         )["result"]
     except (RuntimeError, KeyError, TypeError, ValueError) as exc:
-        print(f"CHECK FAILED: {exc}", file=sys.stderr)
+        print(f"CHECK FAILED: destination was found, but bot membership could not be verified: {exc}", file=sys.stderr)
         return 1
 
     chat_type = str(chat.get("type", "unknown"))
@@ -87,7 +109,7 @@ def check_destination(token: str, chat_id: str) -> int:
         permission_detail = "unsupported chat type"
 
     result = {
-        "bot_username": f"@{bot_username}" if bot_username != "(username not returned)" else bot_username,
+        "bot_username": printable_bot,
         "destination_title": chat.get("title") or chat.get("username") or "(no title returned)",
         "destination_type": chat_type,
         "bot_membership_status": status,
