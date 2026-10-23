@@ -127,6 +127,36 @@ def _meta_request(method: str, url: str, **kwargs):
     return body
 
 
+def _resolve_linked_instagram_user_id(token: str) -> str:
+    """Resolve the Instagram account linked to the Bullseye Theory Page.
+
+    The account ID secret can become stale when Meta assets are re-linked. Resolve
+    from the System User's assigned Page instead of publishing to an arbitrary ID.
+    """
+    result = _meta_request(
+        "GET", f"https://graph.facebook.com/{API_VERSION}/me/accounts",
+        params={
+            "fields": "id,name,instagram_business_account{id,username}",
+            "access_token": token,
+        }, timeout=30,
+    )
+    pages = result.get("data") if isinstance(result, dict) else []
+    eligible = [
+        page for page in (pages or [])
+        if isinstance(page, dict)
+        and str(page.get("name", "")).strip().casefold() == "bullseye theory"
+        and isinstance(page.get("instagram_business_account"), dict)
+        and str(page["instagram_business_account"].get("id", "")).strip()
+    ]
+    if len(eligible) != 1:
+        raise RuntimeError(
+            "Instagram account resolution failed: expected exactly one assigned Page named "
+            "'Bullseye Theory' with a linked Instagram professional account."
+        )
+    account = eligible[0]["instagram_business_account"]
+    return str(account["id"]).strip()
+
+
 def _instagram_publish(
     image_url: str,
     caption: str,
@@ -142,18 +172,20 @@ def _instagram_publish(
     token, token_source = _first_configured_env(
         ("META_SYSTEM_USER_TOKEN", "INSTAGRAM_ACCESS_TOKEN", "IG_ACCESS_TOKEN")
     )
-    user_id, user_id_source = _first_configured_env(
+    configured_user_id, user_id_source = _first_configured_env(
         ("IG_USER_ID", "INSTAGRAM_USER_ID")
     )
     log.info(
-        "Instagram credential sources: token=%s; user_id=%s",
-        token_source or "none", user_id_source or "none",
+        "Instagram credential source: token=%s; account ID resolved from linked Page",
+        token_source or "none",
     )
-    if not token or not user_id:
-        raise RuntimeError(
-            "Instagram credentials missing: "
-            f"token source={token_source or 'none'}; "
-            f"user ID source={user_id_source or 'none'}."
+    if not token:
+        raise RuntimeError("Instagram publishing token is not configured.")
+    user_id = _resolve_linked_instagram_user_id(token)
+    if configured_user_id and configured_user_id != user_id:
+        log.warning(
+            "Configured Instagram account ID secret is stale; using the account linked to the exact Bullseye Theory Page. "
+            "The configured value is not logged."
         )
 
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
@@ -281,11 +313,11 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             ("IG_USER_ID", "INSTAGRAM_USER_ID")
         )
         log.info(
-            "Instagram credential sources: token=%s; user_id=%s",
-            token_source or "none", user_id_source or "none",
+            "Instagram credential source: token=%s; account ID will be resolved from linked Page",
+            token_source or "none",
         )
         instagram_state = platforms.setdefault("instagram", {})
-        if token and user_id:
+        if token:
             try:
                 image_url = _accessible_image_url(card_path)
                 media_id = _instagram_publish(
@@ -301,11 +333,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                 errors.append(f"Instagram: {exc}")
                 log.error("Instagram publish failed for %s: %s", signal["signal_id"], exc)
         else:
-            message = (
-                "Instagram credentials missing: "
-                f"token source={token_source or 'none'}; "
-                f"user ID source={user_id_source or 'none'}."
-            )
+            message = f"Instagram publishing token missing (source={token_source or 'none'})."
             instagram_state["status"] = "failed"
             instagram_state["error"] = message
             errors.append(f"Instagram: {message}")

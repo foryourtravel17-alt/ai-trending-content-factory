@@ -35,6 +35,8 @@ class PublisherTests(unittest.TestCase):
         def fake_meta_request(method, url, **kwargs):
             payload = kwargs.get("data") or kwargs.get("params") or {}
             self.assertEqual(payload.get("access_token"), "system-token")
+            if method == "GET" and url.endswith("/me/accounts"):
+                return {"data": [{"id": "page-1", "name": "Bullseye Theory", "instagram_business_account": {"id": "123456", "username": "bullseye_theory"}}]}
             if method == "POST" and url.endswith("/media"):
                 return {"id": "container-123"}
             if method == "GET" and url.endswith("/container-123"):
@@ -64,6 +66,8 @@ class PublisherTests(unittest.TestCase):
         publish_creation_ids = []
 
         def fake_meta_request(method, url, **kwargs):
+            if method == "GET" and url.endswith("/me/accounts"):
+                return {"data": [{"id": "page-1", "name": "Bullseye Theory", "instagram_business_account": {"id": "123456", "username": "bullseye_theory"}}]}
             if method == "POST" and url.endswith("/media"):
                 container_calls.append(kwargs.get("data", {}).get("caption"))
                 return {"id": "container-123"}

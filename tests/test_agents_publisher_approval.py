@@ -18,6 +18,8 @@ class PublisherApprovalGateTests(unittest.TestCase):
 
         def fake_meta_request(method, url, **kwargs):
             calls.append((method, url, kwargs))
+            if method == "GET" and url.endswith("/me/accounts"):
+                return {"data": [{"id": "page-1", "name": "Bullseye Theory", "instagram_business_account": {"id": "resolved-ig-user", "username": "bullseye_theory"}}]}
             if method == "POST" and url.endswith("/media"):
                 return {"id": "container-123"}
             if method == "GET" and url.endswith("/container-123"):
@@ -30,7 +32,7 @@ class PublisherApprovalGateTests(unittest.TestCase):
             "META_SYSTEM_USER_TOKEN": "known-valid-system-token",
             "INSTAGRAM_ACCESS_TOKEN": "stale-instagram-token",
             "IG_ACCESS_TOKEN": "older-fallback-token",
-            "IG_USER_ID": "test-ig-user",
+            "IG_USER_ID": "stale-ig-user",
         }):
             with patch.object(publisher, "_meta_request", side_effect=fake_meta_request):
                 media_id = publisher._instagram_publish(
@@ -38,6 +40,8 @@ class PublisherApprovalGateTests(unittest.TestCase):
                 )
 
         self.assertEqual(media_id, "media-456")
+        self.assertTrue(any(url.endswith("/resolved-ig-user/media") for method, url, _ in calls))
+        self.assertFalse(any(url.endswith("/stale-ig-user/media") for method, url, _ in calls))
         tokens = [
             kwargs.get("data", {}).get("access_token")
             or kwargs.get("params", {}).get("access_token")
