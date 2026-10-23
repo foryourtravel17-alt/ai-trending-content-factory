@@ -101,7 +101,8 @@ class EducationalReelRecoveryTests(unittest.TestCase):
     def test_workflow_has_explicit_opt_in_and_scheduled_default_off(self):
         workflow = Path(".github/workflows/educational_reel_recovery.yml").read_text(encoding="utf-8")
         self.assertIn('default: false', workflow)
-        self.assertIn("vars.ENABLE_REEL_RECOVERY == 'true'", workflow)
+        self.assertNotIn("schedule:", workflow)
+        self.assertIn("github.event_name == 'workflow_dispatch' && inputs.confirm_live_publish == true", workflow)
         self.assertIn("confirm_live_publish == true", workflow)
         self.assertIn("reserve exactly one safe candidate", workflow.lower())
 
