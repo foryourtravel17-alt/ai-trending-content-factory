@@ -32,11 +32,12 @@ jobs:
             echo "ERROR: No Meta System User credential configured."
             exit 1
           fi
-          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
+          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,access_token,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
           if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
-          linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
-          if [ -z "${linked}" ]; then
-            echo "ERROR: System User has no assigned Page with a linked Instagram account."
+          linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id")]; print((rows[0].get("instagram_business_account") or {}).get("id","") if len(rows)==1 else "")' <<<"${response}")"
+          page_token="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id")]; print(rows[0].get("access_token","") if len(rows)==1 else "")' <<<"${response}")"
+          if [ -z "${linked}" ] || [ -z "${page_token}" ]; then
+            echo "ERROR: System User must have exactly one assigned Page named Bullseye Theory with a linked Instagram account and Page access token."
             exit 1
           fi
           configured="${IG_USER_ID:-${INSTAGRAM_USER_ID:-}}"
@@ -45,12 +46,12 @@ jobs:
           elif [ "${configured}" != "${linked}" ]; then
             echo "WARNING: Legacy Instagram account-ID secret is stale; publisher will use the account resolved from the exact Bullseye Theory Page. No secret values are printed."
           fi
-          account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username,account_type" --data-urlencode "access_token=${token}")"
+          account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username" --data-urlencode "access_token=${page_token}")"
           if echo "${account_response}" | grep -q '"error"'; then
             echo "ERROR: The Page-linked Instagram account cannot be loaded with the publishing token. Meta returned an account-access error; values and token are redacted."
             exit 1
           fi
-          echo "PASS: the Instagram account linked to the Bullseye Theory Page is readable by the publishing token."
+          echo "PASS: the Instagram account linked to the Bullseye Theory Page is readable with its Page access token."
 
       - name: Alert Telegram on invalid token or broken Instagram link
         if: failure()
