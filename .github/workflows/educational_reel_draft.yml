@@ -14,10 +14,10 @@ on:
           - afternoon
           - evening
   schedule:
-    # Three draft-only slots in India time: 10:15 AM, 2:15 PM, 6:15 PM.
-    - cron: '45 4 * * *'
-    - cron: '45 8 * * *'
-    - cron: '45 12 * * *'
+    # Three draft-only slots in India time: 10:17 AM, 2:17 PM, 6:17 PM.
+    - cron: '47 4 * * *'
+    - cron: '47 8 * * *'
+    - cron: '47 12 * * *'
 
 permissions:
   contents: write
