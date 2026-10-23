@@ -188,9 +188,9 @@ def _instagram_publish(
         raise RuntimeError("Instagram publishing token is not configured.")
     user_id, page_token = _resolve_linked_instagram_user_id(token)
     if configured_user_id and configured_user_id != user_id:
-        log.warning(
-            "Configured Instagram account ID secret is stale; using the account linked to the exact Bullseye Theory Page. "
-            "The configured value is not logged."
+        raise RuntimeError(
+            "Instagram account ID mismatch: IG_USER_ID/INSTAGRAM_USER_ID does not match the account "
+            "linked to the Bullseye Theory Page. Credential values are redacted; publishing is blocked."
         )
 
     api = f"https://graph.facebook.com/{API_VERSION}/{user_id}"
