@@ -88,7 +88,7 @@ jobs:
         env:
           PUBLISH_ONLY: "true"
           # Scheduled runs publish; manual dispatch keeps its dry_run=true default.
-          DRY_RUN: \${{ inputs.dry_run || '0' }}
+          DRY_RUN: ${{ inputs.dry_run || '0' }}
         run: python -m src.orchestrator
 
       - name: Refresh sanitized public feed with publishing outcomes
