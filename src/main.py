@@ -627,9 +627,14 @@ def build_content(item, index, content_id=None, content_role="education"):
             "telegram": {"status": "not_published"},
         },
         "approval": {
-            "required": not AUTO_PUBLISH_ENABLED,
+            "required": not (AUTO_PUBLISH_ENABLED and safety["passed"]),
             "status": "approved" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else "pending",
-            "mode": "automatic" if AUTO_PUBLISH_ENABLED else "manual",
+            "mode": "automated_policy" if AUTO_PUBLISH_ENABLED else "manual",
+            **(
+                {"automated_review_at": now_utc()}
+                if AUTO_PUBLISH_ENABLED and safety["passed"]
+                else {}
+            ),
         },
     }
 
