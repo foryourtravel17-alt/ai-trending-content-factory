@@ -83,6 +83,41 @@ jobs:
             git push
           fi
 
+      - name: Wait for GitHub Pages images to become publicly reachable
+        env:
+          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${IMAGE_BASE_URL:-}" ]; then
+            echo "IMAGE_BASE_URL is not configured; refusing to publish Instagram media with an unknown public URL."
+            exit 1
+          fi
+          shopt -s nullglob
+          images=(output/*.png)
+          if [ ${#images[@]} -eq 0 ]; then
+            echo "No PNG images generated; nothing to wait for."
+            exit 0
+          fi
+          deadline=$((SECONDS + 240))
+          while (( SECONDS < deadline )); do
+            pending=0
+            for image in "${images[@]}"; do
+              name="${image##*/}"
+              code=$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 12 "${IMAGE_BASE_URL%/}/${name}" || true)
+              if [ "$code" != "200" ]; then
+                echo "Waiting for public image: $name (HTTP ${code:-unknown})"
+                pending=1
+              fi
+            done
+            if [ "$pending" -eq 0 ]; then
+              echo "All ${#images[@]} generated image(s) return HTTP 200 from the configured public image base."
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Timed out waiting for GitHub Pages images. Skipping publishing rather than sending broken media URLs."
+          exit 1
+
       - name: Publish prepared market signals after generated images are public
         id: publish
         env:
