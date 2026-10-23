@@ -1,0 +1,77 @@
+name: Bullseye Premium Daily Auto-Publish
+
+on:
+  schedule:
+    # Daily at 10:00 AM India time (04:30 UTC).
+    - cron: '30 4 * * *'
+  workflow_dispatch:
+    inputs:
+      publish_now:
+        description: 'Set true only when you intentionally want to publish one Premium lesson now'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bullseye-premium-daily-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: ${{ github.event_name == 'schedule' || inputs.publish_now == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate publisher and destination-check syntax
+        run: python -m py_compile scripts/premium_telegram.py scripts/telegram_destination_check.py
+
+      - name: Verify required Premium destination configuration
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PREMIUM_TELEGRAM_CHAT_ID: ${{ secrets.PREMIUM_TELEGRAM_CHAT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$TELEGRAM_BOT_TOKEN" || { echo "::error::Missing TELEGRAM_BOT_TOKEN secret."; exit 1; }
+          test -n "$PREMIUM_TELEGRAM_CHAT_ID" || { echo "::error::Missing PREMIUM_TELEGRAM_CHAT_ID secret. Add the exact private Premium channel chat ID; do not use the public channel by assumption."; exit 1; }
+          echo "Required secrets are present (values are not printed)."
+
+      # Fail closed before a live send if the bot cannot resolve and post to
+      # the configured Premium destination. This is read-only and sends no message.
+      - name: Preflight Telegram Premium destination before publishing
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PREMIUM_TELEGRAM_CHAT_ID: ${{ secrets.PREMIUM_TELEGRAM_CHAT_ID }}
+        run: python scripts/telegram_destination_check.py
+
+      - name: Select rotating lesson
+        id: lesson
+        run: |
+          python - <<'PY'
+          import datetime, os
+          # Stable daily rotation: market structure, risk management, psychology.
+          index = datetime.datetime.now(datetime.timezone.utc).timetuple().tm_yday % 3
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"index={index}\n")
+          print(f"Selected lesson index: {index}")
+          PY
+
+      - name: Publish educational lesson to Premium Telegram channel
+        env:
+          DRY_RUN: 'false'
+          LESSON_INDEX: ${{ steps.lesson.outputs.index }}
+          PREMIUM_TELEGRAM_AUTOPUBLISH: 'true'
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PREMIUM_TELEGRAM_CHAT_ID: ${{ secrets.PREMIUM_TELEGRAM_CHAT_ID }}
+        run: python scripts/premium_telegram.py
