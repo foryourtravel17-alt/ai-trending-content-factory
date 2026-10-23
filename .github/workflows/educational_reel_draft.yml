@@ -1,4 +1,4 @@
-name: Generate Educational Reel Draft (No Publish)
+name: Bullseye Daily Educational Reel Auto-Publish
 
 on:
   workflow_dispatch:
