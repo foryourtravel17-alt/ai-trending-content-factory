@@ -12,6 +12,11 @@ on:
           - '0'
           - '1'
           - '2'
+      check_destination:
+        description: 'Run read-only Telegram destination check (no messages are sent)'
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -32,7 +37,15 @@ jobs:
         with:
           python-version: '3.11'
       - name: Validate Python syntax
-        run: python -m py_compile scripts/premium_telegram.py
+        run: python -m py_compile scripts/premium_telegram.py scripts/telegram_destination_check.py
+      - name: Test read-only destination diagnostic
+        run: python -m unittest discover -s tests -p 'test_telegram_destination_check.py'
+      - name: Check Telegram Premium destination (read-only, no messages sent)
+        if: ${{ inputs.check_destination == true }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PREMIUM_TELEGRAM_CHAT_ID: ${{ secrets.PREMIUM_TELEGRAM_CHAT_ID }}
+        run: python scripts/telegram_destination_check.py
       - name: Generate educational lesson preview (no network calls)
         env:
           DRY_RUN: 'true'
