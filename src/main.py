@@ -595,7 +595,14 @@ def build_content(item, index, content_id=None, content_role="education"):
     visuals = visual_plan(item)
     social = caption_and_hashtags(item, script)
 
-    status = "approved_for_publishing" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else ("pending_approval" if safety["passed"] else "safety_review_required")
+    # A safety-screen pass is not enough for automatic approval when the fact
+    # check flagged claims for human review. Keep those records approval-gated.
+    automated_approval_eligible = (
+        AUTO_PUBLISH_ENABLED
+        and safety["passed"]
+        and fact_check_data.get("status") == "passed"
+    )
+    status = "approved_for_publishing" if automated_approval_eligible else ("pending_approval" if safety["passed"] else "safety_review_required")
 
     return {
         "content_id": content_id or f"content_{index}",
@@ -627,12 +634,12 @@ def build_content(item, index, content_id=None, content_role="education"):
             "telegram": {"status": "not_published"},
         },
         "approval": {
-            "required": not (AUTO_PUBLISH_ENABLED and safety["passed"]),
-            "status": "approved" if (AUTO_PUBLISH_ENABLED and safety["passed"]) else "pending",
-            "mode": "automated_policy" if AUTO_PUBLISH_ENABLED else "manual",
+            "required": not automated_approval_eligible,
+            "status": "approved" if automated_approval_eligible else "pending",
+            "mode": "automated_policy" if automated_approval_eligible else "manual",
             **(
                 {"automated_review_at": now_utc()}
-                if AUTO_PUBLISH_ENABLED and safety["passed"]
+                if automated_approval_eligible
                 else {}
             ),
         },
