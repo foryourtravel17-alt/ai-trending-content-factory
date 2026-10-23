@@ -59,9 +59,9 @@ class DailyReelDraftTests(unittest.TestCase):
 
     def test_workflow_runs_three_times_but_only_sends_approval_requests(self):
         workflow = Path(".github/workflows/educational_reel_draft.yml").read_text(encoding="utf-8")
-        self.assertIn("cron: '45 4 * * *'", workflow)
-        self.assertIn("cron: '45 8 * * *'", workflow)
-        self.assertIn("cron: '45 12 * * *'", workflow)
+        self.assertIn("cron: '47 4 * * *'", workflow)
+        self.assertIn("cron: '47 8 * * *'", workflow)
+        self.assertIn("cron: '47 12 * * *'", workflow)
         self.assertIn("Send Telegram approval request", workflow)
         self.assertIn("Register draft in shared approval state", workflow)
         self.assertNotIn("Publish Approved Reel to Instagram", workflow)
