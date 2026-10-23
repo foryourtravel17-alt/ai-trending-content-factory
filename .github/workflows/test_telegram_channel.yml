@@ -1,16 +1,24 @@
 name: Test Telegram Channel Post
 
+# Approval stance: the fixed test Reel is sent to the public channel only after explicit owner confirmation.
 on:
   workflow_dispatch:
+    inputs:
+      confirm_test_post:
+        description: "Explicitly authorize sending the fixed test Reel to the public Telegram channel"
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
 
 jobs:
   test:
+    if: ${{ inputs.confirm_test_post == true }}
     runs-on: ubuntu-24.04
     steps:
-      - name: Send latest Reel to Bullseye Theory Telegram channel
+      - name: Send fixed test Reel after explicit confirmation
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           VIDEO_URL: "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/content_2.mp4"

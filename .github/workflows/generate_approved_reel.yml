@@ -3,7 +3,7 @@ name: Generate Approved Reel
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["AI Trading Content Pipeline (Automatic Publish)"]
+    workflows: ["AI Trading Content Pipeline (Manual Draft Only)"]
     types: [completed]
 
 permissions:

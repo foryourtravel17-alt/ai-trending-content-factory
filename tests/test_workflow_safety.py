@@ -46,13 +46,14 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('"Bullseye Premium Daily Auto-Publish"', workflow)
         self.assertIn("github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'", workflow)
 
-    def test_legacy_manual_fallback_uses_automated_policy_without_extra_schedule(self):
+    def test_legacy_manual_fallback_is_draft_only_without_extra_schedule(self):
         workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
-        self.assertIn('AUTO_PUBLISH_ENABLED: "true"', workflow)
+        self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)
+        self.assertNotIn('AUTO_PUBLISH_ENABLED: "true"', workflow)
         self.assertNotIn("schedule:", workflow)
         self.assertNotIn("Send pending content to Telegram", workflow)
         reel_workflow = Path(".github/workflows/generate_approved_reel.yml").read_text(encoding="utf-8")
-        self.assertIn('workflows: ["AI Trading Content Pipeline (Automatic Publish)"]', reel_workflow)
+        self.assertIn('workflows: ["AI Trading Content Pipeline (Manual Draft Only)"]', reel_workflow)
         self.assertIn('safety_check.get("passed") is True', reel_workflow)
 
 

@@ -99,8 +99,8 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         self.assertIsNone(content)
         self.assertIn("without an accepted fact/safety check", output.getvalue())
 
-    def test_draft_older_than_24_hours_is_skipped_with_clear_log(self):
-        old = (self.now - timedelta(hours=25)).isoformat()
+    def test_draft_older_than_48_hours_is_skipped_with_clear_log(self):
+        old = (self.now - timedelta(hours=49)).isoformat()
         self.write_record("draft_stale_20261021", created_at=old)
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -266,6 +266,11 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
                         MODULE.publish_content_record(path, retry_record, ig_user_id="test-ig-user")
         second_request.assert_not_called()
         telegram_retry.assert_not_called()
+
+
+class InstagramPublishFreshnessWindowTests(unittest.TestCase):
+    def test_approved_reel_window_is_48_hours(self):
+        self.assertEqual(MODULE.MAX_CONTENT_AGE, timedelta(hours=48))
 
 
 if __name__ == "__main__":

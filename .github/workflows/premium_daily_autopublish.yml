@@ -1,5 +1,7 @@
 name: Bullseye Premium Daily Auto-Publish
 
+# Approval stance: explicit exception; evergreen lessons auto-publish only to the configured private Premium Telegram destination.
+
 on:
   schedule:
     # Daily at 10:00 AM India time (04:30 UTC).

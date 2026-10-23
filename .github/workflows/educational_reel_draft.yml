@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       slot:
-        description: 'Draft slot to generate; auto chooses based on current UTC time'
+        description: 'Draft slot to generate; scheduled runs pass their configured slot'
         type: choice
         required: true
         default: auto
@@ -42,7 +42,7 @@ jobs:
       - name: Create fresh rotating educational script
         id: draft
         env:
-          CONTENT_SLOT: ${{ inputs.slot || 'auto' }}
+          SLOT_INPUT: ${{ inputs.slot || (github.event.schedule == '47 4 * * *' && 'morning') || (github.event.schedule == '47 8 * * *' && 'afternoon') || (github.event.schedule == '47 12 * * *' && 'evening') || 'auto' }}
         run: python scripts/daily_reel_draft.py
 
       - name: Install free rendering tools

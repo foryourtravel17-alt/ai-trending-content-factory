@@ -1,8 +1,8 @@
-name: AI Trading Content Pipeline (Automatic Publish)
+name: AI Trading Content Pipeline (Manual Draft Only)
 
+# Approval stance: manual dispatch is draft-only; no content is auto-approved or published.
 on:
-  # Manual fallback only. The dedicated daily Reel workflow owns the
-  # three scheduled publishing slots to avoid duplicate-content runs.
+  # Manual fallback only; all public publishing must follow the relevant approval gate.
   workflow_dispatch:
 
 permissions:
@@ -24,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run content pipeline
+      - name: Generate draft content only
         env:
           MOCK_MODE: "false"
-          AUTO_PUBLISH_ENABLED: "true"
+          AUTO_PUBLISH_ENABLED: "false"
           CONTENT_BATCH_SIZE: "1"
           # Optional free-first LLM layer; remains disabled unless explicitly enabled.
           LLM_ENABLED: ${{ vars.LLM_ENABLED || 'false' }}
