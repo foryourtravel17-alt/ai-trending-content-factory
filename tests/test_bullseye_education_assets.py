@@ -33,6 +33,14 @@ class BullseyeEducationAssetTests(unittest.TestCase):
         self.assertIn("template", html.lower())
         self.assertIn("not personalized financial advice", html.lower())
 
+    def test_public_launch_copy_avoids_live_signal_or_validated_indicator_claims(self):
+        copy = (BASE / "Landing_Page_Copy.md").read_text(encoding="utf-8").lower()
+        html = (BASE / "landing-page.html").read_text(encoding="utf-8").lower()
+        self.assertIn("educational chart-scenario study", copy)
+        self.assertIn("hypothetical educational chart scenarios", copy)
+        self.assertIn("not a live signal or validated strategy", html)
+        self.assertIn("does not submit broker orders", html)
+
     def test_launch_checklist_does_not_claim_tradingview_compile(self):
         text = (BASE / "LAUNCH_CHECKLIST.md").read_text(encoding="utf-8")
         self.assertIn("Compile both Pine files in TradingView", text)
