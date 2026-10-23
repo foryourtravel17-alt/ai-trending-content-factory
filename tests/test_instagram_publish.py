@@ -268,5 +268,10 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         telegram_retry.assert_not_called()
 
 
+class InstagramPublishFreshnessWindowTests(unittest.TestCase):
+    def test_approved_reel_window_is_48_hours(self):
+        self.assertEqual(MODULE.MAX_CONTENT_AGE, timedelta(hours=48))
+
+
 if __name__ == "__main__":
     unittest.main()
