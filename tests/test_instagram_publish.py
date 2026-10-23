@@ -57,6 +57,15 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         self.assertEqual(selected, path)
         self.assertEqual(content["content_id"], "draft_education_20261022")
 
+    def test_fact_check_review_required_logs_human_review_block(self):
+        self.write_record("draft_claim_flagged_20261022", fact_status="review_required")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            selected, content = MODULE.load_newest_unpublished_approved()
+        self.assertIsNone(selected)
+        self.assertIsNone(content)
+        self.assertIn("BLOCKED: fact check flagged this draft for human review", output.getvalue())
+
     def test_fact_check_gate_blocks_never_approved_draft(self):
         self.write_record("draft_unreviewed_20261022", fact_status="needs_human_review")
         output = io.StringIO()

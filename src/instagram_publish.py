@@ -190,7 +190,10 @@ def load_newest_unpublished_approved():
         human_fact_check_ok = fact_check_status in {"passed", "verified", "approved"}
         automated_fact_check_ok = fact_check_status in {"automated_passed", "passed"} and automated_review_ok
         if not (human_fact_check_ok or automated_fact_check_ok):
-            print(f"Skipping draft without an accepted fact/safety check ({fact_check_status or 'missing status'}): {p.name}")
+            if fact_check_status == "review_required":
+                print(f"BLOCKED: fact check flagged this draft for human review; no publishing until reviewed and approved: {p.name}")
+            else:
+                print(f"Skipping draft without an accepted fact/safety check ({fact_check_status or 'missing status'}): {p.name}")
             continue
 
         if approval.get("status") != "approved":
