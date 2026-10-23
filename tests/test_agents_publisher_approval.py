@@ -19,7 +19,7 @@ class PublisherApprovalGateTests(unittest.TestCase):
         def fake_meta_request(method, url, **kwargs):
             calls.append((method, url, kwargs))
             if method == "GET" and url.endswith("/me/accounts"):
-                return {"data": [{"id": "page-1", "name": "Bullseye Theory", "instagram_business_account": {"id": "resolved-ig-user", "username": "bullseye_theory"}}]}
+                return {"data": [{"id": "page-1", "name": "Bullseye Theory", "access_token": "page-token", "instagram_business_account": {"id": "resolved-ig-user", "username": "bullseye_theory"}}]}
             if method == "POST" and url.endswith("/media"):
                 return {"id": "container-123"}
             if method == "GET" and url.endswith("/container-123"):
@@ -43,12 +43,13 @@ class PublisherApprovalGateTests(unittest.TestCase):
         self.assertTrue(any(url.endswith("/resolved-ig-user/media") for method, url, _ in calls))
         self.assertFalse(any(url.endswith("/stale-ig-user/media") for method, url, _ in calls))
         tokens = [
-            kwargs.get("data", {}).get("access_token")
-            or kwargs.get("params", {}).get("access_token")
-            for _, _, kwargs in calls
+            (url.endswith("/me/accounts"), kwargs.get("data", {}).get("access_token")
+             or kwargs.get("params", {}).get("access_token"))
+            for _, url, kwargs in calls
         ]
         self.assertTrue(tokens)
-        self.assertTrue(all(token == "known-valid-system-token" for token in tokens))
+        self.assertTrue(all(token == ("known-valid-system-token" if is_lookup else "page-token")
+                            for is_lookup, token in tokens))
 
     def test_approved_record_publishes_when_human_approval_env_is_true(self):
         with tempfile.TemporaryDirectory() as tmp:
