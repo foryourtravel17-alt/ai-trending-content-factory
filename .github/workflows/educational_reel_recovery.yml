@@ -8,9 +8,6 @@ on:
         type: boolean
         required: true
         default: false
-  schedule:
-    # Scheduled recovery is disabled until ENABLE_REEL_RECOVERY=true is set in repository Actions variables.
-    - cron: "10 */2 * * *"
 
 permissions:
   contents: write
@@ -21,7 +18,7 @@ concurrency:
 
 jobs:
   recover-one-reel:
-    if: ${{ (github.event_name == 'schedule' && vars.ENABLE_REEL_RECOVERY == 'true') || (github.event_name == 'workflow_dispatch' && inputs.confirm_live_publish == true) }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_live_publish == true }}
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
