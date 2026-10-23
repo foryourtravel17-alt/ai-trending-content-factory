@@ -313,11 +313,11 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
             ("IG_USER_ID", "INSTAGRAM_USER_ID")
         )
         log.info(
-            "Instagram credential sources: token=%s; user_id=%s",
-            token_source or "none", user_id_source or "none",
+            "Instagram credential source: token=%s; account ID will be resolved from linked Page",
+            token_source or "none",
         )
         instagram_state = platforms.setdefault("instagram", {})
-        if token and user_id:
+        if token:
             try:
                 image_url = _accessible_image_url(card_path)
                 media_id = _instagram_publish(
@@ -333,11 +333,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
                 errors.append(f"Instagram: {exc}")
                 log.error("Instagram publish failed for %s: %s", signal["signal_id"], exc)
         else:
-            message = (
-                "Instagram credentials missing: "
-                f"token source={token_source or 'none'}; "
-                f"user ID source={user_id_source or 'none'}."
-            )
+            message = f"Instagram publishing token missing (source={token_source or 'none'})."
             instagram_state["status"] = "failed"
             instagram_state["error"] = message
             errors.append(f"Instagram: {message}")
