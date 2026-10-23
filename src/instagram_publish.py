@@ -97,7 +97,7 @@ def is_already_published(data):
     )
 
 
-MAX_CONTENT_AGE = timedelta(hours=24)
+MAX_CONTENT_AGE = timedelta(hours=48)
 DAILY_PUBLISH_LIMIT = 3
 LOCAL_TZ = ZoneInfo("Asia/Kolkata")
 OUTPUT_DIR = Path("output")
@@ -660,7 +660,7 @@ def publish_approved_educational_reel(record: dict) -> dict:
     if not created_at:
         raise RuntimeError("Publishing blocked: metadata created_at is missing or invalid.")
     if not already_ig and (datetime.now(timezone.utc) - created_at > MAX_CONTENT_AGE):
-        print(f"Skipping stale approved educational Reel ({content_id}); exceeds 24-hour publishing window.")
+        print(f"Skipping stale approved educational Reel ({content_id}); exceeds 48-hour publishing window.")
         record["status"] = "expired"
         record["expired_at"] = datetime.now(timezone.utc).isoformat()
         return record
