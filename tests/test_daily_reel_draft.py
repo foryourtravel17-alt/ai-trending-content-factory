@@ -52,6 +52,18 @@ class DailyReelDraftTests(unittest.TestCase):
             self.assertEqual(existing_draft_for_slot(out, "2026-10-23", "morning"), record)
             self.assertIsNone(existing_draft_for_slot(out, "2026-10-23", "afternoon"))
 
+
+    def test_workflow_runs_three_times_but_only_sends_approval_requests(self):
+        workflow = Path(".github/workflows/educational_reel_draft.yml").read_text(encoding="utf-8")
+        self.assertIn("cron: '45 4 * * *'", workflow)
+        self.assertIn("cron: '45 8 * * *'", workflow)
+        self.assertIn("cron: '45 12 * * *'", workflow)
+        self.assertIn("Send Telegram approval request", workflow)
+        self.assertIn("Register draft in shared approval state", workflow)
+        self.assertNotIn("Publish Approved Reel to Instagram", workflow)
+        self.assertIn("if: steps.draft.outputs.skip != 'true'", workflow)
+        self.assertIn("No-op when this slot already has a draft", workflow)
+
     def test_unsupported_slot_is_rejected(self):
         with self.assertRaises(ValueError):
             resolve_slot(datetime(2026, 10, 23, 4, 45, tzinfo=timezone.utc), "midnight")
