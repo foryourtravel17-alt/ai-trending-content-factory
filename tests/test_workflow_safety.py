@@ -37,6 +37,12 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertNotIn('parts[0] in ("approve", "reject")', source)
         self.assertIn("Ignoring unsupported Telegram callback type", source)
 
+    def test_watchdog_monitors_new_daily_content_workflows(self):
+        workflow = Path(".github/workflows/automation_failure_watchdog.yml").read_text(encoding="utf-8")
+        self.assertIn('"Generate Educational Reel Draft (No Publish)"', workflow)
+        self.assertIn('"Bullseye Premium Daily Auto-Publish"', workflow)
+        self.assertIn("github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'", workflow)
+
     def test_legacy_reel_pipeline_does_not_auto_approve_for_publishing(self):
         workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
         self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)
