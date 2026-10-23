@@ -54,6 +54,18 @@ class PublisherTests(unittest.TestCase):
 
         self.assertEqual(media_id, "media-456")
 
+    def test_instagram_configured_id_mismatch_fails_closed(self):
+        env = {"META_SYSTEM_USER_TOKEN": "test-token", "IG_USER_ID": "wrong-id"}
+        with patch.dict(os.environ, env, clear=True), \
+             patch("agents.publisher._resolve_linked_instagram_user_id", return_value=("right-id", "page-token")):
+            with self.assertRaisesRegex(RuntimeError, "account ID mismatch"):
+                _instagram_publish("https://example.com/card.png", "Test caption", {})
+
+    def test_instagram_missing_token_fails_closed(self):
+        with patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "token is not configured"):
+                _instagram_publish("https://example.com/card.png", "Test caption", {})
+
     def test_instagram_retry_reuses_creation_id_after_media_publish_error(self):
         record = {"publishing": {}}
         env = {

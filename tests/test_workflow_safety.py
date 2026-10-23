@@ -44,7 +44,7 @@ class WorkflowSafetyTests(unittest.TestCase):
 
     def test_watchdog_monitors_new_daily_content_workflows(self):
         workflow = Path(".github/workflows/automation_failure_watchdog.yml").read_text(encoding="utf-8")
-        self.assertIn('"Bullseye Daily Educational Reel Auto-Publish"', workflow)
+        self.assertIn('"Bullseye Daily Educational Reel Draft"', workflow)
         self.assertIn('"Bullseye Premium Daily Auto-Publish"', workflow)
         self.assertIn("github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'", workflow)
 

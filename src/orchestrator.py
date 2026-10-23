@@ -101,8 +101,15 @@ def _publish_prepared(state: dict) -> int:
                 save_state(state)
                 continue
             card_path = Path(record.get("card_path", ""))
-            if not card_path.exists():
-                raise FileNotFoundError(f"Card image missing for {signal_id}: {card_path}")
+            if not card_path.is_file():
+                # The market publisher must not mutate shared state for a record
+                # whose expected asset is absent; the owner workflow can recover it.
+                log.warning(
+                    "SKIP prepared market signal %s: expected card asset is missing (%s); "
+                    "record status is unchanged and this item will not abort the publish batch.",
+                    signal_id, card_path,
+                )
+                continue
             updated = publish(record["signal"], record["copy"], card_path, record, dry_run=DRY_RUN)
             state["signals"][signal_id] = updated
             state.setdefault("runs", []).append({
