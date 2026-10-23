@@ -87,6 +87,13 @@ def _publish_prepared(state: dict) -> int:
     for signal_id, record in list(state.get("signals", {}).items()):
         if PUBLISH_ONLY_SIGNAL_ID and signal_id != PUBLISH_ONLY_SIGNAL_ID:
             continue
+        # Market orchestration shares data/state.json with educational Reels.
+        # Only records with the market-signal schema belong in this publisher;
+        # otherwise an MP4 path can be mistaken for a market-card PNG.
+        if not isinstance(record, dict) or not isinstance(record.get("signal"), dict) or not isinstance(record.get("copy"), dict):
+            continue
+        if record.get("content_type") == "educational_reel":
+            continue
         if record.get("status") not in {"generated", "publish_failed", "partial"}:
             continue
         try:
