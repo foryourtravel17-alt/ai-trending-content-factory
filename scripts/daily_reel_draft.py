@@ -90,10 +90,16 @@ def resolve_slot(now: datetime, requested: str | None = None) -> str:
     if requested != "auto":
         raise ValueError("SLOT_INPUT must be auto, morning, afternoon, or evening.")
     current_minute = now.hour * 60 + now.minute
-    return min(
-        SLOTS,
-        key=lambda slot: abs(current_minute - (SLOT_CRON_UTC[slot][0] * 60 + SLOT_CRON_UTC[slot][1])),
-    )
+    scheduled_minutes = {
+        slot: hour * 60 + minute
+        for slot, (hour, minute) in SLOT_CRON_UTC.items()
+    }
+    # Treat each cron time as the start of its slot window. Delayed starts
+    # remain assigned to the most recent slot instead of drifting forward.
+    elapsed_slots = [slot for slot in SLOTS if scheduled_minutes[slot] <= current_minute]
+    if elapsed_slots:
+        return max(elapsed_slots, key=lambda slot: scheduled_minutes[slot])
+    return min(SLOTS, key=lambda slot: scheduled_minutes[slot])
 
 
 def existing_draft_for_slot(out_dir: Path, utc_date: str, slot_name: str) -> Path | None:
