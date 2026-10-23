@@ -38,7 +38,11 @@ def main():
         raise SystemExit("No rendered output/draft_<content_id>.json found.")
 
     source, content = max(candidates, key=lambda pair: pair[0].stat().st_mtime)
+    safety_check = content.get("safety_check") if isinstance(content.get("safety_check"), dict) else {}
+    if safety_check.get("passed") is not True:
+        raise SystemExit("Automated safety screen did not pass; automatic publishing is blocked.")
     content_id = str(content.get("content_id", "")).strip()
+    automated_review_at = datetime.now(timezone.utc).isoformat()
     if not content_id or any(ch not in SAFE_ID for ch in content_id):
         raise SystemExit("Draft has a missing or unsafe content_id.")
 
@@ -82,10 +86,12 @@ def main():
         "content_type": "educational_reel",
         "content_id": content_id,
         "metadata_path": str(source),
-        "status": "pending_approval",
-        "approval_status": "pending",
+        "status": "generated",
+        "approval_status": "approved",
+        "approval_mode": "automated_policy",
+        "automated_review_at": automated_review_at,
         "created_at": created_at,
-        "human_approval_required": True,
+        "human_approval_required": False,
         "signal": {
             "signal_id": content_id,
             "symbol": "EDUCATIONAL_REEL",
@@ -98,18 +104,32 @@ def main():
         },
         "card_path": str(content.get("video", f"output/media/{content_id}.mp4")),
         "fact_check": {
-            "status": "needs_human_review",
-            "notes": ["Human reviewer must verify the educational claims before approval."],
+            "status": "automated_passed",
+            "automated_review_at": automated_review_at,
+            "notes": [
+                "Automated safety/format gate passed for curated evergreen education.",
+                "This is not independent fact verification; no live-market or personalized advice is included.",
+            ],
         },
         "publishing": (existing.get("publishing", {}) if isinstance(existing, dict) else {}),
     }
 
-    content["status"] = "draft_only"
-    content["approval"] = {**approval, "required": True, "status": "pending", "mode": "human_review"}
+    content["status"] = "approved_for_publishing"
+    content["approval"] = {
+        **approval,
+        "required": False,
+        "status": "approved",
+        "mode": "automated_policy",
+        "automated_review_at": automated_review_at,
+    }
     content["fact_check"] = {
         **(content.get("fact_check") if isinstance(content.get("fact_check"), dict) else {}),
-        "status": "needs_human_review",
-        "notes": ["Human reviewer must verify the educational claims before approval."],
+        "status": "automated_passed",
+        "automated_review_at": automated_review_at,
+        "notes": [
+            "Automated safety/format gate passed for curated evergreen education.",
+            "This is not independent fact verification; no live-market or personalized advice is included.",
+        ],
     }
     save_json(source, content)
 
@@ -124,10 +144,18 @@ def main():
     if not isinstance(queue.setdefault("telegram_sent", []), list):
         raise SystemExit("Approval queue telegram_sent must be a list.")
     if not any(isinstance(item, dict) and item.get("content_id") == content_id for item in items):
-        items.append({"content_id": content_id, "status": "pending", "processed": False})
+        items.append({"content_id": content_id, "status": "auto_publish_ready", "processed": True})
+    else:
+        for item in items:
+            if isinstance(item, dict) and item.get("content_id") == content_id:
+                item.update({"status": "auto_publish_ready", "processed": True})
     save_json(STATE_PATH, state)
     save_json(QUEUE_PATH, queue)
-    print(f"Registered {content_id} in data/state.json for human approval. No publishing was attempted.")
+    target = os.getenv("GITHUB_OUTPUT", "").strip()
+    if target:
+        with open(target, "a", encoding="utf-8") as handle:
+            handle.write(f"content_id={content_id}\n")
+    print(f"Registered {content_id} as auto-publish ready after the automated safety screen.")
 
 
 if __name__ == "__main__":
