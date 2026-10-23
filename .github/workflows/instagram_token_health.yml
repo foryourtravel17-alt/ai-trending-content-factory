@@ -41,20 +41,16 @@ jobs:
           fi
           configured="${IG_USER_ID:-${INSTAGRAM_USER_ID:-}}"
           if [ -z "${configured}" ]; then
-            echo "ERROR: Instagram account ID secret is missing (IG_USER_ID / INSTAGRAM_USER_ID)."
-            exit 1
+            echo "INFO: Legacy Instagram account-ID secret is unset; publisher resolves the account from the linked Bullseye Theory Page."
+          elif [ "${configured}" != "${linked}" ]; then
+            echo "WARNING: Legacy Instagram account-ID secret is stale; publisher will use the account resolved from the exact Bullseye Theory Page. No secret values are printed."
           fi
-          if [ "${configured}" != "${linked}" ]; then
-            echo "ERROR: Configured Instagram account ID does not match the account linked to the Bullseye Theory Page."
-            echo "Update the account-ID secret to the linked Instagram Business/Creator account ID; values are intentionally not printed."
-            exit 1
-          fi
-          account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${configured}" --data-urlencode "fields=id,username,account_type" --data-urlencode "access_token=${token}")"
+          account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username,account_type" --data-urlencode "access_token=${token}")"
           if echo "${account_response}" | grep -q '"error"'; then
-            echo "ERROR: The configured Instagram account object cannot be loaded with the publishing token. Meta returned an account-access error; values and token are redacted."
+            echo "ERROR: The Page-linked Instagram account cannot be loaded with the publishing token. Meta returned an account-access error; values and token are redacted."
             exit 1
           fi
-          echo "PASS: configured account ID matches the Bullseye Theory Page link and is readable by the publishing token."
+          echo "PASS: the Instagram account linked to the Bullseye Theory Page is readable by the publishing token."
 
       - name: Alert Telegram on invalid token or broken Instagram link
         if: failure()
