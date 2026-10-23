@@ -1,4 +1,3 @@
-import json
 import unittest
 from unittest.mock import patch
 
@@ -47,8 +46,26 @@ class TelegramDestinationCheckTests(unittest.TestCase):
             with patch("builtins.print"):
                 self.assertEqual(check_destination("redacted-token", "-100123"), 0)
 
-    def test_api_error_fails_safely(self):
-        with patch("scripts.telegram_destination_check.telegram_api", side_effect=RuntimeError("chat not found")):
+    def test_chat_not_found_still_prints_bot_identity_without_secrets(self):
+        def fake_api(token, method, params=None):
+            if method == "getMe":
+                return {"result": {"id": 123, "username": "actual_bot_name"}}
+            if method == "getChat":
+                raise RuntimeError("Telegram getChat request failed (HTTP 400): Bad Request: chat not found")
+            raise AssertionError(f"Unexpected Telegram method: {method}")
+
+        with patch("scripts.telegram_destination_check.telegram_api", side_effect=fake_api):
+            with patch("builtins.print") as output:
+                self.assertEqual(check_destination("redacted-token", "-100123"), 1)
+
+        rendered = "\n".join(str(call.args[0]) for call in output.call_args_list if call.args)
+        self.assertIn("@actual_bot_name", rendered)
+        self.assertNotIn("redacted-token", rendered)
+        self.assertNotIn("-100123", rendered)
+        self.assertNotIn("sendMessage", rendered)
+
+    def test_api_error_from_getme_fails_safely(self):
+        with patch("scripts.telegram_destination_check.telegram_api", side_effect=RuntimeError("invalid token")):
             with patch("builtins.print"):
                 self.assertEqual(check_destination("redacted-token", "-100123"), 1)
 
