@@ -180,7 +180,7 @@ def load_newest_unpublished_approved():
             and safety_check.get("passed") is True
         )
         human_fact_check_ok = fact_check_status in {"passed", "verified", "approved"}
-        automated_fact_check_ok = fact_check_status == "automated_passed" and automated_review_ok
+        automated_fact_check_ok = fact_check_status in {"automated_passed", "passed"} and automated_review_ok
         if not (human_fact_check_ok or automated_fact_check_ok):
             print(f"Skipping draft without an accepted fact/safety check ({fact_check_status or 'missing status'}): {p.name}")
             continue
@@ -494,7 +494,7 @@ def publish_content_record(content_path: Path, approved: dict, ig_user_id: str |
         automated_mode
         and approval.get("required") is False
         and bool(approval.get("automated_review_at"))
-        and fact_check.get("status") == "automated_passed"
+        and fact_check.get("status") in {"automated_passed", "passed"}
         and safety_check.get("passed") is True
     )
     human_gate_ok = (
