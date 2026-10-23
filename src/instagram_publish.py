@@ -103,6 +103,14 @@ LOCAL_TZ = ZoneInfo("Asia/Kolkata")
 OUTPUT_DIR = Path("output")
 
 
+def load_json(path: Path, default=None):
+    """Read JSON metadata, returning the supplied default for missing/invalid files."""
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, TypeError):
+        return default
+
+
 def content_record_paths():
     """Return legacy and daily-educational metadata without duplicate paths."""
     paths = set()
