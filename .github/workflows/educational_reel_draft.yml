@@ -41,17 +41,18 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install free rendering tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg espeak-ng
-          python -m pip install --upgrade pip pillow edge-tts
-
       - name: Create fresh rotating educational script
         id: draft
         env:
           CONTENT_SLOT: ${{ inputs.slot || 'auto' }}
         run: python scripts/daily_reel_draft.py
+
+      - name: Install free rendering tools
+        if: steps.draft.outputs.skip != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng
+          python -m pip install --upgrade pip pillow edge-tts
 
       - name: Render MP4 draft locally in runner
         if: steps.draft.outputs.skip != 'true'
