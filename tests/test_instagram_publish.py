@@ -64,7 +64,7 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
             selected, content = MODULE.load_newest_unpublished_approved()
         self.assertIsNone(selected)
         self.assertIsNone(content)
-        self.assertIn("Skipping draft requiring fact-check review", output.getvalue())
+        self.assertIn("Skipping draft without an accepted fact/safety check", output.getvalue())
 
     def test_automated_policy_draft_is_eligible_without_human_approval(self):
         path = self.write_record("draft_auto_policy_20261023", fact_status="automated_passed")
