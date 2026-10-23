@@ -44,16 +44,18 @@ class QueueEducationalDraftTests(unittest.TestCase):
         queue = json.loads(MODULE.QUEUE_PATH.read_text(encoding="utf-8"))
         state = json.loads(MODULE.STATE_PATH.read_text(encoding="utf-8"))
         record = state["signals"]["draft_sample_20261022"]
-        self.assertEqual(content["approval"]["status"], "approved")
-        self.assertEqual(content["approval"]["mode"], "automated_policy")
-        self.assertFalse(content["approval"]["required"])
+        self.assertEqual(content["status"], "pending_approval")
+        self.assertEqual(content["approval"]["status"], "pending")
+        self.assertEqual(content["approval"]["mode"], "human_review")
+        self.assertTrue(content["approval"]["required"])
         self.assertEqual(queue["items"][0]["content_id"], "draft_sample_20261022")
         self.assertEqual(record["content_type"], "educational_reel")
-        self.assertEqual(record["approval_status"], "approved")
-        self.assertEqual(record["approval_mode"], "automated_policy")
-        self.assertEqual(record["status"], "generated")
+        self.assertEqual(record["approval_status"], "pending")
+        self.assertEqual(record["approval_mode"], "human_review")
+        self.assertTrue(record["human_approval_required"])
+        self.assertEqual(record["status"], "pending_approval")
         self.assertEqual(record["signal"]["signal_id"], "draft_sample_20261022")
-        self.assertEqual(record["fact_check"]["status"], "automated_passed")
+        self.assertEqual(record["fact_check"]["status"], "needs_human_review")
 
     def test_blocks_registration_when_automated_safety_screen_fails(self):
         source = self.write_draft()
@@ -98,8 +100,10 @@ class QueueEducationalDraftTests(unittest.TestCase):
         queue = json.loads(MODULE.QUEUE_PATH.read_text(encoding="utf-8"))
         state = json.loads(MODULE.STATE_PATH.read_text(encoding="utf-8"))
         self.assertEqual(len(queue["items"]), 1)
-        self.assertEqual(state["signals"]["draft_sample_20261022"]["approval_status"], "approved")
-        self.assertEqual(state["signals"]["draft_sample_20261022"]["approval_mode"], "automated_policy")
+        self.assertEqual(queue["items"][0]["status"], "pending_approval")
+        self.assertFalse(queue["items"][0]["processed"])
+        self.assertEqual(state["signals"]["draft_sample_20261022"]["approval_status"], "pending")
+        self.assertEqual(state["signals"]["draft_sample_20261022"]["approval_mode"], "human_review")
 
 
 if __name__ == "__main__":
