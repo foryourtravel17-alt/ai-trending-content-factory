@@ -1,0 +1,89 @@
+name: Recover one failed educational Reel (manual opt-in)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_live_publish:
+        description: "Explicitly allow one approved Instagram + Telegram recovery attempt"
+        type: boolean
+        required: true
+        default: false
+  schedule:
+    # Scheduled recovery is disabled until ENABLE_REEL_RECOVERY=true is set in repository Actions variables.
+    - cron: "10 */2 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-state
+  cancel-in-progress: false
+
+jobs:
+  recover-one-reel:
+    if: ${{ (github.event_name == 'schedule' && vars.ENABLE_REEL_RECOVERY == 'true') || (github.event_name == 'workflow_dispatch' && inputs.confirm_live_publish == true) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Reserve exactly one safe candidate before network publishing
+        id: reserve
+        run: python scripts/recover_failed_educational_reel.py reserve
+
+      - name: Commit one-time reservation so it cannot loop
+        if: steps.reserve.outputs.content_id != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          if git diff --cached --quiet; then
+            echo "No recovery reservation changes to commit."
+          else
+            git commit -m "content: reserve one safe educational Reel recovery"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Install publisher dependencies
+        if: steps.reserve.outputs.content_id != ''
+        run: python -m pip install -r requirements.txt
+
+      - name: Publish only the reserved, previously approved Reel
+        if: steps.reserve.outputs.content_id != ''
+        env:
+          EDUCATIONAL_APPROVED_IDS: ${{ steps.reserve.outputs.content_id }}
+          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python scripts/publish_approved_educational_reels.py
+
+      - name: Persist platform outcomes even when publishing fails
+        if: always() && steps.reserve.outputs.content_id != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash scripts/stage_publish_state.sh
+          if git diff --cached --quiet; then
+            echo "No outcome changes to commit."
+          else
+            git commit -m "content: record educational Reel recovery outcome"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Safe no-op
+        if: steps.reserve.outputs.content_id == ''
+        run: echo "No safe candidate found; no network publishing call was made."
