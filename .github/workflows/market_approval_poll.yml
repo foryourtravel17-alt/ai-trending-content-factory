@@ -27,6 +27,8 @@ on:
       - tests/test_upload_educational_reel.py
       - tests/test_agents_publisher_approval.py
       - tests/test_instagram_publisher.py
+      - tests/test_workflow_safety.py
+      - tests/test_daily_reel_draft.py
   workflow_run:
     workflows: ["Autonomous Market Content Factory"]
     types: [completed]
