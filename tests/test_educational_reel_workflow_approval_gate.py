@@ -19,12 +19,9 @@ class EducationalReelWorkflowApprovalGateTests(unittest.TestCase):
         self.assertNotIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("Publish eligible educational Reel to Instagram and Telegram automatically", workflow)
 
-    def test_manual_legacy_pipeline_is_draft_only_and_premium_exception_is_explicit(self):
-        pipeline = PIPELINE.read_text(encoding="utf-8")
+    def test_legacy_manual_pipeline_is_removed_and_premium_exception_is_explicit(self):
         premium = PREMIUM.read_text(encoding="utf-8")
-        self.assertIn("Approval stance: manual dispatch is draft-only", pipeline)
-        self.assertIn('AUTO_PUBLISH_ENABLED: "false"', pipeline)
-        self.assertNotIn('AUTO_PUBLISH_ENABLED: "true"', pipeline)
+        self.assertFalse(PIPELINE.exists())
         self.assertIn("explicit exception", premium)
         self.assertIn("PREMIUM_TELEGRAM_CHAT_ID", premium)
 
