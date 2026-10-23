@@ -46,6 +46,17 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('"Bullseye Premium Daily Auto-Publish"', workflow)
         self.assertIn("github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'", workflow)
 
+    def test_manual_pipeline_serializes_shared_state_writes(self):
+        workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
+        self.assertIn("group: market-state", workflow)
+        self.assertIn("cancel-in-progress: false", workflow)
+
+    def test_automated_approval_requires_fact_check_pass(self):
+        source = Path("src/main.py").read_text(encoding="utf-8")
+        self.assertIn('fact_check_data.get("status") == "passed"', source)
+        self.assertIn("automated_approval_eligible", source)
+        self.assertIn('"required": not automated_approval_eligible', source)
+
     def test_legacy_manual_fallback_is_draft_only_without_extra_schedule(self):
         workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
         self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)
