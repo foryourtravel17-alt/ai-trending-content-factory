@@ -26,8 +26,11 @@ class DailyReelDraftTests(unittest.TestCase):
             with self.subTest(slot=slot):
                 self.assertEqual(resolve_slot(delayed_morning_run, slot), slot)
 
-    def test_auto_fallback_chooses_nearest_configured_cron_window(self):
-        self.assertEqual(resolve_slot(datetime(2026, 10, 23, 7, 5, tzinfo=timezone.utc), "auto"), "afternoon")
+    def test_delayed_auto_run_stays_in_most_recent_cron_slot(self):
+        self.assertEqual(resolve_slot(datetime(2026, 10, 23, 7, 5, tzinfo=timezone.utc), "auto"), "morning")
+
+    def test_auto_fallback_chooses_next_slot_before_first_cron_window(self):
+        self.assertEqual(resolve_slot(datetime(2026, 10, 23, 3, 0, tzinfo=timezone.utc), "auto"), "morning")
 
     def test_each_slot_creates_different_topic_and_stays_draft_only(self):
         now = datetime(2026, 10, 23, 4, 45, tzinfo=timezone.utc)
