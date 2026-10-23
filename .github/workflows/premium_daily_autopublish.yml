@@ -33,8 +33,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Validate publisher syntax
-        run: python -m py_compile scripts/premium_telegram.py
+      - name: Validate publisher and destination-check syntax
+        run: python -m py_compile scripts/premium_telegram.py scripts/telegram_destination_check.py
 
       - name: Verify required Premium destination configuration
         env:
@@ -46,6 +46,14 @@ jobs:
           test -n "$TELEGRAM_BOT_TOKEN" || { echo "::error::Missing TELEGRAM_BOT_TOKEN secret."; exit 1; }
           test -n "$PREMIUM_TELEGRAM_CHAT_ID" || { echo "::error::Missing PREMIUM_TELEGRAM_CHAT_ID secret. Add the exact private Premium channel chat ID; do not use the public channel by assumption."; exit 1; }
           echo "Required secrets are present (values are not printed)."
+
+      # Fail closed before a live send if the bot cannot resolve and post to
+      # the configured Premium destination. This is read-only and sends no message.
+      - name: Preflight Telegram Premium destination before publishing
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PREMIUM_TELEGRAM_CHAT_ID: ${{ secrets.PREMIUM_TELEGRAM_CHAT_ID }}
+        run: python scripts/telegram_destination_check.py
 
       - name: Select rotating lesson
         id: lesson
