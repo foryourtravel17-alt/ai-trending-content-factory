@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+# Serialize writes to shared market/content state with the other pipeline workflows.
+concurrency:
+  group: market-state
+  cancel-in-progress: false
+
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
