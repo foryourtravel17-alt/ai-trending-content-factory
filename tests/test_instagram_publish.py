@@ -64,7 +64,40 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
             selected, content = MODULE.load_newest_unpublished_approved()
         self.assertIsNone(selected)
         self.assertIsNone(content)
-        self.assertIn("Skipping draft requiring fact-check review", output.getvalue())
+        self.assertIn("Skipping draft without an accepted fact/safety check", output.getvalue())
+
+    def test_automated_policy_draft_is_eligible_without_human_approval(self):
+        path = self.write_record("draft_auto_policy_20261023", fact_status="automated_passed")
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record["approval"] = {
+            "required": False,
+            "status": "approved",
+            "mode": "automated_policy",
+            "automated_review_at": self.now.isoformat(),
+        }
+        record["safety_check"] = {"passed": True, "blocked_phrases": []}
+        path.write_text(json.dumps(record), encoding="utf-8")
+        selected, content = MODULE.load_newest_unpublished_approved()
+        self.assertEqual(selected, path)
+        self.assertEqual(content["approval"]["mode"], "automated_policy")
+
+    def test_automated_policy_draft_without_safety_pass_is_blocked(self):
+        path = self.write_record("draft_auto_without_safety_20261023", fact_status="automated_passed")
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record["approval"] = {
+            "required": False,
+            "status": "approved",
+            "mode": "automated_policy",
+            "automated_review_at": self.now.isoformat(),
+        }
+        record["safety_check"] = {"passed": False, "blocked_phrases": ["blocked"]}
+        path.write_text(json.dumps(record), encoding="utf-8")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            selected, content = MODULE.load_newest_unpublished_approved()
+        self.assertIsNone(selected)
+        self.assertIsNone(content)
+        self.assertIn("without an accepted fact/safety check", output.getvalue())
 
     def test_draft_older_than_24_hours_is_skipped_with_clear_log(self):
         old = (self.now - timedelta(hours=25)).isoformat()

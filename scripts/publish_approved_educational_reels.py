@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish only exact educational Reel IDs newly approved by the Telegram poller."""
+"""Publish exact educational Reel IDs eligible under human or automatic policy."""
 from __future__ import annotations
 
 import json
@@ -49,17 +49,24 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
                 raise RuntimeError("Matching shared-state record is missing.")
             if record.get("content_type") != "educational_reel":
                 raise RuntimeError("Record is not an educational Reel.")
-            if record.get("human_approval_required") is not True:
-                raise RuntimeError("Human approval is not marked as required.")
             if record.get("approval_status") != "approved":
-                raise RuntimeError("Persisted human approval is missing.")
+                raise RuntimeError("Persisted publish-policy decision is missing.")
             fact_check = record.get("fact_check") if isinstance(record.get("fact_check"), dict) else {}
-            if (
-                fact_check.get("status") != "approved"
-                or not record.get("reviewed_at")
-                or not record.get("reviewed_by")
-            ):
-                raise RuntimeError("Persisted human fact-check review is incomplete.")
+            approval_mode = str(record.get("approval_mode", "")).strip()
+            automated_policy_ok = (
+                approval_mode == "automated_policy"
+                and record.get("human_approval_required") is False
+                and bool(record.get("automated_review_at"))
+                and fact_check.get("status") == "automated_passed"
+            )
+            human_policy_ok = (
+                record.get("human_approval_required") is True
+                and fact_check.get("status") == "approved"
+                and bool(record.get("reviewed_at"))
+                and bool(record.get("reviewed_by"))
+            )
+            if not (automated_policy_ok or human_policy_ok):
+                raise RuntimeError("Neither the automated safety gate nor the legacy human-review gate is complete.")
 
             updated = publish_approved_educational_reel(record)
             if not isinstance(updated, dict):

@@ -57,16 +57,21 @@ class DailyReelDraftTests(unittest.TestCase):
             self.assertEqual(existing_draft_for_slot(out, "2026-10-23", "morning"), record)
 
 
-    def test_workflow_runs_three_times_but_only_sends_approval_requests(self):
+    def test_workflow_runs_three_times_and_publishes_without_human_approval(self):
         workflow = Path(".github/workflows/educational_reel_draft.yml").read_text(encoding="utf-8")
         self.assertIn("cron: '47 4 * * *'", workflow)
         self.assertIn("cron: '47 8 * * *'", workflow)
         self.assertIn("cron: '47 12 * * *'", workflow)
-        self.assertIn("Send Telegram approval request", workflow)
-        self.assertIn("Register draft in shared approval state", workflow)
-        self.assertNotIn("Publish Approved Reel to Instagram", workflow)
+        self.assertNotIn("Send Telegram approval request", workflow)
+        self.assertIn("Publish eligible educational Reel to Instagram and Telegram automatically", workflow)
+        self.assertIn("id: queue", workflow)
+        self.assertIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
+        self.assertIn("Register Reel for automatic publishing", workflow)
+        self.assertIn("run: python scripts/publish_approved_educational_reels.py", workflow)
+        self.assertNotIn("Upload draft for review (no publishing)", workflow)
         self.assertIn("if: steps.draft.outputs.skip != 'true'", workflow)
         self.assertIn("No-op when this slot already has a draft", workflow)
+        self.assertIn("approval_queue.json", workflow)
 
     def test_unsupported_slot_is_rejected(self):
         with self.assertRaises(ValueError):

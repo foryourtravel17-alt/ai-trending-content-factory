@@ -3,7 +3,7 @@ name: Generate Approved Reel
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["AI Trading Content Pipeline"]
+    workflows: ["AI Trading Content Pipeline (Automatic Publish)"]
     types: [completed]
 
 permissions:
@@ -59,10 +59,17 @@ jobs:
               except (TypeError, ValueError):
                   continue
               fact_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
+              approval = data.get("approval") if isinstance(data.get("approval"), dict) else {}
+              safety_check = data.get("safety_check") if isinstance(data.get("safety_check"), dict) else {}
               content_id = data.get("content_id", path.stem)
               video = Path("output/media") / f"{content_id}.mp4"
               if (
                   data.get("status") == "approved_for_publishing"
+                  and approval.get("status") == "approved"
+                  and approval.get("mode") == "automated_policy"
+                  and approval.get("required") is False
+                  and bool(approval.get("automated_review_at"))
+                  and safety_check.get("passed") is True
                   and fact_status in {"passed", "verified", "approved"}
                   and timedelta(0) <= age <= timedelta(hours=24)
                   and not data.get("reel_generated", False)

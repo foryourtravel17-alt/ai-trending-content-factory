@@ -1,4 +1,4 @@
-name: Generate Educational Reel Draft (No Publish)
+name: Bullseye Daily Educational Reel Auto-Publish
 
 on:
   workflow_dispatch:
@@ -30,8 +30,6 @@ jobs:
   generate-draft:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    env:
-      TELEGRAM_APPROVER_USER_IDS: ${{ secrets.TELEGRAM_APPROVER_USER_IDS }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -97,32 +95,39 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/upload_educational_reel.py
 
-      - name: Register draft in shared approval state
+      - name: Register Reel for automatic publishing
+        id: queue
         if: steps.draft.outputs.skip != 'true'
         run: python scripts/queue_educational_draft.py
 
-      - name: Send Telegram approval request
+      - name: Publish eligible educational Reel to Instagram and Telegram automatically
         if: steps.draft.outputs.skip != 'true'
         env:
+          EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}
+          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python src/telegram_send.py
+        run: python scripts/publish_approved_educational_reels.py
 
-      - name: Persist shared approval state (draft only)
+      - name: Persist publishing state and exact Reel metadata
         if: steps.draft.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/draft_*.json output/approval_queue.json
           bash scripts/stage_publish_state.sh
           if git diff --cached --quiet; then
-            echo "No draft state changes to commit."
+            echo "No publishing-state changes to commit."
           else
-            git commit -m "content: queue educational Reel for human review"
+            git commit -m "content: record automatic educational Reel publishing result"
             git pull --rebase origin main
             git push
           fi
 
-      - name: Upload draft for review (no publishing)
+      - name: Archive generated Reel and publishing record
         if: steps.draft.outputs.skip != 'true'
         uses: actions/upload-artifact@v7
         with:
@@ -136,4 +141,4 @@ jobs:
 
       - name: No-op when this slot already has a draft
         if: steps.draft.outputs.skip == 'true'
-        run: echo "This UTC date/slot already has a persisted draft. Skipped render, upload, Telegram approval, and all publishing."
+        run: echo "This UTC date/slot already has a persisted draft. Skipped rendering and publishing to prevent duplicate posts."
