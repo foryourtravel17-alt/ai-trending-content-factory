@@ -60,7 +60,7 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertFalse((root / "generate_approved_reel.yml").exists())
         self.assertFalse((root / "instagram_publish.yml").exists())
         readme = Path("README.md").read_text(encoding="utf-8")
-        self.assertIn("legacy `pipeline.yml` and its legacy", readme)
+        self.assertIn("The retired manual `pipeline.yml` and its legacy", readme)
         self.assertIn("are unsupported and have been removed", readme)
         self.assertIn("educational_reel_draft.yml", readme)
 
