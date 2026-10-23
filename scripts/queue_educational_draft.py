@@ -43,7 +43,7 @@ def main():
     if safety_check.get("passed") is not True:
         raise SystemExit("Automated safety screen did not pass; automatic publishing is blocked.")
     content_id = str(content.get("content_id", "")).strip()
-    automated_review_at = datetime.now(timezone.utc).isoformat()
+    safety_screened_at = datetime.now(timezone.utc).isoformat()
     if not content_id or any(ch not in SAFE_ID for ch in content_id):
         raise SystemExit("Draft has a missing or unsafe content_id.")
 
