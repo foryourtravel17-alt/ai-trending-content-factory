@@ -79,9 +79,21 @@ def verify_public_video(url: str, sha256: str, size_bytes: int, duration_seconds
                     actual_size += len(chunk)
                     temp.write(chunk)
     except urllib.error.HTTPError as exc:
-        if exc.code == 404:
+        # Supabase Storage can return structured JSON for configuration and path
+        # errors. Include only its short message/code (never request headers or URLs)
+        # so the next failed run identifies the real cause without leaking secrets.
+        try:
+            payload = json.loads(exc.read().decode("utf-8", errors="replace"))
+            detail = str(payload.get("message") or payload.get("error") or payload.get("statusCode") or "")
+        except Exception:
+            detail = ""
+        detail = " ".join(detail.split())[:180]
+        if exc.code == 404 or (exc.code == 400 and any(
+            marker in detail.lower() for marker in ("object not found", "resource not found", "not found")
+        )):
             raise FileNotFoundError("Supabase public object not found yet.") from None
-        raise RuntimeError(f"Supabase public video verification returned HTTP {exc.code}.") from None
+        suffix = f" ({detail})" if detail else ""
+        raise RuntimeError(f"Supabase public video verification returned HTTP {exc.code}{suffix}.") from None
     except urllib.error.URLError as exc:
         raise RuntimeError(f"Could not verify Supabase public video ({type(exc).__name__}).") from None
 
@@ -116,7 +128,14 @@ def upload_object(upload_url: str, api_key: str, video_path: Path):
     except urllib.error.HTTPError as exc:
         if exc.code == 409:
             return
-        raise RuntimeError(f"Supabase MP4 upload failed HTTP {exc.code}; credentials and response redacted.") from None
+        try:
+            payload = json.loads(exc.read().decode("utf-8", errors="replace"))
+            detail = str(payload.get("message") or payload.get("error") or payload.get("statusCode") or "")
+        except Exception:
+            detail = ""
+        detail = " ".join(detail.split())[:180]
+        suffix = f" ({detail})" if detail else ""
+        raise RuntimeError(f"Supabase MP4 upload failed HTTP {exc.code}{suffix}; credentials redacted.") from None
     except urllib.error.URLError as exc:
         raise RuntimeError(f"Supabase MP4 upload failed ({type(exc).__name__}); credentials redacted.") from None
 
