@@ -171,13 +171,22 @@ def load_newest_unpublished_approved():
                 continue
 
         fact_check_status = str((data.get("fact_check") or {}).get("status", "")).strip().lower()
-        if fact_check_status not in {"passed", "verified", "approved"}:
-            print(f"Skipping draft requiring fact-check review ({fact_check_status or 'missing status'}): {p.name}")
+        approval = data.get("approval", {}) if isinstance(data.get("approval"), dict) else {}
+        safety_check = data.get("safety_check", {}) if isinstance(data.get("safety_check"), dict) else {}
+        automated_review_ok = (
+            approval.get("mode") == "automated_policy"
+            and approval.get("required") is False
+            and bool(approval.get("automated_review_at"))
+            and safety_check.get("passed") is True
+        )
+        human_fact_check_ok = fact_check_status in {"passed", "verified", "approved"}
+        automated_fact_check_ok = fact_check_status == "automated_passed" and automated_review_ok
+        if not (human_fact_check_ok or automated_fact_check_ok):
+            print(f"Skipping draft without an accepted fact/safety check ({fact_check_status or 'missing status'}): {p.name}")
             continue
 
-        approval = data.get("approval", {}) if isinstance(data.get("approval"), dict) else {}
         if approval.get("status") != "approved":
-            print(f"Skipping draft without a persisted human approval: {p.name}")
+            print(f"Skipping draft without a persisted publishing decision: {p.name}")
             continue
 
         created_at = parse_timestamp(data.get("created_at"))
@@ -471,7 +480,7 @@ def _send_telegram_video(token: str, video_url: str, caption: str) -> int:
 
 
 def publish_content_record(content_path: Path, approved: dict, ig_user_id: str | None = None) -> dict:
-    """Publish a human-approved Reel with independent, retry-safe Instagram and Telegram state."""
+    """Publish an eligible educational Reel with retry-safe Instagram and Telegram state."""
     content_id = str(approved.get("content_id", "")).strip()
     if not content_id or content_path.stem != content_id:
         raise RuntimeError("Publishing metadata filename/content_id mismatch.")
@@ -479,10 +488,23 @@ def publish_content_record(content_path: Path, approved: dict, ig_user_id: str |
         raise RuntimeError("Publishing blocked: the Reel does not have an approved publishing status.")
     approval = approved.get("approval", {}) if isinstance(approved.get("approval"), dict) else {}
     fact_check = approved.get("fact_check", {}) if isinstance(approved.get("fact_check"), dict) else {}
-    if approval.get("status") != "approved" or fact_check.get("status") not in {"approved", "passed", "verified"}:
-        raise RuntimeError("Publishing blocked: explicit human approval and fact-check review are required.")
-    if not approval.get("reviewed_at") or not approval.get("reviewed_by"):
-        raise RuntimeError("Publishing blocked: human review timestamp/user are missing.")
+    automated_mode = approval.get("mode") == "automated_policy"
+    safety_check = approved.get("safety_check", {}) if isinstance(approved.get("safety_check"), dict) else {}
+    automated_gate_ok = (
+        automated_mode
+        and approval.get("required") is False
+        and bool(approval.get("automated_review_at"))
+        and fact_check.get("status") == "automated_passed"
+        and safety_check.get("passed") is True
+    )
+    human_gate_ok = (
+        approval.get("status") == "approved"
+        and fact_check.get("status") in {"approved", "passed", "verified"}
+        and bool(approval.get("reviewed_at"))
+        and bool(approval.get("reviewed_by"))
+    )
+    if approval.get("status") != "approved" or not (automated_gate_ok or human_gate_ok):
+        raise RuntimeError("Publishing blocked: neither the automated safety policy nor the legacy human-review gate passed.")
 
     telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     if not telegram_token:
@@ -560,18 +582,39 @@ def publish_approved_educational_reel(record: dict) -> dict:
     if record.get("content_type") != "educational_reel":
         raise RuntimeError("Expected educational_reel content_type.")
     if record.get("approval_status") != "approved":
-        raise RuntimeError("Publishing blocked: shared state lacks explicit human approval.")
+        raise RuntimeError("Publishing blocked: shared state lacks an approved publish policy decision.")
+    approval_mode = str(record.get("approval_mode", "")).strip()
+    automated_mode = approval_mode == "automated_policy"
     fact_check = record.get("fact_check", {}) if isinstance(record.get("fact_check"), dict) else {}
-    if fact_check.get("status") != "approved" or not record.get("reviewed_at") or not record.get("reviewed_by"):
-        raise RuntimeError("Publishing blocked: shared-state human fact-check review is incomplete.")
+    if automated_mode:
+        if fact_check.get("status") != "automated_passed" or not record.get("automated_review_at"):
+            raise RuntimeError("Publishing blocked: shared-state automated safety decision is incomplete.")
+    elif (
+        fact_check.get("status") != "approved"
+        or not record.get("reviewed_at")
+        or not record.get("reviewed_by")
+    ):
+        raise RuntimeError("Publishing blocked: shared-state legacy human review is incomplete.")
     metadata_path = OUTPUT_DIR / f"{content_id}.json"
     metadata = load_json(metadata_path, None)
     if not isinstance(metadata, dict) or metadata.get("content_id") != content_id:
         raise RuntimeError("Publishing blocked: matching Reel metadata file is missing or mismatched.")
     approval = metadata.get("approval", {}) if isinstance(metadata.get("approval"), dict) else {}
     metadata_fact = metadata.get("fact_check", {}) if isinstance(metadata.get("fact_check"), dict) else {}
-    if approval.get("status") != "approved" or metadata_fact.get("status") != "approved":
-        raise RuntimeError("Publishing blocked: metadata approval/fact-check does not match shared state.")
+    if approval.get("status") != "approved":
+        raise RuntimeError("Publishing blocked: metadata approval/policy status does not match shared state.")
+    if automated_mode:
+        metadata_safety = metadata.get("safety_check", {}) if isinstance(metadata.get("safety_check"), dict) else {}
+        if (
+            approval.get("mode") != "automated_policy"
+            or approval.get("required") is not False
+            or metadata_fact.get("status") != "automated_passed"
+            or metadata_safety.get("passed") is not True
+            or not approval.get("automated_review_at")
+        ):
+            raise RuntimeError("Publishing blocked: metadata automated safety decision does not match shared state.")
+    elif metadata_fact.get("status") != "approved":
+        raise RuntimeError("Publishing blocked: metadata human fact-check does not match shared state.")
     created_at = parse_timestamp(metadata.get("created_at"))
     already_ig = is_already_published(metadata)
     if not created_at:
