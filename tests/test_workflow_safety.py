@@ -20,7 +20,7 @@ class WorkflowSafetyTests(unittest.TestCase):
             workflow.index("Commit generated approval drafts and state"),
             workflow.index("Publish prepared market signals after generated images are public"),
         )
-        self.assertIn("DRY_RUN: \${{ inputs.dry_run || '0' }}", workflow)
+        self.assertIn("DRY_RUN: ${{ inputs.dry_run || '0' }}", workflow)
         self.assertIn("if: always() && steps.publish.outcome != 'skipped'", workflow)
         self.assertIn("from agents.qa import", Path("src/orchestrator.py").read_text(encoding="utf-8"))
 
