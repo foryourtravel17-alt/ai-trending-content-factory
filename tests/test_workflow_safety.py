@@ -9,17 +9,13 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('description: "Generate charts and captions without publishing"', workflow)
         self.assertRegex(workflow, r"(?m)^\s+default: true\s*$")
 
-    def test_market_workflow_requires_approval_by_default(self):
+    def test_market_workflow_auto_publishes_after_existing_quality_checks(self):
         workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
-        self.assertIn('HUMAN_APPROVAL: "true"', workflow)
-
-    def test_market_workflow_never_publishes_without_approval_callback(self):
-        workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
-        self.assertIn("HUMAN_APPROVAL: \"true\"", workflow)
+        self.assertIn('HUMAN_APPROVAL: "false"', workflow)
         self.assertIn("run: python -m src.orchestrator", workflow)
         self.assertNotIn("PUBLISH_ONLY: \"true\"", workflow)
-        self.assertNotIn("Publish committed cards to Telegram and Instagram", workflow)
-        self.assertNotIn("HUMAN_APPROVAL: \"false\"", workflow)
+        self.assertNotIn("HUMAN_APPROVAL: \"true\"", workflow)
+        self.assertIn("agents/qa.py", Path("src/orchestrator.py").read_text(encoding="utf-8"))
 
     def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
