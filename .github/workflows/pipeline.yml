@@ -50,5 +50,6 @@ jobs:
             echo "No output changes to commit."
           else
             git commit -m "chore: update generated content and Telegram state"
+            git pull --rebase origin main
             git push
           fi
