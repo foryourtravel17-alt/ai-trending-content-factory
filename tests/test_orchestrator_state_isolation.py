@@ -25,8 +25,8 @@ class MarketPublisherStateIsolationTests(unittest.TestCase):
             "copy": {"telegram_html": "test", "instagram_caption": "test"},
             "card_path": "output/media/missing-card.mp4",
         }
-        with patch.object(orchestrator, "_signal_is_fresh", return_value=True), \\
-             patch.object(orchestrator, "save_state") as save_state, \\
+        with patch.object(orchestrator, "_signal_is_fresh", return_value=True), \
+             patch.object(orchestrator, "save_state") as save_state, \
              patch.object(orchestrator, "publish") as publish:
             errors = orchestrator._publish_prepared({"signals": {"missing-card": record}})
         self.assertEqual(errors, 0)

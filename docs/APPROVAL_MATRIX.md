@@ -9,6 +9,7 @@
 | educational_reel_draft.yml | Three daily schedules; manual dispatch | No — drafts require explicit Telegram owner approval. |
 | educational_reel_recovery.yml | Manual dispatch with explicit live-publish confirmation | No new approval — only a previously approved Reel can be retried. |
 | instagram_publish_recovery.yml | Successful workflow completion | No new approval — retries only a previously approved post after guarded reservation. |
+| instagram_credential_diagnostic.yml | Manual dispatch | No — read-only credential and Page-link diagnostic. |
 | instagram_token_health.yml | Schedule; push; manual dispatch | No — credential diagnostics only. |
 | market_approval_poll.yml | Every 5 minutes; push; market workflow completion; manual dispatch | No — public publishing through this poller requires an existing owner approval state. |
 | market_content.yml | Weekday schedule; manual dispatch | Yes for scheduled runs — market scenarios use automated QA and HUMAN_APPROVAL=false; manual dispatch defaults to dry-run. |

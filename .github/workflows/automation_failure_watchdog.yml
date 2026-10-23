@@ -3,17 +3,15 @@ name: Bullseye Automation Failure Watchdog
 on:
   workflow_run:
     workflows:
-      - "AI Trading Content Pipeline (Automatic Publish)"
-      - "Generate Approved Reel"
-      - "Publish Approved Reel to Instagram"
-      - "Telegram Approval"
+      - "Telegram Approval (manual info only)"
       - "Instagram Token Health Check"
       - "Autonomous Market Content Factory"
       - "Market Signal Approval Poller"
       - "Bullseye Weekly P&L and Engagement Summary"
       - "Market Factory Schedule Watchdog"
-      - "Bullseye Daily Educational Reel Auto-Publish"
+      - "Bullseye Daily Educational Reel Draft"
       - "Bullseye Premium Daily Auto-Publish"
+      - "Diagnose Instagram Credential Link (Read Only)"
     types: [completed]
 
 permissions:

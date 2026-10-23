@@ -56,7 +56,7 @@ class PublisherTests(unittest.TestCase):
 
     def test_instagram_configured_id_mismatch_fails_closed(self):
         env = {"META_SYSTEM_USER_TOKEN": "test-token", "IG_USER_ID": "wrong-id"}
-        with patch.dict(os.environ, env, clear=True), \\
+        with patch.dict(os.environ, env, clear=True), \
              patch("agents.publisher._resolve_linked_instagram_user_id", return_value=("right-id", "page-token")):
             with self.assertRaisesRegex(RuntimeError, "account ID mismatch"):
                 _instagram_publish("https://example.com/card.png", "Test caption", {})
