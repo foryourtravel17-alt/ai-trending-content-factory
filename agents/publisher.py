@@ -127,7 +127,7 @@ def _meta_request(method: str, url: str, **kwargs):
     return body
 
 
-def _resolve_linked_instagram_user_id(token: str) -> str:
+def _resolve_linked_instagram_user_id(token: str) -> tuple[str, str]:
     """Resolve the Instagram account linked to the Bullseye Theory Page.
 
     The account ID secret can become stale when Meta assets are re-linked. Resolve
@@ -136,7 +136,7 @@ def _resolve_linked_instagram_user_id(token: str) -> str:
     result = _meta_request(
         "GET", f"https://graph.facebook.com/{API_VERSION}/me/accounts",
         params={
-            "fields": "id,name,instagram_business_account{id,username}",
+            "fields": "id,name,access_token,instagram_business_account{id,username}",
             "access_token": token,
         }, timeout=30,
     )
@@ -153,8 +153,13 @@ def _resolve_linked_instagram_user_id(token: str) -> str:
             "Instagram account resolution failed: expected exactly one assigned Page named "
             "'Bullseye Theory' with a linked Instagram professional account."
         )
-    account = eligible[0]["instagram_business_account"]
-    return str(account["id"]).strip()
+    page = eligible[0]
+    account = page["instagram_business_account"]
+    page_token = str(page.get("access_token") or "").strip()
+    account_id = str(account.get("id") or "").strip()
+    if not page_token or not account_id:
+        raise RuntimeError("Bullseye Theory Page did not provide a Page token and linked Instagram account ID.")
+    return account_id, page_token
 
 
 def _instagram_publish(
@@ -181,7 +186,7 @@ def _instagram_publish(
     )
     if not token:
         raise RuntimeError("Instagram publishing token is not configured.")
-    user_id = _resolve_linked_instagram_user_id(token)
+    user_id, page_token = _resolve_linked_instagram_user_id(token)
     if configured_user_id and configured_user_id != user_id:
         log.warning(
             "Configured Instagram account ID secret is stale; using the account linked to the exact Bullseye Theory Page. "
@@ -192,7 +197,7 @@ def _instagram_publish(
     creation_id = str(state.get("creation_id") or "").strip()
     if not creation_id:
         container = _meta_request("POST", f"{api}/media", data={
-            "image_url": image_url, "caption": caption[:2200], "access_token": token,
+            "image_url": image_url, "caption": caption[:2200], "access_token": page_token,
         }, timeout=60)
         creation_id = str(container.get("id") or "").strip()
         if not creation_id:
@@ -207,7 +212,7 @@ def _instagram_publish(
     for attempt in range(6):
         status = _meta_request(
             "GET", f"https://graph.facebook.com/{API_VERSION}/{creation_id}",
-            params={"fields": "status_code", "access_token": token}, timeout=30,
+            params={"fields": "status_code", "access_token": page_token}, timeout=30,
         )
         code = status.get("status_code")
         if code in {"ERROR", "EXPIRED"}:
@@ -227,7 +232,7 @@ def _instagram_publish(
         )
 
     published = _meta_request("POST", f"{api}/media_publish", data={
-        "creation_id": creation_id, "access_token": token,
+        "creation_id": creation_id, "access_token": page_token,
     }, timeout=60)
     media_id = published.get("id")
     if not media_id:
