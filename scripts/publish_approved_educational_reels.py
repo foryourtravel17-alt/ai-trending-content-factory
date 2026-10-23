@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
+import traceback
 from pathlib import Path
 
 # Executing `python scripts/publish_approved_educational_reels.py` puts the
@@ -87,7 +89,19 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
             if isinstance(record, dict):
                 record["last_publish_error"] = type(exc).__name__
                 signals[content_id] = record
-            print(f"Educational Reel publish failed for {content_id}: {type(exc).__name__}; see Actions logs.")
+            print(f"Educational Reel publish failed for {content_id}: {type(exc).__name__}; credentials and response bodies are not logged.")
+            # Log only the source locations and, for NameError, the missing Python
+            # identifier. Do not print exception messages or request/credential data.
+            try:
+                frames = traceback.extract_tb(exc.__traceback__)[-6:]
+                for frame in frames:
+                    print(f"Safe diagnostic frame: {Path(frame.filename).name}:{frame.lineno} in {frame.name}")
+                if isinstance(exc, NameError):
+                    missing_name = getattr(exc, "name", None)
+                    if isinstance(missing_name, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", missing_name):
+                        print(f"Undefined Python identifier: {missing_name}")
+            except Exception:
+                print("Safe diagnostic trace unavailable.")
         finally:
             # Save after every ID, including partial publication or an exception,
             # so recorded Instagram/Telegram IDs and ambiguous outcomes survive.
