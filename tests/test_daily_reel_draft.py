@@ -57,17 +57,18 @@ class DailyReelDraftTests(unittest.TestCase):
             self.assertEqual(existing_draft_for_slot(out, "2026-10-23", "morning"), record)
 
 
-    def test_workflow_runs_three_times_and_publishes_without_human_approval(self):
+    def test_workflow_runs_three_times_and_requires_human_approval(self):
         workflow = Path(".github/workflows/educational_reel_draft.yml").read_text(encoding="utf-8")
         self.assertIn("cron: '47 4 * * *'", workflow)
         self.assertIn("cron: '47 8 * * *'", workflow)
         self.assertIn("cron: '47 12 * * *'", workflow)
-        self.assertNotIn("Send Telegram approval request", workflow)
-        self.assertIn("Publish eligible educational Reel to Instagram and Telegram automatically", workflow)
+        self.assertIn("Send private Telegram approval request (no public publishing)", workflow)
+        self.assertIn("run: python src/telegram_send.py", workflow)
+        self.assertIn("Register Reel for owner approval", workflow)
+        self.assertNotIn("run: python scripts/publish_approved_educational_reels.py", workflow)
+        self.assertNotIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
+        self.assertNotIn("Bullseye Daily Educational Reel Auto-Publish", workflow)
         self.assertIn("id: queue", workflow)
-        self.assertIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
-        self.assertIn("Register Reel for automatic publishing", workflow)
-        self.assertIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("Upload draft for review (no publishing)", workflow)
         self.assertIn("if: steps.draft.outputs.skip != 'true'", workflow)
         self.assertIn("if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'", workflow)
