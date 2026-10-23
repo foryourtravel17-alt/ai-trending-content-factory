@@ -46,7 +46,7 @@ jobs:
           elif [ "${configured}" != "${linked}" ]; then
             echo "WARNING: Legacy Instagram account-ID secret is stale; publisher will use the account resolved from the exact Bullseye Theory Page. No secret values are printed."
           fi
-          account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username,account_type" --data-urlencode "access_token=${page_token}")"
+          account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username" --data-urlencode "access_token=${page_token}")"
           if echo "${account_response}" | grep -q '"error"'; then
             echo "ERROR: The Page-linked Instagram account cannot be loaded with the publishing token. Meta returned an account-access error; values and token are redacted."
             exit 1
