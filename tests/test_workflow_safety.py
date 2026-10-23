@@ -2,6 +2,8 @@
 from pathlib import Path
 import unittest
 
+from scripts.preflight_publish_guard import should_publish
+
 
 class WorkflowSafetyTests(unittest.TestCase):
     def test_manual_market_run_defaults_to_dry_run(self):
@@ -46,26 +48,38 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('"Bullseye Premium Daily Auto-Publish"', workflow)
         self.assertIn("github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'", workflow)
 
-    def test_manual_pipeline_serializes_shared_state_writes(self):
-        workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
-        self.assertIn("group: market-state", workflow)
-        self.assertIn("cancel-in-progress: false", workflow)
-
     def test_automated_approval_requires_fact_check_pass(self):
         source = Path("src/main.py").read_text(encoding="utf-8")
         self.assertIn('fact_check_data.get("status") == "passed"', source)
         self.assertIn("automated_approval_eligible", source)
         self.assertIn('"required": not automated_approval_eligible', source)
 
-    def test_legacy_manual_fallback_is_draft_only_without_extra_schedule(self):
-        workflow = Path(".github/workflows/pipeline.yml").read_text(encoding="utf-8")
-        self.assertIn('AUTO_PUBLISH_ENABLED: "false"', workflow)
-        self.assertNotIn('AUTO_PUBLISH_ENABLED: "true"', workflow)
-        self.assertNotIn("schedule:", workflow)
-        self.assertNotIn("Send pending content to Telegram", workflow)
-        reel_workflow = Path(".github/workflows/generate_approved_reel.yml").read_text(encoding="utf-8")
-        self.assertIn('workflows: ["AI Trading Content Pipeline (Manual Draft Only)"]', reel_workflow)
-        self.assertIn('safety_check.get("passed") is True', reel_workflow)
+    def test_legacy_manual_pipeline_is_removed_and_documented_unsupported(self):
+        root = Path(".github/workflows")
+        self.assertFalse((root / "pipeline.yml").exists())
+        self.assertFalse((root / "generate_approved_reel.yml").exists())
+        self.assertFalse((root / "instagram_publish.yml").exists())
+        readme = Path("README.md").read_text(encoding="utf-8")
+        self.assertIn("legacy `pipeline.yml` and its legacy", readme)
+        self.assertIn("are unsupported and have been removed", readme)
+        self.assertIn("educational_reel_draft.yml", readme)
+
+    def test_auto_published_market_record_cannot_pass_human_approval_preflight(self):
+        auto_published = {
+            "status": "published",
+            "signal": {"signal_id": "market_auto_1", "as_of": "2026-10-24T00:00:00+00:00"},
+            "publishing": {
+                "telegram": {"status": "published"},
+                "instagram": {"status": "published"},
+            },
+        }
+        allowed, reason = should_publish(auto_published)
+        self.assertFalse(allowed)
+        self.assertEqual(reason, "signal is not human-approved")
+
+    def test_readme_states_market_and_educational_approval_policies(self):
+        readme = Path("README.md").read_text(encoding="utf-8")
+        self.assertIn("Market cards auto-publish on schedule by design; educational Reels require owner approval.", readme)
 
 
 if __name__ == "__main__":
