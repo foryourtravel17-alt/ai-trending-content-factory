@@ -87,12 +87,12 @@ def main():
         "content_type": "educational_reel",
         "content_id": content_id,
         "metadata_path": str(source),
-        "status": "generated",
-        "approval_status": "approved",
-        "approval_mode": "automated_policy",
-        "automated_review_at": automated_review_at,
+        "status": "pending_approval",
+        "approval_status": "pending",
+        "approval_mode": "human_review",
+        "safety_screened_at": safety_screened_at,
         "created_at": created_at,
-        "human_approval_required": False,
+        "human_approval_required": True,
         "signal": {
             "signal_id": content_id,
             "symbol": "EDUCATIONAL_REEL",
@@ -105,31 +105,31 @@ def main():
         },
         "card_path": str(content.get("video", f"output/media/{content_id}.mp4")),
         "fact_check": {
-            "status": "automated_passed",
-            "automated_review_at": automated_review_at,
+            "status": "needs_human_review",
+            "safety_screened_at": safety_screened_at,
             "notes": [
-                "Automated safety/format gate passed for curated evergreen education.",
-                "This is not independent fact verification; no live-market or personalized advice is included.",
+                "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+                "Owner must review the exact script, caption, hashtags and matching video before publication.",
             ],
         },
         "publishing": (existing.get("publishing", {}) if isinstance(existing, dict) else {}),
     }
 
-    content["status"] = "approved_for_publishing"
+    content["status"] = "pending_approval"
     content["approval"] = {
         **approval,
-        "required": False,
-        "status": "approved",
-        "mode": "automated_policy",
-        "automated_review_at": automated_review_at,
+        "required": True,
+        "status": "pending",
+        "mode": "human_review",
+        "safety_screened_at": safety_screened_at,
     }
     content["fact_check"] = {
         **(content.get("fact_check") if isinstance(content.get("fact_check"), dict) else {}),
-        "status": "automated_passed",
-        "automated_review_at": automated_review_at,
+        "status": "needs_human_review",
+        "safety_screened_at": safety_screened_at,
         "notes": [
-            "Automated safety/format gate passed for curated evergreen education.",
-            "This is not independent fact verification; no live-market or personalized advice is included.",
+            "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+            "Owner must review the exact script, caption, hashtags and matching video before publication.",
         ],
     }
     save_json(source, content)
@@ -145,18 +145,18 @@ def main():
     if not isinstance(queue.setdefault("telegram_sent", []), list):
         raise SystemExit("Approval queue telegram_sent must be a list.")
     if not any(isinstance(item, dict) and item.get("content_id") == content_id for item in items):
-        items.append({"content_id": content_id, "status": "auto_publish_ready", "processed": True})
+        items.append({"content_id": content_id, "status": "pending_approval", "processed": False})
     else:
         for item in items:
             if isinstance(item, dict) and item.get("content_id") == content_id:
-                item.update({"status": "auto_publish_ready", "processed": True})
+                item.update({"status": "pending_approval", "processed": False})
     save_json(STATE_PATH, state)
     save_json(QUEUE_PATH, queue)
     target = os.getenv("GITHUB_OUTPUT", "").strip()
     if target:
         with open(target, "a", encoding="utf-8") as handle:
             handle.write(f"content_id={content_id}\n")
-    print(f"Registered {content_id} as auto-publish ready after the automated safety screen.")
+    print(f"Registered {content_id} as pending human approval after the automated safety screen. No publishing was authorized.")
 
 
 if __name__ == "__main__":
