@@ -4,7 +4,15 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from pathlib import Path
+
+# Executing `python scripts/publish_approved_educational_reels.py` puts the
+# scripts/ directory, not the repository root, at sys.path[0]. Ensure `src`
+# remains importable in the actual GitHub Actions entrypoint.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from src.instagram_publish import publish_approved_educational_reel
 
