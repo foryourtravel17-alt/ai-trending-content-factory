@@ -527,27 +527,42 @@ def publish_content_record(content_path: Path, approved: dict, ig_user_id: str |
 
     publishing = approved.setdefault("publishing", {})
     instagram = publishing.setdefault("instagram", {})
+    instagram_error = None
+
+    # Keep the two destinations independent: a Meta/Instagram failure must not
+    # prevent the public Telegram channel from receiving this educational Reel.
     if not is_already_published(approved):
-        if not ig_user_id:
-            ig_user_id = resolve_instagram_user_id()
-        media_id = publish_instagram_reel_container(ig_user_id, video_url, caption, approved, content_path)
-        approved["status"] = "published_to_instagram"
-        approved["instagram_media_id"] = media_id
-        approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        instagram["status"] = "published_to_instagram"
-        instagram["media_id"] = media_id
-        instagram["published_at"] = approved["published_at"]
-        save_state(content_path, approved)
-        print(f"Instagram Reel published; media ID saved for {content_id}.")
+        try:
+            if not ig_user_id:
+                ig_user_id = resolve_instagram_user_id()
+            media_id = publish_instagram_reel_container(ig_user_id, video_url, caption, approved, content_path)
+            approved["status"] = "published_to_instagram"
+            approved["instagram_media_id"] = media_id
+            approved["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            instagram["status"] = "published_to_instagram"
+            instagram["media_id"] = media_id
+            instagram["published_at"] = approved["published_at"]
+            save_state(content_path, approved)
+            print(f"Instagram Reel published; media ID saved for {content_id}.")
+        except Exception as exc:
+            instagram_error = exc
+            # Preserve ambiguous publish markers. They must never be reset to a
+            # retryable state because that could create duplicate Instagram posts.
+            if instagram.get("status") not in {"publish_attempt_started", "publish_outcome_unknown"}:
+                instagram["status"] = "failed"
+                instagram["error_type"] = type(exc).__name__
+            save_state(content_path, approved)
+            print(f"Instagram publish failed for {content_id} ({type(exc).__name__}); continuing to Telegram.")
     else:
         print(f"Instagram already published for {content_id}; skipping duplicate Instagram publish.")
 
     telegram = publishing.setdefault("telegram", {})
     tg_status = str(telegram.get("status", "")).lower()
+    telegram_error = None
     if tg_status == "published":
         print(f"Telegram channel already published for {content_id}; skipping duplicate channel post.")
     elif tg_status in {"sending", "unknown"}:
-        raise TelegramPublishUnknown(
+        telegram_error = TelegramPublishUnknown(
             f"Telegram channel outcome for {content_id} is ambiguous; automatic resend blocked to prevent duplicates."
         )
     else:
@@ -561,18 +576,35 @@ def publish_content_record(content_path: Path, approved: dict, ig_user_id: str |
             telegram["status"] = "failed"
             telegram["error"] = str(exc)[:300]
             save_state(content_path, approved)
-            raise
+            telegram_error = exc
         except TelegramPublishUnknown as exc:
             telegram["status"] = "unknown"
             telegram["error"] = str(exc)[:300]
             save_state(content_path, approved)
-            raise
-        telegram["status"] = "published"
-        telegram["message_id"] = message_id
-        telegram["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        telegram.pop("error", None)
-        save_state(content_path, approved)
-        print(f"Telegram channel post recorded for {content_id}; message ID saved.")
+            telegram_error = exc
+        else:
+            telegram["status"] = "published"
+            telegram["message_id"] = message_id
+            telegram["published_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            telegram.pop("error", None)
+            save_state(content_path, approved)
+            print(f"Telegram channel post recorded for {content_id}; message ID saved.")
+
+    # Surface publishing failure to GitHub Actions after recording both channel
+    # outcomes, so the watchdog still alerts while successful delivery is retained.
+    if telegram_error is not None and instagram_error is not None:
+        raise RuntimeError(
+            f"Instagram and Telegram publishing failed for {content_id} "
+            f"(Instagram={type(instagram_error).__name__}, Telegram={type(telegram_error).__name__}); "
+            "both outcomes were recorded."
+        ) from telegram_error
+    if telegram_error is not None:
+        raise telegram_error
+    if instagram_error is not None:
+        raise RuntimeError(
+            f"Instagram publishing failed for {content_id} ({type(instagram_error).__name__}); "
+            "Telegram was attempted and its result was recorded."
+        ) from instagram_error
     return approved
 
 

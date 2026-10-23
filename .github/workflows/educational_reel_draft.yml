@@ -113,7 +113,7 @@ jobs:
         run: python scripts/publish_approved_educational_reels.py
 
       - name: Persist publishing state and exact Reel metadata
-        if: steps.draft.outputs.skip != 'true'
+        if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

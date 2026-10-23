@@ -70,6 +70,7 @@ class DailyReelDraftTests(unittest.TestCase):
         self.assertIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("Upload draft for review (no publishing)", workflow)
         self.assertIn("if: steps.draft.outputs.skip != 'true'", workflow)
+        self.assertIn("if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'", workflow)
         self.assertIn("No-op when this slot already has a draft", workflow)
         self.assertIn("approval_queue.json", workflow)
 

@@ -161,6 +161,34 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         self.assertEqual(updated["instagram_media_id"], "ig-media-123")
         self.assertEqual(updated["publishing"]["telegram"]["status"], "published")
 
+    def test_telegram_still_publishes_when_instagram_credentials_fail(self):
+        content_id = "draft_telegram_fallback_20261023"
+        path = self.write_record(content_id)
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record.update({
+            "video_url": f"https://example.supabase.co/storage/v1/object/public/REELS/reels/{content_id}.mp4",
+            "video_content_id": content_id,
+            "video_sha256": "a" * 64,
+            "video_size_bytes": 123,
+            "video_duration_seconds": 42.29,
+        })
+        path.write_text(json.dumps(record), encoding="utf-8")
+        with patch.dict(os.environ, {
+            "SUPABASE_URL": "https://example.supabase.co",
+            "TELEGRAM_BOT_TOKEN": "fake-test-token",
+        }), patch.object(MODULE, "verify_public_video_url", return_value=record["video_url"]), \
+             patch.object(MODULE, "resolve_instagram_user_id", side_effect=RuntimeError("simulated Meta auth failure")) as resolve_ig, \
+             patch.object(MODULE, "_send_telegram_video", return_value=556) as telegram:
+            with self.assertRaisesRegex(RuntimeError, "Instagram publishing failed"):
+                MODULE.publish_content_record(path, record)
+        resolve_ig.assert_called_once()
+        telegram.assert_called_once()
+        updated = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(updated["publishing"]["instagram"]["status"], "failed")
+        self.assertEqual(updated["publishing"]["instagram"]["error_type"], "RuntimeError")
+        self.assertEqual(updated["publishing"]["telegram"]["status"], "published")
+        self.assertEqual(updated["publishing"]["telegram"]["message_id"], 556)
+
     def test_duplicate_run_after_instagram_and_telegram_success_sends_nothing(self):
         content_id = "draft_fully_published_20261022"
         path = self.write_record(content_id, status="published_to_instagram", published_at=self.now.isoformat())
@@ -217,11 +245,12 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         with patch.dict(os.environ, {
             "SUPABASE_URL": "https://example.supabase.co",
             "TELEGRAM_BOT_TOKEN": "fake-test-token",
-        }):
+        }), patch.object(MODULE, "_send_telegram_video", return_value=456) as telegram:
             with patch.object(MODULE, "verify_public_video_url", return_value=record["video_url"]):
                 with patch.object(MODULE, "request", side_effect=fake_request):
-                    with self.assertRaises(MODULE.InstagramPublishUnknown):
+                    with self.assertRaisesRegex(RuntimeError, "Instagram publishing failed"):
                         MODULE.publish_content_record(path, record, ig_user_id="test-ig-user")
+            telegram.assert_called_once()
         first_saved = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(first_saved["publishing"]["instagram"]["status"], "publish_outcome_unknown")
         self.assertEqual(first_saved["publishing"]["instagram"]["creation_id"], "creation-test-123")
@@ -230,12 +259,13 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         with patch.dict(os.environ, {
             "SUPABASE_URL": "https://example.supabase.co",
             "TELEGRAM_BOT_TOKEN": "fake-test-token",
-        }):
+        }), patch.object(MODULE, "_send_telegram_video") as telegram_retry:
             with patch.object(MODULE, "verify_public_video_url", return_value=retry_record["video_url"]):
                 with patch.object(MODULE, "request") as second_request:
-                    with self.assertRaises(MODULE.InstagramPublishUnknown):
+                    with self.assertRaisesRegex(RuntimeError, "Instagram publishing failed"):
                         MODULE.publish_content_record(path, retry_record, ig_user_id="test-ig-user")
         second_request.assert_not_called()
+        telegram_retry.assert_not_called()
 
 
 if __name__ == "__main__":

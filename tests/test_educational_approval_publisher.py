@@ -1,4 +1,7 @@
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -120,6 +123,20 @@ class EducationalApprovalPublisherTests(unittest.TestCase):
         self.assertEqual(result, 0)
         adapter.assert_called_once()
 
+
+    def test_script_entrypoint_can_import_src_from_scripts_directory(self):
+        env = os.environ.copy()
+        env["EDUCATIONAL_APPROVED_IDS"] = ""
+        result = subprocess.run(
+            [sys.executable, "scripts/publish_approved_educational_reels.py"],
+            cwd=Path(__file__).resolve().parents[1],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("No newly approved educational Reel IDs", result.stdout)
 
 if __name__ == "__main__":
     unittest.main()
