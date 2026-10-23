@@ -484,6 +484,11 @@
       "status": "pending_approval",
       "approval_required": true,
       "created_at": "2026-10-22T14:02:35.287269+00:00"
+    },
+    {
+      "content_id": "draft_risk-per-trade_evening_20261023_134943",
+      "status": "auto_publish_ready",
+      "processed": true
     }
   ],
   "telegram_sent": [

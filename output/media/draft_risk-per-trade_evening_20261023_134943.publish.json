@@ -1,0 +1,18 @@
+{
+  "content_id": "draft_risk-per-trade_evening_20261023_134943",
+  "video": "output/media/draft_risk-per-trade_evening_20261023_134943.mp4",
+  "caption": "Your lot size should not be the first decision you make.\n\nPosition sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.\n\nEducational content only; not financial advice.",
+  "hashtags": [
+    "#BullseyeTheory",
+    "#TradingEducation",
+    "#TechnicalAnalysis",
+    "#RiskManagement"
+  ],
+  "status": "ready_for_instagram",
+  "audio": {
+    "voice": "professional male English neural voice with local fallback",
+    "background_music": "procedural cinematic low-volume bed",
+    "voice_duration_seconds": 44.59
+  },
+  "visual_style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only."
+}

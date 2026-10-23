@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_risk-per-trade_evening_20261023_134943",
+  "created_at": "2026-10-23T13:49:43.978494+00:00",
+  "schedule_slot": {
+    "name": "evening",
+    "utc_date": "2026-10-23",
+    "index": 2
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "approved_for_publishing",
+  "topic": {
+    "title": "Position Sizing Starts With Risk, Not the Lot Button",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "Position sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "automated_passed",
+    "notes": [
+      "Automated safety/format gate passed for curated evergreen education.",
+      "This is not independent fact verification; no live-market or personalized advice is included."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "automated_review_at": "2026-10-23T13:50:50.111916+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "Your lot size should not be the first decision you make.",
+    "body": "Position sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "risk",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "DEFINE RISK FIRST",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "KNOW INVALIDATION",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "CALCULATE SIZE",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "NEVER GUESS INPUTS",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "Your lot size should not be the first decision you make.\n\nPosition sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "approved",
+    "mode": "automated_policy",
+    "automated_review_at": "2026-10-23T13:50:50.111916+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "term",
+  "reel_generated_at": "2026-10-23T13:50:44.539091+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_risk-per-trade_evening_20261023_134943.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_risk-per-trade_evening_20261023_134943.mp4",
+  "video_content_id": "draft_risk-per-trade_evening_20261023_134943",
+  "video_sha256": "94d4f63408af49d0655cfc2bd96a65644bf3272ccd009b8b6eb0454fe188ab1b",
+  "video_size_bytes": 1669326,
+  "video_duration_seconds": 44.592,
+  "video_uploaded_at": "2026-10-23T13:50:50.061275+00:00"
+}
