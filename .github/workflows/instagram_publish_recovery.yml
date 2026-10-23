@@ -53,14 +53,8 @@ jobs:
               print("FAIL: META_SYSTEM_USER_TOKEN is missing; recovery stopped.")
               sys.exit(1)
           version = os.environ.get("META_GRAPH_API_VERSION", "v23.0").strip() or "v23.0"
-          expected = {
-              x.strip() for x in (
-                  os.environ.get("IG_USER_ID", ""),
-                  os.environ.get("INSTAGRAM_USER_ID", ""),
-              ) if x.strip()
-          }
           query = urlencode({
-              "fields": "id,name,tasks,instagram_business_account{id,username}",
+              "fields": "id,name,tasks,access_token,instagram_business_account{id,username}",
               "access_token": token,
           })
           url = f"https://graph.facebook.com/{version}/me/accounts?{query}"
@@ -85,15 +79,16 @@ jobs:
               code = str(err.get("code", "unknown"))
               print(f"FAIL: Meta credential check returned no page list (code={code}).")
               sys.exit(1)
-          linked = [
-              str((row.get("instagram_business_account") or {}).get("id") or "")
-              for row in rows if isinstance(row, dict)
+          eligible = [
+              row for row in rows if isinstance(row, dict)
+              and str(row.get("name", "")).strip().casefold() == "bullseye theory"
+              and str(row.get("access_token", "")).strip()
+              and str((row.get("instagram_business_account") or {}).get("id") or "").strip()
           ]
-          linked = [value for value in linked if value]
-          if not linked or (expected and not (set(linked) & expected)):
-              print("FAIL: the System User token has no matching linked Instagram account.")
+          if len(eligible) != 1:
+              print("FAIL: expected exactly one Bullseye Theory Page with a linked Instagram account and Page access token.")
               sys.exit(1)
-          print("PASS: System User token accepted and linked Instagram account matched.")
+          print("PASS: System User token can resolve the Bullseye Theory Page and its linked Instagram account; legacy ID secrets are not used for routing.")
           PY
 
       - name: Reserve this signal's one-time retry before publishing
