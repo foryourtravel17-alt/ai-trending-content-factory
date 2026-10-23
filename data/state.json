@@ -6066,8 +6066,10 @@
           "message_id": 253
         }
       },
-      "status": "generated",
-      "last_run_mode": "dry_run"
+      "status": "expired",
+      "last_run_mode": "dry_run",
+      "expired_at": "2026-10-23T13:06:29.142530+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026101917-short": {
       "signal": {
@@ -6123,8 +6125,10 @@
       "card_path": "output/eth-usd-2026101917-short_card.png",
       "created_at": "2026-10-19T17:22:04.371966+00:00",
       "publishing": {},
-      "status": "generated",
-      "last_run_mode": "dry_run"
+      "status": "expired",
+      "last_run_mode": "dry_run",
+      "expired_at": "2026-10-23T13:06:29.158519+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101917-short": {
       "signal": {
@@ -6180,8 +6184,10 @@
       "card_path": "output/eurusd-x-2026101917-short_card.png",
       "created_at": "2026-10-19T17:22:04.624168+00:00",
       "publishing": {},
-      "status": "generated",
-      "last_run_mode": "dry_run"
+      "status": "expired",
+      "last_run_mode": "dry_run",
+      "expired_at": "2026-10-23T13:06:29.221475+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026101918-short": {
       "signal": {
@@ -6237,8 +6243,10 @@
       "card_path": "output/eth-usd-2026101918-short_card.png",
       "created_at": "2026-10-19T18:45:50.490218+00:00",
       "publishing": {},
-      "status": "generated",
-      "last_run_mode": "dry_run"
+      "status": "expired",
+      "last_run_mode": "dry_run",
+      "expired_at": "2026-10-23T13:06:29.284646+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026101918-short": {
       "signal": {
@@ -6294,8 +6302,10 @@
       "card_path": "output/eurusd-x-2026101918-short_card.png",
       "created_at": "2026-10-19T18:45:50.794839+00:00",
       "publishing": {},
-      "status": "generated",
-      "last_run_mode": "dry_run"
+      "status": "expired",
+      "last_run_mode": "dry_run",
+      "expired_at": "2026-10-23T13:06:29.295250+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026101918-short": {
       "signal": {
@@ -6351,8 +6361,10 @@
       "card_path": "output/gc-f-2026101918-short_card.png",
       "created_at": "2026-10-19T18:45:51.202831+00:00",
       "publishing": {},
-      "status": "generated",
-      "last_run_mode": "dry_run"
+      "status": "expired",
+      "last_run_mode": "dry_run",
+      "expired_at": "2026-10-23T13:06:29.305671+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026102004-long": {
       "signal": {
@@ -6925,11 +6937,12 @@
           "error": "Meta API HTTP 400 (GraphMethodException, code=100, subcode=33); message redacted, credentials protected."
         }
       },
-      "status": "publish_failed",
+      "status": "expired",
       "approval_status": "approved",
       "approved_at": "2026-10-20T12:39:13Z",
       "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/eth-usd-2026102010-short_card.png",
-      "last_error": "See workflow logs for details."
+      "last_error": "Signal expired before publishing; a fresh market candle is required.",
+      "expired_at": "2026-10-23T13:06:29.316776+00:00"
     },
     "sbin-ns-2026102105-long": {
       "signal": {
@@ -7444,7 +7457,7 @@
           "error": "Meta API HTTP 400; code=190, subcode=unknown, type=OAuthException; message redacted, credentials protected."
         }
       },
-      "status": "publish_failed",
+      "status": "expired",
       "last_run_mode": "dry_run",
       "approval_status": "approved",
       "approved_at": "2026-10-22T02:49:20Z",
@@ -7459,7 +7472,8 @@
         "reviewed_by": "@bullseyetheory"
       },
       "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/eurusd-x-2026102202-long_card.png",
-      "last_error": "See workflow logs for details."
+      "last_error": "Signal expired before publishing; a fresh market candle is required.",
+      "expired_at": "2026-10-23T13:06:29.329746+00:00"
     },
     "eurusd-x-2026102204-long": {
       "signal": {
@@ -8351,9 +8365,9 @@
           "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
         }
       },
-      "status": "partial",
+      "status": "publish_failed",
       "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/btc-usd-2026102210-short_card.png",
-      "last_error": "Retry failed; see Actions logs."
+      "last_error": "See workflow logs for details."
     },
     "nsebank-2026102209-short": {
       "signal": {
@@ -8599,8 +8613,19 @@
       "chart_path": "output/spy-2026102219-short.png",
       "card_path": "output/spy-2026102219-short_card.png",
       "created_at": "2026-10-23T13:06:23.898699+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 97
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/spy-2026102219-short_card.png",
+      "last_error": "See workflow logs for details."
     },
     "eurusd-x-2026102313-short": {
       "signal": {
@@ -8655,8 +8680,19 @@
       "chart_path": "output/eurusd-x-2026102313-short.png",
       "card_path": "output/eurusd-x-2026102313-short_card.png",
       "created_at": "2026-10-23T13:06:24.249753+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 98
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/eurusd-x-2026102313-short_card.png",
+      "last_error": "See workflow logs for details."
     },
     "nsei-2026102309-short": {
       "signal": {
@@ -8712,8 +8748,19 @@
       "chart_path": "output/nsei-2026102309-short.png",
       "card_path": "output/nsei-2026102309-short_card.png",
       "created_at": "2026-10-23T13:06:24.600924+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 99
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/nsei-2026102309-short_card.png",
+      "last_error": "See workflow logs for details."
     },
     "nsebank-2026102309-short": {
       "signal": {
@@ -8769,8 +8816,19 @@
       "chart_path": "output/nsebank-2026102309-short.png",
       "card_path": "output/nsebank-2026102309-short_card.png",
       "created_at": "2026-10-23T13:06:24.952332+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 100
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/nsebank-2026102309-short_card.png",
+      "last_error": "See workflow logs for details."
     },
     "reliance-ns-2026102309-short": {
       "signal": {
@@ -8825,8 +8883,19 @@
       "chart_path": "output/reliance-ns-2026102309-short.png",
       "card_path": "output/reliance-ns-2026102309-short_card.png",
       "created_at": "2026-10-23T13:06:25.382525+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 101
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/reliance-ns-2026102309-short_card.png",
+      "last_error": "See workflow logs for details."
     }
   },
   "runs": [
