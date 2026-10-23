@@ -1,0 +1,103 @@
+//@version=6
+strategy("Bullseye Theory — Five Pillar Backtest", shorttitle="BULLSEYE BT", overlay=true, pyramiding=0, initial_capital=100000, process_orders_on_close=true, default_qty_type=strategy.fixed)
+
+// RESEARCH ONLY: no broker connection. Configure costs and verify contract sizing per symbol.
+// Backtest output is not proof of future profitability.
+
+// SCOPE: previous completed HTF EMA50/EMA200; use H4 for FX/crypto, Daily for stocks.
+string scopeTf = input.timeframe("240", "Scope timeframe (FX/Crypto H4; Stocks Daily)")
+int scopeFastLen = input.int(50, "Scope EMA fast", minval=2)
+int scopeSlowLen = input.int(200, "Scope EMA slow", minval=3)
+float scopeFast = request.security(syminfo.tickerid, scopeTf, ta.ema(close, scopeFastLen)[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+float scopeSlow = request.security(syminfo.tickerid, scopeTf, ta.ema(close, scopeSlowLen)[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+bool scopeBull = scopeFast > scopeSlow
+bool scopeBear = scopeFast < scopeSlow
+
+// TARGET: EMA21 +/- 0.5 ATR(14).
+int emaLen = input.int(21, "Pullback EMA", minval=2)
+int atrLen = input.int(14, "ATR length", minval=1)
+float zoneMult = input.float(0.5, "Zone half-width (ATR)", minval=0.1, step=0.1)
+float ema = ta.ema(close, emaLen)
+float atr = ta.atr(atrLen)
+float zoneHi = ema + atr * zoneMult
+float zoneLo = ema - atr * zoneMult
+bool touchedZone = low <= zoneHi and high >= zoneLo
+
+// TRIGGER: engulfing (body >= 55%) or rejection/pin bar, zone touched, candle closes outside zone.
+float minBodyPct = input.float(55.0, "Engulfing minimum body %", minval=5, maxval=100, step=5)
+float wickRatio = input.float(2.0, "Pin-bar wick/body ratio", minval=1, maxval=6, step=0.25)
+float rng = math.max(high - low, syminfo.mintick)
+float body = math.abs(close - open)
+float bodyPct = body / rng * 100.0
+float uw = high - math.max(open, close)
+float lw = math.min(open, close) - low
+bool bullEngulf = close > open and close[1] < open[1] and open <= close[1] and close >= open[1] and bodyPct >= minBodyPct
+bool bearEngulf = close < open and close[1] > open[1] and open >= close[1] and close <= open[1] and bodyPct >= minBodyPct
+bool bullPin = close > open and lw >= math.max(body, syminfo.mintick) * wickRatio and uw <= math.max(body, syminfo.mintick)
+bool bearPin = close < open and uw >= math.max(body, syminfo.mintick) * wickRatio and lw <= math.max(body, syminfo.mintick)
+bool longTrigger = barstate.isconfirmed and scopeBull and touchedZone and (bullEngulf or bullPin) and close > zoneHi
+bool shortTrigger = barstate.isconfirmed and scopeBear and touchedZone and (bearEngulf or bearPin) and close < zoneLo
+
+// GUARDRAILS: IST session, max entries per India date, manual news blackout.
+string sessionHours = input.session("1200-2000:1234567", "Allowed session (India time)")
+bool manualNewsBlackout = input.bool(false, "Manual news blackout", tooltip="Toggle on for 15 minutes before/after high-impact news. No live economic calendar is connected.")
+int maxPerDay = input.int(2, "Maximum entries per India day", minval=1, maxval=10)
+float riskPct = input.float(1.0, "Risk budget (% strategy equity)", minval=0.1, maxval=5.0, step=0.1)
+bool inSession = not na(time(timeframe.period, sessionHours, "Asia/Kolkata"))
+int dayKey = year(time, "Asia/Kolkata") * 10000 + month(time, "Asia/Kolkata") * 100 + dayofmonth(time, "Asia/Kolkata")
+var int entriesToday = 0
+if na(dayKey[1]) or dayKey != dayKey[1]
+    entriesToday := 0
+bool allowed = inSession and not manualNewsBlackout and entriesToday < maxPerDay
+
+// SHIELD/BULLSEYE: stop 1.5 ATR beyond zone; partial 50% at 1R; remainder at 2R.
+// Original stop remains in place. Position size is a research estimate using syminfo.pointvalue.
+float stopMult = input.float(1.5, "Stop buffer (ATR)", minval=0.1, step=0.1)
+float partialR = input.float(1.0, "Partial exit R", minval=0.5, maxval=1.5, step=0.25)
+float targetR = input.float(2.0, "Final target R", minval=1.0, step=0.25)
+float partialPct = input.float(50.0, "Partial exit %", minval=10, maxval=90, step=5)
+var float activeStop = na
+var float activePartial = na
+var float activeTarget = na
+
+if strategy.position_size == 0 and allowed and longTrigger
+    float entryRef = close
+    float stopRef = zoneLo - atr * stopMult
+    float riskDist = entryRef - stopRef
+    float qtyRef = riskDist > 0 ? (strategy.equity * riskPct / 100.0) / (riskDist * syminfo.pointvalue) : na
+    if not na(qtyRef) and qtyRef > 0
+        activeStop := stopRef
+        activePartial := entryRef + riskDist * partialR
+        activeTarget := entryRef + riskDist * targetR
+        strategy.entry("Long", strategy.long, qty=qtyRef, comment="Research hypothesis")
+        strategy.exit("Long partial", from_entry="Long", stop=activeStop, limit=activePartial, qty_percent=partialPct)
+        strategy.exit("Long final", from_entry="Long", stop=activeStop, limit=activeTarget, qty_percent=100.0 - partialPct)
+        entriesToday += 1
+
+if strategy.position_size == 0 and allowed and shortTrigger
+    float entryRef = close
+    float stopRef = zoneHi + atr * stopMult
+    float riskDist = stopRef - entryRef
+    float qtyRef = riskDist > 0 ? (strategy.equity * riskPct / 100.0) / (riskDist * syminfo.pointvalue) : na
+    if not na(qtyRef) and qtyRef > 0
+        activeStop := stopRef
+        activePartial := entryRef - riskDist * partialR
+        activeTarget := entryRef - riskDist * targetR
+        strategy.entry("Short", strategy.short, qty=qtyRef, comment="Research hypothesis")
+        strategy.exit("Short partial", from_entry="Short", stop=activeStop, limit=activePartial, qty_percent=partialPct)
+        strategy.exit("Short final", from_entry="Short", stop=activeStop, limit=activeTarget, qty_percent=100.0 - partialPct)
+        entriesToday += 1
+
+if strategy.position_size > 0
+    strategy.exit("Long partial", from_entry="Long", stop=activeStop, limit=activePartial, qty_percent=partialPct)
+    strategy.exit("Long final", from_entry="Long", stop=activeStop, limit=activeTarget, qty_percent=100.0 - partialPct)
+if strategy.position_size < 0
+    strategy.exit("Short partial", from_entry="Short", stop=activeStop, limit=activePartial, qty_percent=partialPct)
+    strategy.exit("Short final", from_entry="Short", stop=activeStop, limit=activeTarget, qty_percent=100.0 - partialPct)
+
+plot(ema, "EMA 21", color=color.aqua)
+pH = plot(zoneHi, "Zone upper", color=color.new(color.blue, 25))
+pL = plot(zoneLo, "Zone lower", color=color.new(color.blue, 25))
+fill(pH, pL, color=color.new(color.blue, 88), title="Pullback zone")
+plotshape(longTrigger and allowed, title="Long research candidate", text="LONG\nTEST", style=shape.labelup, location=location.belowbar, color=color.lime, textcolor=color.black, size=size.tiny)
+plotshape(shortTrigger and allowed, title="Short research candidate", text="SHORT\nTEST", style=shape.labeldown, location=location.abovebar, color=color.red, textcolor=color.white, size=size.tiny)
