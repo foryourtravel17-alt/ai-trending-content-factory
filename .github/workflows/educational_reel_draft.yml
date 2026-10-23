@@ -2,9 +2,22 @@ name: Generate Educational Reel Draft (No Publish)
 
 on:
   workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Draft slot to generate; auto chooses based on current UTC time'
+        type: choice
+        required: true
+        default: auto
+        options:
+          - auto
+          - morning
+          - afternoon
+          - evening
   schedule:
-    # 10:15 AM India time (04:45 UTC) daily; creates drafts only.
-    - cron: '45 4 * * *'
+    # Three draft-only slots in India time: 10:17 AM, 2:17 PM, 6:17 PM.
+    - cron: '47 4 * * *'
+    - cron: '47 8 * * *'
+    - cron: '47 12 * * *'
 
 permissions:
   contents: write
@@ -28,16 +41,21 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Create fresh rotating educational script
+        id: draft
+        env:
+          CONTENT_SLOT: ${{ inputs.slot || 'auto' }}
+        run: python scripts/daily_reel_draft.py
+
       - name: Install free rendering tools
+        if: steps.draft.outputs.skip != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg espeak-ng
           python -m pip install --upgrade pip pillow edge-tts
 
-      - name: Create fresh rotating educational script
-        run: python scripts/daily_reel_draft.py
-
       - name: Render MP4 draft locally in runner
+        if: steps.draft.outputs.skip != 'true'
         run: |
           python - <<'PY'
           import json
@@ -49,6 +67,7 @@ jobs:
           PY
 
       - name: Validate generated MP4
+        if: steps.draft.outputs.skip != 'true'
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -72,21 +91,25 @@ jobs:
           ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$FILE"
 
       - name: Upload and verify exact MP4 in Supabase
+        if: steps.draft.outputs.skip != 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/upload_educational_reel.py
 
       - name: Register draft in shared approval state
+        if: steps.draft.outputs.skip != 'true'
         run: python scripts/queue_educational_draft.py
 
       - name: Send Telegram approval request
+        if: steps.draft.outputs.skip != 'true'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python src/telegram_send.py
 
       - name: Persist shared approval state (draft only)
+        if: steps.draft.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -100,6 +123,7 @@ jobs:
           fi
 
       - name: Upload draft for review (no publishing)
+        if: steps.draft.outputs.skip != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: bullseye-educational-reel-draft
@@ -109,3 +133,7 @@ jobs:
             output/draft_*.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: No-op when this slot already has a draft
+        if: steps.draft.outputs.skip == 'true'
+        run: echo "This UTC date/slot already has a persisted draft. Skipped render, upload, Telegram approval, and all publishing."
