@@ -1,20 +1,20 @@
 # AI Trading Content Factory — Bullseye Theory
 
-A free-tier-first GitHub Actions content factory for Bullseye Theory. The original educational Reel pipeline remains in place; the market-analysis pipeline is an additive workflow under `agents/` and `src/orchestrator.py`.
+A free-tier-first GitHub Actions content factory for Bullseye Theory. Educational Reels use the approval-gated `educational_reel_draft.yml` workflow; the market-analysis pipeline runs under `agents/` and `src/orchestrator.py`.
 
 > **Risk note:** This system publishes rule-based educational market scenarios, not personalized investment advice. Technical levels can fail. Yahoo Finance data can be delayed, incomplete, or corrected. Never treat an automated setup as a guaranteed outcome or as an instruction to place a trade.
 
 ## Existing system (preserved)
 
 - `src/main.py`: deterministic educational topic/script pipeline with an optional OpenAI-compatible LLM.
-- `src/reel_generator.py`: creates approved short-form Reels.
 - `src/telegram_send.py` and `src/telegram_process.py`: Telegram approval queue and callback processing.
-- `src/instagram_publish.py`: existing Reel publisher through Meta Graph API and Supabase.
-- The legacy `pipeline.yml` is manual-only and draft-only (`AUTO_PUBLISH_ENABLED=false`); it cannot self-approve content. The legacy `generate_approved_reel.yml` / `instagram_publish.yml` chain only accepts records whose persisted approval policy passes its guards. See [the workflow approval matrix](docs/APPROVAL_MATRIX.md).
+- The retired manual `pipeline.yml` and its legacy `generate_approved_reel.yml` / `instagram_publish.yml` publishing chain are unsupported and have been removed; use `educational_reel_draft.yml` for educational Reels. See [the workflow approval matrix](docs/APPROVAL_MATRIX.md).
 
-The legacy workflow uses Python 3.12 and its existing Meta/Supabase secrets. The scheduled daily educational Reel workflow runs a separate Python 3.12/FFmpeg pipeline and creates draft-only Reels. The owner must approve the exact Reel in Telegram before the approval poller can publish it; automated safety screening is not owner approval.
+The scheduled daily educational Reel workflow runs a Python 3.12/FFmpeg pipeline and creates draft-only Reels. The owner must approve the exact Reel in Telegram before the approval poller can publish it; automated safety screening is not owner approval.
 
 `.github/workflows/educational_reel_draft.yml` generates three curated evergreen educational Reel drafts per day at 10:17 AM, 2:17 PM, and 6:17 PM India time. It renders one MP4 per slot, uploads and verifies the exact object in Supabase, registers the draft as pending human review, and sends a private Telegram approval request. It does not publish publicly. The approval poller publishes only after the owner approves the exact draft; automated safety screening is not approval. Approved drafts have a 48-hour publishing window, and one private Telegram notice lists drafts that expired in the last 24 hours. Scheduled runs pass the intended slot explicitly so delayed GitHub cron starts cannot mislabel a slot.
+
+Market cards auto-publish on schedule by design; educational Reels require owner approval.
 
 ## New market-content factory
 
