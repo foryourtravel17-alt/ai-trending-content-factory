@@ -8624,7 +8624,7 @@
         }
       },
       "status": "publish_failed",
-      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/spy-2026102219-short_card.png",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/spy-2026102219-short_card.png",
       "last_error": "See workflow logs for details."
     },
     "eurusd-x-2026102313-short": {
@@ -8691,7 +8691,7 @@
         }
       },
       "status": "publish_failed",
-      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/eurusd-x-2026102313-short_card.png",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/eurusd-x-2026102313-short_card.png",
       "last_error": "See workflow logs for details."
     },
     "nsei-2026102309-short": {
@@ -8758,8 +8758,8 @@
           "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
         }
       },
-      "status": "generated",
-      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/nsei-2026102309-short_card.png",
+      "status": "publish_failed",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/nsei-2026102309-short_card.png",
       "last_error": "See workflow logs for details."
     },
     "nsebank-2026102309-short": {
@@ -8826,8 +8826,8 @@
           "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
         }
       },
-      "status": "generated",
-      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/nsebank-2026102309-short_card.png",
+      "status": "publish_failed",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/nsebank-2026102309-short_card.png",
       "last_error": "See workflow logs for details."
     },
     "reliance-ns-2026102309-short": {
@@ -8893,15 +8893,15 @@
           "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
         }
       },
-      "status": "generated",
-      "image_url": "https://raw.githubusercontent.com/foryourtravel17-alt/ai-trending-content-factory/main/output/reliance-ns-2026102309-short_card.png",
+      "status": "publish_failed",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/reliance-ns-2026102309-short_card.png",
       "last_error": "See workflow logs for details."
     },
     "draft_risk-per-trade_evening_20261023_134943": {
       "content_type": "educational_reel",
       "content_id": "draft_risk-per-trade_evening_20261023_134943",
       "metadata_path": "output/draft_risk-per-trade_evening_20261023_134943.json",
-      "status": "generated",
+      "status": "publish_failed",
       "approval_status": "approved",
       "approval_mode": "automated_policy",
       "automated_review_at": "2026-10-23T13:50:50.111916+00:00",
@@ -8927,7 +8927,8 @@
         ]
       },
       "publishing": {},
-      "last_publish_error": "NameError"
+      "last_publish_error": "NameError",
+      "last_error": "See workflow logs for details."
     },
     "spy-2026102314-short": {
       "signal": {
@@ -8982,8 +8983,19 @@
       "chart_path": "output/spy-2026102314-short.png",
       "card_path": "output/spy-2026102314-short_card.png",
       "created_at": "2026-10-23T15:01:49.875213+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 102
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/spy-2026102314-short_card.png",
+      "last_error": "See workflow logs for details."
     },
     "ndx-2026102314-short": {
       "signal": {
@@ -9038,8 +9050,19 @@
       "chart_path": "output/ndx-2026102314-short.png",
       "card_path": "output/ndx-2026102314-short_card.png",
       "created_at": "2026-10-23T15:01:50.233653+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram": {
+          "status": "published",
+          "message_id": 103
+        },
+        "instagram": {
+          "status": "failed",
+          "error": "Meta API HTTP 400; code=100, subcode=33, type=GraphMethodException; message redacted, credentials protected."
+        }
+      },
+      "status": "publish_failed",
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/ndx-2026102314-short_card.png",
+      "last_error": "See workflow logs for details."
     }
   },
   "runs": [
