@@ -83,7 +83,7 @@ SLOT_CRON_UTC = {"morning": (4, 47), "afternoon": (8, 47), "evening": (12, 47)}
 
 
 def resolve_slot(now: datetime, requested: str | None = None) -> str:
-    """Use the explicit scheduled slot; auto falls back to the nearest UTC cron window."""
+    """Use the explicit scheduled slot; auto falls back to the most recent UTC cron window."""
     requested = (requested or "auto").strip().lower()
     if requested in SLOTS:
         return requested
