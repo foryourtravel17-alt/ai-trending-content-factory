@@ -52,6 +52,10 @@ class DailyReelDraftTests(unittest.TestCase):
             self.assertEqual(existing_draft_for_slot(out, "2026-10-23", "morning"), record)
             self.assertIsNone(existing_draft_for_slot(out, "2026-10-23", "afternoon"))
 
+            malformed = out / "draft_malformed.json"
+            malformed.write_text("[]", encoding="utf-8")
+            self.assertEqual(existing_draft_for_slot(out, "2026-10-23", "morning"), record)
+
 
     def test_workflow_runs_three_times_but_only_sends_approval_requests(self):
         workflow = Path(".github/workflows/educational_reel_draft.yml").read_text(encoding="utf-8")
