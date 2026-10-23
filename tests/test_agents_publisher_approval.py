@@ -32,7 +32,7 @@ class PublisherApprovalGateTests(unittest.TestCase):
             "META_SYSTEM_USER_TOKEN": "known-valid-system-token",
             "INSTAGRAM_ACCESS_TOKEN": "stale-instagram-token",
             "IG_ACCESS_TOKEN": "older-fallback-token",
-            "IG_USER_ID": "stale-ig-user",
+            "IG_USER_ID": "resolved-ig-user",
         }):
             with patch.object(publisher, "_meta_request", side_effect=fake_meta_request):
                 media_id = publisher._instagram_publish(
