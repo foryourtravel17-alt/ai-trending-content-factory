@@ -68,6 +68,8 @@ class PublisherTests(unittest.TestCase):
         def fake_meta_request(method, url, **kwargs):
             if method == "GET" and url.endswith("/me/accounts"):
                 return {"data": [{"id": "page-1", "name": "Bullseye Theory", "instagram_business_account": {"id": "123456", "username": "bullseye_theory"}}]}
+            if method == "GET" and url.endswith("/me/accounts"):
+                return {"data": [{"id": "page-1", "name": "Bullseye Theory", "access_token": "page-token", "instagram_business_account": {"id": "123456", "username": "bullseye_theory"}}]}
             if method == "POST" and url.endswith("/media"):
                 container_calls.append(kwargs.get("data", {}).get("caption"))
                 return {"id": "container-123"}
