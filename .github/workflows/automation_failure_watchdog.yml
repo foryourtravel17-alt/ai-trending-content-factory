@@ -3,7 +3,7 @@ name: Bullseye Automation Failure Watchdog
 on:
   workflow_run:
     workflows:
-      - "AI Trading Content Pipeline"
+      - "AI Trading Content Pipeline (Automatic Publish)"
       - "Generate Approved Reel"
       - "Publish Approved Reel to Instagram"
       - "Telegram Approval"
