@@ -18,9 +18,9 @@
 | market_publish_retry.yml | Manual dispatch with exact RETRY confirmation | No new approval — retries one signal only after the approval/freshness/duplicate preflight. |
 | market_stall_watchdog.yml | Weekday schedule | No — stalled-run alert only. |
 | pipeline.yml | Manual dispatch | No — draft-only; AUTO_PUBLISH_ENABLED=false. |
-| premium_daily_autopublish.yml | Daily schedule; manual dispatch with publish_now=true | Yes, explicit exception — sends an evergreen lesson only to the configured private Premium Telegram destination. |
+| premium_daily_autopublish.yml | Daily schedule; manual dispatch with publish_now=true | No public post — explicit private-channel exception auto-sends an evergreen lesson to the configured Premium Telegram destination. |
 | premium_telegram_education.yml | Manual dispatch | No — preview and optional read-only destination check. |
-| ritu-daily.yml | Scheduled workflow | Separate Ritu content workflow; check its own publishing guard before use, outside the Bullseye approval pipeline. |
+| ritu-daily.yml | Daily schedule; manual dispatch | No — generates and commits a content queue; no public publishing step in this workflow. |
 | telegram_approval.yml | Manual dispatch | No — informational only. |
-| test_telegram_channel.yml | Manual dispatch | No public content publishing — destination test only. |
+| test_telegram_channel.yml | Manual dispatch | Yes — sends a hard-coded Reel video to the public Bullseye Telegram channel without a content-level approval check; do not dispatch unless intentionally authorizing that exact test post. |
 | weekly_report.yml | Weekly schedule; manual dispatch | No — reporting only. |
