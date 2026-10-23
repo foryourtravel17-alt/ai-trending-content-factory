@@ -9,12 +9,19 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('description: "Generate charts and captions without publishing"', workflow)
         self.assertRegex(workflow, r"(?m)^\s+default: true\s*$")
 
-    def test_market_workflow_auto_publishes_after_existing_quality_checks(self):
+    def test_market_workflow_commits_public_images_before_live_publish(self):
         workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
         self.assertIn('HUMAN_APPROVAL: "false"', workflow)
+        self.assertIn('GENERATE_ONLY: "true"', workflow)
+        self.assertIn('PUBLISH_ONLY: "true"', workflow)
         self.assertIn("run: python -m src.orchestrator", workflow)
-        self.assertNotIn("PUBLISH_ONLY: \"true\"", workflow)
-        self.assertNotIn("HUMAN_APPROVAL: \"true\"", workflow)
+        self.assertNotIn('HUMAN_APPROVAL: "true"', workflow)
+        self.assertLess(
+            workflow.index("Commit generated approval drafts and state"),
+            workflow.index("Publish prepared market signals after generated images are public"),
+        )
+        self.assertIn("DRY_RUN: ${{ inputs.dry_run || '0' }}", workflow)
+        self.assertIn("if: always() && steps.publish.outcome != 'skipped'", workflow)
         self.assertIn("from agents.qa import", Path("src/orchestrator.py").read_text(encoding="utf-8"))
 
     def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):

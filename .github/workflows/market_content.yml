@@ -28,6 +28,8 @@ jobs:
     env:
       DRY_RUN: ${{ inputs.dry_run || '0' }}
       HUMAN_APPROVAL: "false"
+      # Generate and persist card PNGs first; Instagram requires a publicly reachable URL.
+      GENERATE_ONLY: "true"
       LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
       LLM_BASE: ${{ vars.LLM_BASE || secrets.LLM_BASE || 'https://api.venice.ai/api/v1' }}
       LLM_MODEL: ${{ vars.LLM_MODEL || secrets.LLM_MODEL || 'llama-3.3-70b' }}
@@ -61,7 +63,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
-      - name: Generate market data, charts, cards, copy, QA, and send approval request
+      - name: Generate market data, charts, copy, and QA without publishing
         run: python -m src.orchestrator
 
       - name: Export sanitized approved Market Lab feed
@@ -77,6 +79,32 @@ jobs:
             echo "No generated image/state changes to commit."
           else
             git commit -m "market: generate educational approval drafts"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Publish prepared market signals after generated images are public
+        id: publish
+        env:
+          PUBLISH_ONLY: "true"
+          # Scheduled runs publish; manual dispatch keeps its dry_run=true default.
+          DRY_RUN: ${{ inputs.dry_run || '0' }}
+        run: python -m src.orchestrator
+
+      - name: Refresh sanitized public feed with publishing outcomes
+        if: always() && steps.publish.outcome != 'skipped'
+        run: python scripts/export_public_market_feed.py
+
+      - name: Commit publishing outcomes
+        if: always() && steps.publish.outcome != 'skipped'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json data/approved_market_feed.json
+          if git diff --cached --quiet; then
+            echo "No publishing outcome changes to commit."
+          else
+            git commit -m "market: record publishing outcomes"
             git pull --rebase origin main
             git push
           fi
