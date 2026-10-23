@@ -43,7 +43,7 @@ def main():
         print("FAIL: IG_USER_ID and INSTAGRAM_USER_ID are both missing; cannot compare configured ID.")
         return 1
     try:
-        configured = get(configured_id, token)
+        configured = get(f"{configured_id}?fields=id,username", token)
         print(f"Configured account lookup: id={configured.get('id', 'MISSING')}, username=@{configured.get('username', 'unknown')}")
         pages = get("me/accounts?fields=id,name,instagram_business_account{id,username}", token)
     except RuntimeError as exc:
