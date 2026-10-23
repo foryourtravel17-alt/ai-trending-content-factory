@@ -15,7 +15,7 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn("run: python -m src.orchestrator", workflow)
         self.assertNotIn("PUBLISH_ONLY: \"true\"", workflow)
         self.assertNotIn("HUMAN_APPROVAL: \"true\"", workflow)
-        self.assertIn("agents/qa.py", Path("src/orchestrator.py").read_text(encoding="utf-8"))
+        self.assertIn("from agents.qa import", Path("src/orchestrator.py").read_text(encoding="utf-8"))
 
     def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
