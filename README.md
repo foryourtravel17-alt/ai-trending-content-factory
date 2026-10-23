@@ -10,7 +10,7 @@ A free-tier-first GitHub Actions content factory for Bullseye Theory. The origin
 - `src/reel_generator.py`: creates approved short-form Reels.
 - `src/telegram_send.py` and `src/telegram_process.py`: Telegram approval queue and callback processing.
 - `src/instagram_publish.py`: existing Reel publisher through Meta Graph API and Supabase.
-- Existing workflows continue to run independently: `pipeline.yml`, `generate_approved_reel.yml`, `instagram_publish.yml`, token health, failure watchdog, daily report, and Ritu workflow.
+- The legacy `pipeline.yml` is manual-only so it cannot create duplicate posts alongside the three-slot daily Reel scheduler. `generate_approved_reel.yml` and `instagram_publish.yml` remain its automatic publishing chain; token health, failure watchdog, daily report, and Ritu workflows continue independently.
 
 The legacy workflow uses Python 3.12 and its existing Meta/Supabase secrets. The scheduled daily educational Reel workflow runs a separate Python 3.12/FFmpeg pipeline and publishes only after automated safety checks, exact-media verification, freshness checks, and duplicate-state checks.
 
