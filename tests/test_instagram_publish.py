@@ -99,8 +99,8 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         self.assertIsNone(content)
         self.assertIn("without an accepted fact/safety check", output.getvalue())
 
-    def test_draft_older_than_24_hours_is_skipped_with_clear_log(self):
-        old = (self.now - timedelta(hours=25)).isoformat()
+    def test_draft_older_than_48_hours_is_skipped_with_clear_log(self):
+        old = (self.now - timedelta(hours=49)).isoformat()
         self.write_record("draft_stale_20261021", created_at=old)
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
