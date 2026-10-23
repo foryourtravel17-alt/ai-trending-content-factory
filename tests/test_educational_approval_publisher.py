@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from scripts import publish_approved_educational_reels as MODULE
+from src import instagram_publish as PUBLISHER
 
 
 class EducationalApprovalPublisherTests(unittest.TestCase):
@@ -35,6 +36,13 @@ class EducationalApprovalPublisherTests(unittest.TestCase):
 
     def read_state(self):
         return json.loads(self.state_path.read_text(encoding="utf-8"))
+
+    def test_metadata_json_loader_handles_missing_and_invalid_files(self):
+        missing = Path(self.temp.name) / "missing.json"
+        invalid = Path(self.temp.name) / "invalid.json"
+        invalid.write_text("{not json", encoding="utf-8")
+        self.assertIsNone(PUBLISHER.load_json(missing, None))
+        self.assertEqual(PUBLISHER.load_json(invalid, {"fallback": True}), {"fallback": True})
 
     def test_authorized_educational_approval_reaches_adapter_and_persists_returned_status(self):
         def publish(record):
