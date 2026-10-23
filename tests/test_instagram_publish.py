@@ -245,11 +245,12 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         with patch.dict(os.environ, {
             "SUPABASE_URL": "https://example.supabase.co",
             "TELEGRAM_BOT_TOKEN": "fake-test-token",
-        }):
+        }), patch.object(MODULE, "_send_telegram_video", return_value=456) as telegram:
             with patch.object(MODULE, "verify_public_video_url", return_value=record["video_url"]):
                 with patch.object(MODULE, "request", side_effect=fake_request):
-                    with self.assertRaises(MODULE.InstagramPublishUnknown):
+                    with self.assertRaisesRegex(RuntimeError, "Instagram publishing failed"):
                         MODULE.publish_content_record(path, record, ig_user_id="test-ig-user")
+            telegram.assert_called_once()
         first_saved = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(first_saved["publishing"]["instagram"]["status"], "publish_outcome_unknown")
         self.assertEqual(first_saved["publishing"]["instagram"]["creation_id"], "creation-test-123")
@@ -258,12 +259,13 @@ class InstagramPublishDiscoveryTests(unittest.TestCase):
         with patch.dict(os.environ, {
             "SUPABASE_URL": "https://example.supabase.co",
             "TELEGRAM_BOT_TOKEN": "fake-test-token",
-        }):
+        }), patch.object(MODULE, "_send_telegram_video") as telegram_retry:
             with patch.object(MODULE, "verify_public_video_url", return_value=retry_record["video_url"]):
                 with patch.object(MODULE, "request") as second_request:
-                    with self.assertRaises(MODULE.InstagramPublishUnknown):
+                    with self.assertRaisesRegex(RuntimeError, "Instagram publishing failed"):
                         MODULE.publish_content_record(path, retry_record, ig_user_id="test-ig-user")
         second_request.assert_not_called()
+        telegram_retry.assert_not_called()
 
 
 if __name__ == "__main__":
