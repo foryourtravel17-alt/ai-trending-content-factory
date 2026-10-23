@@ -19,6 +19,8 @@ on:
       - scripts/publish_approved_educational_reels.py
       - scripts/stage_publish_state.sh
       - scripts/check_deployment_readiness.py
+      - scripts/alert_expired_educational_drafts.py
+      - tests/test_expired_educational_draft_alert.py
       - src/instagram_publish.py
       - scripts/upload_educational_reel.py
       - tests/test_instagram_publish.py
@@ -121,6 +123,13 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python scripts/publish_approved_educational_reels.py
+
+      - name: Alert once for recently expired educational drafts
+        if: always() && steps.approval.outcome == 'success'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/alert_expired_educational_drafts.py
 
       - name: Export sanitized approved Market Lab feed
         if: always() && steps.approval.outcome == 'success'
