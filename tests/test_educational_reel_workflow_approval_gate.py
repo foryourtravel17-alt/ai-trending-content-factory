@@ -8,6 +8,7 @@ QUEUE_SCRIPT = ROOT / "scripts" / "queue_educational_draft.py"
 PIPELINE = ROOT / ".github" / "workflows" / "pipeline.yml"
 PREMIUM = ROOT / ".github" / "workflows" / "premium_daily_autopublish.yml"
 MATRIX = ROOT / "docs" / "APPROVAL_MATRIX.md"
+TEST_CHANNEL = ROOT / ".github" / "workflows" / "test_telegram_channel.yml"
 
 
 class EducationalReelWorkflowApprovalGateTests(unittest.TestCase):
@@ -26,6 +27,12 @@ class EducationalReelWorkflowApprovalGateTests(unittest.TestCase):
         self.assertNotIn('AUTO_PUBLISH_ENABLED: "true"', pipeline)
         self.assertIn("explicit exception", premium)
         self.assertIn("PREMIUM_TELEGRAM_CHAT_ID", premium)
+
+    def test_public_telegram_test_post_requires_explicit_confirmation(self):
+        workflow = TEST_CHANNEL.read_text(encoding="utf-8")
+        self.assertIn("confirm_test_post", workflow)
+        self.assertIn("default: false", workflow)
+        self.assertIn("inputs.confirm_test_post == true", workflow)
 
     def test_approval_matrix_lists_every_workflow(self):
         matrix = MATRIX.read_text(encoding="utf-8")
