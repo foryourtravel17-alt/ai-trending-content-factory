@@ -5,9 +5,10 @@ on:
     paths:
       - '.github/workflows/instagram_token_health.yml'
       - 'agents/publisher.py'
+      - 'tests/test_workflow_safety.py'
   workflow_dispatch:
   schedule:
-    # Avoid the top of the hour because GitHub documents higher Actions load there.
+    # Avoid the top of the hour because GitHub documents higher Actions load.
     - cron: "17 */6 * * *"
 
 permissions:
@@ -27,13 +28,13 @@ jobs:
           META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
         run: |
           set -euo pipefail
-          token="${META_SYSTEM_USER_TOKEN:-${IG_ACCESS_TOKEN:-${INSTAGRAM_ACCESS_TOKEN:-}}}"
+          token="${INSTAGRAM_ACCESS_TOKEN:-${IG_ACCESS_TOKEN:-${META_SYSTEM_USER_TOKEN:-}}}"
           if [ -z "${token}" ]; then
-            echo "ERROR: No Meta System User credential configured."
+            echo "ERROR: No Meta credential configured."
             exit 1
           fi
           response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,access_token,instagram_business_account{id,username}" --data-urlencode "access_token=${token}")"
-          if echo "${response}" | grep -q '"error"'; then echo "${response}"; exit 1; fi
+          if echo "${response}" | grep -q '"error"'; then echo "ERROR: Meta could not resolve the linked Page; response redacted."; exit 1; fi
           linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id")]; print((rows[0].get("instagram_business_account") or {}).get("id","") if len(rows)==1 else "")' <<<"${response}")"
           page_token="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id")]; print(rows[0].get("access_token","") if len(rows)==1 else "")' <<<"${response}")"
           if [ -z "${linked}" ] || [ -z "${page_token}" ]; then
@@ -48,7 +49,7 @@ jobs:
           fi
           account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username" --data-urlencode "access_token=${page_token}")"
           if echo "${account_response}" | grep -q '"error"'; then
-            echo "ERROR: The Page-linked Instagram account cannot be loaded with the publishing token. Meta returned an account-access error; values and token are redacted."
+            echo "ERROR: The Page-linked Instagram account cannot be loaded with its Page access token. Meta response redacted."
             exit 1
           fi
           echo "PASS: the Instagram account linked to the Bullseye Theory Page is readable with its Page access token."
