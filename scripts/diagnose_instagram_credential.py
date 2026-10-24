@@ -81,7 +81,7 @@ def main():
 
     # Scope inspection is read-only. Some System User token types do not expose
     # /me/permissions; in that case report the limitation rather than guessing.
-    missing_publish_scope = False
+    missing_required_scopes = None
     try:
         permission_body = get("me/permissions", token)
         permission_rows = permission_body.get("data", []) if isinstance(permission_body, dict) else []
@@ -91,9 +91,10 @@ def main():
             if isinstance(item, dict) and str(item.get("status", "")).lower() == "granted"
         }
         if permission_rows:
-            for scope in ("pages_show_list", "pages_read_engagement", "instagram_basic", "instagram_content_publish"):
+            required_scopes = {"pages_show_list", "pages_read_engagement", "instagram_basic", "instagram_content_publish"}
+            for scope in sorted(required_scopes):
                 print(f"Meta permission {scope}: {'GRANTED' if scope in granted else 'NOT GRANTED'}")
-            missing_publish_scope = "instagram_content_publish" not in granted
+            missing_required_scopes = required_scopes - granted
         else:
             print("WARNING: Meta returned no permission rows; publishing scope could not be verified.")
     except RuntimeError as exc:
@@ -118,11 +119,16 @@ def main():
 
     if configured_id == linked_id and configured_lookup_ok:
         print("MATCH: configured account ID equals the Instagram account linked to the Bullseye Theory Page.")
-        if missing_publish_scope:
-            print("BLOCKED: instagram_content_publish is not granted to this credential.")
+        if missing_required_scopes:
+            print("BLOCKED: required Instagram publishing permissions are missing: " + ", ".join(sorted(missing_required_scopes)))
+            print("Grant the missing permissions to the Meta app/System User, then refresh the credential.")
             print("FAIL")
             return 1
-        print("PASS: linked account ID matches; scope lookup did not report a missing publishing permission.")
+        if missing_required_scopes is None:
+            print("WARNING: account ID matches, but required publishing permissions could not be verified.")
+            print("PASS: account-link check only; publishing readiness remains unverified.")
+            return 0
+        print("PASS: account ID matches and required publishing permissions are granted.")
         return 0
 
     print("MISMATCH: configured account ID is missing, invalid, or differs from the linked Instagram account.")
