@@ -11,7 +11,8 @@ class InstagramCredentialDiagnosticTests(unittest.TestCase):
     def test_bad_configured_id_does_not_block_page_resolution_and_prints_correct_id(self):
         calls = []
 
-        def fake_get(path, token):
+        def fake_get(url, params=None, timeout=None):
+            path = url.split('/v23.0/', 1)[-1]
             calls.append(path)
             if path.startswith("me/accounts?"):
                 class Response:
