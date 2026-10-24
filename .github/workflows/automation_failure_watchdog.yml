@@ -12,6 +12,9 @@ on:
       - "Bullseye Daily Educational Reel Draft"
       - "Bullseye Premium Daily Auto-Publish"
       - "Diagnose Instagram Credential Link (Read Only)"
+      - "Bullseye Daily Automation Report"
+      - "Ritu Daily Content Pack"
+      - "Bullseye Organic-to-Paid Preflight"
     types: [completed]
 
 permissions:
