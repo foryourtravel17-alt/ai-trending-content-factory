@@ -10,6 +10,20 @@ WATCHDOG = WORKFLOWS_DIR / "automation_failure_watchdog.yml"
 
 
 class WatchdogWorkflowNameTests(unittest.TestCase):
+    def test_every_scheduled_workflow_is_watched(self):
+        watchdog = yaml.load(WATCHDOG.read_text(encoding="utf-8"), Loader=yaml.BaseLoader) or {}
+        configured = set(watchdog.get("on", {}).get("workflow_run", {}).get("workflows", []))
+        unwatched = []
+        for path in WORKFLOWS_DIR.glob("*.yml"):
+            if path == WATCHDOG:
+                continue
+            parsed = yaml.load(path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader) or {}
+            triggers = parsed.get("on", {}) or {}
+            name = parsed.get("name", "")
+            if "schedule" in triggers and name.strip() and name.strip() not in configured:
+                unwatched.append(f"{path.name} ({name.strip()})")
+        self.assertFalse(unwatched, "Scheduled workflow(s) missing from failure watchdog: " + ", ".join(sorted(unwatched)))
+
     def test_every_watchdog_entry_matches_a_current_workflow_name(self):
         actual_names = set()
         for path in WORKFLOWS_DIR.glob("*.yml"):
