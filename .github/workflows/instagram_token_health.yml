@@ -37,7 +37,7 @@ jobs:
               continue
             fi
             response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,access_token,instagram_business_account{id,username}" --data-urlencode "access_token=${candidate}")"
-            if echo "${response}" | grep -q '"error"'; then
+            if grep -q '"error"' <<<"${response}"; then
               echo "INFO: Meta Page lookup failed for credential source ${source}; trying next configured source."
               continue
             fi
@@ -61,7 +61,7 @@ jobs:
             echo "WARNING: Legacy Instagram account-ID secret is stale; publisher will use the account resolved from the exact Bullseye Theory Page. No secret values are printed."
           fi
           account_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/${linked}" --data-urlencode "fields=id,username" --data-urlencode "access_token=${page_token}")"
-          if echo "${account_response}" | grep -q '"error"'; then
+          if grep -q '"error"' <<<"${account_response}"; then
             echo "ERROR: The Page-linked Instagram account cannot be loaded with its Page access token. Meta response redacted."
             exit 1
           fi
