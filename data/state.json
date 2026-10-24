@@ -9100,6 +9100,43 @@
           "sent_at": "2026-10-24T09:10:09.922643+00:00"
         }
       }
+    },
+    "draft_false-breakouts_afternoon_20261024_125550": {
+      "content_type": "educational_reel",
+      "content_id": "draft_false-breakouts_afternoon_20261024_125550",
+      "metadata_path": "output/draft_false-breakouts_afternoon_20261024_125550.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-24T12:57:04.789379+00:00",
+      "created_at": "2026-10-24T12:55:50.592624+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_false-breakouts_afternoon_20261024_125550",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-24T12:55:50.592624+00:00",
+        "title": "False Breakouts: Read the Reaction, Not Just the Wick"
+      },
+      "copy": {
+        "telegram_html": "A candle poking beyond a level does not prove a breakout will hold.\n\nPrice can move beyond a visible level and then return to the prior range. Traders often call this a false breakout, but the label is clearer after observing the reaction. Look at the close, follow-through, surrounding structure, and your invalidation criteria. No single candle can guarantee continuation.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "A candle poking beyond a level does not prove a breakout will hold.\n\nPrice can move beyond a visible level and then return to the prior range. Traders often call this a false breakout, but the label is clearer after observing the reaction. Look at the close, follow-through, surrounding structure, and your invalidation criteria. No single candle can guarantee continuation.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_false-breakouts_afternoon_20261024_125550.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-24T12:57:04.789379+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 328,
+          "sent_at": "2026-10-24T12:57:05.637639+00:00"
+        }
+      }
     }
   },
   "runs": [
