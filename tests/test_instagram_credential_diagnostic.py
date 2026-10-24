@@ -54,6 +54,7 @@ class InstagramCredentialDiagnosticTests(unittest.TestCase):
         self.assertIn("CORRECT IG_USER_ID = correct-ig-123", text)
         self.assertIn("SET IG_USER_ID to this value: correct-ig-123", text)
         self.assertIn("ENV IG_USER_ID: EMPTY", text)
+        self.assertIn("WARNING: Permission-scope lookup unavailable", text)
 
 
 if __name__ == "__main__":
