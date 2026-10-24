@@ -94,6 +94,8 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('"instagram_content_publish"', workflow)
         self.assertIn("required Meta publishing permissions are missing or could not be verified", workflow)
         self.assertIn("Alert Telegram on invalid token, missing scopes, or broken Instagram link", workflow)
+        self.assertIn("if: github.event_name != 'push'", workflow)
+        self.assertIn("Scheduled and manual runs still perform the real credential/scope check", workflow)
 
 
 if __name__ == "__main__":
