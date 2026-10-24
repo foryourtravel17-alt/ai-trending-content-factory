@@ -54,12 +54,12 @@ jobs:
             echo "ERROR: Meta Page lookup failed for the selected publisher credential source ${token_source}; no fallback token will be tested. Credential values redacted."
             exit 1
           fi
-          parsed="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id") and x.get("access_token")]; print(str((rows[0].get("instagram_business_account") or {}).get("id",""))+"\\t"+str(rows[0].get("access_token","")) if len(rows)==1 else "")' <<<"${response}")"
+          parsed="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id") and x.get("access_token")]; print(str((rows[0].get("instagram_business_account") or {}).get("id",""))+"\t"+str(rows[0].get("access_token","")) if len(rows)==1 else "")' <<<"${response}")"
           if [ -z "${parsed}" ]; then
             echo "ERROR: The selected publisher credential did not resolve exactly one Bullseye Theory Page with a linked Instagram account and Page access token. Credential values redacted."
             exit 1
           fi
-          IFS=$'\\t' read -r linked page_token <<<"${parsed}"
+          IFS=$'\t' read -r linked page_token <<<"${parsed}"
           echo "INFO: Page link resolved using the same credential source as the publisher (${token_source}); credential values redacted."
 
           # A readable linked Page is not enough: verify the scopes used by publishing.
