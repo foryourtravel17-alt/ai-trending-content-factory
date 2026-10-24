@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_risk-reward_evening_20261024_161502",
+  "created_at": "2026-10-24T16:15:02.395864+00:00",
+  "schedule_slot": {
+    "name": "evening",
+    "utc_date": "2026-10-24",
+    "index": 2
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "pending_approval",
+  "topic": {
+    "title": "Risk-to-Reward Is a Planning Tool, Not a Win-Rate Promise",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "Reward-to-risk compares a planned potential gain with a planned potential loss. It does not tell you how often a setup wins, and real fills can differ because of costs or slippage. Evaluate a method over a meaningful sample, include expenses, and avoid treating one ratio as proof of an edge.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+      "Owner must review the exact script, caption, hashtags and matching video before publication."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "safety_screened_at": "2026-10-24T16:16:11.555722+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "A two-to-one reward-to-risk ratio does not guarantee a profitable strategy.",
+    "body": "Reward-to-risk compares a planned potential gain with a planned potential loss. It does not tell you how often a setup wins, and real fills can differ because of costs or slippage. Evaluate a method over a meaningful sample, include expenses, and avoid treating one ratio as proof of an edge.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "risk",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "COMPARE PLANNED OUTCOMES",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "INCLUDE COSTS",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "TRACK A SAMPLE",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "RATIO ≠ EDGE",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "A two-to-one reward-to-risk ratio does not guarantee a profitable strategy.\n\nReward-to-risk compares a planned potential gain with a planned potential loss. It does not tell you how often a setup wins, and real fills can differ because of costs or slippage. Evaluate a method over a meaningful sample, include expenses, and avoid treating one ratio as proof of an edge.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "human_review",
+    "safety_screened_at": "2026-10-24T16:16:11.555722+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "term",
+  "reel_generated_at": "2026-10-24T16:16:05.079584+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_risk-reward_evening_20261024_161502.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_risk-reward_evening_20261024_161502.mp4",
+  "video_content_id": "draft_risk-reward_evening_20261024_161502",
+  "video_sha256": "3c10791ee439ef6815b45577efd18bb283df23c1df485cc70c3ab4b25ebe5b5b",
+  "video_size_bytes": 1658037,
+  "video_duration_seconds": 42.733333,
+  "video_uploaded_at": "2026-10-24T16:16:11.507066+00:00"
+}
