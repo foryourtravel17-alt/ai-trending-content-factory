@@ -12,7 +12,7 @@
 | instagram_credential_diagnostic.yml | Manual dispatch | No — read-only credential and Page-link diagnostic. |
 | instagram_token_health.yml | Schedule; push; manual dispatch | No — credential diagnostics only. |
 | market_approval_poll.yml | Every 5 minutes; push; market workflow completion; manual dispatch | No — public publishing through this poller requires an existing owner approval state. |
-| market_content.yml | Weekday schedule; manual dispatch | Yes for scheduled runs — market scenarios use automated QA and HUMAN_APPROVAL=false; manual dispatch defaults to dry-run. |
+| market_content.yml | Weekday schedule; manual dispatch | No — scheduled market scenarios require an authorized owner approval in private Telegram before public posting; manual dispatch defaults to dry-run. |
 | market_content_tests.yml | Pull request/push/manual CI trigger | No — tests only. |
 | market_publish_retry.yml | Manual dispatch with exact RETRY confirmation | No new approval — retries one signal only after the approval/freshness/duplicate preflight. |
 | market_stall_watchdog.yml | Weekday schedule | No — stalled-run alert only. |
