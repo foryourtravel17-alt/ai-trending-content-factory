@@ -14,7 +14,7 @@ The scheduled daily educational Reel workflow runs a Python 3.12/FFmpeg pipeline
 
 `.github/workflows/educational_reel_draft.yml` generates three curated evergreen educational Reel drafts per day at 10:17 AM, 2:17 PM, and 6:17 PM India time. It renders one MP4 per slot, uploads and verifies the exact object in Supabase, registers the draft as pending human review, and sends a private Telegram approval request. It does not publish publicly. The approval poller publishes only after the owner approves the exact draft; automated safety screening is not approval. Approved drafts have a 48-hour publishing window, and one private Telegram notice lists drafts that expired in the last 24 hours. Scheduled runs pass the intended slot explicitly so delayed GitHub cron starts cannot mislabel a slot.
 
-Market cards auto-publish on schedule by design; educational Reels require owner approval.
+Market cards are generated on schedule and sent to the owner private Telegram for approval; public posting happens only after an explicit approval button. Educational Reels also require owner approval.
 
 ## New market-content factory
 
@@ -39,11 +39,11 @@ Market cards auto-publish on schedule by design; educational Reels require owner
 - 13:30 IST (08:00 UTC)
 - 15:45 IST (10:15 UTC)
 
-The workflow first generates and commits PNGs/state, then publishes. That order allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. Manual dispatch defaults to `dry_run=true` so the first manual run is safe; set it to `false` only after reviewing generated output and confirming credentials and hosting.
+The workflow first generates and commits PNGs/state, then sends approval requests to the owner's private Telegram chat. After an authorized approval callback, the poller publishes the selected card. Committing the PNG first allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. Manual dispatch defaults to `dry_run=true` so the first manual run is safe; set it to `false` only after reviewing generated output and confirming credentials and hosting.
 
 **Important hosting and visibility note:** this repository is currently **public** (verified on GitHub). Instagram needs a publicly reachable HTTPS image URL; the publisher checks URL reachability and fails rather than posting a broken image. Keep secrets and private account data out of source, commits, generated output, and logs. GitHub Pages or `IMAGE_BASE_URL` can serve generated cards. Do not change repository visibility as part of this workflow without first reviewing the image-hosting impact.
 
-`.github/workflows/market_approval_poll.yml` is the single Telegram callback consumer for approval-gated market records and educational Reels. Market-card publication remains a separate automated-QA path configured with `HUMAN_APPROVAL=false`; that is an explicit automated-policy exception and is documented in [the approval matrix](docs/APPROVAL_MATRIX.md).
+`.github/workflows/market_approval_poll.yml` is the single Telegram callback consumer for market records and educational Reels. The market factory uses `HUMAN_APPROVAL=true`: new market cards are sent to the owner private Telegram, and public posting is attempted only after an authorized owner approval callback and freshness/duplicate preflight.
 
 `.github/workflows/weekly_report.yml` sends a Friday Telegram report. It estimates hypothetical signal outcomes from post-signal hourly OHLC (conservatively counting same-candle stop/target ambiguity as a stop) and fetches Instagram Insights when permissions allow. This is not actual broker P&L; the report clearly labels it as scenario analysis. `.github/workflows/market_stall_watchdog.yml` checks weekday evening for a recent successful market-content run and sends an alert only if the scheduled factory appears stalled. The failure watchdog also monitors the new market workflows.
 
@@ -72,7 +72,7 @@ Optional/compatibility:
 - `META_APP_ID`, `META_APP_SECRET` — only needed locally by the token refresh helper; never commit them
 
 Recommended repository **Variables** (Settings → Secrets and variables → Actions → Variables):
-- Market publishing sets `HUMAN_APPROVAL=false` in the workflow so eligible new market scenarios publish automatically after quality and freshness checks.
+- Market publishing sets `HUMAN_APPROVAL=true`; scheduled runs request owner approval in private Telegram, and only a recorded authorized approval can trigger public publishing.
 - `LLM_ENABLED` = `true` to use the configured LLM; fallback copy works if unavailable
 - `LLM_BASE` = `https://api.venice.ai/api/v1` (or your OpenAI-compatible base URL)
 - `LLM_MODEL` = your selected model, default `llama-3.3-70b`
@@ -88,7 +88,7 @@ The workflow accepts `GH_USER` and `GH_REPO` as secrets. They are not sensitive,
 3. Create or open the Bullseye Theory channel (`@bullseye_theory`) and add the bot as an administrator with permission to post.
 4. Start a private chat with your bot and send `/start`.
 5. Obtain your private chat ID using the bot's `getUpdates` response or a trusted Telegram ID helper, then set `TELEGRAM_CHAT_ID`. The bot must be able to message you before draft delivery works.
-6. Scheduled market scenarios use the documented automated-QA policy. Educational Reel drafts do **not** publish automatically: review the exact MP4, caption, and hashtags in your private Telegram chat, then press the approval button. The separate Premium Telegram lesson workflow is an explicit private-channel exception and requires `PREMIUM_TELEGRAM_CHAT_ID`.
+6. Scheduled market scenarios and educational Reel drafts both require owner approval in your private Telegram chat. Review each exact card/Reel, caption, and hashtags, then press the approval button to authorize that item for public posting. The separate Premium Telegram lesson workflow is an explicit private-channel exception and requires `PREMIUM_TELEGRAM_CHAT_ID`.
 
 ### 3. Set up Instagram Graph API
 
@@ -121,7 +121,7 @@ By default, the script exchanges the token and updates the repository secret `IG
 1. Confirm the secrets/variables above are configured.
 2. Open **Actions → Autonomous Market Content Factory → Run workflow**.
 3. The manual workflow defaults to `dry_run=true`. It should generate charts, cards, copy, and QA/state records but must not post to Telegram or Instagram.
-4. Review the Action log and generated output after the dry run. Scheduled runs publish automatically; for manual dispatch, set `dry_run=false` only when you intentionally want to send content live. Instagram/Telegram credentials, public image hosting, and Meta permissions must be configured first.
+4. Review the Action log and generated output after the dry run. Scheduled runs send new market scenarios to private Telegram for review; a public post requires the owner to press the approval button. For manual dispatch, set `dry_run=false` only when you intentionally want to generate and send review requests. Instagram/Telegram credentials, public image hosting, and Meta permissions must be configured first.
 5. Watch **Actions** for per-symbol warnings and platform status. A weak/neutral setup is skipped. If Yahoo Finance has no valid candles or every symbol fails, inspect the logs; the system does not fabricate a signal. Stale hourly data is rejected after 20 hours for non-crypto instruments and 36 hours for crypto. Missing publishing credentials now fail the publish step rather than silently claiming success.
 6. Run the QA unit tests locally or in CI with `python -m unittest discover -s tests`.
 
