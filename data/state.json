@@ -9063,6 +9063,43 @@
       "status": "publish_failed",
       "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/ndx-2026102314-short_card.png",
       "last_error": "See workflow logs for details."
+    },
+    "draft_overtrading_morning_20261024_090905": {
+      "content_type": "educational_reel",
+      "content_id": "draft_overtrading_morning_20261024_090905",
+      "metadata_path": "output/draft_overtrading_morning_20261024_090905.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-24T09:10:09.203156+00:00",
+      "created_at": "2026-10-24T09:09:05.608983+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_overtrading_morning_20261024_090905",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-24T09:09:05.608983+00:00",
+        "title": "Overtrading Can Turn Small Decisions Into Big Problems"
+      },
+      "copy": {
+        "telegram_html": "More trades do not automatically mean more progress.\n\nRepeated entries can come from boredom, frustration, or trying to recover a loss. A written plan can define when a setup is valid and when to stop for the day. Track whether each trade followed your rules rather than judging yourself only by the result. Sometimes the disciplined decision is to do nothing.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "More trades do not automatically mean more progress.\n\nRepeated entries can come from boredom, frustration, or trying to recover a loss. A written plan can define when a setup is valid and when to stop for the day. Track whether each trade followed your rules rather than judging yourself only by the result. Sometimes the disciplined decision is to do nothing.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_overtrading_morning_20261024_090905.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-24T09:10:09.203156+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 327,
+          "sent_at": "2026-10-24T09:10:09.922643+00:00"
+        }
+      }
     }
   },
   "runs": [
