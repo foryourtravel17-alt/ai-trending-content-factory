@@ -34,29 +34,33 @@ jobs:
           linked=""
           page_token=""
           token_source=""
-          for source in INSTAGRAM_ACCESS_TOKEN IG_ACCESS_TOKEN META_SYSTEM_USER_TOKEN; do
-            candidate="${!source:-}"
-            if [ -z "${candidate}" ]; then
-              continue
-            fi
-            response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,access_token,instagram_business_account{id,username}" --data-urlencode "access_token=${candidate}")"
-            if grep -q '"error"' <<<"${response}"; then
-              echo "INFO: Meta Page lookup failed for credential source ${source}; trying next configured source."
-              continue
-            fi
-            parsed="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id") and x.get("access_token")]; print(str((rows[0].get("instagram_business_account") or {}).get("id",""))+"\t"+str(rows[0].get("access_token","")) if len(rows)==1 else "")' <<<"${response}")"
-            if [ -n "${parsed}" ]; then
-              IFS=$'\t' read -r linked page_token <<<"${parsed}"
+          candidate=""
+          # Match agents/publisher.py: validate the exact credential the publisher will use.
+          # Do not pass by falling back to a different token when the primary credential fails.
+          for source in META_SYSTEM_USER_TOKEN INSTAGRAM_ACCESS_TOKEN IG_ACCESS_TOKEN; do
+            configured_candidate="${!source:-}"
+            if [ -n "${configured_candidate}" ]; then
+              candidate="${configured_candidate}"
               token_source="${source}"
               break
             fi
-            echo "INFO: Credential source ${source} did not resolve exactly one linked Bullseye Theory Page; trying next configured source."
           done
-          if [ -z "${linked}" ] || [ -z "${page_token}" ]; then
-            echo "ERROR: No configured Meta credential could resolve exactly one Bullseye Theory Page with a linked Instagram account and Page access token. Credential values redacted."
+          if [ -z "${candidate}" ]; then
+            echo "ERROR: No Instagram publishing credential is configured in publisher priority order. Credential values redacted."
             exit 1
           fi
-          echo "INFO: Page link resolved using credential source ${token_source}; credential values redacted."
+          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,tasks,access_token,instagram_business_account{id,username}" --data-urlencode "access_token=${candidate}")"
+          if grep -q '"error"' <<<"${response}"; then
+            echo "ERROR: Meta Page lookup failed for the selected publisher credential source ${token_source}; no fallback token will be tested. Credential values redacted."
+            exit 1
+          fi
+          parsed="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if str(x.get("name","")).strip().casefold()=="bullseye theory" and (x.get("instagram_business_account") or {}).get("id") and x.get("access_token")]; print(str((rows[0].get("instagram_business_account") or {}).get("id",""))+"\t"+str(rows[0].get("access_token","")) if len(rows)==1 else "")' <<<"${response}")"
+          if [ -z "${parsed}" ]; then
+            echo "ERROR: The selected publisher credential did not resolve exactly one Bullseye Theory Page with a linked Instagram account and Page access token. Credential values redacted."
+            exit 1
+          fi
+          IFS=$'\t' read -r linked page_token <<<"${parsed}"
+          echo "INFO: Page link resolved using the same credential source as the publisher (${token_source}); credential values redacted."
 
           # A readable linked Page is not enough: verify the scopes used by publishing.
           permissions_response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/permissions" --data-urlencode "access_token=${candidate}")"
