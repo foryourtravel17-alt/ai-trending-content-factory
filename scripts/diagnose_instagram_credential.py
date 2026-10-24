@@ -47,7 +47,7 @@ def main():
 
     # Resolve the source of truth first. A stale configured ID must never block this.
     try:
-        pages = get("me/accounts?fields=id,name,instagram_business_account{id,username}", token)
+        pages = get("me/accounts?fields=id,name,tasks,instagram_business_account{id,username}", token)
     except RuntimeError as exc:
         print(f"FAIL: Page-link resolution failed: {exc}")
         return 1
@@ -58,6 +58,9 @@ def main():
             continue
         ig = page.get("instagram_business_account") or {}
         print(f"Page: {page.get('name', 'unnamed')} | linked Instagram: @{ig.get('username', 'none')} | linked ID present: {'yes' if ig.get('id') else 'no'}")
+        tasks = page.get("tasks")
+        if isinstance(tasks, list):
+            print(f"Page tasks for {page.get('name', 'unnamed')}: {', '.join(str(task) for task in tasks) or 'none returned'}")
 
     target = [
         p for p in rows
@@ -76,6 +79,29 @@ def main():
     print(f"Correct linked Instagram account: id={linked_id}, username=@{linked_username}")
     print(f"CORRECT IG_USER_ID = {linked_id}")
 
+    # Scope inspection is read-only. Some System User token types do not expose
+    # /me/permissions; in that case report the limitation rather than guessing.
+    missing_publish_scope = False
+    try:
+        permission_body = get("me/permissions", token)
+        permission_rows = permission_body.get("data", []) if isinstance(permission_body, dict) else []
+        granted = {
+            str(item.get("permission", "")).strip()
+            for item in permission_rows
+            if isinstance(item, dict) and str(item.get("status", "")).lower() == "granted"
+        }
+        if permission_rows:
+            for scope in ("pages_show_list", "pages_read_engagement", "instagram_basic", "instagram_content_publish"):
+                print(f"Meta permission {scope}: {'GRANTED' if scope in granted else 'NOT GRANTED'}")
+            missing_publish_scope = "instagram_content_publish" not in granted
+        else:
+            print("WARNING: Meta returned no permission rows; publishing scope could not be verified.")
+    except RuntimeError as exc:
+        import re
+        match = re.search(r"code=([^,]+), subcode=([^;]+)", str(exc))
+        code, subcode = match.groups() if match else ("unknown", "unknown")
+        print(f"WARNING: Permission-scope lookup unavailable (code={code}, subcode={subcode}); confirm Instagram content-publishing access in Meta settings.")
+
     configured_lookup_ok = False
     if configured_id:
         try:
@@ -92,7 +118,11 @@ def main():
 
     if configured_id == linked_id and configured_lookup_ok:
         print("MATCH: configured account ID equals the Instagram account linked to the Bullseye Theory Page.")
-        print("PASS")
+        if missing_publish_scope:
+            print("BLOCKED: instagram_content_publish is not granted to this credential.")
+            print("FAIL")
+            return 1
+        print("PASS: linked account ID matches; scope lookup did not report a missing publishing permission.")
         return 0
 
     print("MISMATCH: configured account ID is missing, invalid, or differs from the linked Instagram account.")
