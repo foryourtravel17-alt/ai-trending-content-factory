@@ -79,10 +79,13 @@ class WorkflowSafetyTests(unittest.TestCase):
         readme = Path("README.md").read_text(encoding="utf-8")
         self.assertIn("Market cards are generated on schedule and sent to the owner private Telegram for approval; public posting happens only after an explicit approval button.", readme)
 
-    def test_instagram_health_check_falls_back_between_configured_credentials_without_leaking_values(self):
+    def test_instagram_health_check_uses_publisher_token_priority_without_fallback(self):
         workflow = Path(".github/workflows/instagram_token_health.yml").read_text(encoding="utf-8")
-        self.assertIn("for source in INSTAGRAM_ACCESS_TOKEN IG_ACCESS_TOKEN META_SYSTEM_USER_TOKEN; do", workflow)
-        self.assertIn("trying next configured source", workflow)
+        publisher = Path("agents/publisher.py").read_text(encoding="utf-8")
+        self.assertIn("for source in META_SYSTEM_USER_TOKEN INSTAGRAM_ACCESS_TOKEN IG_ACCESS_TOKEN; do", workflow)
+        self.assertIn('("META_SYSTEM_USER_TOKEN", "INSTAGRAM_ACCESS_TOKEN", "IG_ACCESS_TOKEN")', publisher)
+        self.assertIn("selected publisher credential source", workflow)
+        self.assertNotIn("trying next configured source", workflow)
         self.assertIn("credential values redacted", workflow)
         self.assertNotIn('echo "${response}"', workflow)
         self.assertNotIn('echo "${account_response}"', workflow)
