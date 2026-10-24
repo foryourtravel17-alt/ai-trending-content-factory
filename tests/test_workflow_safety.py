@@ -87,6 +87,14 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertNotIn('echo "${response}"', workflow)
         self.assertNotIn('echo "${account_response}"', workflow)
 
+    def test_instagram_health_check_blocks_missing_publish_scopes(self):
+        workflow = Path(".github/workflows/instagram_token_health.yml").read_text(encoding="utf-8")
+        self.assertIn("/me/permissions", workflow)
+        self.assertIn('"pages_read_engagement"', workflow)
+        self.assertIn('"instagram_content_publish"', workflow)
+        self.assertIn("required Meta publishing permissions are missing or could not be verified", workflow)
+        self.assertIn("Alert Telegram on invalid token, missing scopes, or broken Instagram link", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
