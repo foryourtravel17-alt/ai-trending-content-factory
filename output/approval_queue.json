@@ -504,6 +504,11 @@
       "content_id": "draft_risk-reward_evening_20261024_161502",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_trading-journal_morning_20261025_092636",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -531,6 +536,7 @@
     "content_20261021_140206_1",
     "draft_false-breakouts_afternoon_20261024_125550",
     "draft_overtrading_morning_20261024_090905",
-    "draft_risk-reward_evening_20261024_161502"
+    "draft_risk-reward_evening_20261024_161502",
+    "draft_trading-journal_morning_20261025_092636"
   ]
 }

@@ -9174,6 +9174,43 @@
           "sent_at": "2026-10-24T16:16:12.243252+00:00"
         }
       }
+    },
+    "draft_trading-journal_morning_20261025_092636": {
+      "content_type": "educational_reel",
+      "content_id": "draft_trading-journal_morning_20261025_092636",
+      "metadata_path": "output/draft_trading-journal_morning_20261025_092636.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-25T09:27:52.323650+00:00",
+      "created_at": "2026-10-25T09:26:36.718557+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_trading-journal_morning_20261025_092636",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-25T09:26:36.718557+00:00",
+        "title": "A Trading Journal Helps You Review Decisions, Not Predict Price"
+      },
+      "copy": {
+        "telegram_html": "Your journal is more useful when it records the decision—not just the profit.\n\nRecord the setup, the reason for entry, the invalidation point, the risk, and whether you followed your rules. Review a group of trades to look for repeated process errors. A small sample can be misleading, and a journal cannot remove uncertainty, but it can make your learning more structured.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "Your journal is more useful when it records the decision—not just the profit.\n\nRecord the setup, the reason for entry, the invalidation point, the risk, and whether you followed your rules. Review a group of trades to look for repeated process errors. A small sample can be misleading, and a journal cannot remove uncertainty, but it can make your learning more structured.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_trading-journal_morning_20261025_092636.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-25T09:27:52.323650+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 336,
+          "sent_at": "2026-10-25T09:27:53.142865+00:00"
+        }
+      }
     }
   },
   "runs": [
