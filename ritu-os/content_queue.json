@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T14:29:27.373327+05:30",
+  "generated_at": "2026-10-25T14:46:25.917344+05:30",
   "mode": "free-first",
   "status": "ready_for_asset_generation",
   "manual_required": [
@@ -10,16 +10,6 @@
     {
       "slot": 1,
       "type": "reel",
-      "theme": "Dating",
-      "hook": "Mujhe slow cheezein bilkul pasand nahi… reply ho ya chemistry. 😂",
-      "caption": "Fast replies are nice. Real chemistry is better. 👀",
-      "visual": "Photorealistic adult Ritu, consistent face, tasteful evening outfit, modern city background, natural movement, cinematic vertical 9:16, non-graphic.",
-      "approval": "pending",
-      "publishing": "not_connected"
-    },
-    {
-      "slot": 2,
-      "type": "reel",
       "theme": "Confidence",
       "hook": "Maybe you should've been paying attention earlier. 👀",
       "caption": "Timing matters. So does confidence. 🖤",
@@ -28,12 +18,22 @@
       "publishing": "not_connected"
     },
     {
-      "slot": 3,
+      "slot": 2,
       "type": "photo",
       "theme": "Travel",
       "hook": "A little escape changes everything.",
       "caption": "If I disappear for a weekend, where should I go? 🌴",
       "visual": "Photorealistic adult Ritu, recognizable face, tasteful resort outfit with cover-up, tropical destination, natural sunlight, realistic travel photography, vertical 4:5.",
+      "approval": "pending",
+      "publishing": "not_connected"
+    },
+    {
+      "slot": 3,
+      "type": "reel",
+      "theme": "Romance",
+      "hook": "Raat meri hai… attention tumhari. 😉🌙",
+      "caption": "Night mood, city lights, and a little mystery. 🌙",
+      "visual": "Photorealistic adult Ritu, consistent identity, elegant black evening outfit, luxury bedroom or rooftop ambience, warm cinematic lighting, non-graphic, vertical 9:16.",
       "approval": "pending",
       "publishing": "not_connected"
     }
