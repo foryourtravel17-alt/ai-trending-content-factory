@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_market-structure_evening_20261025_164933",
+  "created_at": "2026-10-25T16:49:33.662086+00:00",
+  "schedule_slot": {
+    "name": "evening",
+    "utc_date": "2026-10-25",
+    "index": 2
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "pending_approval",
+  "topic": {
+    "title": "Market Structure: Higher Highs, Lower Lows, and Real Direction",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "A sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+      "Owner must review the exact script, caption, hashtags and matching video before publication."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "safety_screened_at": "2026-10-25T16:50:55.149373+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "Before you call a market bullish, check what its swing points are actually doing.",
+    "body": "A sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "trend",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "MARK EACH SWING",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "TRACE THE SEQUENCE",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "ZOOM OUT FOR CONTEXT",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "WAIT FOR CONFIRMATION",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "Before you call a market bullish, check what its swing points are actually doing.\n\nA sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "human_review",
+    "safety_screened_at": "2026-10-25T16:50:55.149373+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "cta",
+  "reel_generated_at": "2026-10-25T16:50:49.578707+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_market-structure_evening_20261025_164933.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_market-structure_evening_20261025_164933.mp4",
+  "video_content_id": "draft_market-structure_evening_20261025_164933",
+  "video_sha256": "33f84174311572d23eeea55781f0ae7f7d5cc3a25f9fcef1170cc77ed8734c1a",
+  "video_size_bytes": 1688617,
+  "video_duration_seconds": 43.752,
+  "video_uploaded_at": "2026-10-25T16:50:55.100711+00:00"
+}
