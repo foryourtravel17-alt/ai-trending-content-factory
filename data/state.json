@@ -9211,6 +9211,43 @@
           "sent_at": "2026-10-25T09:27:53.142865+00:00"
         }
       }
+    },
+    "draft_moving-averages_afternoon_20261025_132157": {
+      "content_type": "educational_reel",
+      "content_id": "draft_moving-averages_afternoon_20261025_132157",
+      "metadata_path": "output/draft_moving-averages_afternoon_20261025_132157.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-25T13:23:09.529788+00:00",
+      "created_at": "2026-10-25T13:21:57.604063+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_moving-averages_afternoon_20261025_132157",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-25T13:21:57.604063+00:00",
+        "title": "EMA Crosses Are Clues, Not Automatic Buy or Sell Signals"
+      },
+      "copy": {
+        "telegram_html": "EMA 20 crossed EMA 50. Does that automatically mean buy? No.\n\nThe 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. A cross may help describe momentum, but both averages use past prices and lag. Sideways markets can produce repeated whipsaws. Check broader structure and risk before interpreting the chart.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "EMA 20 crossed EMA 50. Does that automatically mean buy? No.\n\nThe 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. A cross may help describe momentum, but both averages use past prices and lag. Sideways markets can produce repeated whipsaws. Check broader structure and risk before interpreting the chart.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_moving-averages_afternoon_20261025_132157.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-25T13:23:09.529788+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 337,
+          "sent_at": "2026-10-25T13:23:10.199513+00:00"
+        }
+      }
     }
   },
   "runs": [

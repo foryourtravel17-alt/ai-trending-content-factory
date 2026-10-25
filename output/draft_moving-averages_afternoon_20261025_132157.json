@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_moving-averages_afternoon_20261025_132157",
+  "created_at": "2026-10-25T13:21:57.604063+00:00",
+  "schedule_slot": {
+    "name": "afternoon",
+    "utc_date": "2026-10-25",
+    "index": 1
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "pending_approval",
+  "topic": {
+    "title": "EMA Crosses Are Clues, Not Automatic Buy or Sell Signals",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "The 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. A cross may help describe momentum, but both averages use past prices and lag. Sideways markets can produce repeated whipsaws. Check broader structure and risk before interpreting the chart.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+      "Owner must review the exact script, caption, hashtags and matching video before publication."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "safety_screened_at": "2026-10-25T13:23:09.529788+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "EMA 20 crossed EMA 50. Does that automatically mean buy? No.",
+    "body": "The 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. A cross may help describe momentum, but both averages use past prices and lag. Sideways markets can produce repeated whipsaws. Check broader structure and risk before interpreting the chart.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "trend",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "CROSS ≠ GUARANTEE",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "COMPARE EMA 20 AND 50",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "WATCH FOR WHIPSAWS",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "CONTEXT BEFORE CONCLUSION",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "EMA 20 crossed EMA 50. Does that automatically mean buy? No.\n\nThe 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. A cross may help describe momentum, but both averages use past prices and lag. Sideways markets can produce repeated whipsaws. Check broader structure and risk before interpreting the chart.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "human_review",
+    "safety_screened_at": "2026-10-25T13:23:09.529788+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "cta",
+  "reel_generated_at": "2026-10-25T13:23:02.782928+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_moving-averages_afternoon_20261025_132157.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_moving-averages_afternoon_20261025_132157.mp4",
+  "video_content_id": "draft_moving-averages_afternoon_20261025_132157",
+  "video_sha256": "fd20c5bec2f3e25c2ad0add63c1e12bb4e39e1b89556f21fcb90120ebcdda725",
+  "video_size_bytes": 1764813,
+  "video_duration_seconds": 47.066667,
+  "video_uploaded_at": "2026-10-25T13:23:09.466058+00:00"
+}
