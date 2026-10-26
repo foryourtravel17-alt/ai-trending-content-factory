@@ -9068,7 +9068,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_overtrading_morning_20261024_090905",
       "metadata_path": "output/draft_overtrading_morning_20261024_090905.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-24T09:10:09.203156+00:00",
@@ -9099,13 +9099,15 @@
           "message_id": 327,
           "sent_at": "2026-10-24T09:10:09.922643+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-26T09:22:35.238583+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_afternoon_20261024_125550": {
       "content_type": "educational_reel",
       "content_id": "draft_false-breakouts_afternoon_20261024_125550",
       "metadata_path": "output/draft_false-breakouts_afternoon_20261024_125550.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-24T12:57:04.789379+00:00",
@@ -9136,13 +9138,15 @@
           "message_id": 328,
           "sent_at": "2026-10-24T12:57:05.637639+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-26T09:22:35.247534+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-reward_evening_20261024_161502": {
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_evening_20261024_161502",
       "metadata_path": "output/draft_risk-reward_evening_20261024_161502.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-24T16:16:11.555722+00:00",
@@ -9173,13 +9177,15 @@
           "message_id": 333,
           "sent_at": "2026-10-24T16:16:12.243252+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-26T09:22:35.257006+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_trading-journal_morning_20261025_092636": {
       "content_type": "educational_reel",
       "content_id": "draft_trading-journal_morning_20261025_092636",
       "metadata_path": "output/draft_trading-journal_morning_20261025_092636.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-25T09:27:52.323650+00:00",
@@ -9210,13 +9216,15 @@
           "message_id": 336,
           "sent_at": "2026-10-25T09:27:53.142865+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-26T09:22:35.265341+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_moving-averages_afternoon_20261025_132157": {
       "content_type": "educational_reel",
       "content_id": "draft_moving-averages_afternoon_20261025_132157",
       "metadata_path": "output/draft_moving-averages_afternoon_20261025_132157.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-25T13:23:09.529788+00:00",
@@ -9247,7 +9255,9 @@
           "message_id": 337,
           "sent_at": "2026-10-25T13:23:10.199513+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-26T09:22:35.273789+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_market-structure_evening_20261025_164933": {
       "content_type": "educational_reel",
@@ -9285,6 +9295,62 @@
           "sent_at": "2026-10-25T16:50:55.893583+00:00"
         }
       }
+    },
+    "sbin-ns-2026102608-short": {
+      "signal": {
+        "signal_id": "sbin-ns-2026102608-short",
+        "slug": "sbin-ns-2026102608-short",
+        "symbol": "SBIN.NS",
+        "label": "State Bank of India",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "SHORT",
+        "entry": 958.4000244140625,
+        "stop_loss": 968.249991283454,
+        "targets": [
+          948.550057544671,
+          943.6250741099752,
+          938.7000906752795
+        ],
+        "tp1": 948.550057544671,
+        "tp2": 943.6250741099752,
+        "tp3": 938.7000906752795,
+        "rr_tp2": 1.4999999999999942,
+        "rsi14": 48.47199199333649,
+        "ema20": 959.0011371213866,
+        "ema50": 959.9101412823243,
+        "macd": -2.027975516083302,
+        "macd_signal": -1.8885825334105346,
+        "macd_hist": -0.13939298267276734,
+        "atr14": 6.566644579594331,
+        "vwap": 954.468192529666,
+        "support": 943.5,
+        "resistance": 971.3499755859375,
+        "as_of": "2026-10-26T08:45:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main State Bank of India par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 48.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · State Bank of India</b>\n\n<b>Structure first. Risk always.</b>\n\nMain State Bank of India par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 48.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nState Bank of India: EMA20 EMA50 ke neeche hai aur RSI(14) 48.5 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> SBIN.NS · SHORT\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain State Bank of India par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 48.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nState Bank of India: EMA20 EMA50 ke neeche hai aur RSI(14) 48.5 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: SBIN.NS · SHORT\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/sbin-ns-2026102608-short.png",
+      "card_path": "output/sbin-ns-2026102608-short_card.png",
+      "created_at": "2026-10-26T09:22:40.193546+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
