@@ -1,0 +1,99 @@
+{
+  "content_id": "draft_support-resistance_morning_20261026_103331",
+  "created_at": "2026-10-26T10:33:31.810100+00:00",
+  "schedule_slot": {
+    "name": "morning",
+    "utc_date": "2026-10-26",
+    "index": 0
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "draft_only",
+  "topic": {
+    "title": "Support and Resistance Are Zones, Not Magic Lines",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Evergreen educational copy; verify wording and any source claims before approval."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "If you expect price to respect one perfect line every time, rethink the chart.",
+    "body": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "range",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "MARK THE ZONE",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "COMPARE REACTIONS",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "CHECK HIGHER-TIMEFRAME CONTEXT",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "DEFINE INVALIDATION",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "draft_only",
+    "mode": "human_review"
+  },
+  "reel_generated": false
+}
