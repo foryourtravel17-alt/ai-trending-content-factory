@@ -118,7 +118,10 @@ jobs:
             echo "No publishing-state changes to commit."
           else
             git commit -m "content: record educational Reel approval request"
-            git pull --rebase origin main
+            # Other generator steps can leave tracked state files modified outside
+            # the staged publish-state allow-list. Autostash them while rebasing so
+            # the approval-state commit can still be pushed without discarding work.
+            git pull --rebase --autostash origin main
             git push
           fi
 
