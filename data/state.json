@@ -9271,7 +9271,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_market-structure_evening_20261025_164933",
       "metadata_path": "output/draft_market-structure_evening_20261025_164933.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-25T16:50:55.149373+00:00",
@@ -9302,7 +9302,9 @@
           "message_id": 338,
           "sent_at": "2026-10-25T16:50:55.893583+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-26T14:53:06.165661+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "sbin-ns-2026102608-short": {
       "signal": {
@@ -9425,6 +9427,62 @@
         }
       },
       "status": "pending_approval"
+    },
+    "eurusd-x-2026102614-short": {
+      "signal": {
+        "signal_id": "eurusd-x-2026102614-short",
+        "slug": "eurusd-x-2026102614-short",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 1.1186933517456055,
+        "stop_loss": 1.1201262258502942,
+        "targets": [
+          1.1172604776409167,
+          1.1165440405885723,
+          1.1158276035362278
+        ],
+        "tp1": 1.1172604776409167,
+        "tp2": 1.1165440405885723,
+        "tp3": 1.1158276035362278,
+        "rr_tp2": 1.5000000000000775,
+        "rsi14": 37.184378522876855,
+        "ema20": 1.120366494019631,
+        "ema50": 1.1210490154336936,
+        "macd": -0.0005619617355965278,
+        "macd_signal": -0.00022047151020436362,
+        "macd_hist": -0.0003414902253921642,
+        "atr14": 0.0009552494031258909,
+        "vwap": null,
+        "support": 1.1176930665969849,
+        "resistance": 1.12296462059021,
+        "as_of": "2026-10-26T14:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is below EMA50 and RSI(14) is 37.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is below EMA50 and RSI(14) is 37.2. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026102614-short.png",
+      "card_path": "output/eurusd-x-2026102614-short_card.png",
+      "created_at": "2026-10-26T14:53:10.270965+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
