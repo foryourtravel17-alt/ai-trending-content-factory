@@ -29,7 +29,7 @@ concurrency:
 jobs:
   generate-draft:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -47,10 +47,16 @@ jobs:
 
       - name: Install free rendering tools
         if: steps.draft.outputs.skip != 'true'
+        timeout-minutes: 10
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg espeak-ng
-          python -m pip install --upgrade pip pillow edge-tts
+          set -euo pipefail
+          # Bound network waits and retry transient Ubuntu mirror failures.
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends ffmpeg espeak-ng
+          python -m pip install --retries 2 --timeout 20 pillow edge-tts
 
       - name: Render MP4 draft locally in runner
         if: steps.draft.outputs.skip != 'true'
