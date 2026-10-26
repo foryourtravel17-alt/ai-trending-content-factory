@@ -9549,6 +9549,118 @@
         }
       },
       "status": "pending_approval"
+    },
+    "btc-usd-2026102619-short": {
+      "signal": {
+        "signal_id": "btc-usd-2026102619-short",
+        "slug": "btc-usd-2026102619-short",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 79864.453125,
+        "stop_loss": 80515.31080364698,
+        "targets": [
+          79213.59544635302,
+          78888.16660702955,
+          78562.73776770606
+        ],
+        "tp1": 79213.59544635302,
+        "tp2": 78888.16660702955,
+        "tp3": 78562.73776770606,
+        "rr_tp2": 1.4999999999999776,
+        "rsi14": 45.032094796243115,
+        "ema20": 80093.72994210954,
+        "ema50": 80307.03611106401,
+        "macd": -71.72378261190897,
+        "macd_signal": -71.11994283401918,
+        "macd_hist": -0.6038397778897888,
+        "atr14": 433.90511909798136,
+        "vwap": 79944.41584066799,
+        "support": 79278.3515625,
+        "resistance": 80710.0390625,
+        "as_of": "2026-10-26T19:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 45.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 45.0. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 45.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 45.0. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 45.0. This is a rule-based scenario, not a prediction.\n\nScenario: BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026102619-short.png",
+      "card_path": "output/btc-usd-2026102619-short_card.png",
+      "created_at": "2026-10-26T19:43:23.026765+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eurusd-x-2026102619-short": {
+      "signal": {
+        "signal_id": "eurusd-x-2026102619-short",
+        "slug": "eurusd-x-2026102619-short",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 1.1184431314468384,
+        "stop_loss": 1.1198302992799618,
+        "targets": [
+          1.117055963613715,
+          1.1163623796971534,
+          1.1156687957805917
+        ],
+        "tp1": 1.117055963613715,
+        "tp2": 1.1163623796971534,
+        "tp3": 1.1156687957805917,
+        "rr_tp2": 1.49999999999992,
+        "rsi14": 39.43916859739026,
+        "ema20": 1.119690943745439,
+        "ema50": 1.1206135533642265,
+        "macd": -0.0007091674435861783,
+        "macd_signal": -0.0005346355539176785,
+        "macd_hist": -0.0001745318896684998,
+        "atr14": 0.0009247785554155801,
+        "vwap": null,
+        "support": 1.1176930665969849,
+        "resistance": 1.12296462059021,
+        "as_of": "2026-10-26T19:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 39.4. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 39.4. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is below EMA50 and RSI(14) is 39.4. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 39.4. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is below EMA50 and RSI(14) is 39.4. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026102619-short.png",
+      "card_path": "output/eurusd-x-2026102619-short_card.png",
+      "created_at": "2026-10-26T19:43:23.379803+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
