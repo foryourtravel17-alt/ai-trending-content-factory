@@ -106,5 +106,26 @@ class TelegramProcessApprovalTests(unittest.TestCase):
             self.assertFalse(MODULE.is_authorized_callback(callback))
 
 
+
+    def test_durable_confirmation_replies_to_original_message(self):
+        from unittest.mock import patch
+        callback = {"message": {"chat": {"id": 123}, "message_id": 456}}
+        with patch.object(MODULE, "api") as api_mock:
+            MODULE.send_decision_confirmation(callback, "Approval recorded.")
+        api_mock.assert_called_once()
+        method, payload = api_mock.call_args.args
+        self.assertEqual(method, "sendMessage")
+        self.assertEqual(payload["chat_id"], 123)
+        self.assertEqual(payload["text"], "Approval recorded.")
+        self.assertEqual(json.loads(payload["reply_parameters"]), {
+            "message_id": 456, "allow_sending_without_reply": True
+        })
+
+    def test_durable_confirmation_skips_missing_chat(self):
+        from unittest.mock import patch
+        with patch.object(MODULE, "api") as api_mock:
+            MODULE.send_decision_confirmation({}, "Approval recorded.")
+        api_mock.assert_not_called()
+
 if __name__ == "__main__":
     unittest.main()
