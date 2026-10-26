@@ -12,7 +12,7 @@
   "audience": "Beginner to intermediate traders",
   "content_category": "Trading Education",
   "content_role": "education",
-  "status": "pending_approval",
+  "status": "published_to_instagram",
   "topic": {
     "title": "Overtrading Can Turn Small Decisions Into Big Problems",
     "source": "curated evergreen topic rotation",
@@ -35,14 +35,17 @@
     "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
   },
   "fact_check": {
-    "status": "needs_human_review",
+    "status": "approved",
     "notes": [
       "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
-      "Owner must review the exact script, caption, hashtags and matching video before publication."
+      "Owner must review the exact script, caption, hashtags and matching video before publication.",
+      "Human reviewer approved the displayed educational draft in Telegram."
     ],
     "source_count": 2,
     "verification_scope": "automated safety screen only; not independent fact verification",
-    "safety_screened_at": "2026-10-26T20:10:41.078985+00:00"
+    "safety_screened_at": "2026-10-26T20:10:41.078985+00:00",
+    "reviewed_at": "2026-10-26T22:29:27Z",
+    "reviewed_by": "@bullseyetheory"
   },
   "safety_check": {
     "passed": true,
@@ -94,23 +97,41 @@
   },
   "approval": {
     "required": true,
-    "status": "pending",
+    "status": "approved",
     "mode": "human_review",
-    "safety_screened_at": "2026-10-26T20:10:41.078985+00:00"
+    "safety_screened_at": "2026-10-26T20:10:41.078985+00:00",
+    "decided_at": "2026-10-26T22:29:27Z",
+    "reviewed_at": "2026-10-26T22:29:27Z",
+    "reviewed_by": "@bullseyetheory"
   },
   "reel_generated": true,
   "selected_archetype": "wrongright",
   "reel_generated_at": "2026-10-26T20:10:35.366996+00:00",
   "publishing": {
     "instagram": {
-      "status": "ready_for_publish"
+      "status": "published_to_instagram",
+      "creation_id": "18146566315641954",
+      "container_created_at": "2026-10-26T22:30:10Z",
+      "publish_attempt_started_at": "2026-10-26T22:30:43Z",
+      "media_id": "17913234948551053",
+      "published_at": "2026-10-26T22:30:54Z"
     },
-    "reel_file": "output/media/draft_overtrading_evening_20261026_200938.mp4"
+    "reel_file": "output/media/draft_overtrading_evening_20261026_200938.mp4",
+    "telegram": {
+      "status": "published",
+      "attempt_started_at": "2026-10-26T22:30:54Z",
+      "message_id": 125,
+      "published_at": "2026-10-26T22:30:58Z"
+    }
   },
   "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_overtrading_evening_20261026_200938.mp4",
   "video_content_id": "draft_overtrading_evening_20261026_200938",
   "video_sha256": "ac13546a25a75c792771b1932f274f7e0f692fc9f07c8e620de444af50096b7a",
   "video_size_bytes": 1645988,
   "video_duration_seconds": 42.528,
-  "video_uploaded_at": "2026-10-26T20:10:41.013251+00:00"
+  "video_uploaded_at": "2026-10-26T20:10:41.013251+00:00",
+  "approval_action": "approve",
+  "approval_action_at": "2026-10-26T22:29:27Z",
+  "instagram_media_id": "17913234948551053",
+  "published_at": "2026-10-26T22:30:54Z"
 }

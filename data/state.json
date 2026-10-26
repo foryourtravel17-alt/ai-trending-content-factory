@@ -9720,8 +9720,8 @@
       "content_type": "educational_reel",
       "content_id": "draft_overtrading_evening_20261026_200938",
       "metadata_path": "output/draft_overtrading_evening_20261026_200938.json",
-      "status": "pending_approval",
-      "approval_status": "pending",
+      "status": "published",
+      "approval_status": "approved",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-26T20:10:41.078985+00:00",
       "created_at": "2026-10-26T20:09:38.703272+00:00",
@@ -9738,20 +9738,46 @@
       },
       "card_path": "output/media/draft_overtrading_evening_20261026_200938.mp4",
       "fact_check": {
-        "status": "needs_human_review",
+        "status": "approved",
         "safety_screened_at": "2026-10-26T20:10:41.078985+00:00",
         "notes": [
           "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
-          "Owner must review the exact script, caption, hashtags and matching video before publication."
-        ]
+          "Owner must review the exact script, caption, hashtags and matching video before publication.",
+          "Human reviewer approved the displayed educational draft in Telegram."
+        ],
+        "reviewed_at": "2026-10-26T22:29:27Z",
+        "reviewed_by": "@bullseyetheory"
       },
       "publishing": {
-        "telegram_dm": {
-          "status": "sent",
-          "message_id": 354,
-          "sent_at": "2026-10-26T20:10:41.827781+00:00"
+        "instagram": {
+          "status": "published_to_instagram",
+          "creation_id": "18146566315641954",
+          "container_created_at": "2026-10-26T22:30:10Z",
+          "publish_attempt_started_at": "2026-10-26T22:30:43Z",
+          "media_id": "17913234948551053",
+          "published_at": "2026-10-26T22:30:54Z"
+        },
+        "reel_file": "output/media/draft_overtrading_evening_20261026_200938.mp4",
+        "telegram": {
+          "status": "published",
+          "attempt_started_at": "2026-10-26T22:30:54Z",
+          "message_id": 125,
+          "published_at": "2026-10-26T22:30:58Z"
         }
-      }
+      },
+      "approved_at": "2026-10-26T22:29:27Z",
+      "reviewed_at": "2026-10-26T22:29:27Z",
+      "reviewed_by": "@bullseyetheory",
+      "approval": {
+        "required": true,
+        "status": "approved",
+        "mode": "human_review",
+        "decided_at": "2026-10-26T22:29:27Z",
+        "reviewed_at": "2026-10-26T22:29:27Z",
+        "reviewed_by": "@bullseyetheory"
+      },
+      "instagram_media_id": "17913234948551053",
+      "published_at": "2026-10-26T22:30:54Z"
     }
   },
   "runs": [

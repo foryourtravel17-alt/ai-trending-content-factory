@@ -522,8 +522,9 @@
     },
     {
       "content_id": "draft_overtrading_evening_20261026_200938",
-      "status": "pending_approval",
-      "processed": false
+      "status": "approved",
+      "processed": true,
+      "decided_at": "2026-10-26T22:29:27Z"
     }
   ],
   "telegram_sent": [
