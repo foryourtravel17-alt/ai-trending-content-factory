@@ -9607,9 +9607,31 @@
         "telegram_dm": {
           "status": "sent",
           "message_id": 352
+        },
+        "telegram": {
+          "status": "published",
+          "message_id": 123
+        },
+        "instagram": {
+          "creation_id": "18146546983641954",
+          "status": "published",
+          "media_id": "18038589200847939"
         }
       },
-      "status": "pending_approval"
+      "status": "published",
+      "approval_status": "approved",
+      "approved_at": "2026-10-26T19:54:06Z",
+      "reviewed_at": "2026-10-26T19:54:06Z",
+      "reviewed_by": "@bullseyetheory",
+      "approval": {
+        "required": true,
+        "status": "approved",
+        "mode": "human_review",
+        "decided_at": "2026-10-26T19:54:06Z",
+        "reviewed_at": "2026-10-26T19:54:06Z",
+        "reviewed_by": "@bullseyetheory"
+      },
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/btc-usd-2026102619-short_card.png"
     },
     "eurusd-x-2026102619-short": {
       "signal": {
@@ -9668,9 +9690,31 @@
         "telegram_dm": {
           "status": "sent",
           "message_id": 353
+        },
+        "telegram": {
+          "status": "published",
+          "message_id": 124
+        },
+        "instagram": {
+          "creation_id": "18146547073641954",
+          "status": "published",
+          "media_id": "18119915758987750"
         }
       },
-      "status": "pending_approval"
+      "status": "published",
+      "approval_status": "approved",
+      "approved_at": "2026-10-26T19:54:06Z",
+      "reviewed_at": "2026-10-26T19:54:06Z",
+      "reviewed_by": "@bullseyetheory",
+      "approval": {
+        "required": true,
+        "status": "approved",
+        "mode": "human_review",
+        "decided_at": "2026-10-26T19:54:06Z",
+        "reviewed_at": "2026-10-26T19:54:06Z",
+        "reviewed_by": "@bullseyetheory"
+      },
+      "image_url": "https://foryourtravel17-alt.github.io/ai-trending-content-factory/output/eurusd-x-2026102619-short_card.png"
     }
   },
   "runs": [
@@ -10614,6 +10658,18 @@
       "at": "2026-10-26T19:45:27.848771+00:00",
       "signal_id": "eurusd-x-2026102619-short",
       "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-26T19:54:43.034707+00:00",
+      "signal_id": "btc-usd-2026102619-short",
+      "status": "published",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-26T19:54:53.376247+00:00",
+      "signal_id": "eurusd-x-2026102619-short",
+      "status": "published",
       "dry_run": false
     }
   ],
