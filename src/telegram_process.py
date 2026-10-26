@@ -50,6 +50,27 @@ def api(method, data=None, timeout=30):
     return payload["result"]
 
 
+
+
+def send_decision_confirmation(callback: dict, text: str) -> None:
+    """Send durable chat confirmation even when Telegram's callback toast fails."""
+    message = (callback or {}).get("message") or {}
+    chat_id = (message.get("chat") or {}).get("id")
+    if not chat_id:
+        return
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
+    message_id = message.get("message_id")
+    if message_id:
+        payload["reply_parameters"] = json.dumps({
+            "message_id": message_id,
+            "allow_sending_without_reply": True,
+        })
+    try:
+        api("sendMessage", payload)
+    except Exception as exc:
+        print(f"Confirmation message skipped: {type(exc).__name__}")
+
+
 def _reviewer_label(callback):
     actor = (callback or {}).get("from") or {}
     username = str(actor.get("username") or "").strip()
@@ -298,6 +319,9 @@ def main():
                         })
                     except Exception as exc:
                         print(f"Callback acknowledgement skipped: {type(exc).__name__}")
+                    # Persisted decisions deserve a durable chat message; callback toasts expire.
+                    if not retryable and answer:
+                        send_decision_confirmation(callback, answer)
                     strip_buttons = not retryable
                     message = callback.get("message") or {}
                     chat_id = (message.get("chat") or {}).get("id")
