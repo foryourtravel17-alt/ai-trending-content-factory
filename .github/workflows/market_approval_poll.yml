@@ -13,6 +13,7 @@ on:
       - scripts/export_public_market_feed.py
       - scripts/preflight_publish_guard.py
       - tests/test_single_telegram_poller.py
+      - tests/test_telegram_callback_retry.py
       - tests/test_educational_approval_publisher.py
       - tests/test_publish_state_staging.py
       - tests/test_deployment_readiness.py
@@ -68,7 +69,7 @@ jobs:
           TELEGRAM_APPROVER_USER_IDS: ${{ secrets.TELEGRAM_APPROVER_USER_IDS }}
           # Scheduled checks stay short; a push/manual run or completed draft run
           # keeps the listener available for the owner to review and approve.
-          POLL_SECONDS: ${{ github.event_name == 'schedule' && '15' || '240' }}
+          POLL_SECONDS: ${{ github.event_name == 'schedule' && '60' || '240' }}
         run: python src/telegram_process.py
 
       - name: Install publisher dependencies only when publishing is required
@@ -147,6 +148,6 @@ jobs:
             echo "No approval-state changes to commit."
           else
             git commit -m "market: record Telegram approval and publishing state"
-            git pull --rebase origin main
+            git pull --rebase --autostash origin main
             git push
           fi

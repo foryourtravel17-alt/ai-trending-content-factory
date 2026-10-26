@@ -16,6 +16,7 @@ QUEUE_FILE = Path("output/approval_queue.json")
 MARKET_STATE_FILE = Path("data/state.json")
 OUTPUT_DIR = Path("output")
 SAFE_ID = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")
+MAX_CALLBACK_RETRIES = 12
 
 
 def load_json(path, default):
@@ -194,6 +195,10 @@ def main():
         if isinstance(item, dict) and item.get("content_id")
     }
     offset = int(state.get("update_offset", 0))
+    retries = state.setdefault("callback_retries", {})
+    if not isinstance(retries, dict):
+        retries = {}
+        state["callback_retries"] = retries
     deadline = time.time() + max(5, int(os.getenv("POLL_SECONDS", "240")))
     processed_any = False
     market_approved_ids = []
@@ -210,9 +215,13 @@ def main():
         if not result:
             continue
 
+        next_offset = offset
+        blocked = False
         for update in result:
             update_id = int(update["update_id"])
             callback = update.get("callback_query")
+            retryable = False
+            strip_buttons = False
             if callback and not is_authorized_callback(callback):
                 callback_id = str(callback.get("id", ""))
                 try:
@@ -235,9 +244,11 @@ def main():
                     record = market_state["signals"].get(signal_id)
                     if not record:
                         answer = "This draft is no longer available. No decision was saved."
+                        retryable = True
                     elif record.get("content_type") == "educational_reel" and not sync_metadata_preflight(signal_id):
                         answer = "Draft metadata is missing or mismatched. No decision was saved."
                         print(f"Blocked approval for missing/mismatched educational metadata: {signal_id}")
+                        retryable = True
                     else:
                         now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
                         changed = apply_market_decision(record, action, now, reviewer)
@@ -254,6 +265,8 @@ def main():
                                     record["approval"] = {"required": True, "status": "pending", "mode": "human_review"}
                                     answer = "Draft metadata could not be updated. No decision was committed."
                                     print(f"Metadata write failed for educational draft: {signal_id}")
+                                    record["fact_check"] = {"status": "needs_human_review"}
+                                    retryable = True
                                     changed = False
                                 else:
                                     if signal_id in queue_by_id:
@@ -285,10 +298,11 @@ def main():
                         })
                     except Exception as exc:
                         print(f"Callback acknowledgement skipped: {type(exc).__name__}")
+                    strip_buttons = not retryable
                     message = callback.get("message") or {}
                     chat_id = (message.get("chat") or {}).get("id")
                     message_id = message.get("message_id")
-                    if chat_id and message_id:
+                    if strip_buttons and chat_id and message_id:
                         try:
                             api("editMessageReplyMarkup", {
                                 "chat_id": chat_id, "message_id": message_id,
@@ -308,9 +322,34 @@ def main():
                     except Exception as exc:
                         print(f"Callback acknowledgement skipped: {type(exc).__name__}")
 
-            offset = update_id + 1
-            state["update_offset"] = offset
+            attempts = int(retries.get(str(update_id), 0))
+            consume = not retryable
+            if retryable:
+                attempts += 1
+                retries[str(update_id)] = attempts
+                if attempts >= MAX_CALLBACK_RETRIES:
+                    consume = True
+                    print(f"Callback {update_id} remained blocked after {attempts} attempts; consuming to prevent a permanent stall.")
+                    if callback:
+                        message = callback.get("message") or {}
+                        chat_id = (message.get("chat") or {}).get("id")
+                        message_id = message.get("message_id")
+                        if chat_id and message_id:
+                            try:
+                                api("editMessageReplyMarkup", {"chat_id": chat_id, "message_id": message_id, "reply_markup": json.dumps({"inline_keyboard": []})})
+                            except Exception as exc:
+                                print(f"Button removal after retry cap skipped: {type(exc).__name__}")
+            if consume:
+                retries.pop(str(update_id), None)
+                if not blocked:
+                    next_offset = update_id + 1
+            else:
+                blocked = True
+                next_offset = update_id
             processed_any = True
+        if next_offset != offset:
+            offset = next_offset
+            state["update_offset"] = offset
         if processed_any:
             break
 
