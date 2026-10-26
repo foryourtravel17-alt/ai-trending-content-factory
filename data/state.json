@@ -10279,5 +10279,12 @@
       "status": "pending_approval",
       "dry_run": false
     }
+  ],
+  "expired_draft_alerted_ids": [
+    "draft_overtrading_morning_20261024_090905",
+    "draft_false-breakouts_afternoon_20261024_125550",
+    "draft_risk-reward_evening_20261024_161502",
+    "draft_trading-journal_morning_20261025_092636",
+    "draft_moving-averages_afternoon_20261025_132157"
   ]
 }
