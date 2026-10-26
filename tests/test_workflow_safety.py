@@ -29,7 +29,7 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('cron: "*/5 * * * *"', workflow)
         self.assertIn('workflows: ["Autonomous Market Content Factory"]', workflow)
         self.assertIn("github.event.workflow_run.conclusion == 'success'", workflow)
-        self.assertIn("github.event_name == 'schedule' && '15' || '240'", workflow)
+        self.assertIn("github.event_name == 'schedule' && '60' || '240'", workflow)
         self.assertIn("push:", workflow)
         self.assertIn(".github/workflows/market_approval_poll.yml", workflow)
         self.assertIn("id: approval", workflow)
