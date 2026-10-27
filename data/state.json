@@ -9554,7 +9554,9 @@
           "message_id": 350
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-27T14:00:38.020822+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026102619-short": {
       "signal": {
@@ -10125,7 +10127,7 @@
           "message_id": 362
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "sbin-ns-2026102709-short": {
       "signal": {
@@ -10186,7 +10188,7 @@
           "message_id": 363
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     }
   },
   "runs": [
