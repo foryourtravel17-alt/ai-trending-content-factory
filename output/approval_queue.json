@@ -525,6 +525,11 @@
       "status": "approved",
       "processed": true,
       "decided_at": "2026-10-26T22:29:27Z"
+    },
+    {
+      "content_id": "draft_false-breakouts_morning_20261027_100433",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -551,6 +556,7 @@
     "content_20261021_080300_1",
     "content_20261021_140206_1",
     "draft_false-breakouts_afternoon_20261024_125550",
+    "draft_false-breakouts_morning_20261027_100433",
     "draft_market-structure_evening_20261025_164933",
     "draft_moving-averages_afternoon_20261025_132157",
     "draft_overtrading_evening_20261026_200938",
