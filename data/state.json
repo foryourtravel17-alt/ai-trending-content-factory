@@ -9491,7 +9491,9 @@
           "message_id": 346
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-27T10:58:44.680886+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026102616-short": {
       "signal": {
@@ -10063,6 +10065,118 @@
           "sent_at": "2026-10-27T10:05:39.744527+00:00"
         }
       }
+    },
+    "infy-ns-2026102709-long": {
+      "signal": {
+        "signal_id": "infy-ns-2026102709-long",
+        "slug": "infy-ns-2026102709-long",
+        "symbol": "INFY.NS",
+        "label": "Infosys",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 1163.0,
+        "stop_loss": 1143.0890250231914,
+        "targets": [
+          1182.9109749768086,
+          1192.8664624652126,
+          1202.821949953617
+        ],
+        "tp1": 1182.9109749768086,
+        "tp2": 1192.8664624652126,
+        "tp3": 1202.821949953617,
+        "rr_tp2": 1.4999999999999887,
+        "rsi14": 55.54632763907399,
+        "ema20": 1153.252232381009,
+        "ema50": 1139.6130943125552,
+        "macd": 2.6543635548455313,
+        "macd_signal": 2.236875654034428,
+        "macd_hist": 0.41748790081110343,
+        "atr14": 13.273983317872327,
+        "vwap": 1156.2477979945195,
+        "support": 1114.0999755859375,
+        "resistance": 1196.949951171875,
+        "as_of": "2026-10-27T09:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 55.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Infosys</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 55.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nInfosys: EMA20 EMA50 ke upar hai aur RSI(14) 55.5 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> INFY.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 55.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nInfosys: EMA20 EMA50 ke upar hai aur RSI(14) 55.5 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: INFY.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/infy-ns-2026102709-long.png",
+      "card_path": "output/infy-ns-2026102709-long_card.png",
+      "created_at": "2026-10-27T10:58:50.249530+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "sbin-ns-2026102709-short": {
+      "signal": {
+        "signal_id": "sbin-ns-2026102709-short",
+        "slug": "sbin-ns-2026102709-short",
+        "symbol": "SBIN.NS",
+        "label": "State Bank of India",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "SHORT",
+        "entry": 945.0999755859375,
+        "stop_loss": 954.6960715694671,
+        "targets": [
+          935.5038796024079,
+          930.7058316106431,
+          925.9077836188783
+        ],
+        "tp1": 935.5038796024079,
+        "tp2": 930.7058316106431,
+        "tp3": 925.9077836188783,
+        "rr_tp2": 1.499999999999994,
+        "rsi14": 36.453258613227334,
+        "ema20": 955.9302589446279,
+        "ema50": 958.3375827809446,
+        "macd": -2.966379318647114,
+        "macd_signal": -2.0029898804280104,
+        "macd_hist": -0.9633894382191035,
+        "atr14": 6.397397322353068,
+        "vwap": 953.6928987780343,
+        "support": 943.5,
+        "resistance": 971.3499755859375,
+        "as_of": "2026-10-27T09:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main State Bank of India par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 36.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · State Bank of India</b>\n\n<b>Structure first. Risk always.</b>\n\nMain State Bank of India par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 36.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nState Bank of India: EMA20 EMA50 ke neeche hai aur RSI(14) 36.5 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> SBIN.NS · SHORT\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain State Bank of India par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 36.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nState Bank of India: EMA20 EMA50 ke neeche hai aur RSI(14) 36.5 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: SBIN.NS · SHORT\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/sbin-ns-2026102709-short.png",
+      "card_path": "output/sbin-ns-2026102709-short_card.png",
+      "created_at": "2026-10-27T10:58:50.752711+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
