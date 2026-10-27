@@ -10127,7 +10127,7 @@
           "message_id": 362
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "sbin-ns-2026102709-short": {
       "signal": {
@@ -10188,7 +10188,7 @@
           "message_id": 363
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -11178,6 +11178,18 @@
     },
     {
       "at": "2026-10-27T11:00:42.176028+00:00",
+      "signal_id": "sbin-ns-2026102709-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-27T14:01:31.839745+00:00",
+      "signal_id": "infy-ns-2026102709-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-27T14:01:31.849666+00:00",
       "signal_id": "sbin-ns-2026102709-short",
       "status": "pending_approval",
       "dry_run": false
