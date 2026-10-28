@@ -1,0 +1,18 @@
+{
+  "content_id": "draft_moving-averages_morning_20261028_105112",
+  "video": "output/media/draft_moving-averages_morning_20261028_105112.mp4",
+  "caption": "EMA 20 crossed EMA 50. Does that automatically mean buy? No.\n\nThe 20-period exponential moving average reacts faster to recent prices than the 50-period EMA. A cross may help describe momentum, but both averages use past prices and lag. Sideways markets can produce repeated whipsaws. Check broader structure and risk before interpreting the chart.\n\nEducational content only; not financial advice.",
+  "hashtags": [
+    "#BullseyeTheory",
+    "#TradingEducation",
+    "#TechnicalAnalysis",
+    "#RiskManagement"
+  ],
+  "status": "ready_for_instagram",
+  "audio": {
+    "voice": "professional male English neural voice with local fallback",
+    "background_music": "procedural cinematic low-volume bed",
+    "voice_duration_seconds": 47.06
+  },
+  "visual_style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only."
+}

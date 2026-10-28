@@ -540,6 +540,11 @@
       "content_id": "draft_trading-journal_evening_20261027_181623",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_moving-averages_morning_20261028_105112",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -569,6 +574,7 @@
     "draft_false-breakouts_morning_20261027_100433",
     "draft_market-structure_evening_20261025_164933",
     "draft_moving-averages_afternoon_20261025_132157",
+    "draft_moving-averages_morning_20261028_105112",
     "draft_overtrading_evening_20261026_200938",
     "draft_overtrading_morning_20261024_090905",
     "draft_risk-reward_afternoon_20261027_145520",
