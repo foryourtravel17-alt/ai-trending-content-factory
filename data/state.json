@@ -9846,7 +9846,9 @@
           "message_id": 357
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-28T10:01:59.149145+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026102709-short": {
       "signal": {
@@ -9968,7 +9970,9 @@
           "message_id": 359
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-28T10:01:59.165108+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "sbin-ns-2026102708-short": {
       "signal": {
@@ -10029,13 +10033,15 @@
           "message_id": 360
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-28T10:01:59.179935+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_morning_20261027_100433": {
       "content_type": "educational_reel",
       "content_id": "draft_false-breakouts_morning_20261027_100433",
       "metadata_path": "output/draft_false-breakouts_morning_20261027_100433.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-27T10:05:39.040570+00:00",
@@ -10066,7 +10072,9 @@
           "message_id": 361,
           "sent_at": "2026-10-27T10:05:39.744527+00:00"
         }
-      }
+      },
+      "expired_at": "2026-10-28T10:01:59.193947+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "infy-ns-2026102709-long": {
       "signal": {
@@ -10127,7 +10135,9 @@
           "message_id": 362
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-28T10:01:59.207964+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "sbin-ns-2026102709-short": {
       "signal": {
@@ -10188,7 +10198,9 @@
           "message_id": 363
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-28T10:01:59.222315+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-reward_afternoon_20261027_145520": {
       "content_type": "educational_reel",
