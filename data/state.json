@@ -10660,6 +10660,43 @@
         }
       },
       "status": "pending_approval"
+    },
+    "draft_support-resistance_evening_20261028_183005": {
+      "content_type": "educational_reel",
+      "content_id": "draft_support-resistance_evening_20261028_183005",
+      "metadata_path": "output/draft_support-resistance_evening_20261028_183005.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-28T18:32:02.144662+00:00",
+      "created_at": "2026-10-28T18:30:05.951102+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_support-resistance_evening_20261028_183005",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-28T18:30:05.951102+00:00",
+        "title": "Support and Resistance Are Zones, Not Magic Lines"
+      },
+      "copy": {
+        "telegram_html": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_support-resistance_evening_20261028_183005.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-28T18:32:02.144662+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 377,
+          "sent_at": "2026-10-28T18:32:02.972692+00:00"
+        }
+      }
     }
   },
   "runs": [

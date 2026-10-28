@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_support-resistance_evening_20261028_183005",
+  "created_at": "2026-10-28T18:30:05.951102+00:00",
+  "schedule_slot": {
+    "name": "evening",
+    "utc_date": "2026-10-28",
+    "index": 2
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "pending_approval",
+  "topic": {
+    "title": "Support and Resistance Are Zones, Not Magic Lines",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+      "Owner must review the exact script, caption, hashtags and matching video before publication."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "safety_screened_at": "2026-10-28T18:32:02.144662+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "If you expect price to respect one perfect line every time, rethink the chart.",
+    "body": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "range",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "MARK THE ZONE",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "COMPARE REACTIONS",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "CHECK HIGHER-TIMEFRAME CONTEXT",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "DEFINE INVALIDATION",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "human_review",
+    "safety_screened_at": "2026-10-28T18:32:02.144662+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "rule",
+  "reel_generated_at": "2026-10-28T18:31:55.587511+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_support-resistance_evening_20261028_183005.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_support-resistance_evening_20261028_183005.mp4",
+  "video_content_id": "draft_support-resistance_evening_20261028_183005",
+  "video_sha256": "c97dcbf88100fb1e14d994c130d82e420e23debf0e9158ddb921279b7fc2aef9",
+  "video_size_bytes": 1647013,
+  "video_duration_seconds": 42.216,
+  "video_uploaded_at": "2026-10-28T18:32:02.092058+00:00"
+}

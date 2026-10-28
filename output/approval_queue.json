@@ -550,6 +550,11 @@
       "content_id": "draft_market-structure_afternoon_20261028_152820",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_support-resistance_evening_20261028_183005",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -585,6 +590,7 @@
     "draft_overtrading_morning_20261024_090905",
     "draft_risk-reward_afternoon_20261027_145520",
     "draft_risk-reward_evening_20261024_161502",
+    "draft_support-resistance_evening_20261028_183005",
     "draft_trading-journal_evening_20261027_181623",
     "draft_trading-journal_morning_20261025_092636"
   ]
