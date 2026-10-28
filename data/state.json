@@ -10555,8 +10555,13 @@
       "chart_path": "output/spy-2026102814-long.png",
       "card_path": "output/spy-2026102814-long_card.png",
       "created_at": "2026-10-28T14:52:55.785793+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 373
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -11589,6 +11594,12 @@
     {
       "at": "2026-10-28T11:40:50.008518+00:00",
       "signal_id": "eth-usd-2026102811-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-28T14:54:02.044875+00:00",
+      "signal_id": "spy-2026102814-long",
       "status": "pending_approval",
       "dry_run": false
     }
