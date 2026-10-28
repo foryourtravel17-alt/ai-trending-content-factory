@@ -10431,8 +10431,13 @@
       "chart_path": "output/btc-usd-2026102811-long.png",
       "card_path": "output/btc-usd-2026102811-long_card.png",
       "created_at": "2026-10-28T11:38:26.636801+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 370
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026102811-long": {
       "signal": {
@@ -10487,8 +10492,13 @@
       "chart_path": "output/eth-usd-2026102811-long.png",
       "card_path": "output/eth-usd-2026102811-long_card.png",
       "created_at": "2026-10-28T11:38:26.919381+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 371
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -11509,6 +11519,18 @@
     {
       "at": "2026-10-27T15:53:31.670338+00:00",
       "signal_id": "eurusd-x-2026102715-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-28T11:40:47.973050+00:00",
+      "signal_id": "btc-usd-2026102811-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-28T11:40:50.008518+00:00",
+      "signal_id": "eth-usd-2026102811-long",
       "status": "pending_approval",
       "dry_run": false
     }
