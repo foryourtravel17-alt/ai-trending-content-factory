@@ -11009,7 +11009,7 @@
           "message_id": 383
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "infy-ns-2026102909-long": {
       "signal": {
@@ -11070,7 +11070,7 @@
           "message_id": 384
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_risk-per-trade_morning_20261029_110807": {
       "content_type": "educational_reel",
@@ -11162,8 +11162,13 @@
       "chart_path": "output/gc-f-2026102911-short.png",
       "card_path": "output/gc-f-2026102911-short_card.png",
       "created_at": "2026-10-29T11:44:57.364117+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 387
+        }
+      },
+      "status": "pending_approval"
     },
     "btc-usd-2026102911-short": {
       "signal": {
@@ -11218,8 +11223,13 @@
       "chart_path": "output/btc-usd-2026102911-short.png",
       "card_path": "output/btc-usd-2026102911-short_card.png",
       "created_at": "2026-10-29T11:44:57.952524+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 388
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026102911-short": {
       "signal": {
@@ -11274,8 +11284,13 @@
       "chart_path": "output/eth-usd-2026102911-short.png",
       "card_path": "output/eth-usd-2026102911-short_card.png",
       "created_at": "2026-10-29T11:44:58.456753+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 389
+        }
+      },
+      "status": "pending_approval"
     },
     "nsei-2026102909-long": {
       "signal": {
@@ -11331,8 +11346,13 @@
       "chart_path": "output/nsei-2026102909-long.png",
       "card_path": "output/nsei-2026102909-long_card.png",
       "created_at": "2026-10-29T11:45:00.013597+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 390
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -12413,6 +12433,42 @@
     {
       "at": "2026-10-29T10:27:39.286695+00:00",
       "signal_id": "infy-ns-2026102909-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T11:46:47.477802+00:00",
+      "signal_id": "reliance-ns-2026102909-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T11:46:47.495207+00:00",
+      "signal_id": "infy-ns-2026102909-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T11:46:49.387031+00:00",
+      "signal_id": "gc-f-2026102911-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T11:46:51.190312+00:00",
+      "signal_id": "btc-usd-2026102911-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T11:46:53.067486+00:00",
+      "signal_id": "eth-usd-2026102911-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T11:46:54.880369+00:00",
+      "signal_id": "nsei-2026102909-long",
       "status": "pending_approval",
       "dry_run": false
     }
