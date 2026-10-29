@@ -560,6 +560,11 @@
       "content_id": "draft_risk-per-trade_morning_20261029_110807",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_overtrading_afternoon_20261029_153334",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -591,6 +596,7 @@
     "draft_market-structure_evening_20261025_164933",
     "draft_moving-averages_afternoon_20261025_132157",
     "draft_moving-averages_morning_20261028_105112",
+    "draft_overtrading_afternoon_20261029_153334",
     "draft_overtrading_evening_20261026_200938",
     "draft_overtrading_morning_20261024_090905",
     "draft_risk-per-trade_morning_20261029_110807",
