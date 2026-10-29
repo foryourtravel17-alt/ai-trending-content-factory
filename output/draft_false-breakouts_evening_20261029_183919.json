@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_false-breakouts_evening_20261029_183919",
+  "created_at": "2026-10-29T18:39:19.870267+00:00",
+  "schedule_slot": {
+    "name": "evening",
+    "utc_date": "2026-10-29",
+    "index": 2
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "pending_approval",
+  "topic": {
+    "title": "False Breakouts: Read the Reaction, Not Just the Wick",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "Price can move beyond a visible level and then return to the prior range. Traders often call this a false breakout, but the label is clearer after observing the reaction. Look at the close, follow-through, surrounding structure, and your invalidation criteria. No single candle can guarantee continuation.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+      "Owner must review the exact script, caption, hashtags and matching video before publication."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "safety_screened_at": "2026-10-29T18:40:15.163996+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "A candle poking beyond a level does not prove a breakout will hold.",
+    "body": "Price can move beyond a visible level and then return to the prior range. Traders often call this a false breakout, but the label is clearer after observing the reaction. Look at the close, follow-through, surrounding structure, and your invalidation criteria. No single candle can guarantee continuation.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "break",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "LEVEL BREAKS",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "CHECK THE CLOSE",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "LOOK FOR FOLLOW-THROUGH",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "PLAN INVALIDATION",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "A candle poking beyond a level does not prove a breakout will hold.\n\nPrice can move beyond a visible level and then return to the prior range. Traders often call this a false breakout, but the label is clearer after observing the reaction. Look at the close, follow-through, surrounding structure, and your invalidation criteria. No single candle can guarantee continuation.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "human_review",
+    "safety_screened_at": "2026-10-29T18:40:15.163996+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "chartproof",
+  "reel_generated_at": "2026-10-29T18:40:08.241825+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_false-breakouts_evening_20261029_183919.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_false-breakouts_evening_20261029_183919.mp4",
+  "video_content_id": "draft_false-breakouts_evening_20261029_183919",
+  "video_sha256": "bd1c5ee506309b8118d626a251f3bdfb32585c2a61429719ce294a4224b72f94",
+  "video_size_bytes": 1684441,
+  "video_duration_seconds": 43.866667,
+  "video_uploaded_at": "2026-10-29T18:40:15.127302+00:00"
+}
