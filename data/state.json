@@ -11013,7 +11013,7 @@
           "message_id": 383
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "infy-ns-2026102909-long": {
       "signal": {
@@ -11074,7 +11074,7 @@
           "message_id": 384
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_risk-per-trade_morning_20261029_110807": {
       "content_type": "educational_reel",
@@ -11356,7 +11356,7 @@
           "message_id": 390
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "gc-f-2026102914-short": {
       "signal": {
@@ -11411,8 +11411,13 @@
       "chart_path": "output/gc-f-2026102914-short.png",
       "card_path": "output/gc-f-2026102914-short_card.png",
       "created_at": "2026-10-29T14:58:04.127414+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 392
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -12529,6 +12534,30 @@
     {
       "at": "2026-10-29T11:46:54.880369+00:00",
       "signal_id": "nsei-2026102909-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T14:59:49.870428+00:00",
+      "signal_id": "reliance-ns-2026102909-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T14:59:49.890707+00:00",
+      "signal_id": "infy-ns-2026102909-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T14:59:49.907311+00:00",
+      "signal_id": "nsei-2026102909-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-29T14:59:52.238889+00:00",
+      "signal_id": "gc-f-2026102914-short",
       "status": "pending_approval",
       "dry_run": false
     }
