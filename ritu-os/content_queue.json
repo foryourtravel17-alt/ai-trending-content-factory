@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T16:13:13.020621+05:30",
+  "generated_at": "2026-10-29T16:30:28.645894+05:30",
   "mode": "free-first",
   "status": "ready_for_asset_generation",
   "manual_required": [
@@ -9,16 +9,6 @@
   "posts": [
     {
       "slot": 1,
-      "type": "reel",
-      "theme": "Attraction",
-      "hook": "Dekhna allowed hai… approach karna optional. 😉",
-      "caption": "Confidence looks better when it feels natural. 🖤 What catches your attention first — eyes, energy, or attitude?",
-      "visual": "Photorealistic adult Ritu, consistent identity, elegant fitted outfit, premium lifestyle setting, natural skin texture, subtle confident expression, cinematic vertical 9:16.",
-      "approval": "pending",
-      "publishing": "not_connected"
-    },
-    {
-      "slot": 2,
       "type": "photo",
       "theme": "Lifestyle",
       "hook": "Soft look. Strong energy.",
@@ -28,12 +18,22 @@
       "publishing": "not_connected"
     },
     {
-      "slot": 3,
+      "slot": 2,
       "type": "reel",
       "theme": "Dating",
       "hook": "Mujhe slow cheezein bilkul pasand nahi… reply ho ya chemistry. 😂",
       "caption": "Fast replies are nice. Real chemistry is better. 👀",
       "visual": "Photorealistic adult Ritu, consistent face, tasteful evening outfit, modern city background, natural movement, cinematic vertical 9:16, non-graphic.",
+      "approval": "pending",
+      "publishing": "not_connected"
+    },
+    {
+      "slot": 3,
+      "type": "reel",
+      "theme": "Confidence",
+      "hook": "Maybe you should've been paying attention earlier. 👀",
+      "caption": "Timing matters. So does confidence. 🖤",
+      "visual": "Photorealistic adult Ritu, consistent identity, classy evening look, warm city lights, subtle smile, realistic skin and body proportions, vertical 9:16.",
       "approval": "pending",
       "publishing": "not_connected"
     }
