@@ -1,0 +1,116 @@
+{
+  "content_id": "draft_trading-journal_afternoon_20261030_152048",
+  "created_at": "2026-10-30T15:20:48.226287+00:00",
+  "schedule_slot": {
+    "name": "afternoon",
+    "utc_date": "2026-10-30",
+    "index": 1
+  },
+  "brand": "Bullseye Theory",
+  "language": "English",
+  "market": "Education",
+  "audience": "Beginner to intermediate traders",
+  "content_category": "Trading Education",
+  "content_role": "education",
+  "status": "pending_approval",
+  "topic": {
+    "title": "A Trading Journal Helps You Review Decisions, Not Predict Price",
+    "source": "curated evergreen topic rotation",
+    "score": 1.0
+  },
+  "research": {
+    "summary": "Record the setup, the reason for entry, the invalidation point, the risk, and whether you followed your rules. Review a group of trades to look for repeated process errors. A small sample can be misleading, and a journal cannot remove uncertainty, but it can make your learning more structured.",
+    "sources": [
+      {
+        "name": "CME Group education",
+        "url": "https://www.cmegroup.com/education.html",
+        "type": "general_education_reference"
+      },
+      {
+        "name": "Investor.gov",
+        "url": "https://www.investor.gov/introduction-investing",
+        "type": "general_investing_education"
+      }
+    ],
+    "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
+  },
+  "fact_check": {
+    "status": "needs_human_review",
+    "notes": [
+      "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+      "Owner must review the exact script, caption, hashtags and matching video before publication."
+    ],
+    "source_count": 2,
+    "verification_scope": "automated safety screen only; not independent fact verification",
+    "safety_screened_at": "2026-10-30T15:21:58.482218+00:00"
+  },
+  "safety_check": {
+    "passed": true,
+    "blocked_phrases": [],
+    "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
+  },
+  "script": {
+    "hook": "Your journal is more useful when it records the decision—not just the profit.",
+    "body": "Record the setup, the reason for entry, the invalidation point, the risk, and whether you followed your rules. Review a group of trades to look for repeated process errors. A small sample can be misleading, and a journal cannot remove uncertainty, but it can make your learning more structured.",
+    "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
+    "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
+    "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
+  },
+  "visual_plan": {
+    "format": "short_video",
+    "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
+    "chart_style": "trend",
+    "scenes": [
+      {
+        "scene": 1,
+        "text": "RECORD THE PLAN",
+        "visual": "Premium institutional terminal; illustrative chart only."
+      },
+      {
+        "scene": 2,
+        "text": "NOTE THE RISK",
+        "visual": "Animate one concept label with clean chart annotation."
+      },
+      {
+        "scene": 3,
+        "text": "REVIEW THE PROCESS",
+        "visual": "Show an illustrative counterexample or context panel."
+      },
+      {
+        "scene": 4,
+        "text": "LEARN FROM A SAMPLE",
+        "visual": "Finish with a concise risk-aware takeaway."
+      }
+    ]
+  },
+  "social": {
+    "caption": "Your journal is more useful when it records the decision—not just the profit.\n\nRecord the setup, the reason for entry, the invalidation point, the risk, and whether you followed your rules. Review a group of trades to look for repeated process errors. A small sample can be misleading, and a journal cannot remove uncertainty, but it can make your learning more structured.\n\nEducational content only; not financial advice.",
+    "hashtags": [
+      "#BullseyeTheory",
+      "#TradingEducation",
+      "#TechnicalAnalysis",
+      "#RiskManagement"
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "mode": "human_review",
+    "safety_screened_at": "2026-10-30T15:21:58.482218+00:00"
+  },
+  "reel_generated": true,
+  "selected_archetype": "hook",
+  "reel_generated_at": "2026-10-30T15:21:51.981358+00:00",
+  "publishing": {
+    "instagram": {
+      "status": "ready_for_publish"
+    },
+    "reel_file": "output/media/draft_trading-journal_afternoon_20261030_152048.mp4"
+  },
+  "video_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/reels/draft_trading-journal_afternoon_20261030_152048.mp4",
+  "video_content_id": "draft_trading-journal_afternoon_20261030_152048",
+  "video_sha256": "0a90a082e2ad7cd29f4a4050116b08c22e35910d8c3f06a2be12cc9be6f681a7",
+  "video_size_bytes": 1649915,
+  "video_duration_seconds": 42.288,
+  "video_uploaded_at": "2026-10-30T15:21:58.432959+00:00"
+}

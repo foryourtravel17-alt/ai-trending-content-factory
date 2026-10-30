@@ -575,6 +575,11 @@
       "content_id": "draft_risk-reward_morning_20261030_110304",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_trading-journal_afternoon_20261030_152048",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -615,6 +620,7 @@
     "draft_risk-reward_evening_20261024_161502",
     "draft_risk-reward_morning_20261030_110304",
     "draft_support-resistance_evening_20261028_183005",
+    "draft_trading-journal_afternoon_20261030_152048",
     "draft_trading-journal_evening_20261027_181623",
     "draft_trading-journal_morning_20261025_092636"
   ]
