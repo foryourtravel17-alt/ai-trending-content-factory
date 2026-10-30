@@ -11885,7 +11885,9 @@
           "message_id": 402
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-10-30T16:41:43.599317+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026103009-long": {
       "signal": {
@@ -11897,15 +11899,15 @@
         "language": "Hinglish",
         "direction": "LONG",
         "entry": 2502.60009765625,
-        "stop_loss": 2473.7920312841106,
+        "stop_loss": 2473.777241434419,
         "targets": [
-          2531.4081640283894,
-          2545.812197214459,
-          2560.2162304005287
+          2531.422953878081,
+          2545.8343819889965,
+          2560.245810099912
         ],
-        "tp1": 2531.4081640283894,
-        "tp2": 2545.812197214459,
-        "tp3": 2560.2162304005287,
+        "tp1": 2531.422953878081,
+        "tp2": 2545.8343819889965,
+        "tp3": 2560.245810099912,
         "rr_tp2": 1.5,
         "rsi14": 54.03430440277496,
         "ema20": 2494.6134929982986,
@@ -11913,8 +11915,8 @@
         "macd": 7.710197032219185,
         "macd_signal": 2.9450227874503683,
         "macd_hist": 4.765174244768817,
-        "atr14": 19.20537758142618,
-        "vwap": 2512.7945816042698,
+        "atr14": 19.21523748122067,
+        "vwap": 2512.786282622021,
         "support": 2408.199951171875,
         "resistance": 2527.199951171875,
         "as_of": "2026-10-30T09:45:00+00:00",
@@ -11946,7 +11948,7 @@
           "message_id": 403
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "nsei-2026103009-long": {
       "signal": {
@@ -11958,23 +11960,23 @@
         "language": "Hinglish",
         "direction": "LONG",
         "entry": 23053.099609375,
-        "stop_loss": 22927.086406488128,
+        "stop_loss": 22927.081095186713,
         "targets": [
-          23179.112812261872,
-          23242.119413705306,
-          23305.12601514874
+          23179.118123563287,
+          23242.12738065743,
+          23305.136637751577
         ],
-        "tp1": 23179.112812261872,
-        "tp2": 23242.119413705306,
-        "tp3": 23305.12601514874,
-        "rr_tp2": 1.4999999999999856,
-        "rsi14": 65.82011975326971,
-        "ema20": 22908.98020243449,
-        "ema50": 22812.667494935624,
-        "macd": 92.81119224974464,
-        "macd_signal": 76.30908977546099,
-        "macd_hist": 16.502102474283646,
-        "atr14": 84.00880192458064,
+        "tp1": 23179.118123563287,
+        "tp2": 23242.12738065743,
+        "tp3": 23305.136637751577,
+        "rr_tp2": 1.5000000000000144,
+        "rsi14": 65.81428907630134,
+        "ema20": 22909.01713388368,
+        "ema50": 22812.67271825175,
+        "macd": 92.8458748099838,
+        "macd_signal": 76.34448100633068,
+        "macd_hist": 16.501393803653116,
+        "atr14": 84.012342792192,
         "vwap": null,
         "support": 22497.900390625,
         "resistance": 23118.0,
@@ -12008,7 +12010,7 @@
           "message_id": 404
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "nsebank-2026103009-long": {
       "signal": {
@@ -12020,23 +12022,23 @@
         "language": "Hinglish",
         "direction": "LONG",
         "entry": 54686.94921875,
-        "stop_loss": 54366.18631714135,
+        "stop_loss": 54366.18176300745,
         "targets": [
-          55007.71212035865,
-          55168.09357116297,
-          55328.47502196729
+          55007.71667449255,
+          55168.10040236383,
+          55328.484130235105
         ],
-        "tp1": 55007.71212035865,
-        "tp2": 55168.09357116297,
-        "tp3": 55328.47502196729,
-        "rr_tp2": 1.4999999999999887,
-        "rsi14": 53.54805481425517,
-        "ema20": 54615.35421111923,
-        "ema50": 54610.99112483949,
-        "macd": 101.4286704164042,
-        "macd_signal": 90.42999978585117,
-        "macd_hist": 10.998670630553036,
-        "atr14": 213.84193440576487,
+        "tp1": 55007.71667449255,
+        "tp2": 55168.10040236383,
+        "tp3": 55328.484130235105,
+        "rr_tp2": 1.5000000000000226,
+        "rsi14": 53.55036688727037,
+        "ema20": 54615.27002388722,
+        "ema50": 54610.93091730389,
+        "macd": 101.40055987224332,
+        "macd_signal": 90.39731707272821,
+        "macd_hist": 11.003242799515107,
+        "atr14": 213.84497049503491,
         "vwap": null,
         "support": 53626.1484375,
         "resistance": 55067.80078125,
@@ -12045,13 +12047,13 @@
         "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
       },
       "analyst": {
-        "view": "Main Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 53.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "view": "Main Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 53.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
         "hook": "Structure first. Risk always.",
         "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
       },
       "copy": {
-        "telegram_html": "<b>🎯 Bullseye Theory · Bank Nifty</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 53.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 53.5 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
-        "instagram_caption": "Structure first. Risk always.\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 53.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 53.5 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#BankNifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory",
+        "telegram_html": "<b>🎯 Bullseye Theory · Bank Nifty</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 53.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 53.6 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 53.6 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 53.6 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#BankNifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory",
         "hook": "Structure first. Risk always.",
         "hashtags": [
           "#BankNifty",
@@ -12070,7 +12072,7 @@
           "message_id": 405
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_risk-reward_morning_20261030_110304": {
       "content_type": "educational_reel",
