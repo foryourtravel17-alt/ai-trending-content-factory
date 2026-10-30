@@ -11948,7 +11948,7 @@
           "message_id": 403
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "nsei-2026103009-long": {
       "signal": {
@@ -12010,7 +12010,7 @@
           "message_id": 404
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "nsebank-2026103009-long": {
       "signal": {
@@ -12072,7 +12072,7 @@
           "message_id": 405
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_risk-reward_morning_20261030_110304": {
       "content_type": "educational_reel",
@@ -13669,6 +13669,24 @@
     {
       "at": "2026-10-30T14:55:43.927734+00:00",
       "signal_id": "spy-2026103014-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-30T16:42:14.075742+00:00",
+      "signal_id": "tcs-ns-2026103009-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-30T16:42:14.094837+00:00",
+      "signal_id": "nsei-2026103009-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-10-30T16:42:14.112215+00:00",
+      "signal_id": "nsebank-2026103009-long",
       "status": "pending_approval",
       "dry_run": false
     }
