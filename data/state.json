@@ -12063,6 +12063,43 @@
         }
       },
       "status": "pending_approval"
+    },
+    "draft_risk-reward_morning_20261030_110304": {
+      "content_type": "educational_reel",
+      "content_id": "draft_risk-reward_morning_20261030_110304",
+      "metadata_path": "output/draft_risk-reward_morning_20261030_110304.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-30T11:03:57.284152+00:00",
+      "created_at": "2026-10-30T11:03:04.507743+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_risk-reward_morning_20261030_110304",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-30T11:03:04.507743+00:00",
+        "title": "Risk-to-Reward Is a Planning Tool, Not a Win-Rate Promise"
+      },
+      "copy": {
+        "telegram_html": "A two-to-one reward-to-risk ratio does not guarantee a profitable strategy.\n\nReward-to-risk compares a planned potential gain with a planned potential loss. It does not tell you how often a setup wins, and real fills can differ because of costs or slippage. Evaluate a method over a meaningful sample, include expenses, and avoid treating one ratio as proof of an edge.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "A two-to-one reward-to-risk ratio does not guarantee a profitable strategy.\n\nReward-to-risk compares a planned potential gain with a planned potential loss. It does not tell you how often a setup wins, and real fills can differ because of costs or slippage. Evaluate a method over a meaningful sample, include expenses, and avoid treating one ratio as proof of an edge.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_risk-reward_morning_20261030_110304.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-30T11:03:57.284152+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 407,
+          "sent_at": "2026-10-30T11:03:58.027366+00:00"
+        }
+      }
     }
   },
   "runs": [
