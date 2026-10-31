@@ -12428,6 +12428,43 @@
           "sent_at": "2026-10-30T18:15:19.489027+00:00"
         }
       }
+    },
+    "draft_market-structure_morning_20261031_103724": {
+      "content_type": "educational_reel",
+      "content_id": "draft_market-structure_morning_20261031_103724",
+      "metadata_path": "output/draft_market-structure_morning_20261031_103724.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-10-31T10:38:32.240429+00:00",
+      "created_at": "2026-10-31T10:37:24.416377+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_market-structure_morning_20261031_103724",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-10-31T10:37:24.416377+00:00",
+        "title": "Market Structure: Higher Highs, Lower Lows, and Real Direction"
+      },
+      "copy": {
+        "telegram_html": "Before you call a market bullish, check what its swing points are actually doing.\n\nA sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "Before you call a market bullish, check what its swing points are actually doing.\n\nA sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_market-structure_morning_20261031_103724.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-10-31T10:38:32.240429+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 418,
+          "sent_at": "2026-10-31T10:38:32.964793+00:00"
+        }
+      }
     }
   },
   "runs": [
