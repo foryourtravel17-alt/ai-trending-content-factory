@@ -590,6 +590,11 @@
       "content_id": "draft_market-structure_morning_20261031_103724",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_support-resistance_afternoon_20261031_144537",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
