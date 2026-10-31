@@ -595,6 +595,11 @@
       "content_id": "draft_support-resistance_afternoon_20261031_144537",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_risk-per-trade_evening_20261031_172155",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
