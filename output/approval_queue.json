@@ -610,6 +610,11 @@
       "content_id": "draft_false-breakouts_afternoon_20261101_152821",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_risk-reward_evening_20261101_180651",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
