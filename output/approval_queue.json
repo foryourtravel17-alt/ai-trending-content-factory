@@ -605,6 +605,11 @@
       "content_id": "draft_overtrading_morning_20261101_113031",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_false-breakouts_afternoon_20261101_152821",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
