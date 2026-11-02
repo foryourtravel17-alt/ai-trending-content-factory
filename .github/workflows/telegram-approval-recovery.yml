@@ -30,3 +30,16 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python src/telegram_send.py
+      - name: Persist Telegram delivery receipts even if a later send fails
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash scripts/stage_publish_state.sh
+          if git diff --cached --quiet; then
+            echo "No Telegram delivery-state changes to commit."
+          else
+            git commit -m "chore: persist Telegram approval delivery receipts"
+            git pull --rebase --autostash origin main
+            git push
+          fi
