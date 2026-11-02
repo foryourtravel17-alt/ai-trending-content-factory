@@ -1,0 +1,32 @@
+name: Telegram Approval Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/telegram-approval-recovery.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bullseye-telegram-approval-sender
+  cancel-in-progress: false
+
+jobs:
+  send-pending-approvals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Send only pending educational Reel approval requests
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python src/telegram_send.py
