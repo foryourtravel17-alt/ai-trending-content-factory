@@ -25,6 +25,7 @@ on:
       - "tests/**"
       - "requirements.txt"
       - ".github/workflows/market_content_tests.yml"
+      - "docs/APPROVAL_MATRIX.md"
   workflow_dispatch:
 
 permissions:
