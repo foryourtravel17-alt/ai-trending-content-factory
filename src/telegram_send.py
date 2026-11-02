@@ -76,6 +76,9 @@ if not isinstance(queue, dict):
     raise SystemExit("Approval queue has an unsupported format.")
 items = queue.get("items", [])
 sent_ids = set(queue.get("telegram_sent", []))
+message_ids = queue.get("telegram_message_ids", {})
+if not isinstance(message_ids, dict):
+    message_ids = {}
 state = load_json(STATE_FILE, {"signals": {}, "runs": []})
 signals = state.get("signals", {}) if isinstance(state, dict) else {}
 sent_count = 0
@@ -140,6 +143,8 @@ for item in items:
         "reply_markup": json.dumps(keyboard, separators=(",", ":")),
     })
     sent_ids.add(content_id)
+    message_ids[content_id] = result.get("message_id")
+    queue["telegram_message_ids"] = message_ids
     record["publishing"] = record.get("publishing", {})
     record["publishing"]["telegram_dm"] = {
         "status": "sent",

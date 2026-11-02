@@ -646,6 +646,7 @@
     "content_20261021_080300_1",
     "content_20261021_140206_1",
     "draft_false-breakouts_afternoon_20261024_125550",
+    "draft_false-breakouts_afternoon_20261101_152821",
     "draft_false-breakouts_evening_20261029_183919",
     "draft_false-breakouts_morning_20261027_100433",
     "draft_market-structure_afternoon_20261028_152820",
@@ -657,13 +658,19 @@
     "draft_overtrading_afternoon_20261029_153334",
     "draft_overtrading_evening_20261026_200938",
     "draft_overtrading_morning_20261024_090905",
+    "draft_overtrading_morning_20261101_113031",
+    "draft_risk-per-trade_evening_20261031_172155",
     "draft_risk-per-trade_morning_20261029_110807",
     "draft_risk-reward_afternoon_20261027_145520",
     "draft_risk-reward_evening_20261024_161502",
+    "draft_risk-reward_evening_20261101_180651",
     "draft_risk-reward_morning_20261030_110304",
+    "draft_support-resistance_afternoon_20261031_144537",
     "draft_support-resistance_evening_20261028_183005",
     "draft_trading-journal_afternoon_20261030_152048",
     "draft_trading-journal_evening_20261027_181623",
-    "draft_trading-journal_morning_20261025_092636"
-  ]
+    "draft_trading-journal_morning_20261025_092636",
+    "draft_trading-journal_morning_20261102_125328"
+  ],
+  "telegram_message_ids": {}
 }
