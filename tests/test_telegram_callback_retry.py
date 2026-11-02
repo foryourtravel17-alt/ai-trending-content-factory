@@ -43,11 +43,11 @@ class PollerRetryTests(unittest.TestCase):
                 os.environ[key] = value
         self.tmp.cleanup()
 
-    def seed(self, metadata=True, record=True):
+    def seed(self, metadata=True, record=True, content_id="draft_x_1"):
         signals = {}
         if record:
-            signals["draft_x_1"] = {
-                "content_id": "draft_x_1", "content_type": "educational_reel",
+            signals[content_id] = {
+                "content_id": content_id, "content_type": "educational_reel",
                 "status": "pending_approval", "approval_status": "pending",
                 "human_approval_required": True,
                 "approval": {"required": True, "status": "pending", "mode": "human_review"},
@@ -60,14 +60,14 @@ class PollerRetryTests(unittest.TestCase):
         (self.root / "output" / "approval_queue.json").write_text(
             json.dumps({"items": [], "telegram_sent": []}), encoding="utf-8")
         if metadata:
-            (self.root / "output" / "draft_x_1.json").write_text(
-                json.dumps({"content_id": "draft_x_1", "status": "pending_approval",
+            (self.root / "output" / f"{content_id}.json").write_text(
+                json.dumps({"content_id": content_id, "status": "pending_approval",
                             "approval": {"required": True, "status": "pending"},
                             "fact_check": {"status": "needs_human_review"}}), encoding="utf-8")
 
-    def run_update(self):
+    def run_update(self, callback_data="market_approve:draft_x_1"):
         update = {"update_id": 500, "callback_query": {
-            "id": "cb-1", "data": "market_approve:draft_x_1",
+            "id": "cb-1", "data": callback_data,
             "from": {"id": 111, "username": "bullseyetheory"},
             "message": {"chat": {"id": 111}, "message_id": 354}}}
         calls = []
@@ -115,6 +115,18 @@ class PollerRetryTests(unittest.TestCase):
         self.assertIn("educational_approved_ids=draft_x_1",
                       (self.root / "gh_output.txt").read_text())
         metadata = json.loads((self.root / "output" / "draft_x_1.json").read_text())
+        self.assertEqual(metadata["status"], "approved_for_publishing")
+
+    def test_compact_callback_approves_long_id_within_telegram_limit(self):
+        content_id = "draft_support-resistance_afternoon_20261031_144537"
+        callback_data = "a:" + content_id
+        self.assertLessEqual(len(callback_data.encode("utf-8")), 64)
+        self.seed(metadata=True, content_id=content_id)
+        methods = [method for method, _ in self.run_update(callback_data)]
+        self.assertIn("editMessageReplyMarkup", methods)
+        market = json.loads((self.root / "data" / "state.json").read_text())
+        self.assertEqual(market["signals"][content_id]["approval_status"], "approved")
+        metadata = json.loads((self.root / "output" / f"{content_id}.json").read_text())
         self.assertEqual(metadata["status"], "approved_for_publishing")
 
     def test_workflow_uses_autostash_and_retry_test_trigger(self):

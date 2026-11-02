@@ -89,6 +89,11 @@ for item in items:
     record = signals.get(content_id, {})
     if record.get("content_type") != "educational_reel" or record.get("approval_status") != "pending":
         continue
+    publishing = record.get("publishing", {}) if isinstance(record.get("publishing"), dict) else {}
+    previous_dm = publishing.get("telegram_dm", {}) if isinstance(publishing.get("telegram_dm"), dict) else {}
+    if previous_dm.get("status") == "sent" and previous_dm.get("message_id"):
+        sent_ids.add(content_id)
+        continue
     content = load_json(OUTPUT / f"{content_id}.json", None)
     if not isinstance(content, dict):
         continue
@@ -122,9 +127,13 @@ for item in items:
     )
     if len(message_text) > 3900:
         message_text = message_text[:3900] + "\n\n<i>[Message shortened]</i>"
+    approve_callback = f"a:{content_id}"
+    reject_callback = f"r:{content_id}"
+    if max(len(approve_callback.encode("utf-8")), len(reject_callback.encode("utf-8"))) > 64:
+        raise RuntimeError(f"Telegram callback identifier is too long for {content_id}; no approval message was sent.")
     keyboard = {"inline_keyboard": [[
-        {"text": "✅ APPROVE", "callback_data": f"market_approve:{content_id}"},
-        {"text": "❌ REJECT", "callback_data": f"market_reject:{content_id}"},
+        {"text": "✅ APPROVE", "callback_data": approve_callback},
+        {"text": "❌ REJECT", "callback_data": reject_callback},
     ]]}
     result = api("sendMessage", {
         "chat_id": CHAT_ID, "text": message_text, "parse_mode": "HTML",
@@ -138,9 +147,14 @@ for item in items:
         "sent_at": datetime.now(timezone.utc).isoformat(),
     }
     sent_count += 1
+    # Persist each successful message immediately. If a later Telegram request
+    # fails, the next run must not resend messages that Telegram already accepted.
+    save_json(STATE_FILE, state)
+    queue["telegram_sent"] = sorted(sent_ids)
+    save_json(QUEUE_FILE, queue)
     print(f"Sent {content_id} to the configured approval chat; message ID recorded.")
 
 queue["telegram_sent"] = sorted(sent_ids)
-save_json(QUEUE_FILE, queue)
 save_json(STATE_FILE, state)
+save_json(QUEUE_FILE, queue)
 print(f"Telegram approval sender complete. Sent {sent_count} request(s). No public post was made.")

@@ -260,8 +260,9 @@ def main():
                 callback_id = str(callback.get("id", ""))
                 reviewer = _reviewer_label(callback)
 
-                if data.startswith("market_approve:") or data.startswith("market_reject:"):
+                if data.startswith(("market_approve:", "market_reject:", "a:", "r:")):
                     action, signal_id = data.split(":", 1)
+                    action = {"a": "market_approve", "r": "market_reject"}.get(action, action)
                     record = market_state["signals"].get(signal_id)
                     if not record:
                         answer = "This draft is no longer available. No decision was saved."
