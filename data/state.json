@@ -10773,7 +10773,9 @@
           "message_id": 379
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.617562+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026102910-short": {
       "signal": {
@@ -10897,7 +10899,9 @@
           "message_id": 381
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.645714+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026102908-long": {
       "signal": {
@@ -11249,7 +11253,9 @@
           "message_id": 388
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.665547+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026102911-short": {
       "signal": {
@@ -11310,7 +11316,9 @@
           "message_id": 389
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.683514+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsei-2026102909-long": {
       "signal": {
@@ -11600,7 +11608,9 @@
           "message_id": 396
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.701452+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "ndx-2026102916-short": {
       "signal": {
@@ -11763,7 +11773,9 @@
           "message_id": 400
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.719473+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026103010-short": {
       "signal": {
@@ -11824,7 +11836,9 @@
           "message_id": 401
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.743885+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "ndx-2026102919-short": {
       "signal": {
@@ -11948,7 +11962,9 @@
           "message_id": 403
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.762213+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsei-2026103009-long": {
       "signal": {
@@ -12010,7 +12026,9 @@
           "message_id": 404
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.781106+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsebank-2026103009-long": {
       "signal": {
@@ -12072,13 +12090,15 @@
           "message_id": 405
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.799633+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-reward_morning_20261030_110304": {
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_morning_20261030_110304",
       "metadata_path": "output/draft_risk-reward_morning_20261030_110304.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-30T11:03:57.284152+00:00",
@@ -12109,7 +12129,9 @@
           "message_id": 407,
           "sent_at": "2026-10-30T11:03:58.027366+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-02T17:52:26.818272+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026103011-short": {
       "signal": {
@@ -12170,7 +12192,9 @@
           "message_id": 408
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.837011+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026103011-short": {
       "signal": {
@@ -12231,7 +12255,9 @@
           "message_id": 409
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.855539+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026103014-short": {
       "signal": {
@@ -12292,7 +12318,9 @@
           "message_id": 411
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.874171+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "spy-2026103014-short": {
       "signal": {
@@ -12353,13 +12381,15 @@
           "message_id": 412
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-02T17:52:26.892917+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_trading-journal_afternoon_20261030_152048": {
       "content_type": "educational_reel",
       "content_id": "draft_trading-journal_afternoon_20261030_152048",
       "metadata_path": "output/draft_trading-journal_afternoon_20261030_152048.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-30T15:21:58.482218+00:00",
@@ -12390,13 +12420,15 @@
           "message_id": 414,
           "sent_at": "2026-10-30T15:21:59.124209+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-02T17:52:26.911319+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_moving-averages_evening_20261030_181317": {
       "content_type": "educational_reel",
       "content_id": "draft_moving-averages_evening_20261030_181317",
       "metadata_path": "output/draft_moving-averages_evening_20261030_181317.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-30T18:15:18.686207+00:00",
@@ -12427,13 +12459,15 @@
           "message_id": 415,
           "sent_at": "2026-10-30T18:15:19.489027+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-02T17:52:26.929829+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_market-structure_morning_20261031_103724": {
       "content_type": "educational_reel",
       "content_id": "draft_market-structure_morning_20261031_103724",
       "metadata_path": "output/draft_market-structure_morning_20261031_103724.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-31T10:38:32.240429+00:00",
@@ -12464,13 +12498,15 @@
           "message_id": 418,
           "sent_at": "2026-10-31T10:38:32.964793+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-02T17:52:26.947925+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_support-resistance_afternoon_20261031_144537": {
       "content_type": "educational_reel",
       "content_id": "draft_support-resistance_afternoon_20261031_144537",
       "metadata_path": "output/draft_support-resistance_afternoon_20261031_144537.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-31T14:46:24.636690+00:00",
@@ -12495,13 +12531,15 @@
           "Owner must review the exact script, caption, hashtags and matching video before publication."
         ]
       },
-      "publishing": {}
+      "publishing": {},
+      "expired_at": "2026-11-02T17:52:26.966143+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-per-trade_evening_20261031_172155": {
       "content_type": "educational_reel",
       "content_id": "draft_risk-per-trade_evening_20261031_172155",
       "metadata_path": "output/draft_risk-per-trade_evening_20261031_172155.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-10-31T17:23:00.477693+00:00",
@@ -12526,13 +12564,15 @@
           "Owner must review the exact script, caption, hashtags and matching video before publication."
         ]
       },
-      "publishing": {}
+      "publishing": {},
+      "expired_at": "2026-11-02T17:52:26.984996+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_overtrading_morning_20261101_113031": {
       "content_type": "educational_reel",
       "content_id": "draft_overtrading_morning_20261101_113031",
       "metadata_path": "output/draft_overtrading_morning_20261101_113031.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-01T11:31:39.511474+00:00",
@@ -12557,13 +12597,15 @@
           "Owner must review the exact script, caption, hashtags and matching video before publication."
         ]
       },
-      "publishing": {}
+      "publishing": {},
+      "expired_at": "2026-11-02T17:52:27.003323+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_afternoon_20261101_152821": {
       "content_type": "educational_reel",
       "content_id": "draft_false-breakouts_afternoon_20261101_152821",
       "metadata_path": "output/draft_false-breakouts_afternoon_20261101_152821.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-01T15:29:18.572581+00:00",
@@ -12588,13 +12630,15 @@
           "Owner must review the exact script, caption, hashtags and matching video before publication."
         ]
       },
-      "publishing": {}
+      "publishing": {},
+      "expired_at": "2026-11-02T17:52:27.021659+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-reward_evening_20261101_180651": {
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_evening_20261101_180651",
       "metadata_path": "output/draft_risk-reward_evening_20261101_180651.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-01T18:07:48.115468+00:00",
@@ -12619,7 +12663,9 @@
           "Owner must review the exact script, caption, hashtags and matching video before publication."
         ]
       },
-      "publishing": {}
+      "publishing": {},
+      "expired_at": "2026-11-02T17:52:27.040126+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_trading-journal_morning_20261102_125328": {
       "content_type": "educational_reel",
@@ -12651,6 +12697,231 @@
         ]
       },
       "publishing": {}
+    },
+    "spy-2026110217-short": {
+      "signal": {
+        "signal_id": "spy-2026110217-short",
+        "slug": "spy-2026110217-short",
+        "symbol": "SPY",
+        "label": "S&P 500 ETF",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 757.9000244140625,
+        "stop_loss": 762.8336739427174,
+        "targets": [
+          752.9663748854076,
+          750.4995501210802,
+          748.0327253567528
+        ],
+        "tp1": 752.9663748854076,
+        "tp2": 750.4995501210802,
+        "tp3": 748.0327253567528,
+        "rr_tp2": 1.4999999999999885,
+        "rsi14": 42.0508839707596,
+        "ema20": 761.3972915757367,
+        "ema50": 764.5005612610304,
+        "macd": -2.6962774035582697,
+        "macd_signal": -2.4755843797255697,
+        "macd_hist": -0.22069302383270006,
+        "atr14": 3.289099685769887,
+        "vwap": 761.1415094584521,
+        "support": 750.3599853515625,
+        "resistance": 773.3599853515625,
+        "as_of": "2026-11-02T17:30:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.1. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · S&amp;P 500 ETF</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching S&amp;P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.1. The scenario is invalid if structure fails.\n\nS&amp;P 500 ETF: EMA20 is below EMA50 and RSI(14) is 42.1. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.1. The scenario is invalid if structure fails.\n\nS&P 500 ETF: EMA20 is below EMA50 and RSI(14) is 42.1. This is a rule-based scenario, not a prediction.\n\nScenario: SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#SPY",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/spy-2026110217-short.png",
+      "card_path": "output/spy-2026110217-short_card.png",
+      "created_at": "2026-11-02T17:52:30.378513+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "ndx-2026110217-short": {
+      "signal": {
+        "signal_id": "ndx-2026110217-short",
+        "slug": "ndx-2026110217-short",
+        "symbol": "^NDX",
+        "label": "Nasdaq 100",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 28405.294921875,
+        "stop_loss": 28692.18982994845,
+        "targets": [
+          28118.40001380155,
+          27974.952559764824,
+          27831.505105728098
+        ],
+        "tp1": 28118.40001380155,
+        "tp2": 27974.952559764824,
+        "tp3": 27831.505105728098,
+        "rr_tp2": 1.5000000000000064,
+        "rsi14": 35.744537619142505,
+        "ema20": 28787.575774623405,
+        "ema50": 29129.976880793365,
+        "macd": -278.06457222621975,
+        "macd_signal": -246.00804951760742,
+        "macd_hist": -32.056522708612334,
+        "atr14": 191.26327204896705,
+        "vwap": 28589.285747654,
+        "support": 28093.287109375,
+        "resistance": 29848.052734375,
+        "as_of": "2026-11-02T17:30:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nasdaq 100</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ^NDX · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\nScenario: ^NDX · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nasdaq",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/ndx-2026110217-short.png",
+      "card_path": "output/ndx-2026110217-short_card.png",
+      "created_at": "2026-11-02T17:52:30.906094+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eurusd-x-2026110217-long": {
+      "signal": {
+        "signal_id": "eurusd-x-2026110217-long",
+        "slug": "eurusd-x-2026110217-long",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 1.121076226234436,
+        "stop_loss": 1.1191455294700783,
+        "targets": [
+          1.1230069229987938,
+          1.1239722713809728,
+          1.1249376197631518
+        ],
+        "tp1": 1.1230069229987938,
+        "tp2": 1.1239722713809728,
+        "tp3": 1.1249376197631518,
+        "rr_tp2": 1.5000000000000575,
+        "rsi14": 58.22618855303289,
+        "ema20": 1.119907306433681,
+        "ema50": 1.1185561808625266,
+        "macd": 0.0009485515943630229,
+        "macd_signal": 0.0008963393756945548,
+        "macd_hist": 5.221221866846815e-05,
+        "atr14": 0.0012871311762385487,
+        "vwap": null,
+        "support": 1.116071343421936,
+        "resistance": 1.123974323272705,
+        "as_of": "2026-11-02T17:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 58.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 58.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 58.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 58.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 58.2. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026110217-long.png",
+      "card_path": "output/eurusd-x-2026110217-long_card.png",
+      "created_at": "2026-11-02T17:52:31.417984+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "nsebank-2026110209-long": {
+      "signal": {
+        "signal_id": "nsebank-2026110209-long",
+        "slug": "nsebank-2026110209-long",
+        "symbol": "^NSEBANK",
+        "label": "Bank Nifty",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 55002.19921875,
+        "stop_loss": 54669.57940920201,
+        "targets": [
+          55334.81902829799,
+          55501.12893307199,
+          55667.438837845984
+        ],
+        "tp1": 55334.81902829799,
+        "tp2": 55501.12893307199,
+        "tp3": 55667.438837845984,
+        "rr_tp2": 1.5,
+        "rsi14": 60.22197631773224,
+        "ema20": 54728.61276669128,
+        "ema50": 54666.21205357752,
+        "macd": 104.50501799037738,
+        "macd_signal": 98.56168719365367,
+        "macd_hist": 5.943330796723714,
+        "atr14": 221.74653969866145,
+        "vwap": null,
+        "support": 54050.6484375,
+        "resistance": 55067.80078125,
+        "as_of": "2026-11-02T09:45:00+00:00",
+        "score": 40,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 60.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bank Nifty</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 60.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 60.2 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Bank Nifty par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 60.2 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nBank Nifty: EMA20 EMA50 ke upar hai aur RSI(14) 60.2 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: ^NSEBANK · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#BankNifty #IndianMarkets #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#BankNifty",
+          "#IndianMarkets",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/nsebank-2026110209-long.png",
+      "card_path": "output/nsebank-2026110209-long_card.png",
+      "created_at": "2026-11-02T17:52:31.929454+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
