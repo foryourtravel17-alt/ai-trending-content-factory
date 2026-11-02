@@ -21,6 +21,20 @@ if not TOKEN or not CHAT_ID:
 BASE = f"https://api.telegram.org/bot{TOKEN}"
 
 
+def _safe_api_description(raw: bytes) -> str:
+    """Return Telegram's human-readable error without exposing request credentials."""
+    try:
+        payload = json.loads(raw.decode("utf-8", errors="replace"))
+        description = " ".join(str(payload.get("description") or "").split())
+    except (ValueError, TypeError, AttributeError):
+        description = ""
+    # Telegram descriptions contain API diagnostics, not the bot token or request URL.
+    # Still redact any accidental credential echo before logging.
+    if TOKEN:
+        description = description.replace(TOKEN, "[REDACTED]")
+    return description[:180]
+
+
 def api(method, params):
     data = urllib.parse.urlencode(params).encode("utf-8")
     request = urllib.request.Request(f"{BASE}/{method}", data=data, method="POST")
@@ -28,11 +42,15 @@ def api(method, params):
         with urllib.request.urlopen(request, timeout=30) as response:
             result = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        raise RuntimeError(f"Telegram API HTTP {exc.code}; response redacted to protect bot token.") from None
+        detail = _safe_api_description(exc.read())
+        suffix = f": {detail}" if detail else ""
+        raise RuntimeError(f"Telegram API HTTP {exc.code} in {method}{suffix}; bot token redacted.") from None
     except urllib.error.URLError as exc:
         raise RuntimeError(f"Telegram API request failed ({type(exc).__name__}); bot token redacted.") from None
     if not result.get("ok"):
-        raise RuntimeError(f"Telegram API error in {method}; details redacted.")
+        detail = _safe_api_description(json.dumps(result).encode("utf-8"))
+        suffix = f": {detail}" if detail else ""
+        raise RuntimeError(f"Telegram API error in {method}{suffix}; details redacted.")
     return result.get("result")
 
 
@@ -89,7 +107,7 @@ for item in items:
     if isinstance(hashtags, list):
         hashtags = " ".join(str(tag) for tag in hashtags)
 
-    text = (
+    message_text = (
         "<b>🐂 Bullseye Theory — Approval Required</b>\n\n"
         f"<b>Content:</b> {html.escape(content_id)}\n"
         f"<b>Topic:</b> {html.escape(str(title))}\n\n"
@@ -102,14 +120,14 @@ for item in items:
         "duplicate and technical checks. Reject anything inaccurate.\n\n"
         "<i>Educational content only; not financial advice.</i>"
     )
-    if len(text) > 3900:
-        text = text[:3900] + "\n\n<i>[Message shortened]</i>"
+    if len(message_text) > 3900:
+        message_text = message_text[:3900] + "\n\n<i>[Message shortened]</i>"
     keyboard = {"inline_keyboard": [[
         {"text": "✅ APPROVE", "callback_data": f"market_approve:{content_id}"},
         {"text": "❌ REJECT", "callback_data": f"market_reject:{content_id}"},
     ]]}
     result = api("sendMessage", {
-        "chat_id": CHAT_ID, "text": text, "parse_mode": "HTML",
+        "chat_id": CHAT_ID, "text": message_text, "parse_mode": "HTML",
         "reply_markup": json.dumps(keyboard, separators=(",", ":")),
     })
     sent_ids.add(content_id)
