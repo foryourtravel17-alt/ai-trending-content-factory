@@ -251,7 +251,7 @@ def main() -> int:
         output_path = os.getenv("GITHUB_OUTPUT", "").strip()
         if output_path:
             with open(output_path, "a", encoding="utf-8") as output_file:
-                output_file.write("generated_signal_ids=" + ",".join(generated_signal_ids) + "\\n")
+                output_file.write("generated_signal_ids=" + ",".join(generated_signal_ids) + "\n")
     log.info("Run summary: %s; dry_run=%s; generate_only=%s; human_approval=%s",
              results, DRY_RUN, GENERATE_ONLY, HUMAN_APPROVAL)
     if results["errors"] and results["signals"] == 0:
