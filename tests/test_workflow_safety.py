@@ -10,19 +10,21 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn('description: "Generate charts and captions without publishing"', workflow)
         self.assertRegex(workflow, r"(?m)^\s+default: true\s*$")
 
-    def test_market_workflow_routes_new_scenarios_through_telegram_owner_approval(self):
+    def test_scheduled_market_workflow_auto_publishes_only_after_qa_and_image_verification(self):
         workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
-        self.assertIn('HUMAN_APPROVAL: "true"', workflow)
+        self.assertIn('HUMAN_APPROVAL: "false"', workflow)
         self.assertIn('GENERATE_ONLY: "true"', workflow)
         self.assertIn('PUBLISH_ONLY: "true"', workflow)
         self.assertIn("run: python -m src.orchestrator", workflow)
         self.assertLess(
             workflow.index("Commit generated approval drafts and state"),
-            workflow.index("Send prepared market scenarios to private Telegram for owner approval"),
+            workflow.index("Publish eligible market scenarios after QA and image verification"),
         )
         self.assertIn("DRY_RUN: ${{ inputs.dry_run || '0' }}", workflow)
         self.assertIn("if: always() && steps.publish.outcome != 'skipped'", workflow)
         self.assertIn("from agents.qa import", Path("src/orchestrator.py").read_text(encoding="utf-8"))
+        orchestrator = Path("src/orchestrator.py").read_text(encoding="utf-8")
+        self.assertIn('record.get("approval_status", "")).strip().lower() != "approved"', orchestrator)
 
     def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
@@ -75,9 +77,10 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertFalse(allowed)
         self.assertEqual(reason, "signal is not human-approved")
 
-    def test_readme_states_market_and_educational_approval_policies(self):
+    def test_readme_states_scheduled_auto_policy_and_manual_review_fallback(self):
         readme = Path("README.md").read_text(encoding="utf-8")
-        self.assertIn("Market cards are generated on schedule and sent to the owner private Telegram for approval; public posting happens only after an explicit approval button.", readme)
+        self.assertIn("Scheduled market scenarios and educational Reels publish automatically only after their configured QA and safety gates pass.", readme)
+        self.assertIn("Manual dispatches retain the private Telegram review or dry-run path.", readme)
 
     def test_instagram_health_check_uses_publisher_token_priority_without_fallback(self):
         workflow = Path(".github/workflows/instagram_token_health.yml").read_text(encoding="utf-8")
