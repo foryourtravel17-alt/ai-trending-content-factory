@@ -14,7 +14,7 @@ on:
           - afternoon
           - evening
   schedule:
-    # Three draft-only slots in India time: 10:17 AM, 2:17 PM, 6:17 PM.
+    # Three policy-gated educational Reel slots in India time: 10:17 AM, 2:17 PM, 6:17 PM.
     - cron: '47 4 * * *'
     - cron: '47 8 * * *'
     - cron: '47 12 * * *'
@@ -146,7 +146,7 @@ jobs:
           fi
 
       - name: Archive generated Reel and approval record
-        if: steps.draft.outputs.skip != 'true'
+        if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: bullseye-educational-reel-draft
