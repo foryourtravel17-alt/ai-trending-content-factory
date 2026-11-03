@@ -84,7 +84,7 @@ def main():
     caption = str(social.get("caption", content.get("caption", "")))
     hashtags = social.get("hashtags", content.get("hashtags", []))
     if isinstance(hashtags, list):
-        caption = (caption + "\\n\\n" + " ".join(str(tag) for tag in hashtags)).strip()
+        caption = (caption + "\n\n" + " ".join(str(tag) for tag in hashtags)).strip()
 
     if auto_policy:
         policy_approval = {
@@ -193,7 +193,7 @@ def main():
     target = os.getenv("GITHUB_OUTPUT", "").strip()
     if target:
         with open(target, "a", encoding="utf-8") as handle:
-            handle.write(f"content_id={content_id}\\n")
+            handle.write(f"content_id={content_id}\n")
     if auto_policy:
         print(
             f"Registered {content_id} under the automated safety policy; public publishing remains subject "
