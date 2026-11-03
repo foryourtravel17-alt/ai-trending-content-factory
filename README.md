@@ -121,7 +121,7 @@ By default, the script exchanges the token and updates the repository secret `IG
 1. Confirm the secrets/variables above are configured.
 2. Open **Actions → Autonomous Market Content Factory → Run workflow**.
 3. The manual workflow defaults to `dry_run=true`. It should generate charts, cards, copy, and QA/state records but must not post to Telegram or Instagram.
-4. Review the Action log and generated output after the dry run. Scheduled runs send new market scenarios to private Telegram for review; a public post requires the owner to press the approval button. For manual dispatch, set `dry_run=false` only when you intentionally want to generate and send review requests. Instagram/Telegram credentials, public image hosting, and Meta permissions must be configured first.
+4. Review the Action log and generated output after the dry run. Scheduled runs publish new market scenarios only after QA, freshness, deduplication and public-image checks pass. Manual dispatch defaults to dry-run; set `dry_run=false` only when you intentionally authorize a live run. Instagram/Telegram credentials, public image hosting, and Meta permissions must be configured first.
 5. Watch **Actions** for per-symbol warnings and platform status. A weak/neutral setup is skipped. If Yahoo Finance has no valid candles or every symbol fails, inspect the logs; the system does not fabricate a signal. Stale hourly data is rejected after 20 hours for non-crypto instruments and 36 hours for crypto. Missing publishing credentials now fail the publish step rather than silently claiming success.
 6. Run the QA unit tests locally or in CI with `python -m unittest discover -s tests`.
 
