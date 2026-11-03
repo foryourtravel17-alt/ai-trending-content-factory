@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 35
     env:
       DRY_RUN: ${{ inputs.dry_run || '0' }}
-      HUMAN_APPROVAL: "true"
+      HUMAN_APPROVAL: "false"
       # Generate and persist card PNGs first; Instagram requires a publicly reachable URL.
       GENERATE_ONLY: "true"
       LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
@@ -118,11 +118,11 @@ jobs:
           echo "Timed out waiting for GitHub Pages images. Skipping publishing rather than sending broken media URLs."
           exit 1
 
-      - name: Send prepared market scenarios to private Telegram for owner approval
+      - name: Publish eligible market scenarios after QA and image verification
         id: publish
         env:
           PUBLISH_ONLY: "true"
-          # Scheduled runs request owner approval; public posting requires an authorized approval callback.
+          # Scheduled runs publish only after QA, freshness, deduplication, and public-image checks.
           DRY_RUN: ${{ inputs.dry_run || '0' }}
         run: python -m src.orchestrator
 
