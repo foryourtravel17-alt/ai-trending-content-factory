@@ -67,6 +67,11 @@ def _retry_pending(state: dict) -> None:
             if _expire_if_stale(signal_id, record):
                 save_state(state)
                 continue
+            # A scheduled auto-publish run must never release a legacy item that is
+            # still waiting for its explicit Telegram owner decision.
+            if str(record.get("approval_status", "")).strip().lower() != "approved":
+                log.info("Leaving pending item %s queued until an authorized approval is recorded.", signal_id)
+                continue
             if HUMAN_APPROVAL:
                 continue
             card_path = Path(record.get("card_path", ""))
