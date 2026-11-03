@@ -1,6 +1,6 @@
 # AI Trading Content Factory — Bullseye Theory
 
-A free-tier-first GitHub Actions content factory for Bullseye Theory. Educational Reels use the approval-gated `educational_reel_draft.yml` workflow; the market-analysis pipeline runs under `agents/` and `src/orchestrator.py`.
+A free-tier-first GitHub Actions content factory for Bullseye Theory. Scheduled educational Reels and market scenarios publish automatically only after their configured safety, QA, freshness, media-integrity and duplicate checks pass. Manual educational Reel dispatches retain private Telegram review; manual market dispatch defaults to dry-run.
 
 > **Risk note:** This system publishes rule-based educational market scenarios, not personalized investment advice. Technical levels can fail. Yahoo Finance data can be delayed, incomplete, or corrected. Never treat an automated setup as a guaranteed outcome or as an instruction to place a trade.
 
@@ -10,11 +10,11 @@ A free-tier-first GitHub Actions content factory for Bullseye Theory. Educationa
 - `src/telegram_send.py` and `src/telegram_process.py`: Telegram approval queue and callback processing.
 - The retired manual `pipeline.yml` and its legacy `generate_approved_reel.yml` / `instagram_publish.yml` publishing chain are unsupported and have been removed; use `educational_reel_draft.yml` for educational Reels. See [the workflow approval matrix](docs/APPROVAL_MATRIX.md).
 
-The scheduled daily educational Reel workflow runs a Python 3.12/FFmpeg pipeline and creates draft-only Reels. The owner must approve the exact Reel in Telegram before the approval poller can publish it; automated safety screening is not owner approval.
+The scheduled daily educational Reel workflow runs a Python 3.12/FFmpeg pipeline and publishes only after its automated safety/format policy, exact Supabase media-integrity verification, freshness, duplicate and daily-cap checks pass. Automated screening is not independent factual verification. Manual dispatches retain private Telegram owner review; they do not auto-publish.
 
-`.github/workflows/educational_reel_draft.yml` generates three curated evergreen educational Reel drafts per day at 10:17 AM, 2:17 PM, and 6:17 PM India time. It renders one MP4 per slot, uploads and verifies the exact object in Supabase, registers the draft as pending human review, and sends a private Telegram approval request. It does not publish publicly. The approval poller publishes only after the owner approves the exact draft; automated safety screening is not approval. Approved drafts have a 48-hour publishing window, and one private Telegram notice lists drafts that expired in the last 24 hours. Scheduled runs pass the intended slot explicitly so delayed GitHub cron starts cannot mislabel a slot.
+`.github/workflows/educational_reel_draft.yml` generates three curated evergreen educational Reels per day at 10:17 AM, 2:17 PM, and 6:17 PM India time. It renders one MP4 per slot, uploads and verifies the exact object in Supabase, then applies the scheduled automated safety/format policy and publishes eligible Reels. The automated policy is not independent fact verification or a guarantee of accuracy. Manual dispatches retain the private Telegram owner-review flow. Reels have a 48-hour publishing window, and one private Telegram notice lists drafts that expired in the last 24 hours. Scheduled runs pass the intended slot explicitly so delayed GitHub cron starts cannot mislabel a slot.
 
-Market cards are generated on schedule and sent to the owner private Telegram for approval; public posting happens only after an explicit approval button. Educational Reels also require owner approval.
+Market cards are generated and automatically published on schedule only after QA, freshness, duplicate and public-image checks. The poller remains for explicitly approved legacy/manual Telegram items. Manual market workflow dispatch remains dry-run by default.
 
 ## New market-content factory
 
@@ -39,11 +39,11 @@ Market cards are generated on schedule and sent to the owner private Telegram fo
 - 13:30 IST (08:00 UTC)
 - 15:45 IST (10:15 UTC)
 
-The workflow first generates and commits PNGs/state, then sends approval requests to the owner's private Telegram chat. After an authorized approval callback, the poller publishes the selected card. Committing the PNG first allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. Manual dispatch defaults to `dry_run=true` so the first manual run is safe; set it to `false` only after reviewing generated output and confirming credentials and hosting.
+The workflow first generates and commits PNGs/state, validates the public image URLs, then publishes eligible scenarios to Instagram and Telegram. Committing the PNG first allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. Scheduled publishing requires passing QA, freshness, deduplication and image-integrity gates. Manual dispatch defaults to `dry_run=true`; set it to `false` only when you intentionally authorize a live run after reviewing the generated output and confirming credentials and hosting.
 
 **Important hosting and visibility note:** this repository is currently **public** (verified on GitHub). Instagram needs a publicly reachable HTTPS image URL; the publisher checks URL reachability and fails rather than posting a broken image. Keep secrets and private account data out of source, commits, generated output, and logs. GitHub Pages or `IMAGE_BASE_URL` can serve generated cards. Do not change repository visibility as part of this workflow without first reviewing the image-hosting impact.
 
-`.github/workflows/market_approval_poll.yml` is the single Telegram callback consumer for market records and educational Reels. The market factory uses `HUMAN_APPROVAL=true`: new market cards are sent to the owner private Telegram, and public posting is attempted only after an authorized owner approval callback and freshness/duplicate preflight.
+`.github/workflows/market_approval_poll.yml` remains the single Telegram callback consumer for legacy/manual review records. The scheduled market factory sets `HUMAN_APPROVAL=false` and publishes newly generated records after QA, freshness, duplicate and public-image checks. The scheduled educational Reel workflow applies its own automated safety/format policy. The callback poller still accepts only authorized owner decisions and exact approved IDs.
 
 `.github/workflows/weekly_report.yml` sends a Friday Telegram report. It estimates hypothetical signal outcomes from post-signal hourly OHLC (conservatively counting same-candle stop/target ambiguity as a stop) and fetches Instagram Insights when permissions allow. This is not actual broker P&L; the report clearly labels it as scenario analysis. `.github/workflows/market_stall_watchdog.yml` checks weekday evening for a recent successful market-content run and sends an alert only if the scheduled factory appears stalled. The failure watchdog also monitors the new market workflows.
 
@@ -72,7 +72,7 @@ Optional/compatibility:
 - `META_APP_ID`, `META_APP_SECRET` — only needed locally by the token refresh helper; never commit them
 
 Recommended repository **Variables** (Settings → Secrets and variables → Actions → Variables):
-- Market publishing sets `HUMAN_APPROVAL=true`; scheduled runs request owner approval in private Telegram, and only a recorded authorized approval can trigger public publishing.
+- The market workflow sets `HUMAN_APPROVAL=false` for scheduled QA-gated publishing. Manual dispatch remains `dry_run=true` by default; the Telegram callback flow remains for legacy/manual approvals.
 - `LLM_ENABLED` = `true` to use the configured LLM; fallback copy works if unavailable
 - `LLM_BASE` = `https://api.venice.ai/api/v1` (or your OpenAI-compatible base URL)
 - `LLM_MODEL` = your selected model, default `llama-3.3-70b`
@@ -88,7 +88,7 @@ The workflow accepts `GH_USER` and `GH_REPO` as secrets. They are not sensitive,
 3. Create or open the Bullseye Theory channel (`@bullseye_theory`) and add the bot as an administrator with permission to post.
 4. Start a private chat with your bot and send `/start`.
 5. Obtain your private chat ID using the bot's `getUpdates` response or a trusted Telegram ID helper, then set `TELEGRAM_CHAT_ID`. The bot must be able to message you before draft delivery works.
-6. Scheduled market scenarios and educational Reel drafts both require owner approval in your private Telegram chat. Review each exact card/Reel, caption, and hashtags, then press the approval button to authorize that item for public posting. The separate Premium Telegram lesson workflow is an explicit private-channel exception and requires `PREMIUM_TELEGRAM_CHAT_ID`.
+6. Scheduled market scenarios and educational Reels publish automatically only after their configured quality, safety, freshness, media-integrity and duplicate checks pass. Manual educational Reel dispatches still send a private Telegram review request. Manual market dispatch defaults to dry-run. The separate Premium Telegram lesson workflow is an explicit private-channel exception and requires `PREMIUM_TELEGRAM_CHAT_ID`.
 
 ### 3. Set up Instagram Graph API
 
@@ -121,7 +121,7 @@ By default, the script exchanges the token and updates the repository secret `IG
 1. Confirm the secrets/variables above are configured.
 2. Open **Actions → Autonomous Market Content Factory → Run workflow**.
 3. The manual workflow defaults to `dry_run=true`. It should generate charts, cards, copy, and QA/state records but must not post to Telegram or Instagram.
-4. Review the Action log and generated output after the dry run. Scheduled runs send new market scenarios to private Telegram for review; a public post requires the owner to press the approval button. For manual dispatch, set `dry_run=false` only when you intentionally want to generate and send review requests. Instagram/Telegram credentials, public image hosting, and Meta permissions must be configured first.
+4. Review the Action log and generated output after the dry run. Scheduled runs publish new market scenarios only after QA, freshness, deduplication and public-image checks pass. Manual dispatch defaults to dry-run; set `dry_run=false` only when you intentionally authorize a live run. Instagram/Telegram credentials, public image hosting, and Meta permissions must be configured first.
 5. Watch **Actions** for per-symbol warnings and platform status. A weak/neutral setup is skipped. If Yahoo Finance has no valid candles or every symbol fails, inspect the logs; the system does not fabricate a signal. Stale hourly data is rejected after 20 hours for non-crypto instruments and 36 hours for crypto. Missing publishing credentials now fail the publish step rather than silently claiming success.
 6. Run the QA unit tests locally or in CI with `python -m unittest discover -s tests`.
 
@@ -139,7 +139,7 @@ Python 3.11 for the new market workflow. Requirements include yfinance, pandas, 
 
 Useful environment flags:
 - `DRY_RUN=1`: render and validate without posting.
-- `HUMAN_APPROVAL=true`: send draft to Telegram DM; button approval is required before public posting.
+- `HUMAN_APPROVAL=true`: legacy/manual market compatibility mode; scheduled market publishing sets it to `false` after automated QA. Educational Reel manual dispatch still uses private Telegram review.
 - Approved educational Reels expire after 48 hours; the poller sends one private notice per expired draft.
 - `LLM_ENABLED=true`: use the configured LLM when `LLM_API_KEY` is available.
 - `GENERATE_ONLY=true`: generate and save images/state before the publish phase.

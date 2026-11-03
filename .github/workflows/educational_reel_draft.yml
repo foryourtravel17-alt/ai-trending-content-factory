@@ -14,7 +14,7 @@ on:
           - afternoon
           - evening
   schedule:
-    # Three draft-only slots in India time: 10:17 AM, 2:17 PM, 6:17 PM.
+    # Three policy-gated educational Reel slots in India time: 10:17 AM, 2:17 PM, 6:17 PM.
     - cron: '47 4 * * *'
     - cron: '47 8 * * *'
     - cron: '47 12 * * *'
@@ -101,17 +101,31 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/upload_educational_reel.py
 
-      - name: Register Reel for owner approval
+      - name: Register Reel under scheduled policy or manual review
         id: queue
         if: steps.draft.outputs.skip != 'true'
+        env:
+          AUTO_PUBLISH_POLICY: ${{ github.event_name == 'schedule' && 'true' || 'false' }}
         run: python scripts/queue_educational_draft.py
 
-      - name: Send private Telegram approval request (no public publishing)
-        if: steps.draft.outputs.skip != 'true'
+      - name: Send private Telegram approval request (manual dispatch only)
+        if: steps.draft.outputs.skip != 'true' && github.event_name != 'schedule'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python src/telegram_send.py
+
+      - name: Publish policy-approved educational Reel to Instagram and Telegram
+        if: steps.draft.outputs.skip != 'true' && github.event_name == 'schedule'
+        env:
+          EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}
+          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python scripts/publish_approved_educational_reels.py
 
       - name: Persist publishing state and exact Reel metadata
         if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'
@@ -123,7 +137,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No publishing-state changes to commit."
           else
-            git commit -m "content: record educational Reel approval request"
+            git commit -m "content: record educational Reel policy and publishing state"
             # Other generator steps can leave tracked state files modified outside
             # the staged publish-state allow-list. Autostash them while rebasing so
             # the approval-state commit can still be pushed without discarding work.
@@ -132,7 +146,7 @@ jobs:
           fi
 
       - name: Archive generated Reel and approval record
-        if: steps.draft.outputs.skip != 'true'
+        if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'
         uses: actions/upload-artifact@v7
         with:
           name: bullseye-educational-reel-draft
