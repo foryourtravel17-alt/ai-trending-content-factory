@@ -146,7 +146,7 @@ class QueueEducationalDraftTests(unittest.TestCase):
             "runs": [],
         }
         MODULE.STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-        MODULE.STATE_PATH.write_text(json.dumps(state), encoding="utf-8)
+        MODULE.STATE_PATH.write_text(json.dumps(state), encoding="utf-8")
 
         with patch.dict("os.environ", {"AUTO_PUBLISH_POLICY": "true"}):
             with self.assertRaises(SystemExit):
