@@ -12881,7 +12881,9 @@
           "message_id": 433
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-03T13:00:05.774846+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsebank-2026110209-long": {
       "signal": {
@@ -13202,7 +13204,7 @@
           "message_id": 441
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "nsebank-2026110309-long": {
       "signal": {
@@ -13264,7 +13266,7 @@
           "message_id": 442
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_support-resistance_morning_20261103_122431": {
       "content_type": "educational_reel",
@@ -13302,6 +13304,62 @@
           "sent_at": "2026-11-03T12:26:26.978744+00:00"
         }
       }
+    },
+    "gc-f-2026110312-short": {
+      "signal": {
+        "signal_id": "gc-f-2026110312-short",
+        "slug": "gc-f-2026110312-short",
+        "symbol": "GC=F",
+        "label": "Gold",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 3933.39990234375,
+        "stop_loss": 3955.975312893016,
+        "targets": [
+          3910.824491794484,
+          3899.5367865198514,
+          3888.2490812452183
+        ],
+        "tp1": 3910.824491794484,
+        "tp2": 3899.5367865198514,
+        "tp3": 3888.2490812452183,
+        "rr_tp2": 1.4999999999999798,
+        "rsi14": 49.375086556497706,
+        "ema20": 3931.861972439558,
+        "ema50": 3946.632240920526,
+        "macd": -6.854644846828705,
+        "macd_signal": -4.541899130335033,
+        "macd_hist": -2.312745716493672,
+        "atr14": 15.050273699510571,
+        "vwap": 3930.7723284381673,
+        "support": 3904.10009765625,
+        "resistance": 3980.800048828125,
+        "as_of": "2026-11-03T12:00:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 49.4. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Gold</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 49.4. The scenario is invalid if structure fails.\n\nGold: EMA20 is below EMA50 and RSI(14) is 49.4. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> GC=F · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 49.4. The scenario is invalid if structure fails.\n\nGold: EMA20 is below EMA50 and RSI(14) is 49.4. This is a rule-based scenario, not a prediction.\n\nScenario: GC=F · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#GoldTrading #TechnicalAnalysis #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#GoldTrading",
+          "#TechnicalAnalysis",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/gc-f-2026110312-short.png",
+      "card_path": "output/gc-f-2026110312-short_card.png",
+      "created_at": "2026-11-03T13:00:12.467978+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
