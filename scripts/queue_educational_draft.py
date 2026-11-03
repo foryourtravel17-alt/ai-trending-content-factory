@@ -41,9 +41,10 @@ def main():
     source, content = max(candidates, key=lambda pair: pair[0].stat().st_mtime)
     safety_check = content.get("safety_check") if isinstance(content.get("safety_check"), dict) else {}
     if safety_check.get("passed") is not True:
-        raise SystemExit("Automated safety screen did not pass; automatic publishing is blocked.")
+        raise SystemExit("Automated safety screen did not pass; publishing is blocked.")
     content_id = str(content.get("content_id", "")).strip()
-    safety_screened_at = datetime.now(timezone.utc).isoformat()
+    policy_reviewed_at = datetime.now(timezone.utc).isoformat()
+    auto_policy = os.getenv("AUTO_PUBLISH_POLICY", "false").strip().lower() == "true"
     if not content_id or any(ch not in SAFE_ID for ch in content_id):
         raise SystemExit("Draft has a missing or unsafe content_id.")
 
@@ -66,6 +67,10 @@ def main():
             "generated", "published", "partial", "publish_failed", "rejected"
         }:
             raise SystemExit(f"Refusing to overwrite an existing decision/state for {content_id}.")
+        if auto_policy and decision == "pending":
+            raise SystemExit(
+                f"Refusing to convert an existing human-review decision to automated policy for {content_id}."
+            )
         if existing.get("content_type") != "educational_reel":
             raise SystemExit(f"Content ID collision with non-Reel market record: {content_id}.")
 
@@ -75,24 +80,77 @@ def main():
         raise SystemExit(f"Refusing to re-queue a decided draft: {content_id}.")
 
     topic = content.get("topic", {}) if isinstance(content.get("topic"), dict) else {}
-    script = content.get("script", {}) if isinstance(content.get("script"), dict) else {}
     social = content.get("social", {}) if isinstance(content.get("social"), dict) else {}
     caption = str(social.get("caption", content.get("caption", "")))
     hashtags = social.get("hashtags", content.get("hashtags", []))
     if isinstance(hashtags, list):
-        caption = (caption + "\n\n" + " ".join(str(tag) for tag in hashtags)).strip()
+        caption = (caption + "\\n\\n" + " ".join(str(tag) for tag in hashtags)).strip()
+
+    if auto_policy:
+        policy_approval = {
+            **approval,
+            "required": False,
+            "status": "approved",
+            "mode": "automated_policy",
+            "automated_review_at": policy_reviewed_at,
+        }
+        policy_fact_check = {
+            **(content.get("fact_check") if isinstance(content.get("fact_check"), dict) else {}),
+            "status": "automated_passed",
+            "automated_review_at": policy_reviewed_at,
+            "notes": [
+                "Automated safety/format policy passed.",
+                "This automated screen is not independent factual verification or a guarantee of accuracy.",
+                "The Reel uses curated evergreen educational topics and is subject to media integrity, freshness, duplicate, and daily-publishing limits.",
+            ],
+        }
+        content["status"] = "approved_for_publishing"
+        content["approval"] = policy_approval
+        content["fact_check"] = policy_fact_check
+        state_status = "approved_for_publishing"
+        approval_status = "approved"
+        approval_mode = "automated_policy"
+        fact_check_status = "automated_passed"
+        human_approval_required = False
+    else:
+        policy_approval = {
+            **approval,
+            "required": True,
+            "status": "pending",
+            "mode": "human_review",
+            "safety_screened_at": policy_reviewed_at,
+        }
+        policy_fact_check = {
+            **(content.get("fact_check") if isinstance(content.get("fact_check"), dict) else {}),
+            "status": "needs_human_review",
+            "safety_screened_at": policy_reviewed_at,
+            "notes": [
+                "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+                "Owner must review the exact script, caption, hashtags and matching video before publication.",
+            ],
+        }
+        content["status"] = "pending_approval"
+        content["approval"] = policy_approval
+        content["fact_check"] = policy_fact_check
+        state_status = "pending_approval"
+        approval_status = "pending"
+        approval_mode = "human_review"
+        fact_check_status = "needs_human_review"
+        human_approval_required = True
 
     signals[content_id] = {
         **(existing if isinstance(existing, dict) else {}),
         "content_type": "educational_reel",
         "content_id": content_id,
         "metadata_path": str(source),
-        "status": "pending_approval",
-        "approval_status": "pending",
-        "approval_mode": "human_review",
-        "safety_screened_at": safety_screened_at,
+        "status": state_status,
+        "approval_status": approval_status,
+        "approval_mode": approval_mode,
+        "approval": policy_approval,
+        "safety_check": safety_check,
+        "safety_screened_at": policy_reviewed_at,
         "created_at": created_at,
-        "human_approval_required": True,
+        "human_approval_required": human_approval_required,
         "signal": {
             "signal_id": content_id,
             "symbol": "EDUCATIONAL_REEL",
@@ -103,60 +161,46 @@ def main():
             "telegram_html": caption,
             "instagram_caption": caption,
         },
+        "social": social,
         "card_path": str(content.get("video", f"output/media/{content_id}.mp4")),
-        "fact_check": {
-            "status": "needs_human_review",
-            "safety_screened_at": safety_screened_at,
-            "notes": [
-                "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
-                "Owner must review the exact script, caption, hashtags and matching video before publication.",
-            ],
-        },
+        "fact_check": policy_fact_check,
         "publishing": (existing.get("publishing", {}) if isinstance(existing, dict) else {}),
+        **({"automated_review_at": policy_reviewed_at} if auto_policy else {}),
     }
 
-    content["status"] = "pending_approval"
-    content["approval"] = {
-        **approval,
-        "required": True,
-        "status": "pending",
-        "mode": "human_review",
-        "safety_screened_at": safety_screened_at,
-    }
-    content["fact_check"] = {
-        **(content.get("fact_check") if isinstance(content.get("fact_check"), dict) else {}),
-        "status": "needs_human_review",
-        "safety_screened_at": safety_screened_at,
-        "notes": [
-            "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
-            "Owner must review the exact script, caption, hashtags and matching video before publication.",
-        ],
-    }
     save_json(source, content)
-
-    queue = load_json(QUEUE_PATH, {"items": [], "telegram_sent": []})
-    if isinstance(queue, list):
-        queue = {"items": queue, "telegram_sent": []}
-    if not isinstance(queue, dict):
-        raise SystemExit("Approval queue has an unsupported format.")
-    items = queue.setdefault("items", [])
-    if not isinstance(items, list):
-        raise SystemExit("Approval queue items must be a list.")
-    if not isinstance(queue.setdefault("telegram_sent", []), list):
-        raise SystemExit("Approval queue telegram_sent must be a list.")
-    if not any(isinstance(item, dict) and item.get("content_id") == content_id for item in items):
-        items.append({"content_id": content_id, "status": "pending_approval", "processed": False})
-    else:
-        for item in items:
-            if isinstance(item, dict) and item.get("content_id") == content_id:
-                item.update({"status": "pending_approval", "processed": False})
     save_json(STATE_PATH, state)
-    save_json(QUEUE_PATH, queue)
+
+    if not auto_policy:
+        queue = load_json(QUEUE_PATH, {"items": [], "telegram_sent": []})
+        if isinstance(queue, list):
+            queue = {"items": queue, "telegram_sent": []}
+        if not isinstance(queue, dict):
+            raise SystemExit("Approval queue has an unsupported format.")
+        items = queue.setdefault("items", [])
+        if not isinstance(items, list):
+            raise SystemExit("Approval queue items must be a list.")
+        if not isinstance(queue.setdefault("telegram_sent", []), list):
+            raise SystemExit("Approval queue telegram_sent must be a list.")
+        if not any(isinstance(item, dict) and item.get("content_id") == content_id for item in items):
+            items.append({"content_id": content_id, "status": "pending_approval", "processed": False})
+        else:
+            for item in items:
+                if isinstance(item, dict) and item.get("content_id") == content_id:
+                    item.update({"status": "pending_approval", "processed": False})
+        save_json(QUEUE_PATH, queue)
+
     target = os.getenv("GITHUB_OUTPUT", "").strip()
     if target:
         with open(target, "a", encoding="utf-8") as handle:
-            handle.write(f"content_id={content_id}\n")
-    print(f"Registered {content_id} as pending human approval after the automated safety screen. No publishing was authorized.")
+            handle.write(f"content_id={content_id}\\n")
+    if auto_policy:
+        print(
+            f"Registered {content_id} under the automated safety policy; public publishing remains subject "
+            "to exact media, freshness, duplicate, daily-cap, credential, and platform checks."
+        )
+    else:
+        print(f"Registered {content_id} as pending human approval after the automated safety screen. No publishing was authorized.")
 
 
 if __name__ == "__main__":
