@@ -64,7 +64,7 @@ class DailyReelDraftTests(unittest.TestCase):
             self.assertEqual(existing_draft_for_slot(out, "2026-10-23", "morning"), record)
 
 
-    def test_workflow_runs_three_times_and_requires_human_approval(self):
+    def test_scheduled_reels_use_automated_policy_and_manual_dispatch_keeps_review(self):
         workflow = Path(".github/workflows/educational_reel_draft.yml").read_text(encoding="utf-8")
         self.assertIn("cron: '47 4 * * *'", workflow)
         self.assertIn("cron: '47 8 * * *'", workflow)
@@ -73,15 +73,16 @@ class DailyReelDraftTests(unittest.TestCase):
         self.assertIn("github.event.schedule == '47 4 * * *' && 'morning'", workflow)
         self.assertIn("github.event.schedule == '47 8 * * *' && 'afternoon'", workflow)
         self.assertIn("github.event.schedule == '47 12 * * *' && 'evening'", workflow)
-        self.assertIn("Send private Telegram approval request (no public publishing)", workflow)
+        self.assertIn("AUTO_PUBLISH_POLICY: ${{ github.event_name == 'schedule' && 'true' || 'false' }}", workflow)
+        self.assertIn("Send private Telegram approval request (manual dispatch only)", workflow)
+        self.assertIn("if: steps.draft.outputs.skip != 'true' && github.event_name != 'schedule'", workflow)
         self.assertIn("run: python src/telegram_send.py", workflow)
-        self.assertIn("Register Reel for owner approval", workflow)
-        self.assertNotIn("run: python scripts/publish_approved_educational_reels.py", workflow)
-        self.assertNotIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
-        self.assertNotIn("Bullseye Daily Educational Reel Auto-Publish", workflow)
+        self.assertIn("Register Reel under scheduled policy or manual review", workflow)
+        self.assertIn("Publish policy-approved educational Reel to Instagram and Telegram", workflow)
+        self.assertIn("if: steps.draft.outputs.skip != 'true' && github.event_name == 'schedule'", workflow)
+        self.assertIn("run: python scripts/publish_approved_educational_reels.py", workflow)
+        self.assertIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
         self.assertIn("id: queue", workflow)
-        self.assertNotIn("Upload draft for review (no publishing)", workflow)
-        self.assertIn("if: steps.draft.outputs.skip != 'true'", workflow)
         self.assertIn("if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'", workflow)
         self.assertIn("No-op when this slot already has a draft", workflow)
         self.assertIn("approval_queue.json", workflow)
