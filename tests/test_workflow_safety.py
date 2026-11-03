@@ -1,7 +1,10 @@
 """Guard the production workflow's safe defaults against accidental regression."""
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 from scripts.preflight_publish_guard import should_publish
+from src import orchestrator as ORCHESTRATOR
 
 
 class WorkflowSafetyTests(unittest.TestCase):
@@ -21,11 +24,56 @@ class WorkflowSafetyTests(unittest.TestCase):
             workflow.index("Publish eligible market scenarios after QA and image verification"),
         )
         self.assertIn("DRY_RUN: ${{ inputs.dry_run || '0' }}", workflow)
+        self.assertIn("id: generate", workflow)
+        self.assertIn("PUBLISH_ONLY_SIGNAL_IDS:", workflow)
         self.assertIn("if: always() && steps.publish.outcome != 'skipped'", workflow)
         self.assertIn("from agents.qa import", Path("src/orchestrator.py").read_text(encoding="utf-8"))
         orchestrator = Path("src/orchestrator.py").read_text(encoding="utf-8")
         self.assertIn('record.get("approval_status", "")).strip().lower() != "approved"', orchestrator)
 
+
+    def test_unapproved_legacy_pending_market_items_are_never_auto_published(self):
+        state = {
+            "signals": {
+                "legacy_pending": {
+                    "status": "pending_approval",
+                    "approval_status": "pending",
+                    "signal": {"as_of": "2026-11-03T00:00:00+00:00"},
+                    "copy": {},
+                    "card_path": "missing.png",
+                }
+            }
+        }
+        with patch.multiple(ORCHESTRATOR, DRY_RUN=False, HUMAN_APPROVAL=False):
+            with patch.object(ORCHESTRATOR, "publish") as publisher:
+                ORCHESTRATOR._retry_pending(state)
+        publisher.assert_not_called()
+        self.assertEqual(state["signals"]["legacy_pending"]["status"], "pending_approval")
+
+    def test_market_publish_phase_only_processes_current_run_ids(self):
+        with TemporaryDirectory() as folder:
+            card = Path(folder) / "market-card.png"
+            card.write_bytes(b"test image")
+            def record(signal_id):
+                return {
+                    "status": "generated",
+                    "signal": {"signal_id": signal_id, "as_of": "2026-11-03T00:00:00+00:00"},
+                    "copy": {"telegram_html": "educational", "instagram_caption": "educational"},
+                    "card_path": str(card),
+                }
+            state = {"signals": {"new_today": record("new_today"), "old_dry_run": record("old_dry_run")}}
+            with patch.multiple(
+                ORCHESTRATOR,
+                PUBLISH_ONLY_SIGNAL_ID="",
+                PUBLISH_ONLY_SIGNAL_IDS="new_today",
+                DRY_RUN=True,
+            ):
+                with patch.object(ORCHESTRATOR, "_expire_if_stale", return_value=False):
+                    with patch.object(ORCHESTRATOR, "publish", side_effect=lambda signal, copy, path, item, dry_run=False: item) as publisher:
+                        with patch.object(ORCHESTRATOR, "save_state"):
+                            ORCHESTRATOR._publish_prepared(state)
+            self.assertEqual(publisher.call_count, 1)
+            self.assertEqual(publisher.call_args.args[0]["signal_id"], "new_today")
     def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
         self.assertIn('cron: "*/5 * * * *"', workflow)
