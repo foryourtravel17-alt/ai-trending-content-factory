@@ -2,6 +2,7 @@ import importlib.util
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "queue_educational_draft.py"
@@ -104,6 +105,56 @@ class QueueEducationalDraftTests(unittest.TestCase):
         self.assertFalse(queue["items"][0]["processed"])
         self.assertEqual(state["signals"]["draft_sample_20261022"]["approval_status"], "pending")
         self.assertEqual(state["signals"]["draft_sample_20261022"]["approval_mode"], "human_review")
+
+
+    def test_automated_policy_registers_approved_record_without_private_review_queue(self):
+        source = self.write_draft()
+        with patch.dict("os.environ", {"AUTO_PUBLISH_POLICY": "true"}):
+            MODULE.main()
+
+        content = json.loads(source.read_text(encoding="utf-8"))
+        state = json.loads(MODULE.STATE_PATH.read_text(encoding="utf-8"))
+        record = state["signals"]["draft_sample_20261022"]
+
+        self.assertEqual(content["status"], "approved_for_publishing")
+        self.assertEqual(content["approval"]["status"], "approved")
+        self.assertEqual(content["approval"]["mode"], "automated_policy")
+        self.assertFalse(content["approval"]["required"])
+        self.assertTrue(content["approval"]["automated_review_at"])
+        self.assertEqual(content["fact_check"]["status"], "automated_passed")
+        self.assertTrue(content["safety_check"]["passed"])
+        self.assertEqual(record["approval_status"], "approved")
+        self.assertEqual(record["approval_mode"], "automated_policy")
+        self.assertFalse(record["human_approval_required"])
+        self.assertEqual(record["status"], "approved_for_publishing")
+        self.assertEqual(record["fact_check"]["status"], "automated_passed")
+        self.assertTrue(record["automated_review_at"])
+        self.assertFalse(MODULE.QUEUE_PATH.exists())
+
+    def test_automated_policy_does_not_upgrade_an_existing_pending_human_review(self):
+        self.write_draft()
+        state = {
+            "signals": {
+                "draft_sample_20261022": {
+                    "content_type": "educational_reel",
+                    "content_id": "draft_sample_20261022",
+                    "status": "pending_approval",
+                    "approval_status": "pending",
+                    "approval_mode": "human_review",
+                }
+            },
+            "runs": [],
+        }
+        MODULE.STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        MODULE.STATE_PATH.write_text(json.dumps(state), encoding="utf-8)
+
+        with patch.dict("os.environ", {"AUTO_PUBLISH_POLICY": "true"}):
+            with self.assertRaises(SystemExit):
+                MODULE.main()
+
+        saved = json.loads(MODULE.STATE_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(saved["signals"]["draft_sample_20261022"]["approval_status"], "pending")
+        self.assertFalse(MODULE.QUEUE_PATH.exists())
 
 
 if __name__ == "__main__":
