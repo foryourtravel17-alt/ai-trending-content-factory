@@ -13135,8 +13135,13 @@
       "chart_path": "output/gc-f-2026110311-short.png",
       "card_path": "output/gc-f-2026110311-short_card.png",
       "created_at": "2026-11-03T11:21:40.071638+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 440
+        }
+      },
+      "status": "pending_approval"
     },
     "spy-2026110220-short": {
       "signal": {
@@ -13191,8 +13196,13 @@
       "chart_path": "output/spy-2026110220-short.png",
       "card_path": "output/spy-2026110220-short_card.png",
       "created_at": "2026-11-03T11:21:40.702803+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 441
+        }
+      },
+      "status": "pending_approval"
     },
     "nsebank-2026110309-long": {
       "signal": {
@@ -13248,8 +13258,13 @@
       "chart_path": "output/nsebank-2026110309-long.png",
       "card_path": "output/nsebank-2026110309-long_card.png",
       "created_at": "2026-11-03T11:21:41.224562+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 442
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -14582,6 +14597,24 @@
     {
       "at": "2026-11-02T20:23:20.197282+00:00",
       "signal_id": "spy-2026110219-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-03T11:23:22.404353+00:00",
+      "signal_id": "gc-f-2026110311-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-03T11:23:23.827560+00:00",
+      "signal_id": "spy-2026110220-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-03T11:23:25.304533+00:00",
+      "signal_id": "nsebank-2026110309-long",
       "status": "pending_approval",
       "dry_run": false
     }
