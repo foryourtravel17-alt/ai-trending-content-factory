@@ -79,8 +79,9 @@ class WorkflowSafetyTests(unittest.TestCase):
 
     def test_readme_states_scheduled_auto_policy_and_manual_review_fallback(self):
         readme = Path("README.md").read_text(encoding="utf-8")
-        self.assertIn("Scheduled market scenarios and educational Reels publish automatically only after their configured QA and safety gates pass.", readme)
-        self.assertIn("Manual dispatches retain the private Telegram review or dry-run path.", readme)
+        self.assertIn("Scheduled market scenarios and educational Reels publish automatically only after their configured quality, safety, freshness, media-integrity and duplicate checks pass.", readme)
+        self.assertIn("Manual educational Reel dispatches still send a private Telegram review request.", readme)
+        self.assertIn("Manual market dispatch defaults to dry-run.", readme)
 
     def test_instagram_health_check_uses_publisher_token_priority_without_fallback(self):
         workflow = Path(".github/workflows/instagram_token_health.yml").read_text(encoding="utf-8")
