@@ -1,20 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T17:54:47.580900+00:00",
+  "generatedAt": "2026-11-04T03:20:18.663139+00:00",
   "source": "Bullseye Theory educational market factory",
   "dataStatus": "human_approved_observations",
   "maxObservationAgeHours": 8,
   "disclaimer": "Educational structure observations only. Not a forecast or a recommendation to buy, sell, or hold. Conditions can change; scenarios can fail.",
-  "records": [
-    {
-      "id": "eurusd-x-2026110317-long",
-      "symbol": "EURUSD=X",
-      "label": "EUR/USD",
-      "direction": "LONG",
-      "as_of": "2026-11-03T17:00:00+00:00",
-      "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 54.3. The scenario is invalid if structure fails.",
-      "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario.",
-      "approvalStatus": "approved"
-    }
-  ]
+  "records": []
 }
