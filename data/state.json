@@ -13854,7 +13854,7 @@
           "message_id": 457
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "tcs-ns-2026110409-short": {
       "signal": {
@@ -13915,7 +13915,7 @@
           "message_id": 458
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_false-breakouts_morning_20261104_123628": {
       "content_type": "educational_reel",
@@ -15527,6 +15527,18 @@
     {
       "at": "2026-11-04T13:20:23.155556+00:00",
       "signal_id": "eth-usd-2026110413-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-04T15:59:34.691981+00:00",
+      "signal_id": "infy-ns-2026110409-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-04T15:59:34.706443+00:00",
+      "signal_id": "tcs-ns-2026110409-short",
       "status": "pending_approval",
       "dry_run": false
     }
