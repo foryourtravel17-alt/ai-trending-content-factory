@@ -13516,7 +13516,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_risk-per-trade_afternoon_20261103_163532",
       "metadata_path": "output/draft_risk-per-trade_afternoon_20261103_163532.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-03T16:36:45.936392+00:00",
@@ -13547,7 +13547,9 @@
           "message_id": 450,
           "sent_at": "2026-11-03T16:36:46.679573+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-04T13:16:45.297214+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026110317-long": {
       "signal": {
@@ -13850,7 +13852,7 @@
           "message_id": 457
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "tcs-ns-2026110409-short": {
       "signal": {
@@ -13911,7 +13913,7 @@
           "message_id": 458
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_false-breakouts_morning_20261104_123628": {
       "content_type": "educational_reel",
@@ -13949,6 +13951,118 @@
           "sent_at": "2026-11-04T12:37:49.314602+00:00"
         }
       }
+    },
+    "btc-usd-2026110413-long": {
+      "signal": {
+        "signal_id": "btc-usd-2026110413-long",
+        "slug": "btc-usd-2026110413-long",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 78270.15625,
+        "stop_loss": 77591.92726817055,
+        "targets": [
+          78948.38523182945,
+          79287.49972274418,
+          79626.6142136589
+        ],
+        "tp1": 78948.38523182945,
+        "tp2": 79287.49972274418,
+        "tp3": 79626.6142136589,
+        "rr_tp2": 1.5,
+        "rsi14": 60.159646239014016,
+        "ema20": 77770.71778037706,
+        "ema50": 77544.60158606118,
+        "macd": 296.6962430808926,
+        "macd_signal": 198.61758902533614,
+        "macd_hist": 98.07865405555646,
+        "atr14": 452.1526545529668,
+        "vwap": 77561.64458681986,
+        "support": 75615.5234375,
+        "resistance": 78620.8125,
+        "as_of": "2026-11-04T13:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 60.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 60.2. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 60.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 60.2. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 60.2. This is a rule-based scenario, not a prediction.\n\nScenario: BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026110413-long.png",
+      "card_path": "output/btc-usd-2026110413-long_card.png",
+      "created_at": "2026-11-04T13:16:50.029244+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eth-usd-2026110413-long": {
+      "signal": {
+        "signal_id": "eth-usd-2026110413-long",
+        "slug": "eth-usd-2026110413-long",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 2314.199951171875,
+        "stop_loss": 2289.5335179543176,
+        "targets": [
+          2338.8663843894324,
+          2351.1996009982113,
+          2363.5328176069897
+        ],
+        "tp1": 2338.8663843894324,
+        "tp2": 2351.1996009982113,
+        "tp3": 2363.5328176069897,
+        "rr_tp2": 1.5000000000000093,
+        "rsi14": 61.56577614915554,
+        "ema20": 2295.829976987185,
+        "ema50": 2282.272922773366,
+        "macd": 12.437554610930874,
+        "macd_signal": 8.935920213455677,
+        "macd_hist": 3.501634397475197,
+        "atr14": 16.444288811704943,
+        "vwap": 2294.8591944586597,
+        "support": 2223.510009765625,
+        "resistance": 2336.179931640625,
+        "as_of": "2026-11-04T13:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 61.6. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 61.6. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 61.6. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 61.6. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 61.6. This is a rule-based scenario, not a prediction.\n\nScenario: ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026110413-long.png",
+      "card_path": "output/eth-usd-2026110413-long_card.png",
+      "created_at": "2026-11-04T13:16:50.547985+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
