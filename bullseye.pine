@@ -94,9 +94,9 @@ if pivotLow
         if candidateLow >= low[rightBars + j]
             pivotLow := false
 
-if barstate.isconfirmed and pivotHigh and not na(atrValue[rightBars])
+if barstate.isconfirmed and pivotHigh and not na(atrValue[rightBars]) and atrValue[rightBars] > 0
     f_addPivot(high[rightBars], atrValue[rightBars], bar_index - rightBars, 1)
-if barstate.isconfirmed and pivotLow and not na(atrValue[rightBars])
+if barstate.isconfirmed and pivotLow and not na(atrValue[rightBars]) and atrValue[rightBars] > 0
     f_addPivot(low[rightBars], atrValue[rightBars], bar_index - rightBars, -1)
 
 // Breakouts are evaluated on closed candles only. A zone is independently cooled down.
