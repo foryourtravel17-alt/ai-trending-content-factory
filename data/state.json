@@ -13856,7 +13856,9 @@
           "message_id": 457
         }
       },
-      "status": "generated"
+      "status": "expired",
+      "expired_at": "2026-11-05T11:32:57.418344+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026110409-short": {
       "signal": {
@@ -13917,7 +13919,9 @@
           "message_id": 458
         }
       },
-      "status": "generated"
+      "status": "expired",
+      "expired_at": "2026-11-05T11:32:57.440968+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_morning_20261104_123628": {
       "content_type": "educational_reel",
@@ -14207,8 +14211,13 @@
       "chart_path": "output/tcs-ns-2026110509-long.png",
       "card_path": "output/tcs-ns-2026110509-long_card.png",
       "created_at": "2026-11-05T11:30:49.262265+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 469
+        }
+      },
+      "status": "pending_approval"
     },
     "infy-ns-2026110509-long": {
       "signal": {
@@ -14263,8 +14272,13 @@
       "chart_path": "output/infy-ns-2026110509-long.png",
       "card_path": "output/infy-ns-2026110509-long_card.png",
       "created_at": "2026-11-05T11:30:49.795744+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 470
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -15729,6 +15743,18 @@
     {
       "at": "2026-11-04T15:59:34.706443+00:00",
       "signal_id": "tcs-ns-2026110409-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-05T11:32:59.490136+00:00",
+      "signal_id": "tcs-ns-2026110509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-05T11:33:01.247232+00:00",
+      "signal_id": "infy-ns-2026110509-long",
       "status": "pending_approval",
       "dry_run": false
     }
