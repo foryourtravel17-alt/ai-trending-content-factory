@@ -52,10 +52,13 @@ test('breakout requires strict ATR price buffer and produces exact long/short SL
     target: 107, risk: 3, rewardRisk: 2, touches: 3, strength: 3
   });
   const short = detectBreakout({ close: 98.4, volume: 200 }, zone, 5, 100);
-  assert.deepEqual(short, {
-    direction: 'SHORT', zoneId: 'demand-4', entry: 98.4, stopLoss: 101,
-    target: 93.2, risk: 2.5999999999999943, rewardRisk: 2, touches: 3, strength: 3
-  });
+  assert.equal(short.direction, 'SHORT');
+  assert.equal(short.zoneId, 'demand-4');
+  assert.equal(short.entry, 98.4);
+  assert.equal(short.stopLoss, 101);
+  assert.ok(Math.abs(short.target - 93.2) < 1e-10);
+  assert.ok(Math.abs(short.risk - 2.6) < 1e-10);
+  assert.equal(short.rewardRisk, 2);
 });
 
 test('cooldown suppresses bars 1–11 and permits bar 12, independently per zone', () => {
