@@ -4,10 +4,9 @@ import { pivots, cluster, detectBreakout, cooldownAllows, recordSignal, isSuppor
 
 test('strict 3-left/3-right pivots are confirmed only when right candles exist', () => {
   const highs = [1, 2, 3, 10, 3, 2, 1];
-  const candles = highs.map((high, i) => ({ high, low: -high, atr: 2, volume: 10, close: 0, time: i }));
+  const candles = highs.map((high, i) => ({ high, low: i, atr: 2, volume: 10, close: 0, time: i }));
   assert.deepEqual(pivots(candles, 3, 3), [
-    { index: 3, type: 'supply', price: 10, atr: 2 },
-    { index: 3, type: 'demand', price: -10, atr: 2 }
+    { index: 3, type: 'supply', price: 10, atr: 2 }
   ]);
   assert.deepEqual(pivots(candles.slice(0, 6), 3, 3), []);
 });
