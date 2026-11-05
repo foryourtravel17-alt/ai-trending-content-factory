@@ -57,6 +57,8 @@ function evaluate(candles, symbol, timeframe) {
           if (i === candles.length - 1) {
             latestSignal = { ...signal, symbol, timeframe, time: c.time, barIndex: i };
           }
+          // Match Pine's one-alert-per-closed-bar behavior: first seed-ordered zone wins.
+          break;
         }
       }
     }
