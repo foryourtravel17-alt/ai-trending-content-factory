@@ -158,3 +158,36 @@ The Premium Telegram lesson workflow is an explicit exception to the owner-appro
 - The rule-based EMA/RSI/MACD screen is intentionally simple and is not evidence of profitability.
 - The weekly report estimates hypothetical R outcomes from public OHLC and labels them as non-executed scenario analysis. It does not represent broker P&L or guarantee that a trade was filled. Instagram engagement requires Insights API permissions; if unavailable, the report says so.
 - This project does not connect to a broker and does not execute trades.
+
+
+## Bullseye Levels indicator
+
+The deterministic **Bullseye Levels** indicator has two implementations driven by the same rules in [RULES.md](RULES.md):
+
+- `lib/levels.mjs` — pure Node.js pivots, ATR-scaled zones, breakout math, and per-zone cooldown.
+- `bullseye.pine` — TradingView Pine Script v6 overlay with confirmed-bar labels and alert messages.
+- `server.mjs` + `indicator.html` — private-site web UI and server-only Binance public-kline computation.
+
+### Run the web version locally
+
+Requires Node.js 20 or newer.
+
+```bash
+npm install
+npm start
+```
+
+Open `http://localhost:3000`. The JSON endpoint is `/api/indicator/BTCUSDT/15m`; supported intervals are only `15m` and `1h`. The server discards the still-forming Binance candle, caches completed market data for 60 seconds, and the page polls every 15 seconds. Only the server computes ATR, pivots, zones, and signals.
+
+### Optional Telegram signal delivery
+
+Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in the server environment before starting it. The server posts a new latest-candle signal with entry, stop loss, 1:2 target, symbol, and timeframe. Do not commit credentials to the repository. Without both variables, the indicator still works and Telegram delivery is disabled.
+
+### Test the deterministic core
+
+```bash
+npm test
+node --check server.mjs
+```
+
+The web indicator is educational only. It does not connect to a broker or place orders. Pine compilation and live market/Telegram delivery must be verified in their respective platforms before production use.
