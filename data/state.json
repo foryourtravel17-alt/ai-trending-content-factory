@@ -14221,7 +14221,7 @@
           "message_id": 469
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "infy-ns-2026110509-long": {
       "signal": {
@@ -14282,7 +14282,7 @@
           "message_id": 470
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_moving-averages_morning_20261105_124706": {
       "content_type": "educational_reel",
@@ -15844,6 +15844,18 @@
     },
     {
       "at": "2026-11-05T13:30:41.910262+00:00",
+      "signal_id": "infy-ns-2026110509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-05T18:01:04.292046+00:00",
+      "signal_id": "tcs-ns-2026110509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-05T18:01:04.312657+00:00",
       "signal_id": "infy-ns-2026110509-long",
       "status": "pending_approval",
       "dry_run": false
