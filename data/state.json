@@ -14088,7 +14088,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_afternoon_20261104_163558",
       "metadata_path": "output/draft_risk-reward_afternoon_20261104_163558.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-04T16:37:11.531859+00:00",
@@ -14119,7 +14119,9 @@
           "message_id": 465,
           "sent_at": "2026-11-04T16:37:12.327620+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-05T13:29:14.770838+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_trading-journal_evening_20261104_200202": {
       "content_type": "educational_reel",
@@ -14217,7 +14219,7 @@
           "message_id": 469
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "infy-ns-2026110509-long": {
       "signal": {
@@ -14278,7 +14280,7 @@
           "message_id": 470
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_moving-averages_morning_20261105_124706": {
       "content_type": "educational_reel",
