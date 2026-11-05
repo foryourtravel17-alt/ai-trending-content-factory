@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bullseye Levels — Trading Tool</title>
+<style>
+:root{color-scheme:dark;--bg:#080d18;--panel:#101a2b;--line:#22324a;--muted:#8da1bd;--text:#e8eef8;--lime:#c4f04d;--red:#ff647c;--green:#4be0a1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px max(16px,calc((100vw - 1180px)/2));border-bottom:1px solid var(--line);background:#0b1322}
+.brand{font-weight:800;letter-spacing:.08em}.brand span{color:var(--lime)}.sub{color:var(--muted);font-size:12px}
+main{max-width:1180px;margin:22px auto;padding:0 16px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+select,button{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:8px;font:inherit}
+button{cursor:pointer;background:var(--lime);color:#10180a;font-weight:800;border-color:var(--lime)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.panelhead{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}.chartwrap{height:540px;position:relative}#chart{position:absolute;inset:0}.zones{position:absolute;inset:0;pointer-events:none;overflow:hidden}.zone{position:absolute;border:1px solid;opacity:.18}.zone.supply{background:var(--red);border-color:var(--red)}.zone.demand{background:var(--green);border-color:var(--green)}
+.side{padding:15px}.state{font-size:12px;color:var(--muted);letter-spacing:.12em;font-weight:800}.status{font-size:23px;font-weight:900;margin:6px 0 14px}.status.no{color:var(--muted)}.status.long{color:var(--green)}.status.short{color:var(--red)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{padding:10px;background:#0b1423;border:1px solid var(--line);border-radius:8px}.metric small{display:block;color:var(--muted);font-size:11px}.metric b{font-size:16px;overflow-wrap:anywhere}.note{color:var(--muted);font-size:12px;margin-top:14px}.zoneslist{padding:14px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}.chip{font-size:11px;border:1px solid var(--line);border-radius:20px;padding:5px 9px;color:var(--muted)}.foot{color:var(--muted);font-size:11px;margin:15px 2px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.chartwrap{height:420px}.side{order:-1}.metrics{grid-template-columns:repeat(3,1fr)}header{padding:14px 16px}}
+@media(max-width:480px){.metrics{grid-template-columns:repeat(2,1fr)}.chartwrap{height:350px}.status{font-size:20px}}
+</style>
+<script src="/node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+<header><div><div class="brand">BULLSEYE <span>LEVELS</span></div><div class="sub">FILTER THE NOISE. READ THE STRUCTURE.</div></div><div class="sub">EDUCATIONAL TOOL · NO AUTO-EXECUTION</div></header>
+<main>
+<div class="toolbar">
+<select id="symbol" aria-label="Symbol"><option>BTCUSDT</option><option>ETHUSDT</option><option>BNBUSDT</option><option>SOLUSDT</option><option>ADAUSDT</option><option>BTCUSDC</option></select>
+<select id="tf" aria-label="Timeframe"><option value="15m">15 minutes</option><option value="1h">1 hour</option></select>
+<button id="refresh">Refresh</button><span class="sub" id="updated" style="align-self:center">Waiting for market data…</span>
+</div>
+<div class="layout">
+<section class="panel"><div class="panelhead"><b id="chartTitle">BTCUSDT · 15m</b><span class="sub">Confirmed candles only</span></div><div class="chartwrap"><div id="chart"></div><div class="zones" id="zones"></div></div><div class="zoneslist" id="zoneList"><span class="sub">Zones will appear here.</span></div></section>
+<aside class="panel side"><div class="state">CURRENT SETUP</div><div id="status" class="status no">NO TRADE</div><div class="metrics">
+<div class="metric"><small>ENTRY</small><b id="entry">—</b></div><div class="metric"><small>STOP LOSS</small><b id="sl">—</b></div><div class="metric"><small>TARGET</small><b id="tp">—</b></div><div class="metric"><small>RISK / REWARD</small><b id="rr">—</b></div><div class="metric"><small>ZONE STRENGTH</small><b id="strength">—</b></div><div class="metric"><small>TIMEFRAME</small><b id="timeframe">15m</b></div>
+</div><p class="note" id="reason">Waiting for a confirmed breakout with the required volume expansion.</p></aside>
+</div>
+<p class="foot">Signals are rule-based educational scenarios, not financial advice or guaranteed outcomes. No broker connection or order execution. Data: Binance public market klines.</p>
+</main>
+<script>
+const {createChart,CandlestickSeries,createSeriesMarkers}=window.LightweightCharts;
+const host=document.getElementById('chart');
+const chart=createChart(host,{layout:{background:{color:'#101a2b'},textColor:'#8da1bd'},grid:{vertLines:{color:'#1b2940'},horzLines:{color:'#1b2940'}},rightPriceScale:{borderColor:'#22324a'},timeScale:{borderColor:'#22324a',timeVisible:true,secondsVisible:false},crosshair:{vertLine:{color:'#64748b'},horzLine:{color:'#64748b'}}});
+const candles=chart.addSeries(CandlestickSeries,{upColor:'#4be0a1',downColor:'#ff647c',borderVisible:false,wickUpColor:'#4be0a1',wickDownColor:'#ff647c'});
+let markersApi=createSeriesMarkers(candles,[]);
+let latest=null;
+const fmt=n=>Number.isFinite(n)?Number(n).toLocaleString(undefined,{maximumFractionDigits:6}):'—';
+function drawZones(zones){
+ const layer=document.getElementById('zones');layer.innerHTML='';
+ for(const z of zones){
+  const x=chart.timeScale().timeToCoordinate(z.startTime), y1=candles.priceToCoordinate(z.top), y2=candles.priceToCoordinate(z.bottom);
+  if(x==null||y1==null||y2==null)continue;
+  const el=document.createElement('div');el.className='zone '+z.type;el.style.left=Math.max(0,x)+'px';el.style.top=Math.min(y1,y2)+'px';el.style.width=Math.max(0,host.clientWidth-x)+'px';el.style.height=Math.max(2,Math.abs(y2-y1))+'px';layer.append(el);
+ }
+ document.getElementById('zoneList').innerHTML=zones.length?zones.map(z=>'<span class="chip">'+z.type.toUpperCase()+' · '+fmt(z.bottom)+'–'+fmt(z.top)+' · '+z.touches+' touches</span>').join(''):'<span class="sub">No confirmed 2-touch zones.</span>';
+}
+function render(data){
+ latest=data;document.getElementById('chartTitle').textContent=data.symbol+' · '+data.timeframe;document.getElementById('timeframe').textContent=data.timeframe;
+ candles.setData(data.candles);chart.timeScale().fitContent();
+ const marks=data.signal?[{time:data.signal.time,position:data.signal.direction==='LONG'?'belowBar':'aboveBar',color:data.signal.direction==='LONG'?'#4be0a1':'#ff647c',shape:data.signal.direction==='LONG'?'arrowUp':'arrowDown',text:data.signal.direction+' · '+fmt(data.signal.entry)}]:[];
+ markersApi.setMarkers(marks);drawZones(data.zones);
+ const s=data.signal, status=document.getElementById('status');
+ status.textContent=s?s.direction:'NO TRADE';status.className='status '+(s?s.direction.toLowerCase():'no');
+ document.getElementById('entry').textContent=s?fmt(s.entry):'—';document.getElementById('sl').textContent=s?fmt(s.stopLoss):'—';document.getElementById('tp').textContent=s?fmt(s.target):'—';document.getElementById('rr').textContent=s?'1 : 2':'—';document.getElementById('strength').textContent=s?s.strength+' touches':'—';
+ document.getElementById('reason').textContent=s?'Confirmed close breakout. Volume exceeded the 20-bar average threshold.':'No qualifying breakout on the latest closed candle. Wait for a valid setup.';
+ document.getElementById('updated').textContent='Updated '+new Date(data.updatedAt).toLocaleTimeString();
+}
+async function refresh(){
+ const symbol=document.getElementById('symbol').value,tf=document.getElementById('tf').value;
+ document.getElementById('updated').textContent='Loading…';
+ try{const response=await fetch('/api/indicator/'+encodeURIComponent(symbol)+'/'+encodeURIComponent(tf),{cache:'no-store'});const data=await response.json();if(!response.ok)throw new Error(data.error||data.reason||'Request failed');render(data);}
+ catch(e){document.getElementById('updated').textContent='Market data unavailable';document.getElementById('reason').textContent=e.message;}
+}
+document.getElementById('refresh').addEventListener('click',refresh);document.getElementById('symbol').addEventListener('change',refresh);document.getElementById('tf').addEventListener('change',refresh);
+chart.timeScale().subscribeVisibleTimeRangeChange(()=>{if(latest)drawZones(latest.zones)});new ResizeObserver(()=>{chart.applyOptions({width:host.clientWidth,height:host.clientHeight});if(latest)drawZones(latest.zones)}).observe(host);
+refresh();setInterval(refresh,15000);
+</script>
+</body></html>

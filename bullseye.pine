@@ -1,0 +1,135 @@
+//@version=6
+indicator("Bullseye Levels", "Bullseye Levels", overlay=true, max_boxes_count=200, max_labels_count=200)
+
+// All rule constants are configurable here. Defaults match RULES.md.
+leftBars       = input.int(3, "Pivot left bars", minval=1)
+rightBars      = input.int(3, "Pivot right bars", minval=1)
+atrLength      = input.int(14, "ATR length", minval=1)
+clusterAtr     = input.float(0.25, "Pivot cluster distance × ATR", minval=0.0, step=0.01)
+minTouches     = input.int(2, "Minimum zone touches", minval=2)
+breakoutAtr    = input.float(0.10, "Breakout close buffer × ATR", minval=0.0, step=0.01)
+volumeLength   = input.int(20, "Volume SMA length", minval=1)
+volumeMultiple = input.float(1.5, "Volume multiplier", minval=0.0, step=0.1)
+stopAtr        = input.float(0.20, "Stop buffer × ATR", minval=0.0, step=0.01)
+targetRR       = input.float(2.0, "Target reward/risk", minval=0.1, step=0.1)
+cooldownBars   = input.int(12, "Cooldown bars per zone", minval=0)
+showZones      = input.bool(true, "Show supply/demand zones")
+showLabels     = input.bool(true, "Show LONG/SHORT labels")
+enableAlerts   = input.bool(true, "Enable alert() messages")
+
+// Only the two contract timeframes are eligible.
+supportedTf = timeframe.period == "15" or timeframe.period == "60"
+atrValue = ta.atr(atrLength)
+volumeAverage = ta.sma(volume, volumeLength)
+
+// Parallel arrays retain one seed-anchored cluster per pivot group.
+var array<float> seedPrices = array.new_float()
+var array<float> seedAtr = array.new_float()
+var array<int> zoneTypes = array.new_int()       // 1 = supply, -1 = demand
+var array<float> zoneBottoms = array.new_float()
+var array<float> zoneTops = array.new_float()
+var array<int> zoneTouches = array.new_int()
+var array<int> seedBars = array.new_int()
+var array<int> lastSignalBars = array.new_int()
+var array<box> zoneBoxes = array.new_box()
+
+f_addPivot(float price, float pAtr, int pivotBar, int kind) =>
+    int bestIndex = -1
+    float bestDistance = na
+    int count = array.size(seedPrices)
+    if count > 0 and not na(pAtr) and pAtr > 0
+        for z = 0 to count - 1
+            if array.get(zoneTypes, z) == kind
+                float distance = math.abs(price - array.get(seedPrices, z))
+                float limit = clusterAtr * math.min(pAtr, array.get(seedAtr, z))
+                if distance <= limit and (na(bestDistance) or distance < bestDistance)
+                    bestIndex := z
+                    bestDistance := distance
+    if bestIndex == -1
+        array.push(seedPrices, price)
+        array.push(seedAtr, pAtr)
+        array.push(zoneTypes, kind)
+        array.push(zoneBottoms, price)
+        array.push(zoneTops, price)
+        array.push(zoneTouches, 1)
+        array.push(seedBars, pivotBar)
+        array.push(lastSignalBars, -1000000)
+        array.push(zoneBoxes, na)
+    else
+        float newBottom = math.min(array.get(zoneBottoms, bestIndex), price)
+        float newTop = math.max(array.get(zoneTops, bestIndex), price)
+        int newTouches = array.get(zoneTouches, bestIndex) + 1
+        array.set(zoneBottoms, bestIndex, newBottom)
+        array.set(zoneTops, bestIndex, newTop)
+        array.set(zoneTouches, bestIndex, newTouches)
+        if showZones and newTouches >= minTouches
+            box existing = array.get(zoneBoxes, bestIndex)
+            color fillColor = kind == 1 ? color.new(color.red, 87) : color.new(color.lime, 87)
+            color edgeColor = kind == 1 ? color.new(color.red, 35) : color.new(color.lime, 35)
+            if na(existing)
+                box created = box.new(left=array.get(seedBars, bestIndex), top=newTop, right=bar_index, bottom=newBottom, xloc=xloc.bar_index, extend=extend.right, bgcolor=fillColor, border_color=edgeColor)
+                array.set(zoneBoxes, bestIndex, created)
+            else
+                box.set_top(existing, newTop)
+                box.set_bottom(existing, newBottom)
+
+// Strict pivot comparisons match the Node.js implementation.
+// The candidate is rightBars candles ago; it is added only on this confirmed bar.
+bool pivotHigh = bar_index >= leftBars + rightBars
+bool pivotLow = bar_index >= leftBars + rightBars
+if pivotHigh
+    float candidateHigh = high[rightBars]
+    for j = 0 to rightBars - 1
+        if candidateHigh <= high[j]
+            pivotHigh := false
+    for j = 1 to leftBars
+        if candidateHigh <= high[rightBars + j]
+            pivotHigh := false
+if pivotLow
+    float candidateLow = low[rightBars]
+    for j = 0 to rightBars - 1
+        if candidateLow >= low[j]
+            pivotLow := false
+    for j = 1 to leftBars
+        if candidateLow >= low[rightBars + j]
+            pivotLow := false
+
+if barstate.isconfirmed and pivotHigh and not na(atrValue[rightBars]) and atrValue[rightBars] > 0
+    f_addPivot(high[rightBars], atrValue[rightBars], bar_index - rightBars, 1)
+if barstate.isconfirmed and pivotLow and not na(atrValue[rightBars]) and atrValue[rightBars] > 0
+    f_addPivot(low[rightBars], atrValue[rightBars], bar_index - rightBars, -1)
+
+// Breakouts are evaluated on closed candles only. A zone is independently cooled down.
+bool firedOnBar = false
+if barstate.isconfirmed and supportedTf and not na(atrValue) and not na(volumeAverage)
+    int zoneCount = array.size(seedPrices)
+    if zoneCount > 0
+        for z = 0 to zoneCount - 1
+            int touches = array.get(zoneTouches, z)
+            float bottom = array.get(zoneBottoms, z)
+            float top = array.get(zoneTops, z)
+            int lastSignal = array.get(lastSignalBars, z)
+            bool cooldownReady = bar_index - lastSignal >= cooldownBars
+            bool volumeReady = volume > volumeAverage * volumeMultiple
+            bool longBreak = touches >= minTouches and close > top + breakoutAtr * atrValue and volumeReady
+            bool shortBreak = touches >= minTouches and close < bottom - breakoutAtr * atrValue and volumeReady
+            if cooldownReady and not firedOnBar and (longBreak or shortBreak)
+                bool isLong = longBreak
+                float entryPrice = close
+                float stopPrice = isLong ? bottom - stopAtr * atrValue : top + stopAtr * atrValue
+                float risk = math.abs(entryPrice - stopPrice)
+                if risk > 0
+                    float targetPrice = isLong ? entryPrice + risk * targetRR : entryPrice - risk * targetRR
+                    string direction = isLong ? "LONG" : "SHORT"
+                    string message = "Bullseye Levels " + direction + " | " + syminfo.ticker + " | " + timeframe.period + " | Entry: " + str.tostring(entryPrice, format.mintick) + " | SL: " + str.tostring(stopPrice, format.mintick) + " | TP: " + str.tostring(targetPrice, format.mintick) + " | RR: 1:" + str.tostring(targetRR)
+                    array.set(lastSignalBars, z, bar_index)
+                    firedOnBar := true
+                    if showLabels
+                        label.new(bar_index, isLong ? low : high, direction + "\nEntry " + str.tostring(entryPrice, format.mintick) + "\nSL " + str.tostring(stopPrice, format.mintick) + "\nTP " + str.tostring(targetPrice, format.mintick), style=isLong ? label.style_label_up : label.style_label_down, color=isLong ? color.new(color.lime, 0) : color.new(color.red, 0), textcolor=color.black, size=size.small)
+                    if enableAlerts
+                        alert(message, alert.freq_once_per_bar_close)
+
+// A visible warning on unsupported intervals prevents accidental interpretation.
+var table statusTable = table.new(position.top_right, 1, 1)
+if barstate.islast
+    table.cell(statusTable, 0, 0, supportedTf ? "BULLSEYE LEVELS · CONFIRMED" : "UNSUPPORTED TF · USE 15m / 1h", text_color=supportedTf ? color.lime : color.orange, bgcolor=color.new(color.black, 15))
