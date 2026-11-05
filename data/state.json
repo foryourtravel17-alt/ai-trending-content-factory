@@ -14127,7 +14127,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_trading-journal_evening_20261104_200202",
       "metadata_path": "output/draft_trading-journal_evening_20261104_200202.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-04T20:02:59.000336+00:00",
@@ -14158,7 +14158,9 @@
           "message_id": 467,
           "sent_at": "2026-11-04T20:02:59.648709+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-05T17:59:09.584000+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026110509-long": {
       "signal": {
@@ -14187,7 +14189,7 @@
         "macd_signal": -5.23850276429396,
         "macd_hist": 5.67127500597501,
         "atr14": 21.079966550195568,
-        "vwap": 2495.244335382478,
+        "vwap": 2495.244356937405,
         "support": 2420.10009765625,
         "resistance": 2532.0,
         "as_of": "2026-11-05T09:45:00+00:00",
@@ -14219,7 +14221,7 @@
           "message_id": 469
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "infy-ns-2026110509-long": {
       "signal": {
@@ -14280,7 +14282,7 @@
           "message_id": 470
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_moving-averages_morning_20261105_124706": {
       "content_type": "educational_reel",
