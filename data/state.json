@@ -13732,7 +13732,9 @@
           "message_id": 455
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-06T11:31:29.738816+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026110411-long": {
       "signal": {
@@ -14021,7 +14023,9 @@
           "message_id": 461
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-06T11:31:29.752772+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eth-usd-2026110413-long": {
       "signal": {
@@ -14082,7 +14086,9 @@
           "message_id": 462
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-06T11:31:29.766265+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-reward_afternoon_20261104_163558": {
       "content_type": "educational_reel",
@@ -14221,7 +14227,9 @@
           "message_id": 469
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-06T11:31:29.779815+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "infy-ns-2026110509-long": {
       "signal": {
@@ -14282,13 +14290,15 @@
           "message_id": 470
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-06T11:31:29.792930+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_moving-averages_morning_20261105_124706": {
       "content_type": "educational_reel",
       "content_id": "draft_moving-averages_morning_20261105_124706",
       "metadata_path": "output/draft_moving-averages_morning_20261105_124706.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-05T12:48:21.013417+00:00",
@@ -14319,7 +14329,9 @@
           "message_id": 472,
           "sent_at": "2026-11-05T12:48:21.762423+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-06T11:31:29.806094+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_market-structure_afternoon_20261105_165122": {
       "content_type": "educational_reel",
@@ -14394,6 +14406,118 @@
           "sent_at": "2026-11-05T20:17:07.297426+00:00"
         }
       }
+    },
+    "tcs-ns-2026110609-long": {
+      "signal": {
+        "signal_id": "tcs-ns-2026110609-long",
+        "slug": "tcs-ns-2026110609-long",
+        "symbol": "TCS.NS",
+        "label": "TCS",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 2498.5,
+        "stop_loss": 2465.9793556384493,
+        "targets": [
+          2531.0206443615507,
+          2547.2809665423265,
+          2563.541288723102
+        ],
+        "tp1": 2531.0206443615507,
+        "tp2": 2547.2809665423265,
+        "tp3": 2563.541288723102,
+        "rr_tp2": 1.500000000000014,
+        "rsi14": 52.464437658829105,
+        "ema20": 2492.26266051241,
+        "ema50": 2485.806769505552,
+        "macd": 5.85933823898813,
+        "macd_signal": 3.7972855697441164,
+        "macd_hist": 2.0620526692440135,
+        "atr14": 21.680429574367253,
+        "vwap": 2504.9666953493097,
+        "support": 2420.10009765625,
+        "resistance": 2564.60009765625,
+        "as_of": "2026-11-06T09:45:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 52.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · TCS</b>\n\n<b>Structure first. Risk always.</b>\n\nMain TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 52.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke upar hai aur RSI(14) 52.5 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> TCS.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 52.5 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke upar hai aur RSI(14) 52.5 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: TCS.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/tcs-ns-2026110609-long.png",
+      "card_path": "output/tcs-ns-2026110609-long_card.png",
+      "created_at": "2026-11-06T11:31:33.253292+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "infy-ns-2026110609-long": {
+      "signal": {
+        "signal_id": "infy-ns-2026110609-long",
+        "slug": "infy-ns-2026110609-long",
+        "symbol": "INFY.NS",
+        "label": "Infosys",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 1181.4000244140625,
+        "stop_loss": 1164.7025044516354,
+        "targets": [
+          1198.0975443764896,
+          1206.4463043577032,
+          1214.7950643389167
+        ],
+        "tp1": 1198.0975443764896,
+        "tp2": 1206.4463043577032,
+        "tp3": 1214.7950643389167,
+        "rr_tp2": 1.5,
+        "rsi14": 62.93003626079217,
+        "ema20": 1161.9703804800201,
+        "ema50": 1153.416827366026,
+        "macd": 7.839321427279401,
+        "macd_signal": 5.618794828868343,
+        "macd_hist": 2.220526598411058,
+        "atr14": 11.131679974951425,
+        "vwap": 1171.5537526926246,
+        "support": 1113.0999755859375,
+        "resistance": 1198.800048828125,
+        "as_of": "2026-11-06T09:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 62.9 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Infosys</b>\n\n<b>Structure first. Risk always.</b>\n\nMain Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 62.9 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nInfosys: EMA20 EMA50 ke upar hai aur RSI(14) 62.9 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> INFY.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain Infosys par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 62.9 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nInfosys: EMA20 EMA50 ke upar hai aur RSI(14) 62.9 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: INFY.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/infy-ns-2026110609-long.png",
+      "card_path": "output/infy-ns-2026110609-long_card.png",
+      "created_at": "2026-11-06T11:31:33.531996+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
