@@ -14468,7 +14468,7 @@
           "message_id": 479
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "infy-ns-2026110609-long": {
       "signal": {
@@ -14529,7 +14529,7 @@
           "message_id": 480
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_risk-per-trade_morning_20261106_123118": {
       "content_type": "educational_reel",
@@ -16078,6 +16078,18 @@
     },
     {
       "at": "2026-11-06T11:33:43.530048+00:00",
+      "signal_id": "infy-ns-2026110609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-06T13:14:36.605180+00:00",
+      "signal_id": "tcs-ns-2026110609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-06T13:14:36.627206+00:00",
       "signal_id": "infy-ns-2026110609-long",
       "status": "pending_approval",
       "dry_run": false
