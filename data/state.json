@@ -14376,7 +14376,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_support-resistance_evening_20261105_201618",
       "metadata_path": "output/draft_support-resistance_evening_20261105_201618.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-05T20:17:06.588564+00:00",
@@ -14407,7 +14407,9 @@
           "message_id": 477,
           "sent_at": "2026-11-05T20:17:07.297426+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-06T17:28:04.650220+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026110609-long": {
       "signal": {
@@ -14716,6 +14718,118 @@
           "sent_at": "2026-11-06T16:19:45.129683+00:00"
         }
       }
+    },
+    "ndx-2026110616-short": {
+      "signal": {
+        "signal_id": "ndx-2026110616-short",
+        "slug": "ndx-2026110616-short",
+        "symbol": "^NDX",
+        "label": "Nasdaq 100",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 27123.15234375,
+        "stop_loss": 27570.55943191892,
+        "targets": [
+          26675.74525558108,
+          26452.041711496622,
+          26228.338167412163
+        ],
+        "tp1": 26675.74525558108,
+        "tp2": 26452.041711496622,
+        "tp3": 26228.338167412163,
+        "rr_tp2": 1.5,
+        "rsi14": 36.55537414735551,
+        "ema20": 27514.18785761131,
+        "ema50": 28156.72209254786,
+        "macd": -433.48065493829927,
+        "macd_signal": -399.50065117087405,
+        "macd_hist": -33.98000376742522,
+        "atr14": 298.271392112613,
+        "vwap": 27111.803451492287,
+        "support": 26609.888671875,
+        "resistance": 28829.529296875,
+        "as_of": "2026-11-06T16:30:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 36.6. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nasdaq 100</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 36.6. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is below EMA50 and RSI(14) is 36.6. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ^NDX · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 36.6. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is below EMA50 and RSI(14) is 36.6. This is a rule-based scenario, not a prediction.\n\nScenario: ^NDX · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nasdaq",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/ndx-2026110616-short.png",
+      "card_path": "output/ndx-2026110616-short_card.png",
+      "created_at": "2026-11-06T17:28:09.526065+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "spy-2026110616-short": {
+      "signal": {
+        "signal_id": "spy-2026110616-short",
+        "slug": "spy-2026110616-short",
+        "symbol": "SPY",
+        "label": "S&P 500 ETF",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 739.6799926757812,
+        "stop_loss": 748.0846265511561,
+        "targets": [
+          731.2753588004064,
+          727.0730418627189,
+          722.8707249250314
+        ],
+        "tp1": 731.2753588004064,
+        "tp2": 727.0730418627189,
+        "tp3": 722.8707249250314,
+        "rr_tp2": 1.5,
+        "rsi14": 35.68520789577502,
+        "ema20": 747.3565936698334,
+        "ema50": 754.9065471235828,
+        "macd": -6.3118627161371705,
+        "macd_signal": -4.920150470750265,
+        "macd_hist": -1.3917122453869055,
+        "atr14": 5.603089250249944,
+        "vwap": 739.3899966148325,
+        "support": 732.7100219726562,
+        "resistance": 775.6400146484375,
+        "as_of": "2026-11-06T16:30:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · S&amp;P 500 ETF</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching S&amp;P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nS&amp;P 500 ETF: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nS&P 500 ETF: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\nScenario: SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#SPY",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/spy-2026110616-short.png",
+      "card_path": "output/spy-2026110616-short_card.png",
+      "created_at": "2026-11-06T17:28:09.954544+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
