@@ -15052,6 +15052,43 @@
           "sent_at": "2026-11-08T15:36:56.474193+00:00"
         }
       }
+    },
+    "draft_risk-per-trade_evening_20261108_180530": {
+      "content_type": "educational_reel",
+      "content_id": "draft_risk-per-trade_evening_20261108_180530",
+      "metadata_path": "output/draft_risk-per-trade_evening_20261108_180530.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-11-08T18:06:33.957474+00:00",
+      "created_at": "2026-11-08T18:05:30.710549+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_risk-per-trade_evening_20261108_180530",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-11-08T18:05:30.710549+00:00",
+        "title": "Position Sizing Starts With Risk, Not the Lot Button"
+      },
+      "copy": {
+        "telegram_html": "Your lot size should not be the first decision you make.\n\nPosition sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "Your lot size should not be the first decision you make.\n\nPosition sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_risk-per-trade_evening_20261108_180530.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-11-08T18:06:33.957474+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 497,
+          "sent_at": "2026-11-08T18:06:34.734476+00:00"
+        }
+      }
     }
   },
   "runs": [
