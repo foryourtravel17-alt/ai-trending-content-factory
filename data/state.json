@@ -15362,7 +15362,7 @@
           "message_id": 502
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_overtrading_morning_20261109_132455": {
       "content_type": "educational_reel",
@@ -15498,6 +15498,62 @@
           "sent_at": "2026-11-09T19:10:25.037880+00:00"
         }
       }
+    },
+    "gc-f-2026110920-long": {
+      "signal": {
+        "signal_id": "gc-f-2026110920-long",
+        "slug": "gc-f-2026110920-long",
+        "symbol": "GC=F",
+        "label": "Gold",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 4154.5,
+        "stop_loss": 4125.01287723225,
+        "targets": [
+          4183.98712276775,
+          4198.730684151626,
+          4213.474245535501
+        ],
+        "tp1": 4183.98712276775,
+        "tp2": 4198.730684151626,
+        "tp3": 4213.474245535501,
+        "rr_tp2": 1.5,
+        "rsi14": 65.26093180032186,
+        "ema20": 4119.5497672834645,
+        "ema50": 4101.578505576252,
+        "macd": 11.344606542062138,
+        "macd_signal": 9.594757235529723,
+        "macd_hist": 1.7498493065324148,
+        "atr14": 19.658081845166848,
+        "vwap": 4121.6430968699515,
+        "support": 4063.5,
+        "resistance": 4148.60009765625,
+        "as_of": "2026-11-09T20:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Gold through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 65.3. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Gold</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 65.3. The scenario is invalid if structure fails.\n\nGold: EMA20 is above EMA50 and RSI(14) is 65.3. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> GC=F · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 65.3. The scenario is invalid if structure fails.\n\nGold: EMA20 is above EMA50 and RSI(14) is 65.3. This is a rule-based scenario, not a prediction.\n\nScenario: GC=F · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#GoldTrading #TechnicalAnalysis #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#GoldTrading",
+          "#TechnicalAnalysis",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/gc-f-2026110920-long.png",
+      "card_path": "output/gc-f-2026110920-long_card.png",
+      "created_at": "2026-11-09T20:41:20.764220+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
