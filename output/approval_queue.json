@@ -720,6 +720,11 @@
       "content_id": "draft_risk-per-trade_evening_20261108_180530",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_overtrading_morning_20261109_132455",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -769,6 +774,7 @@
     "draft_overtrading_evening_20261103_195005",
     "draft_overtrading_morning_20261024_090905",
     "draft_overtrading_morning_20261101_113031",
+    "draft_overtrading_morning_20261109_132455",
     "draft_risk-per-trade_afternoon_20261103_163532",
     "draft_risk-per-trade_evening_20261031_172155",
     "draft_risk-per-trade_evening_20261108_180530",
@@ -812,6 +818,7 @@
     "draft_moving-averages_evening_20261107_175142": 493,
     "draft_market-structure_morning_20261108_113315": 495,
     "draft_support-resistance_afternoon_20261108_153551": 496,
-    "draft_risk-per-trade_evening_20261108_180530": 497
+    "draft_risk-per-trade_evening_20261108_180530": 497,
+    "draft_overtrading_morning_20261109_132455": 505
   }
 }
