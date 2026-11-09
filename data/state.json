@@ -15085,7 +15085,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_risk-per-trade_evening_20261108_180530",
       "metadata_path": "output/draft_risk-per-trade_evening_20261108_180530.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-08T18:06:33.957474+00:00",
@@ -15116,7 +15116,9 @@
           "message_id": 497,
           "sent_at": "2026-11-08T18:06:34.734476+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-09T14:20:35.517771+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026110911-long": {
       "signal": {
@@ -15311,23 +15313,23 @@
         "language": "Hinglish",
         "direction": "SHORT",
         "entry": 2475.39990234375,
-        "stop_loss": 2506.1867675511417,
+        "stop_loss": 2506.1861095796776,
         "targets": [
-          2444.6130371363583,
-          2429.2196045326627,
-          2413.8261719289667
+          2444.6136951078224,
+          2429.220591489858,
+          2413.8274878718944
         ],
-        "tp1": 2444.6130371363583,
-        "tp2": 2429.2196045326627,
-        "tp3": 2413.8261719289667,
-        "rr_tp2": 1.4999999999999927,
+        "tp1": 2444.6136951078224,
+        "tp2": 2429.220591489858,
+        "tp3": 2413.8274878718944,
+        "rr_tp2": 1.5000000000000149,
         "rsi14": 48.06487533879674,
         "ema20": 2479.757819413791,
         "ema50": 2481.361643064409,
         "macd": -4.623453850078931,
         "macd_signal": -1.302120412358092,
         "macd_hist": -3.321333437720839,
-        "atr14": 20.52457680492772,
+        "atr14": 20.524138157285154,
         "vwap": 2466.4997165503632,
         "support": 2449.60009765625,
         "resistance": 2564.60009765625,
@@ -15360,7 +15362,7 @@
           "message_id": 502
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_overtrading_morning_20261109_132455": {
       "content_type": "educational_reel",
@@ -15398,6 +15400,62 @@
           "sent_at": "2026-11-09T13:25:44.159219+00:00"
         }
       }
+    },
+    "gc-f-2026110914-long": {
+      "signal": {
+        "signal_id": "gc-f-2026110914-long",
+        "slug": "gc-f-2026110914-long",
+        "symbol": "GC=F",
+        "label": "Gold",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 4129.7998046875,
+        "stop_loss": 4105.810305355798,
+        "targets": [
+          4153.789304019202,
+          4165.784053685054,
+          4177.778803350904
+        ],
+        "tp1": 4153.789304019202,
+        "tp2": 4165.784053685054,
+        "tp3": 4177.778803350904,
+        "rr_tp2": 1.5000000000000189,
+        "rsi14": 59.75225791405478,
+        "ema20": 4110.416189567302,
+        "ema50": 4093.9960128589096,
+        "macd": 10.87352856805137,
+        "macd_signal": 9.033164526380876,
+        "macd_hist": 1.8403640416704938,
+        "atr14": 15.992999554468174,
+        "vwap": 4118.219474328382,
+        "support": 4062.5,
+        "resistance": 4143.2998046875,
+        "as_of": "2026-11-09T14:00:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Gold through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 59.8. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Gold</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 59.8. The scenario is invalid if structure fails.\n\nGold: EMA20 is above EMA50 and RSI(14) is 59.8. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> GC=F · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Gold through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 59.8. The scenario is invalid if structure fails.\n\nGold: EMA20 is above EMA50 and RSI(14) is 59.8. This is a rule-based scenario, not a prediction.\n\nScenario: GC=F · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#GoldTrading #TechnicalAnalysis #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#GoldTrading",
+          "#TechnicalAnalysis",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/gc-f-2026110914-long.png",
+      "card_path": "output/gc-f-2026110914-long_card.png",
+      "created_at": "2026-11-09T14:20:38.425422+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
