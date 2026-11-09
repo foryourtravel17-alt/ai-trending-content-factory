@@ -15362,7 +15362,7 @@
           "message_id": 502
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_overtrading_morning_20261109_132455": {
       "content_type": "educational_reel",
@@ -17021,6 +17021,12 @@
     {
       "at": "2026-11-09T14:24:40.097840+00:00",
       "signal_id": "gc-f-2026110914-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-09T18:24:37.869881+00:00",
+      "signal_id": "tcs-ns-2026110909-short",
       "status": "pending_approval",
       "dry_run": false
     }
