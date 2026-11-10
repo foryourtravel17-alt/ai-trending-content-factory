@@ -15179,7 +15179,9 @@
           "message_id": 499
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-10T11:47:41.548364+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026110912-short": {
       "signal": {
@@ -15362,13 +15364,15 @@
           "message_id": 502
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-10T11:47:41.562664+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_overtrading_morning_20261109_132455": {
       "content_type": "educational_reel",
       "content_id": "draft_overtrading_morning_20261109_132455",
       "metadata_path": "output/draft_overtrading_morning_20261109_132455.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-09T13:25:43.366566+00:00",
@@ -15399,7 +15403,9 @@
           "message_id": 505,
           "sent_at": "2026-11-09T13:25:44.159219+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-10T11:47:41.576193+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026110914-long": {
       "signal": {
@@ -15460,7 +15466,9 @@
           "message_id": 506
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-10T11:47:41.589460+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_afternoon_20261109_190932": {
       "content_type": "educational_reel",
@@ -15596,6 +15604,118 @@
           "sent_at": "2026-11-09T22:43:33.789384+00:00"
         }
       }
+    },
+    "btc-usd-2026111011-short": {
+      "signal": {
+        "signal_id": "btc-usd-2026111011-short",
+        "slug": "btc-usd-2026111011-short",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 74319.0234375,
+        "stop_loss": 74972.1518771601,
+        "targets": [
+          73665.8949978399,
+          73339.33077800984,
+          73012.76655817979
+        ],
+        "tp1": 73665.8949978399,
+        "tp2": 73339.33077800984,
+        "tp3": 73012.76655817979,
+        "rr_tp2": 1.5000000000000222,
+        "rsi14": 42.87884386585915,
+        "ema20": 74643.18375224237,
+        "ema50": 74924.7675957844,
+        "macd": -138.49895875884977,
+        "macd_signal": -88.42819863988312,
+        "macd_hist": -50.070760118966646,
+        "atr14": 435.4189597734027,
+        "vwap": 74322.45823031216,
+        "support": 74017.3203125,
+        "resistance": 75462.2734375,
+        "as_of": "2026-11-10T11:00:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.9. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.9. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 42.9. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.9. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 42.9. This is a rule-based scenario, not a prediction.\n\nScenario: BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026111011-short.png",
+      "card_path": "output/btc-usd-2026111011-short_card.png",
+      "created_at": "2026-11-10T11:47:45.261805+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eth-usd-2026111011-short": {
+      "signal": {
+        "signal_id": "eth-usd-2026111011-short",
+        "slug": "eth-usd-2026111011-short",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 2092.3701171875,
+        "stop_loss": 2116.407503215356,
+        "targets": [
+          2068.332731159644,
+          2056.314038145716,
+          2044.2953451317878
+        ],
+        "tp1": 2068.332731159644,
+        "tp2": 2056.314038145716,
+        "tp3": 2044.2953451317878,
+        "rr_tp2": 1.5,
+        "rsi14": 32.703648251686445,
+        "ema20": 2116.1763714819563,
+        "ema50": 2143.869264505989,
+        "macd": -11.878466938876045,
+        "macd_signal": -10.57417534860016,
+        "macd_hist": -1.3042915902758843,
+        "atr14": 16.02492401857072,
+        "vwap": 2097.829378434155,
+        "support": 2081.550048828125,
+        "resistance": 2149.030029296875,
+        "as_of": "2026-11-10T11:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 32.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 32.7. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 32.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 32.7. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 32.7. This is a rule-based scenario, not a prediction.\n\nScenario: ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026111011-short.png",
+      "card_path": "output/eth-usd-2026111011-short_card.png",
+      "created_at": "2026-11-10T11:47:45.564227+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
