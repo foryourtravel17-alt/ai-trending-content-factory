@@ -15753,6 +15753,62 @@
           "sent_at": "2026-11-10T13:03:05.122066+00:00"
         }
       }
+    },
+    "btc-usd-2026111013-short": {
+      "signal": {
+        "signal_id": "btc-usd-2026111013-short",
+        "slug": "btc-usd-2026111013-short",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 73804.6875,
+        "stop_loss": 74500.87006367094,
+        "targets": [
+          73108.50493632906,
+          72760.41365449359,
+          72412.32237265812
+        ],
+        "tp1": 73108.50493632906,
+        "tp2": 72760.41365449359,
+        "tp3": 72412.32237265812,
+        "rr_tp2": 1.5,
+        "rsi14": 35.670750084289836,
+        "ema20": 74536.21176878676,
+        "ema50": 74858.89407078724,
+        "macd": -193.56299560285697,
+        "macd_signal": -118.80045927941588,
+        "macd_hist": -74.7625363234411,
+        "atr14": 464.12170911396026,
+        "vwap": 74147.59915981942,
+        "support": 74014.5078125,
+        "resistance": 75332.1171875,
+        "as_of": "2026-11-10T13:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\nScenario: BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026111013-short.png",
+      "card_path": "output/btc-usd-2026111013-short_card.png",
+      "created_at": "2026-11-10T13:45:49.286237+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
