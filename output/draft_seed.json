@@ -1,10 +1,10 @@
 {
-  "content_id": "draft_support-resistance_morning_20261026_103331",
-  "created_at": "2026-10-26T10:33:31.810100+00:00",
+  "content_id": "draft_risk-per-trade_afternoon_20261111_163724",
+  "created_at": "2026-11-11T16:37:24.303690+00:00",
   "schedule_slot": {
-    "name": "morning",
-    "utc_date": "2026-10-26",
-    "index": 0
+    "name": "afternoon",
+    "utc_date": "2026-11-11",
+    "index": 1
   },
   "brand": "Bullseye Theory",
   "language": "English",
@@ -14,12 +14,12 @@
   "content_role": "education",
   "status": "draft_only",
   "topic": {
-    "title": "Support and Resistance Are Zones, Not Magic Lines",
+    "title": "Position Sizing Starts With Risk, Not the Lot Button",
     "source": "curated evergreen topic rotation",
     "score": 1.0
   },
   "research": {
-    "summary": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
+    "summary": "Position sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.",
     "sources": [
       {
         "name": "CME Group education",
@@ -48,8 +48,8 @@
     "notes": "Draft only; no personalized advice, guaranteed outcomes, live price, or trade signal."
   },
   "script": {
-    "hook": "If you expect price to respect one perfect line every time, rethink the chart.",
-    "body": "Markets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.",
+    "hook": "Your lot size should not be the first decision you make.",
+    "body": "Position sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.",
     "cta": "Follow Bullseye Theory for practical chart breakdowns. Save this Reel and review the checklist before your next chart analysis.",
     "tagline": "FILTER THE NOISE. READ THE STRUCTURE. HIT THE BULLSEYE.",
     "disclaimer": "Educational content only—not financial advice. Illustrative chart, not a live signal. Trading involves risk."
@@ -57,32 +57,32 @@
   "visual_plan": {
     "format": "short_video",
     "style": "Premium institutional trading terminal; deep obsidian navy, restrained metallic gold and neon lime; clear mobile-safe typography; illustrative chart only.",
-    "chart_style": "range",
+    "chart_style": "risk",
     "scenes": [
       {
         "scene": 1,
-        "text": "MARK THE ZONE",
+        "text": "DEFINE RISK FIRST",
         "visual": "Premium institutional terminal; illustrative chart only."
       },
       {
         "scene": 2,
-        "text": "COMPARE REACTIONS",
+        "text": "KNOW INVALIDATION",
         "visual": "Animate one concept label with clean chart annotation."
       },
       {
         "scene": 3,
-        "text": "CHECK HIGHER-TIMEFRAME CONTEXT",
+        "text": "CALCULATE SIZE",
         "visual": "Show an illustrative counterexample or context panel."
       },
       {
         "scene": 4,
-        "text": "DEFINE INVALIDATION",
+        "text": "NEVER GUESS INPUTS",
         "visual": "Finish with a concise risk-aware takeaway."
       }
     ]
   },
   "social": {
-    "caption": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.",
+    "caption": "Your lot size should not be the first decision you make.\n\nPosition sizing connects the distance to your invalidation point with the amount you can afford to risk. A larger position can magnify losses just as it can magnify gains. Understand the instrument, account currency, contract rules, and possible slippage before calculating size. If those inputs are unclear, do not guess.\n\nEducational content only; not financial advice.",
     "hashtags": [
       "#BullseyeTheory",
       "#TradingEducation",
