@@ -9,7 +9,7 @@ from unittest.mock import patch
 import numpy as np
 import pandas as pd
 
-from agents.scout import compute_indicators, make_signal
+from agents.scout import StaleCandleError, compute_indicators, make_signal
 from agents.charts import render_chart
 from agents.card import render_card
 from agents.analyst import analyze
@@ -43,6 +43,34 @@ class DryRunSmokeTest(unittest.TestCase):
             "symbol": "BTC-USD", "as_of": (now - timedelta(hours=50)).isoformat()
         }))
         self.assertFalse(orchestrator._signal_is_fresh({"symbol": "TEST"}))
+
+    def test_stale_market_candle_is_a_safe_skip_not_a_pipeline_error(self):
+        indicators, signal = synthetic_market()
+        self.assertIsNotNone(signal, "synthetic trend should produce a non-neutral scenario")
+        stale = indicators.copy()
+        stale.index = stale.index - pd.Timedelta(hours=32)
+        with self.assertRaisesRegex(StaleCandleError, "Latest candle is stale"):
+            make_signal("TCS.NS", "TCS", "INDIA", stale)
+
+    def test_orchestrator_counts_stale_candle_as_skipped(self):
+        original_cwd = os.getcwd()
+        with tempfile.TemporaryDirectory() as tmp:
+            os.chdir(tmp)
+            try:
+                state_path = Path(tmp) / "data" / "state.json"
+                state_path.parent.mkdir(parents=True)
+                state_path.write_text('{"signals": {}, "runs": []}', encoding="utf-8")
+                with patch("agents.qa.STATE_PATH", state_path), \
+                     patch.object(orchestrator, "STATE_PATH", state_path), \
+                     patch.object(orchestrator, "SYMBOLS", {"INDIA": {"TCS.NS": "TCS"}}), \
+                     patch.object(orchestrator, "scout_symbol", side_effect=StaleCandleError("Latest candle is stale (32.0 hours old).")), \
+                     patch.object(orchestrator, "DRY_RUN", True), \
+                     patch.object(orchestrator, "GENERATE_ONLY", True), \
+                     patch.object(orchestrator, "PUBLISH_ONLY", False):
+                    self.assertEqual(orchestrator.main(), 0)
+            finally:
+                os.chdir(original_cwd)
+
 
     def test_agent_chain_renders_without_network_posts(self):
         os.environ["DRY_RUN"] = "1"
