@@ -109,6 +109,10 @@ def compute_indicators(frame: pd.DataFrame) -> pd.DataFrame:
     return df.dropna(subset=["EMA50", "ATR14"])
 
 
+class StaleCandleError(ValueError):
+    """A valid market-data response whose latest candle is too old to use."""
+
+
 def make_signal(symbol: str, label: str, region: str, frame: pd.DataFrame) -> dict[str, Any] | None:
     if frame.empty:
         return None
@@ -141,7 +145,7 @@ def make_signal(symbol: str, label: str, region: str, frame: pd.DataFrame) -> di
     max_age_hours = 36 if symbol in {"BTC-USD", "ETH-USD"} else 20
     age_hours = (datetime.now(timezone.utc) - timestamp_utc).total_seconds() / 3600
     if age_hours > max_age_hours:
-        raise ValueError(f"Latest candle is stale ({age_hours:.1f} hours old).")
+        raise StaleCandleError(f"Latest candle is stale ({age_hours:.1f} hours old).")
     score = int(
         40
         + 20 * (abs(float(row["EMA20"] - row["EMA50"])) / max(entry * 0.002, 1e-9) > 1)
