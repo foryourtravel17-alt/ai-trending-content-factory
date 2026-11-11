@@ -15882,7 +15882,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_moving-averages_afternoon_20261110_163715",
       "metadata_path": "output/draft_moving-averages_afternoon_20261110_163715.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-10T16:38:48.184014+00:00",
@@ -15913,7 +15913,9 @@
           "message_id": 514,
           "sent_at": "2026-11-10T16:38:48.981483+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-11T12:56:49.659021+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_market-structure_evening_20261110_200021": {
       "content_type": "educational_reel",
