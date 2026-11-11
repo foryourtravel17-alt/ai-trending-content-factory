@@ -15921,7 +15921,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_market-structure_evening_20261110_200021",
       "metadata_path": "output/draft_market-structure_evening_20261110_200021.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-10T20:01:40.451710+00:00",
@@ -15952,7 +15952,9 @@
           "message_id": 516,
           "sent_at": "2026-11-10T20:01:41.282271+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-11T17:52:19.216155+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026111109-short": {
       "signal": {
