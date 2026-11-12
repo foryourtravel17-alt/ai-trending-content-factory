@@ -16016,7 +16016,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_support-resistance_morning_20261111_121310",
       "metadata_path": "output/draft_support-resistance_morning_20261111_121310.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-11T12:14:39.242795+00:00",
@@ -16047,7 +16047,9 @@
           "message_id": 519,
           "sent_at": "2026-11-11T12:14:40.050997+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-12T11:51:58.977481+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_overtrading_evening_20261111_195151": {
       "content_type": "educational_reel",
@@ -16085,6 +16087,174 @@
           "sent_at": "2026-11-11T19:52:44.570829+00:00"
         }
       }
+    },
+    "ndx-2026111120-long": {
+      "signal": {
+        "signal_id": "ndx-2026111120-long",
+        "slug": "ndx-2026111120-long",
+        "symbol": "^NDX",
+        "label": "Nasdaq 100",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 28374.005859375,
+        "stop_loss": 28070.201460402837,
+        "targets": [
+          28677.810258347163,
+          28829.712457833244,
+          28981.614657319325
+        ],
+        "tp1": 28677.810258347163,
+        "tp2": 28829.712457833244,
+        "tp3": 28981.614657319325,
+        "rr_tp2": 1.5,
+        "rsi14": 62.01331091057496,
+        "ema20": 28042.86417588659,
+        "ema50": 28021.074405813288,
+        "macd": 214.06100014071853,
+        "macd_signal": 135.96849669071037,
+        "macd_hist": 78.09250345000817,
+        "atr14": 202.5362659814415,
+        "vwap": 28452.558897269988,
+        "support": 27234.576171875,
+        "resistance": 28593.40234375,
+        "as_of": "2026-11-11T20:30:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nasdaq 100</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.0. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is above EMA50 and RSI(14) is 62.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ^NDX · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.0. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is above EMA50 and RSI(14) is 62.0. This is a rule-based scenario, not a prediction.\n\nScenario: ^NDX · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nasdaq",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/ndx-2026111120-long.png",
+      "card_path": "output/ndx-2026111120-long_card.png",
+      "created_at": "2026-11-12T11:52:03.206370+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "spy-2026111120-long": {
+      "signal": {
+        "signal_id": "spy-2026111120-long",
+        "slug": "spy-2026111120-long",
+        "symbol": "SPY",
+        "label": "S&P 500 ETF",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 759.7899780273438,
+        "stop_loss": 754.660260233129,
+        "targets": [
+          764.9196958215585,
+          767.484554718666,
+          770.0494136157733
+        ],
+        "tp1": 764.9196958215585,
+        "tp2": 767.484554718666,
+        "tp3": 770.0494136157733,
+        "rr_tp2": 1.500000000000011,
+        "rsi14": 62.627853722636736,
+        "ema20": 754.1786350156302,
+        "ema50": 753.3836116633843,
+        "macd": 3.1647368127929667,
+        "macd_signal": 1.9131205319417015,
+        "macd_hist": 1.2516162808512652,
+        "atr14": 3.4198118628098766,
+        "vwap": 759.4220515266331,
+        "support": 741.0250244140625,
+        "resistance": 762.510009765625,
+        "as_of": "2026-11-11T20:30:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.6. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · S&amp;P 500 ETF</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching S&amp;P 500 ETF through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.6. The scenario is invalid if structure fails.\n\nS&amp;P 500 ETF: EMA20 is above EMA50 and RSI(14) is 62.6. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> SPY · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.6. The scenario is invalid if structure fails.\n\nS&P 500 ETF: EMA20 is above EMA50 and RSI(14) is 62.6. This is a rule-based scenario, not a prediction.\n\nScenario: SPY · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#SPY",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/spy-2026111120-long.png",
+      "card_path": "output/spy-2026111120-long_card.png",
+      "created_at": "2026-11-12T11:52:03.584343+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "tcs-ns-2026111209-short": {
+      "signal": {
+        "signal_id": "tcs-ns-2026111209-short",
+        "slug": "tcs-ns-2026111209-short",
+        "symbol": "TCS.NS",
+        "label": "TCS",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "SHORT",
+        "entry": 2442.39990234375,
+        "stop_loss": 2469.8957309207667,
+        "targets": [
+          2414.9040737667333,
+          2401.156159478225,
+          2387.408245189717
+        ],
+        "tp1": 2414.9040737667333,
+        "tp2": 2401.156159478225,
+        "tp3": 2387.408245189717,
+        "rr_tp2": 1.4999999999999918,
+        "rsi14": 42.9742193682142,
+        "ema20": 2455.529296655699,
+        "ema50": 2468.2485129070965,
+        "macd": -12.078304990130619,
+        "macd_signal": -9.696792656084579,
+        "macd_hist": -2.3815123340460396,
+        "atr14": 18.330552384677667,
+        "vwap": 2437.2978134379805,
+        "support": 2422.5,
+        "resistance": 2505.800048828125,
+        "as_of": "2026-11-12T09:45:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main TCS par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 43.0 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · TCS</b>\n\n<b>Structure first. Risk always.</b>\n\nMain TCS par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 43.0 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke neeche hai aur RSI(14) 43.0 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> TCS.NS · SHORT\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nMain TCS par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 43.0 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke neeche hai aur RSI(14) 43.0 hai. Ye rule-based scenario hai, prediction nahi.\n\nScenario: TCS.NS · SHORT\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\nEducational market commentary only. Not financial advice.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/tcs-ns-2026111209-short.png",
+      "card_path": "output/tcs-ns-2026111209-short_card.png",
+      "created_at": "2026-11-12T11:52:03.966437+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
