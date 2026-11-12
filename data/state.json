@@ -16443,6 +16443,174 @@
           "sent_at": "2026-11-12T17:06:32.740054+00:00"
         }
       }
+    },
+    "ndx-2026111217-long": {
+      "signal": {
+        "signal_id": "ndx-2026111217-long",
+        "slug": "ndx-2026111217-long",
+        "symbol": "^NDX",
+        "label": "Nasdaq 100",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 28372.392578125,
+        "stop_loss": 28046.251691149686,
+        "targets": [
+          28698.533465100314,
+          28861.60390858797,
+          29024.674352075628
+        ],
+        "tp1": 28698.533465100314,
+        "tp2": 28861.60390858797,
+        "tp3": 29024.674352075628,
+        "rr_tp2": 1.5,
+        "rsi14": 58.95170462280311,
+        "ema20": 28148.60585941363,
+        "ema50": 28071.309069342286,
+        "macd": 195.4711688634561,
+        "macd_signal": 173.87740639166213,
+        "macd_hist": 21.59376247179398,
+        "atr14": 217.42725798354297,
+        "vwap": 28266.500912728716,
+        "support": 27421.181640625,
+        "resistance": 28593.40234375,
+        "as_of": "2026-11-12T17:30:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 59.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nasdaq 100</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 59.0. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is above EMA50 and RSI(14) is 59.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ^NDX · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 59.0. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is above EMA50 and RSI(14) is 59.0. This is a rule-based scenario, not a prediction.\n\nScenario: ^NDX · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nasdaq",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/ndx-2026111217-long.png",
+      "card_path": "output/ndx-2026111217-long_card.png",
+      "created_at": "2026-11-12T18:14:25.794984+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "spy-2026111217-long": {
+      "signal": {
+        "signal_id": "spy-2026111217-long",
+        "slug": "spy-2026111217-long",
+        "symbol": "SPY",
+        "label": "S&P 500 ETF",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 760.2150268554688,
+        "stop_loss": 754.8612187654008,
+        "targets": [
+          765.5688349455367,
+          768.2457389905707,
+          770.9226430356047
+        ],
+        "tp1": 765.5688349455367,
+        "tp2": 768.2457389905707,
+        "tp3": 770.9226430356047,
+        "rr_tp2": 1.5000000000000107,
+        "rsi14": 59.9614640156018,
+        "ema20": 756.1682751441551,
+        "ema50": 754.3857291258176,
+        "macd": 3.183233414782535,
+        "macd_signal": 2.6578173037638266,
+        "macd_hist": 0.5254161110187083,
+        "atr14": 3.569205393378624,
+        "vwap": 759.9870737129988,
+        "support": 744.8599853515625,
+        "resistance": 763.0399780273438,
+        "as_of": "2026-11-12T17:30:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 60.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · S&amp;P 500 ETF</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching S&amp;P 500 ETF through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 60.0. The scenario is invalid if structure fails.\n\nS&amp;P 500 ETF: EMA20 is above EMA50 and RSI(14) is 60.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> SPY · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 60.0. The scenario is invalid if structure fails.\n\nS&P 500 ETF: EMA20 is above EMA50 and RSI(14) is 60.0. This is a rule-based scenario, not a prediction.\n\nScenario: SPY · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#SPY",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/spy-2026111217-long.png",
+      "card_path": "output/spy-2026111217-long_card.png",
+      "created_at": "2026-11-12T18:14:26.156032+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eth-usd-2026111218-short": {
+      "signal": {
+        "signal_id": "eth-usd-2026111218-short",
+        "slug": "eth-usd-2026111218-short",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 2016.5799560546875,
+        "stop_loss": 2041.692099365196,
+        "targets": [
+          1991.467812744179,
+          1978.9117410889246,
+          1966.3556694336703
+        ],
+        "tp1": 1991.467812744179,
+        "tp2": 1978.9117410889246,
+        "tp3": 1966.3556694336703,
+        "rr_tp2": 1.5,
+        "rsi14": 37.03070432536924,
+        "ema20": 2030.4534243512035,
+        "ema50": 2053.3863955420834,
+        "macd": -13.900271733202317,
+        "macd_signal": -11.939225487611742,
+        "macd_hist": -1.961046245590575,
+        "atr14": 16.741428873672426,
+        "vwap": 2011.5094672422695,
+        "support": 1982.3199462890625,
+        "resistance": 2078.60009765625,
+        "as_of": "2026-11-12T18:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.0. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.0. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 37.0. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.0. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 37.0. This is a rule-based scenario, not a prediction.\n\nScenario: ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026111218-short.png",
+      "card_path": "output/eth-usd-2026111218-short_card.png",
+      "created_at": "2026-11-12T18:14:26.521692+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
