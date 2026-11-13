@@ -13,7 +13,7 @@ from agents.charts import render_chart
 from agents.copy import build_copy
 from agents.qa import STATE_PATH, load_state, validate
 from agents.publisher import publish
-from agents.scout import SYMBOLS, MAX_PER_REGION, scout_symbol
+from agents.scout import SYMBOLS, MAX_PER_REGION, StaleCandleError, scout_symbol
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO),
@@ -151,6 +151,11 @@ def main() -> int:
                 region_candidates.append((int(signal["score"]), signal, analysis["frame"]))
                 log.info("%s: %s scenario, score=%s, as_of=%s",
                          symbol, signal["direction"], signal["score"], signal["as_of"])
+            except StaleCandleError as exc:
+                # Stale prices are a deliberate safety rejection, not a broken
+                # pipeline. Count the symbol as skipped and never build/post it.
+                results["skipped"] += 1
+                log.warning("Symbol %s skipped: %s", symbol, exc)
             except Exception as exc:
                 results["errors"] += 1
                 log.warning("Symbol %s failed; continuing to next symbol: %s", symbol, exc)
