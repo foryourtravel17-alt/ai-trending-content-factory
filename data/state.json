@@ -16857,6 +16857,62 @@
           "sent_at": "2026-11-13T12:40:59.323757+00:00"
         }
       }
+    },
+    "eurusd-x-2026111315-short": {
+      "signal": {
+        "signal_id": "eurusd-x-2026111315-short",
+        "slug": "eurusd-x-2026111315-short",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 1.1036310195922852,
+        "stop_loss": 1.1054412229378647,
+        "targets": [
+          1.1018208162467056,
+          1.1009157145739157,
+          1.1000106129011258
+        ],
+        "tp1": 1.1018208162467056,
+        "tp2": 1.1009157145739157,
+        "tp3": 1.1000106129011258,
+        "rr_tp2": 1.5000000000000613,
+        "rsi14": 32.194360327149056,
+        "ema20": 1.1060306391366754,
+        "ema50": 1.1081740498304862,
+        "macd": -0.0007868331622420399,
+        "macd_signal": -0.0007722358812614487,
+        "macd_hist": -1.4597280980591207e-05,
+        "atr14": 0.0012068022303864485,
+        "vwap": null,
+        "support": 1.1047282218933105,
+        "resistance": 1.107419729232788,
+        "as_of": "2026-11-13T15:00:00+00:00",
+        "score": 40,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 32.2. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 32.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is below EMA50 and RSI(14) is 32.2. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "instagram_caption": "Structure first. Risk always.\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 32.2. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is below EMA50 and RSI(14) is 32.2. This is a rule-based scenario, not a prediction.\n\nScenario: EURUSD=X · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\nEducational market commentary only. Not financial advice.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026111315-short.png",
+      "card_path": "output/eurusd-x-2026111315-short_card.png",
+      "created_at": "2026-11-13T15:56:23.656647+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
