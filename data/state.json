@@ -17008,6 +17008,43 @@
       "created_at": "2026-11-13T17:42:04.879133+00:00",
       "publishing": {},
       "status": "generated"
+    },
+    "draft_support-resistance_evening_20261113_200317": {
+      "content_type": "educational_reel",
+      "content_id": "draft_support-resistance_evening_20261113_200317",
+      "metadata_path": "output/draft_support-resistance_evening_20261113_200317.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-11-13T20:04:44.379645+00:00",
+      "created_at": "2026-11-13T20:03:17.148651+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_support-resistance_evening_20261113_200317",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-11-13T20:03:17.148651+00:00",
+        "title": "Support and Resistance Are Zones, Not Magic Lines"
+      },
+      "copy": {
+        "telegram_html": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement",
+        "instagram_caption": "If you expect price to respect one perfect line every time, rethink the chart.\n\nMarkets often react around areas rather than one exact price. Repeated reactions can help you mark a zone, but the zone is not a guaranteed floor or ceiling. Watch how price behaves when it returns, consider the higher timeframe, and decide what would invalidate your idea.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_support-resistance_evening_20261113_200317.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-11-13T20:04:44.379645+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 535,
+          "sent_at": "2026-11-13T20:04:45.189121+00:00"
+        }
+      }
     }
   },
   "runs": [
