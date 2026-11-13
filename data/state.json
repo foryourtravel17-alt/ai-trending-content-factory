@@ -16413,7 +16413,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_afternoon_20261112_170541",
       "metadata_path": "output/draft_risk-reward_afternoon_20261112_170541.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-12T17:06:31.984173+00:00",
@@ -16444,7 +16444,9 @@
           "message_id": 527,
           "sent_at": "2026-11-12T17:06:32.740054+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-13T13:25:57.117330+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "ndx-2026111217-long": {
       "signal": {
