@@ -24,6 +24,15 @@ class WorkflowSafetyTests(unittest.TestCase):
         self.assertIn("if: always() && steps.publish.outcome != 'skipped'", workflow)
         self.assertIn("from agents.qa import", Path("src/orchestrator.py").read_text(encoding="utf-8"))
 
+    def test_private_repo_market_cards_use_verified_supabase_public_storage(self):
+        workflow = Path(".github/workflows/market_content.yml").read_text(encoding="utf-8")
+        self.assertIn("run: python scripts/upload_market_cards.py", workflow)
+        self.assertIn("SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}", workflow)
+        self.assertNotIn("Wait for GitHub Pages images", workflow)
+        publisher = Path("agents/publisher.py").read_text(encoding="utf-8")
+        self.assertIn("_accessible_image_url(card_path, str(record.get(\"image_url\") or \"\").strip())", publisher)
+        self.assertIn("without a private-repository fallback", publisher)
+
     def test_telegram_approval_polling_is_responsive_without_bypassing_approval(self):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
         self.assertIn('cron: "*/5 * * * *"', workflow)

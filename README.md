@@ -1,6 +1,6 @@
 # AI Trading Content Factory — Bullseye Theory
 
-A free-tier-first GitHub Actions content factory for Bullseye Theory. Educational Reels use the approval-gated `educational_reel_draft.yml` workflow; the market-analysis pipeline runs under `agents/` and `src/orchestrator.py`.
+A free-tier-first GitHub Actions content factory for Bullseye Theory. Educational Reels use the approval-gated `educational_reel_draft.yml` workflow; the market-analysis pipeline runs under `agents/` and `src/orchestrator.py`. The source repository stays private; public social-media assets are served from the existing Supabase Storage `REELS` bucket after byte-for-byte verification.
 
 > **Risk note:** This system publishes rule-based educational market scenarios, not personalized investment advice. Technical levels can fail. Yahoo Finance data can be delayed, incomplete, or corrected. Never treat an automated setup as a guaranteed outcome or as an instruction to place a trade.
 
@@ -39,9 +39,9 @@ Market cards are generated on schedule and sent to the owner private Telegram fo
 - 13:30 IST (08:00 UTC)
 - 15:45 IST (10:15 UTC)
 
-The workflow first generates and commits PNGs/state, then sends approval requests to the owner's private Telegram chat. After an authorized approval callback, the poller publishes the selected card. Committing the PNG first allows Instagram to fetch a public image URL. GitHub Pages is preferred when configured; raw GitHub is a fallback for public repositories. Manual dispatch defaults to `dry_run=true` so the first manual run is safe; set it to `false` only after reviewing generated output and confirming credentials and hosting.
+The workflow first generates and commits PNGs/state, then sends approval requests to the owner's private Telegram chat. After an authorized approval callback, the poller publishes the selected card. Committing the PNG first allows Instagram to fetch a public image URL. Market-card PNGs are uploaded to the existing public Supabase Storage `REELS` bucket and fetched back for SHA-256/size verification before Telegram approval requests are sent. This keeps the source repository private and avoids GitHub Pages or raw-GitHub dependencies. Manual dispatch defaults to `dry_run=true` so the first manual run is safe; set it to `false` only after reviewing generated output and confirming credentials and hosting.
 
-**Important hosting and visibility note:** this repository is currently **public** (verified on GitHub). Instagram needs a publicly reachable HTTPS image URL; the publisher checks URL reachability and fails rather than posting a broken image. Keep secrets and private account data out of source, commits, generated output, and logs. GitHub Pages or `IMAGE_BASE_URL` can serve generated cards. Do not change repository visibility as part of this workflow without first reviewing the image-hosting impact.
+**Important hosting and visibility note:** this repository is **private**. Instagram requires a publicly reachable HTTPS image URL, so market-card PNGs are stored in the existing public Supabase Storage `REELS` bucket under `market-cards/`. The workflow verifies the downloaded bytes before proceeding. Only intended social-media images are public; credentials and private account data stay in GitHub Secrets and are never written to the bucket.
 
 `.github/workflows/market_approval_poll.yml` is the single Telegram callback consumer for market records and educational Reels. The market factory uses `HUMAN_APPROVAL=true`: new market cards are sent to the owner private Telegram, and public posting is attempted only after an authorized owner approval callback and freshness/duplicate preflight.
 
@@ -68,7 +68,7 @@ Optional/compatibility:
 - `LLM_BASE`, `LLM_MODEL` — optional LLM endpoint/model settings; these are non-secret configuration and are best stored as Variables, but the workflow also accepts them as Secrets
 - `GH_USER`, `GH_REPO` — public GitHub username and repository name (these are public metadata; repository Variables are also supported by the approval workflow)
 - `META_SYSTEM_USER_TOKEN`, `INSTAGRAM_USER_ID` — compatibility names for the existing legacy publisher
-- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — required by the existing Reel publishing workflow, not the new market-card publisher
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — required by both the educational Reel uploader and the new verified market-card image uploader
 - `META_APP_ID`, `META_APP_SECRET` — only needed locally by the token refresh helper; never commit them
 
 Recommended repository **Variables** (Settings → Secrets and variables → Actions → Variables):
@@ -76,10 +76,10 @@ Recommended repository **Variables** (Settings → Secrets and variables → Act
 - `LLM_ENABLED` = `true` to use the configured LLM; fallback copy works if unavailable
 - `LLM_BASE` = `https://api.venice.ai/api/v1` (or your OpenAI-compatible base URL)
 - `LLM_MODEL` = your selected model, default `llama-3.3-70b`
-- `IMAGE_BASE_URL` = optional public base URL ending in `/output`, e.g. `https://USERNAME.github.io/REPOSITORY/output`
+- Market-card public hosting uses the existing Supabase `REELS` bucket; no `IMAGE_BASE_URL`, GitHub Pages, public repository, or paid hosting is required.
 - `META_GRAPH_API_VERSION` = optional; default `v23.0`
 
-The workflow accepts `GH_USER` and `GH_REPO` as secrets. They are not sensitive, so Variables are preferable when configuring them for the market approval workflow. Do not put any access token, app secret, or API key in Variables or source code.
+The workflow does not need `GH_USER` or `GH_REPO` for market-card hosting. Do not put any access token, app secret, or API key in Variables or source code.
 
 ### 2. Create the Telegram bot and channel access
 
@@ -108,13 +108,9 @@ python scripts/refresh_ig_token.py
 
 By default, the script exchanges the token and updates the repository secret `IG_ACCESS_TOKEN` through GitHub CLI without printing the value. If you need to copy the token manually, run `python scripts/refresh_ig_token.py --print-token` only in a private terminal and paste it into GitHub Secrets. **Never run the print option in GitHub Actions logs or commit the token.** Token exchange may fail if the original token/app permissions are invalid; inspect the Meta error and regenerate the credential if necessary.
 
-### 4. Enable GitHub Pages for public card URLs
+### 4. Public market-card image hosting (automated)
 
-1. Open **Repository → Settings → Pages**.
-2. Choose **Deploy from a branch**, select branch `main` and folder `/(root)`, then save.
-3. Wait until GitHub reports that the site is published. The images are committed under `output/`, so a card is served at `https://USERNAME.github.io/REPOSITORY/output/<slug>_card.png`.
-4. Optionally set the `IMAGE_BASE_URL` repository Variable to `https://USERNAME.github.io/REPOSITORY/output`.
-5. Keep the repository public if using public Pages or the raw-GitHub fallback. Only generated market cards/charts and state are committed; never add credentials or private account data to generated output.
+The market workflow uploads generated PNG cards to the already-used public Supabase Storage `REELS` bucket at `market-cards/<signal_id>.png`, then downloads each object and verifies its SHA-256 and byte size before requesting Telegram approval. The source GitHub repository remains private. This uses the same `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` secrets already used by the educational Reel uploader; no new paid plan or GitHub Pages setup is required. The bucket must remain public-read for Instagram's media fetch, while uploads remain authenticated with the service-role secret.
 
 ### 5. First run and verification
 
@@ -129,7 +125,7 @@ By default, the script exchanges the token and updates the repository secret `IG
 
 `.github/workflows/ads_preflight_report.yml` runs each Monday at 10:00 IST and can also be dispatched manually. It reads recent published Instagram content records, requests available media Insights, and sends a private Telegram report ranking posts by a transparent weighted-engagement-per-reach heuristic (likes + 2×comments + 3×saves + 3×shares, divided by reach). This is only an organic-engagement signal, not evidence of leads, sales, or return on ad spend.
 
-The report does not call advertising write APIs, create/edit/enable campaigns, change budgets, or spend money. It does not commit private performance metrics into this public repository. If Insights are unavailable or reach is missing, it deliberately makes no winner recommendation.
+The report does not call advertising write APIs, create/edit/enable campaigns, change budgets, or spend money. It does not commit private performance metrics into this private repository. If Insights are unavailable or reach is missing, it deliberately makes no winner recommendation.
 
 Before any paid campaign can be launched, the owner must confirm the exact Meta ad account, course/lead destination, tracking event, objective, audience, campaign dates, and daily/total spending limit, then provide explicit final approval. Do not claim guaranteed trading results or fabricate testimonials, social proof, or performance statistics.
 
