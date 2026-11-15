@@ -15669,7 +15669,11 @@
       "card_path": "output/btc-usd-2026111011-short_card.png",
       "created_at": "2026-11-10T11:47:45.261805+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/btc-usd-2026111011-short.png",
+      "image_sha256": "9f1f651bce2a46b3f05ea8266db4cfc7da96f761852f34a80d1eee66a6cd7ed1",
+      "image_size_bytes": 56817,
+      "image_storage": "supabase_public_reels"
     },
     "eth-usd-2026111011-short": {
       "signal": {
@@ -15725,7 +15729,11 @@
       "card_path": "output/eth-usd-2026111011-short_card.png",
       "created_at": "2026-11-10T11:47:45.564227+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/eth-usd-2026111011-short.png",
+      "image_sha256": "6bc85b8f41301d194cba8ba5c2bf979e496c5afa7dc09c39c5a0a79c56c057c4",
+      "image_size_bytes": 55000,
+      "image_storage": "supabase_public_reels"
     },
     "draft_trading-journal_morning_20261110_130153": {
       "content_type": "educational_reel",
@@ -15820,7 +15828,11 @@
       "card_path": "output/btc-usd-2026111013-short_card.png",
       "created_at": "2026-11-10T13:45:49.286237+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/btc-usd-2026111013-short.png",
+      "image_sha256": "babb26bae28e6cacfd49b8d2a41119c44f57cd14c28c814e62e36d561c2c4624",
+      "image_size_bytes": 57272,
+      "image_storage": "supabase_public_reels"
     },
     "btc-usd-2026111016-short": {
       "signal": {
@@ -15876,7 +15888,11 @@
       "card_path": "output/btc-usd-2026111016-short_card.png",
       "created_at": "2026-11-10T16:08:01.257033+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/btc-usd-2026111016-short.png",
+      "image_sha256": "372c25fc172585c601f4378fb4f65b02333add89830b0b95321365e9d69a528a",
+      "image_size_bytes": 57495,
+      "image_storage": "supabase_public_reels"
     },
     "draft_moving-averages_afternoon_20261110_163715": {
       "content_type": "educational_reel",
@@ -16010,7 +16026,11 @@
       "card_path": "output/tcs-ns-2026111109-short_card.png",
       "created_at": "2026-11-11T11:28:05.224704+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/tcs-ns-2026111109-short.png",
+      "image_sha256": "8cd9ad1c7d2b066bc2678f1ed6507bf70722645d1498e6fdeb2edc944cea0634",
+      "image_size_bytes": 51772,
+      "image_storage": "supabase_public_reels"
     },
     "draft_support-resistance_morning_20261111_121310": {
       "content_type": "educational_reel",
@@ -16144,7 +16164,11 @@
       "card_path": "output/ndx-2026111120-long_card.png",
       "created_at": "2026-11-12T11:52:03.206370+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/ndx-2026111120-long.png",
+      "image_sha256": "92971ffd8f54b632d102a93f4ec8ab1ca3591c36c41f3b0796182ffd63cf7f75",
+      "image_size_bytes": 55860,
+      "image_storage": "supabase_public_reels"
     },
     "spy-2026111120-long": {
       "signal": {
@@ -16200,7 +16224,11 @@
       "card_path": "output/spy-2026111120-long_card.png",
       "created_at": "2026-11-12T11:52:03.584343+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/spy-2026111120-long.png",
+      "image_sha256": "c09a8bb38fc95aa39a6089b902a05c9ec1b9621fb0b21cd1a78966ee25eb501e",
+      "image_size_bytes": 51501,
+      "image_storage": "supabase_public_reels"
     },
     "tcs-ns-2026111209-short": {
       "signal": {
@@ -16256,7 +16284,11 @@
       "card_path": "output/tcs-ns-2026111209-short_card.png",
       "created_at": "2026-11-12T11:52:03.966437+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/tcs-ns-2026111209-short.png",
+      "image_sha256": "77af870e8edd30a80687037121b0ef4d59b66f589a2d66212ccfe4d75df594da",
+      "image_size_bytes": 53677,
+      "image_storage": "supabase_public_reels"
     },
     "draft_false-breakouts_morning_20261112_131750": {
       "content_type": "educational_reel",
@@ -16351,7 +16383,11 @@
       "card_path": "output/ndx-2026111216-long_card.png",
       "created_at": "2026-11-12T16:36:47.253496+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/ndx-2026111216-long.png",
+      "image_sha256": "feae037ef5743a8fa362956134aa9a15cb3ff27b1c4a793a29911f65ee733137",
+      "image_size_bytes": 57372,
+      "image_storage": "supabase_public_reels"
     },
     "spy-2026111216-long": {
       "signal": {
@@ -16407,7 +16443,11 @@
       "card_path": "output/spy-2026111216-long_card.png",
       "created_at": "2026-11-12T16:36:47.616750+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/spy-2026111216-long.png",
+      "image_sha256": "49b7c7a23cef8c803871b04a1be9759216df2569048be9a18665ef88dd8b493e",
+      "image_size_bytes": 52424,
+      "image_storage": "supabase_public_reels"
     },
     "draft_risk-reward_afternoon_20261112_170541": {
       "content_type": "educational_reel",
@@ -16502,7 +16542,11 @@
       "card_path": "output/ndx-2026111217-long_card.png",
       "created_at": "2026-11-12T18:14:25.794984+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/ndx-2026111217-long.png",
+      "image_sha256": "90e153683888c2b3c015f20f0a46b361d623b67a64d4e00d4b88b9c822dec54d",
+      "image_size_bytes": 58525,
+      "image_storage": "supabase_public_reels"
     },
     "spy-2026111217-long": {
       "signal": {
@@ -16558,7 +16602,11 @@
       "card_path": "output/spy-2026111217-long_card.png",
       "created_at": "2026-11-12T18:14:26.156032+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/spy-2026111217-long.png",
+      "image_sha256": "71f8a31c3007e514a7cc1b335763dd5b5953ace71be3864bbe3c909769af645f",
+      "image_size_bytes": 53079,
+      "image_storage": "supabase_public_reels"
     },
     "eth-usd-2026111218-short": {
       "signal": {
@@ -16614,7 +16662,11 @@
       "card_path": "output/eth-usd-2026111218-short_card.png",
       "created_at": "2026-11-12T18:14:26.521692+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/eth-usd-2026111218-short.png",
+      "image_sha256": "062de9a6fa4e04c83612d278587b537b2401017351a48ff6fbfa422372ccfd72",
+      "image_size_bytes": 54060,
+      "image_storage": "supabase_public_reels"
     },
     "draft_trading-journal_evening_20261112_202727": {
       "content_type": "educational_reel",
@@ -16709,7 +16761,11 @@
       "card_path": "output/eth-usd-2026111311-short_card.png",
       "created_at": "2026-11-13T11:36:05.183808+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/eth-usd-2026111311-short.png",
+      "image_sha256": "581470d745032196aaa1cd7f0b8167423811563714feb797829c253009e786bf",
+      "image_size_bytes": 54570,
+      "image_storage": "supabase_public_reels"
     },
     "infy-ns-2026111309-short": {
       "signal": {
@@ -16765,7 +16821,11 @@
       "card_path": "output/infy-ns-2026111309-short_card.png",
       "created_at": "2026-11-13T11:36:05.701141+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/infy-ns-2026111309-short.png",
+      "image_sha256": "9127f4260fb62e1da13b58a947b548a4d0376040fd3b2ebc61945a6ba564f3e7",
+      "image_size_bytes": 52213,
+      "image_storage": "supabase_public_reels"
     },
     "tcs-ns-2026111309-short": {
       "signal": {
@@ -16821,7 +16881,11 @@
       "card_path": "output/tcs-ns-2026111309-short_card.png",
       "created_at": "2026-11-13T11:36:06.216524+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/tcs-ns-2026111309-short.png",
+      "image_sha256": "91e937a661ba182a09be9aad636e574c8310d2a017d27f4478890a661c3c6b12",
+      "image_size_bytes": 55562,
+      "image_storage": "supabase_public_reels"
     },
     "draft_moving-averages_morning_20261113_123936": {
       "content_type": "educational_reel",
@@ -16914,7 +16978,11 @@
       "card_path": "output/eurusd-x-2026111315-short_card.png",
       "created_at": "2026-11-13T15:56:23.656647+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/eurusd-x-2026111315-short.png",
+      "image_sha256": "3b996d2fb2a67e26c392af1f6587b472bbe8ccf2b26eb78f9d053fc909059b80",
+      "image_size_bytes": 50758,
+      "image_storage": "supabase_public_reels"
     },
     "draft_market-structure_afternoon_20261113_164416": {
       "content_type": "educational_reel",
@@ -17007,7 +17075,11 @@
       "card_path": "output/eurusd-x-2026111317-short_card.png",
       "created_at": "2026-11-13T17:42:04.879133+00:00",
       "publishing": {},
-      "status": "generated"
+      "status": "generated",
+      "image_url": "https://kjhdcpjztuzpysdauqdz.supabase.co/storage/v1/object/public/REELS/market-cards/eurusd-x-2026111317-short.png",
+      "image_sha256": "9542a5365b05cf359592dade2a95e79a7f29def9a67bf4ae5cbfce7696bb8d54",
+      "image_size_bytes": 50863,
+      "image_storage": "supabase_public_reels"
     },
     "draft_support-resistance_evening_20261113_200317": {
       "content_type": "educational_reel",
