@@ -815,6 +815,11 @@
       "content_id": "draft_trading-journal_afternoon_20261115_155255",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_moving-averages_evening_20261115_190653",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -862,6 +867,7 @@
     "draft_moving-averages_afternoon_20261110_163715",
     "draft_moving-averages_evening_20261030_181317",
     "draft_moving-averages_evening_20261107_175142",
+    "draft_moving-averages_evening_20261115_190653",
     "draft_moving-averages_morning_20261028_105112",
     "draft_moving-averages_morning_20261105_124706",
     "draft_moving-averages_morning_20261113_123936",
@@ -945,6 +951,7 @@
     "draft_overtrading_afternoon_20261114_152101": 541,
     "draft_false-breakouts_evening_20261114_182927": 542,
     "draft_risk-reward_morning_20261115_121757": 544,
-    "draft_trading-journal_afternoon_20261115_155255": 545
+    "draft_trading-journal_afternoon_20261115_155255": 545,
+    "draft_moving-averages_evening_20261115_190653": 547
   }
 }
