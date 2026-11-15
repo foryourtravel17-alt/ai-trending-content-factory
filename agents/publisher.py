@@ -48,8 +48,22 @@ def public_image_url(image_path: Path) -> str:
     raise RuntimeError("Set GITHUB_REPOSITORY, GH_USER/GH_REPO, or IMAGE_BASE_URL to create a public image URL.")
 
 
-def _accessible_image_url(image_path: Path) -> str:
-    """Prefer GitHub Pages; fall back to raw GitHub if Pages is not deployed yet."""
+def _accessible_image_url(image_path: Path, preferred_url: str = "") -> str:
+    """Verify a pre-uploaded public URL; legacy hosts are fallback only for old records."""
+    if preferred_url:
+        try:
+            response = requests.head(preferred_url, allow_redirects=True, timeout=12)
+            if response.status_code == 200:
+                log.info("Verified pre-uploaded public market-card URL.")
+                return preferred_url
+        except requests.RequestException as exc:
+            raise RuntimeError(
+                f"Pre-uploaded market-card URL could not be verified ({type(exc).__name__}); publishing blocked."
+            ) from None
+        raise RuntimeError(
+            "Pre-uploaded market-card URL is not publicly reachable; publishing blocked without a private-repository fallback."
+        )
+
     gh_user = os.getenv("GH_USER", "").strip()
     gh_repo = os.getenv("GH_REPO", "").strip()
     custom_base = os.getenv("IMAGE_BASE_URL", "").strip().rstrip("/")
@@ -69,7 +83,7 @@ def _accessible_image_url(image_path: Path) -> str:
         if raw_candidate not in candidates:
             candidates.append(raw_candidate)
     if not candidates:
-        raise RuntimeError("Set GH_USER and GH_REPO, or IMAGE_BASE_URL, to create a public image URL.")
+        raise RuntimeError("Set IMAGE_BASE_URL to a public image host for legacy market records.")
     for candidate in candidates:
         try:
             response = requests.head(candidate, allow_redirects=True, timeout=12)
@@ -79,8 +93,7 @@ def _accessible_image_url(image_path: Path) -> str:
             log.warning("Image URL not ready (%s): %s", response.status_code, candidate)
         except requests.RequestException as exc:
             log.warning("Could not verify image URL (%s).", type(exc).__name__)
-    raise RuntimeError("Generated card is not publicly reachable. Enable GitHub Pages or check the raw GitHub URL.")
-
+    raise RuntimeError("Generated card is not publicly reachable; no public image host passed verification.")
 
 def _telegram(method: str, data: dict, files: dict | None = None) -> dict:
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
@@ -324,7 +337,7 @@ def publish(signal: dict, copy: dict, card_path: Path, record: dict, dry_run: bo
         instagram_state = platforms.setdefault("instagram", {})
         if token:
             try:
-                image_url = _accessible_image_url(card_path)
+                image_url = _accessible_image_url(card_path, str(record.get("image_url") or "").strip())
                 media_id = _instagram_publish(
                     image_url, copy["instagram_caption"], instagram_state
                 )
