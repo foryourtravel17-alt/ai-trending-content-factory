@@ -71,7 +71,7 @@ def main():
 
     approval = content.get("approval") if isinstance(content.get("approval"), dict) else {}
     status = str(content.get("status", "")).strip().lower()
-    if status in {"approved_for_publishing", "published_to_instagram", "rejected"} or approval.get("status") in {"approved", "rejected"}:
+    if status in {"approved_for_publishing", "published", "rejected"} or approval.get("status") in {"approved", "rejected"}:
         raise SystemExit(f"Refusing to re-queue a decided draft: {content_id}.")
 
     topic = content.get("topic", {}) if isinstance(content.get("topic"), dict) else {}
