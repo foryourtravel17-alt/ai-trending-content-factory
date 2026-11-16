@@ -17,10 +17,11 @@ class EducationalPublisherDiagnosticTests(unittest.TestCase):
             "content_id": content_id,
             "status": "generated",
             "approval_status": "approved",
-            "approval_mode": "automated_policy",
-            "human_approval_required": False,
-            "automated_review_at": "2026-10-23T00:00:00Z",
-            "fact_check": {"status": "automated_passed"},
+            "approval_mode": "human_review",
+            "human_approval_required": True,
+            "reviewed_at": "2026-10-23T00:00:00Z",
+            "reviewed_by": "id:123",
+            "fact_check": {"status": "approved"},
         }
         with tempfile.TemporaryDirectory() as tmp:
             state_path = Path(tmp) / "state.json"
