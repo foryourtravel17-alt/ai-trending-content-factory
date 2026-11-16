@@ -1,9 +1,40 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-04T03:20:18.663139+00:00",
+  "generatedAt": "2026-11-16T08:58:37.366431+00:00",
   "source": "Bullseye Theory educational market factory",
   "dataStatus": "human_approved_observations",
   "maxObservationAgeHours": 8,
   "disclaimer": "Educational structure observations only. Not a forecast or a recommendation to buy, sell, or hold. Conditions can change; scenarios can fail.",
-  "records": []
+  "records": [
+    {
+      "id": "tcs-ns-2026111608-short",
+      "symbol": "TCS.NS",
+      "label": "TCS",
+      "direction": "SHORT",
+      "as_of": "2026-11-16T08:45:00+00:00",
+      "view": "Main TCS par short scenario dekh raha hoon. EMA20 EMA50 ke neeche hai; RSI(14) 33.8 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+      "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.",
+      "approvalStatus": "approved"
+    },
+    {
+      "id": "gc-f-2026111608-short",
+      "symbol": "GC=F",
+      "label": "Gold",
+      "direction": "SHORT",
+      "as_of": "2026-11-16T08:00:00+00:00",
+      "view": "I’m watching Gold through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.9. The scenario is invalid if structure fails.",
+      "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario.",
+      "approvalStatus": "approved"
+    },
+    {
+      "id": "btc-usd-2026111608-short",
+      "symbol": "BTC-USD",
+      "label": "Bitcoin",
+      "direction": "SHORT",
+      "as_of": "2026-11-16T08:00:00+00:00",
+      "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 43.1. The scenario is invalid if structure fails.",
+      "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario.",
+      "approvalStatus": "approved"
+    }
+  ]
 }
