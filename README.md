@@ -1,6 +1,6 @@
 # Bullseye Theory — Telegram-only Content Factory
 
-This repository runs the Bullseye Theory social-content pipeline with free GitHub Actions workflows and Telegram as the **only social publishing destination**. Facebook and Instagram are intentionally disconnected: no Meta Graph API calls, Instagram credentials, Instagram publishing, Facebook publishing, or Instagram health checks are part of this automation.
+This repository runs the Bullseye Theory social-content pipeline with free GitHub Actions workflows. Telegram is the only social publishing destination. Facebook and Instagram are intentionally disconnected: no Meta Graph API calls, Instagram credentials, Instagram publishing, Facebook publishing, or Instagram health checks are part of this automation.
 
 The source repository remains private. No paid social scheduler, TradingView Pro plan, or paid image host is required.
 
