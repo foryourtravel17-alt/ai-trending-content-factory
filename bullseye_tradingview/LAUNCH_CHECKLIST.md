@@ -26,7 +26,7 @@
 - [ ] Compile, visually inspect historical charts and backtest results.
 - [ ] Verify captions, disclaimer, logo/brand assets, course link and Telegram channel.
 - [ ] You manually press TradingView's final Publish button; I cannot truthfully report publication without that platform confirmation.
-- [ ] A code merge does not mean a script is published or that an Instagram post went live.
+- [ ] A code merge does not mean a script is published or that a Telegram post went live.
 
 ## What the words mean
 - **Pine Script:** TradingView's scripting language.
