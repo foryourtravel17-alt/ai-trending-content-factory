@@ -24,7 +24,6 @@ except ImportError:
 BRAND = "Bullseye Theory"
 OUTPUT_DIR = Path("output")
 MOCK_MODE = os.getenv("MOCK_MODE", "true").lower() == "true"
-AUTO_PUBLISH_ENABLED = os.getenv("AUTO_PUBLISH_ENABLED", "false").lower() == "true"
 CONTENT_BATCH_SIZE = max(1, min(int(os.getenv("CONTENT_BATCH_SIZE", "1")), 3))
 
 PHILOSOPHY = "LEARN | TRADE | GROW"
@@ -595,14 +594,9 @@ def build_content(item, index, content_id=None, content_role="education"):
     visuals = visual_plan(item)
     social = caption_and_hashtags(item, script)
 
-    # A safety-screen pass is not enough for automatic approval when the fact
-    # check flagged claims for human review. Keep those records approval-gated.
-    automated_approval_eligible = (
-        AUTO_PUBLISH_ENABLED
-        and safety["passed"]
-        and fact_check_data.get("status") == "passed"
-    )
-    status = "approved_for_publishing" if automated_approval_eligible else ("pending_approval" if safety["passed"] else "safety_review_required")
+    # Safety screening is never publishing approval. Every public Telegram post
+    # must follow an explicit owner APPROVE callback in the private Telegram chat.
+    status = "pending_approval" if safety["passed"] else "safety_review_required"
 
     return {
         "content_id": content_id or f"content_{index}",
@@ -630,18 +624,13 @@ def build_content(item, index, content_id=None, content_role="education"):
         "visual_plan": visuals,
         "social": social,
         "publishing": {
-            "instagram": {"status": "not_published"},
             "telegram": {"status": "not_published"},
         },
+        "human_approval_required": True,
         "approval": {
-            "required": not automated_approval_eligible,
-            "status": "approved" if automated_approval_eligible else "pending",
-            "mode": "automated_policy" if automated_approval_eligible else "manual",
-            **(
-                {"automated_review_at": now_utc()}
-                if automated_approval_eligible
-                else {}
-            ),
+            "required": True,
+            "status": "pending",
+            "mode": "human_review",
         },
     }
 
