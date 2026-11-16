@@ -28,7 +28,7 @@ jobs:
     env:
       DRY_RUN: ${{ inputs.dry_run || '0' }}
       HUMAN_APPROVAL: "true"
-      # Generate and persist card PNGs first; Instagram requires a publicly reachable URL.
+      # Generate local card PNGs for Telegram-only delivery; no public image host is required.
       GENERATE_ONLY: "true"
       LLM_ENABLED: ${{ vars.LLM_ENABLED || 'true' }}
       LLM_BASE: ${{ vars.LLM_BASE || secrets.LLM_BASE || 'https://api.venice.ai/api/v1' }}
@@ -37,15 +37,6 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       TELEGRAM_APPROVER_USER_IDS: ${{ secrets.TELEGRAM_APPROVER_USER_IDS }}
-      IG_USER_ID: ${{ secrets.IG_USER_ID }}
-      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-      INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
-      INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
-      META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
-      META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
-      GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
-      GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
-      IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
       LOG_LEVEL: INFO
 
     steps:
@@ -68,12 +59,6 @@ jobs:
 
       - name: Export sanitized approved Market Lab feed
         run: python scripts/export_public_market_feed.py
-
-      - name: Upload and verify market cards in Supabase public storage
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/upload_market_cards.py
 
       - name: Commit generated approval drafts and state
         run: |
