@@ -94,7 +94,7 @@ def load_newest_unpublished_approved():
         if not content_id or path.stem != content_id:
             print(f"Skipping content ID / filename mismatch: {path.name}")
             continue
-        if data.get("status") not in {"approved_for_publishing", "published_to_instagram", "publish_failed", "partial"}:
+        if data.get("status") not in {"approved_for_publishing", "published", "publish_failed", "partial"}:
             continue
         publishing = data.get("publishing", {}) if isinstance(data.get("publishing"), dict) else {}
         telegram = publishing.get("telegram", {}) if isinstance(publishing.get("telegram"), dict) else {}
@@ -292,7 +292,7 @@ def publish_content_record(content_path: Path, approved: dict) -> dict:
     approval = approved.get("approval", {}) if isinstance(approved.get("approval"), dict) else {}
     fact = approved.get("fact_check", {}) if isinstance(approved.get("fact_check"), dict) else {}
     if not (
-        approved.get("status") in {"approved_for_publishing", "publish_failed", "published_to_instagram", "partial"}
+        approved.get("status") in {"approved_for_publishing", "publish_failed", "published", "partial"}
         and approval.get("required") is True
         and approval.get("status") == "approved"
         and approval.get("mode") == "human_review"
