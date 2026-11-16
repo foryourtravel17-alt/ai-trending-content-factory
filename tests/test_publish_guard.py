@@ -17,19 +17,15 @@ class PublishGuardTests(unittest.TestCase):
         record = self.approved()
         record["publishing"] = {
             "telegram": {"status": "published"},
-            "instagram": {"status": "published"},
-        }
+                    }
         allowed, reason = should_publish(record)
         self.assertFalse(allowed)
-        self.assertIn("fully published", reason)
+        self.assertIn("already published to Telegram", reason)
 
-    def test_partial_publish_allows_retry(self):
+    def test_partial_legacy_publish_with_telegram_already_published_blocks(self):
         record = self.approved()
-        record["publishing"] = {
-            "telegram": {"status": "published"},
-            "instagram": {"status": "failed"},
-        }
-        self.assertTrue(should_publish(record)[0])
+        record["publishing"] = {"telegram": {"status": "published"}}
+        self.assertFalse(should_publish(record)[0])
 
     def test_missing_record_blocks(self):
         self.assertFalse(should_publish({})[0])
