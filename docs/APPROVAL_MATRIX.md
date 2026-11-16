@@ -4,6 +4,7 @@
 |---|---|---|
 | ads_preflight_report.yml | Weekly schedule; manual dispatch | No — read-only preflight report. |
 | automation_failure_watchdog.yml | Schedule; workflow completion | No — alerting only. |
+| bullseye-levels-test.yml | Pull request/push CI trigger | No — Node.js indicator calculation tests only; no publishing or messaging. |
 | daily_automation_report.yml | Daily schedule; manual dispatch | No — private report only. |
 | deployment_readiness.yml | Push; manual dispatch | No — readiness checks only. |
 | educational_reel_draft.yml | Three daily schedules; manual dispatch | No — drafts require explicit Telegram owner approval. |
@@ -19,6 +20,7 @@
 | premium_daily_autopublish.yml | Daily schedule; manual dispatch with publish_now=true | No public post — explicit private-channel exception auto-sends an evergreen lesson to the configured Premium Telegram destination. |
 | premium_telegram_education.yml | Manual dispatch | No — preview and optional read-only destination check. |
 | ritu-daily.yml | Daily schedule; manual dispatch | No — generates and commits a content queue; no public publishing step in this workflow. |
-| telegram-approval-recovery.yml | Manual dispatch; one-time push on workflow addition | No — sends only pending private educational Reel approval requests; it never publishes. |\n| telegram_approval.yml | Manual dispatch | No — informational only. |
+| telegram-approval-recovery.yml | Manual dispatch; one-time push on workflow addition | No — sends only pending private educational Reel approval requests; it never publishes. |
+| telegram_approval.yml | Manual dispatch | No — informational only. |
 | test_telegram_channel.yml | Manual dispatch with confirm_test_post=true | No — public test post is blocked unless the owner explicitly confirms the fixed video in the dispatch form. |
 | weekly_report.yml | Weekly schedule; manual dispatch | No — reporting only. |
