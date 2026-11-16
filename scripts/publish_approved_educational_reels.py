@@ -16,7 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.instagram_publish import publish_approved_educational_reel
+from src.telegram_reel_publish import publish_approved_educational_reel
 
 STATE_PATH = Path("data/state.json")
 SAFE_ID = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")
@@ -83,13 +83,13 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
                 raise RuntimeError("Educational publisher returned an invalid record.")
             signals[content_id] = updated
             updated.pop("last_publish_error", None)
-            print(f"Educational Reel publisher completed for {content_id}; state persisted.")
+            print(f"Telegram Reel publisher completed for {content_id}; state persisted.")
         except Exception as exc:
             failed = True
             if isinstance(record, dict):
                 record["last_publish_error"] = type(exc).__name__
                 signals[content_id] = record
-            print(f"Educational Reel publish failed for {content_id}: {type(exc).__name__}; credentials and response bodies are not logged.")
+            print(f"Telegram Reel publish failed for {content_id}: {type(exc).__name__}; credentials and response bodies are not logged.")
             # Log only the source locations and, for NameError, the missing Python
             # identifier. Do not print exception messages or request/credential data.
             try:
@@ -104,7 +104,7 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
                 print("Safe diagnostic trace unavailable.")
         finally:
             # Save after every ID, including partial publication or an exception,
-            # so recorded Instagram/Telegram IDs and ambiguous outcomes survive.
+            # so Telegram message IDs and ambiguous outcomes survive.
             save_state_atomic(path, state)
 
     return 1 if failed else 0
