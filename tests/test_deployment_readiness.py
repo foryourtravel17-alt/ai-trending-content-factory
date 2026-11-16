@@ -74,5 +74,13 @@ class DeploymentReadinessDoctorTests(unittest.TestCase):
         self.assertEqual(captured["headers"].get("Content-type"), "application/json")
         self.assertEqual(captured["data"], b'{"prefix": "reels", "limit": 20, "offset": 0}')
 
+    def test_readiness_workflow_runs_automatically_after_relevant_main_changes(self):
+        from pathlib import Path
+        workflow = Path(".github/workflows/deployment_readiness.yml").read_text(encoding="utf-8")
+        self.assertIn("push:", workflow)
+        self.assertIn("branches: [main]", workflow)
+        self.assertIn('"scripts/check_deployment_readiness.py"', workflow)
+        self.assertIn('".github/workflows/deployment_readiness.yml"', workflow)
+
 if __name__ == "__main__":
     unittest.main()
