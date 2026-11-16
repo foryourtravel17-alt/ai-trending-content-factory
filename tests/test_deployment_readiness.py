@@ -51,5 +51,28 @@ class DeploymentReadinessDoctorTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(calls, ["getMe", "getChat", "getChatMember", "getChat"])
 
+    def test_request_json_sets_json_content_type_for_storage_list_payload(self):
+        captured = {}
+        class Response:
+            status = 200
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self): return b'[]'
+        def fake_urlopen(request, timeout):
+            captured["headers"] = dict(request.header_items())
+            captured["data"] = request.data
+            return Response()
+        with patch.object(doctor.urllib.request, "urlopen", side_effect=fake_urlopen):
+            status, result = doctor.request_json(
+                "https://example.supabase.co/storage/v1/object/list/REELS",
+                method="POST",
+                headers={"Authorization": "Bearer test", "apikey": "test"},
+                payload={"prefix": "reels", "limit": 20, "offset": 0},
+            )
+        self.assertEqual(status, 200)
+        self.assertEqual(result, [])
+        self.assertEqual(captured["headers"].get("Content-type"), "application/json")
+        self.assertEqual(captured["data"], b'{"prefix": "reels", "limit": 20, "offset": 0}')
+
 if __name__ == "__main__":
     unittest.main()

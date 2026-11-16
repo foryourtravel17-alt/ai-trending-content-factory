@@ -62,7 +62,10 @@ def api(token: str, method: str, payload: dict | None = None):
 def request_json(url: str, method: str = "GET", headers: dict | None = None,
                  payload: dict | None = None):
     body = json.dumps(payload).encode("utf-8") if payload is not None else None
-    req = urllib.request.Request(url, data=body, headers=headers or {}, method=method)
+    request_headers = dict(headers or {})
+    if payload is not None:
+        request_headers.setdefault("Content-Type", "application/json")
+    req = urllib.request.Request(url, data=body, headers=request_headers, method=method)
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as response:
             raw = response.read()
