@@ -1,4 +1,4 @@
-"""Send weekly hypothetical signal outcomes and available Instagram Insights to Telegram.
+"""Send weekly Telegram publishing counts and hypothetical market-scenario outcomes.
 
 This is scenario analysis from public OHLC, not broker execution or realized P&L.
 """
@@ -12,25 +12,6 @@ import pandas as pd
 import yfinance as yf
 
 STATE = Path("data/state.json")
-
-def fetch_engagement(media_id: str, token: str, version: str) -> dict | None:
-    try:
-        response = requests.get(
-            f"https://graph.facebook.com/{version}/{media_id}/insights",
-            params={"metric": "reach,likes,comments,saved,shares", "access_token": token},
-            timeout=20,
-        )
-        response.raise_for_status()
-        metrics = {}
-        for item in response.json().get("data", []):
-            values = item.get("values") or []
-            value = values[0].get("value", 0) if values else item.get("value", 0)
-            if isinstance(value, (int, float)):
-                metrics[item.get("name", "unknown")] = int(value)
-        return metrics
-    except (requests.RequestException, ValueError, TypeError) as exc:
-        print(f"Insights unavailable for media {media_id} ({type(exc).__name__}); request details redacted.")
-        return None
 
 def fetch_weekly_ohlc(symbol: str) -> pd.DataFrame | None:
     try:
@@ -123,7 +104,6 @@ def main():
         "",
         f"Scenarios generated: {len(signals)}",
         f"Published/partial records: {len(published)}",
-        f"Instagram posts confirmed: {sum(1 for r in published if r.get('publishing', {}).get('instagram', {}).get('status') == 'published')}",
         f"Telegram posts confirmed: {sum(1 for r in published if r.get('publishing', {}).get('telegram', {}).get('status') == 'published')}",
         f"Awaiting human review: {len(pending)}",
         "",
@@ -157,24 +137,6 @@ def main():
         lines.append("Scenario outcome estimate: no resolved post-signal levels available yet.")
     lines.append(f"Open/unavailable scenarios: {open_count}.")
 
-    ig_token = os.getenv("IG_ACCESS_TOKEN", "").strip() or os.getenv("META_SYSTEM_USER_TOKEN", "").strip()
-    version = os.getenv("META_GRAPH_API_VERSION", "v23.0")
-    engagement = []
-    if ig_token:
-        for record in published:
-            media_id = record.get("publishing", {}).get("instagram", {}).get("media_id")
-            if media_id:
-                metrics = fetch_engagement(str(media_id), ig_token, version)
-                if metrics is not None:
-                    engagement.append(metrics)
-    if engagement:
-        totals = {}
-        for row in engagement:
-            for name, value in row.items():
-                totals[name] = totals.get(name, 0) + value
-        lines.append(f"Instagram Insights ({len(engagement)} media): " + ", ".join(f"{k} {v}" for k, v in sorted(totals.items())) + ".")
-    else:
-        lines.append("Engagement: Insights unavailable (check token permissions or configure IG_ACCESS_TOKEN).")
     lines.extend([
         "Targets are not counted as hits unless observed in post-signal candles.",
         "Educational market scenarios only — not financial advice.",

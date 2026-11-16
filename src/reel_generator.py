@@ -753,7 +753,7 @@ def build(content):
         "video": str(output),
         "caption": social.get("caption", ""),
         "hashtags": social.get("hashtags", []),
-        "status": "ready_for_instagram",
+        "status": "ready_for_telegram",
         "audio": {
             "voice": "professional male English neural voice with local fallback",
             "background_music": "procedural cinematic low-volume bed",
@@ -771,8 +771,8 @@ def build(content):
         __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
     )
     publishing = content.setdefault("publishing", {})
-    instagram = publishing.setdefault("instagram", {})
-    instagram["status"] = "ready_for_publish"
+    publishing.setdefault("telegram", {"status": "pending_approval"})
+    content["human_approval_required"] = True
     content["publishing"]["reel_file"] = str(output)
     content_path = OUTPUT_DIR / f"{content_id}.json"
     content_path.write_text(

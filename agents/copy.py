@@ -1,5 +1,6 @@
-"""Generate language-specific Telegram HTML and Instagram captions."""
+"""Generate Telegram-only market scenario captions."""
 from html import escape
+
 
 def build_copy(signal: dict, analyst: dict) -> dict:
     symbol = signal.get("symbol", "")
@@ -38,19 +39,12 @@ def build_copy(signal: dict, analyst: dict) -> dict:
             tags = "#IndianStocks #PriceAction #RiskManagement #BullseyeTheory"
     view = str(analyst.get("view", "")).strip()[:260]
     caveat = str(analyst.get("caveat", "")).strip()[:130]
-    caption = (
-        f"{hook}\n\n{view}\n\n{body}\n\n"
-        f"Scenario: {signal['symbol']} · {signal['direction']}\n\n"
-        f"{caveat}\n"
-        "Educational market commentary only. Not financial advice."
-    )
-    instagram = f"{caption}\n\n{tags}"
     telegram_html = (
         f"<b>🎯 Bullseye Theory · {escape(signal['label'])}</b>\n\n"
         f"<b>{escape(hook)}</b>\n\n{escape(view)}\n\n{escape(body)}\n\n"
         f"<b>Scenario:</b> {escape(signal['symbol'])} · {signal['direction']}\n\n"
         f"{escape(caveat)}\n\n"
+        f"{escape(tags)}\n\n"
         "<i>Educational scenario only. Not financial advice; levels can fail.</i>"
     )
-    return {"telegram_html": telegram_html[:1000], "instagram_caption": instagram[:2200],
-            "hook": hook, "hashtags": tags.split()}
+    return {"telegram_html": telegram_html[:1000], "hook": hook, "hashtags": tags.split()}

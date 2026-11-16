@@ -84,7 +84,7 @@ class DryRunSmokeTest(unittest.TestCase):
             analyst = analyze(signal)
             copy = build_copy(signal, analyst)
             self.assertTrue(copy["telegram_html"])
-            self.assertTrue(copy["instagram_caption"])
+            self.assertNotIn("instagram_caption", copy)
             ok, reason = validate(signal, {"signals": {}})
             self.assertTrue(ok, reason)
             record = {"signal": signal, "copy": copy, "publishing": {}}

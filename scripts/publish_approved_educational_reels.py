@@ -16,7 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.instagram_publish import publish_approved_educational_reel
+from src.telegram_reel_publish import publish_approved_educational_reel
 
 STATE_PATH = Path("data/state.json")
 SAFE_ID = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")
@@ -62,34 +62,27 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
             if record.get("approval_status") != "approved":
                 raise RuntimeError("Persisted publish-policy decision is missing.")
             fact_check = record.get("fact_check") if isinstance(record.get("fact_check"), dict) else {}
-            approval_mode = str(record.get("approval_mode", "")).strip()
-            automated_policy_ok = (
-                approval_mode == "automated_policy"
-                and record.get("human_approval_required") is False
-                and bool(record.get("automated_review_at"))
-                and fact_check.get("status") == "automated_passed"
-            )
             human_policy_ok = (
                 record.get("human_approval_required") is True
                 and fact_check.get("status") == "approved"
                 and bool(record.get("reviewed_at"))
                 and bool(record.get("reviewed_by"))
             )
-            if not (automated_policy_ok or human_policy_ok):
-                raise RuntimeError("Neither the automated safety gate nor the legacy human-review gate is complete.")
+            if not human_policy_ok:
+                raise RuntimeError("Telegram publishing requires the exact human owner approval recorded by Telegram.")
 
             updated = publish_approved_educational_reel(record)
             if not isinstance(updated, dict):
                 raise RuntimeError("Educational publisher returned an invalid record.")
             signals[content_id] = updated
             updated.pop("last_publish_error", None)
-            print(f"Educational Reel publisher completed for {content_id}; state persisted.")
+            print(f"Telegram Reel publisher completed for {content_id}; state persisted.")
         except Exception as exc:
             failed = True
             if isinstance(record, dict):
                 record["last_publish_error"] = type(exc).__name__
                 signals[content_id] = record
-            print(f"Educational Reel publish failed for {content_id}: {type(exc).__name__}; credentials and response bodies are not logged.")
+            print(f"Telegram Reel publish failed for {content_id}: {type(exc).__name__}; credentials and response bodies are not logged.")
             # Log only the source locations and, for NameError, the missing Python
             # identifier. Do not print exception messages or request/credential data.
             try:
@@ -104,7 +97,7 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
                 print("Safe diagnostic trace unavailable.")
         finally:
             # Save after every ID, including partial publication or an exception,
-            # so recorded Instagram/Telegram IDs and ambiguous outcomes survive.
+            # so Telegram message IDs and ambiguous outcomes survive.
             save_state_atomic(path, state)
 
     return 1 if failed else 0

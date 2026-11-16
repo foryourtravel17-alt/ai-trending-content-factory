@@ -8,6 +8,7 @@ on:
       - .github/workflows/deployment_readiness.yml
       - .github/workflows/telegram_approval.yml
       - src/telegram_process.py
+      - src/telegram_reel_publish.py
       - src/telegram_send.py
       - scripts/queue_educational_draft.py
       - scripts/export_public_market_feed.py
@@ -15,6 +16,9 @@ on:
       - tests/test_single_telegram_poller.py
       - tests/test_telegram_callback_retry.py
       - tests/test_educational_approval_publisher.py
+      - tests/test_publisher.py
+      - tests/test_agents_publisher_approval.py
+      - tests/test_workflow_safety.py
       - tests/test_publish_state_staging.py
       - tests/test_deployment_readiness.py
       - scripts/publish_approved_educational_reels.py
@@ -22,12 +26,9 @@ on:
       - scripts/check_deployment_readiness.py
       - scripts/alert_expired_educational_drafts.py
       - tests/test_expired_educational_draft_alert.py
-      - src/instagram_publish.py
       - scripts/upload_educational_reel.py
-      - tests/test_instagram_publish.py
       - tests/test_upload_educational_reel.py
       - tests/test_agents_publisher_approval.py
-      - tests/test_instagram_publisher.py
       - tests/test_workflow_safety.py
       - tests/test_daily_reel_draft.py
   workflow_run:
@@ -85,15 +86,6 @@ jobs:
           DRY_RUN: "0"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          IG_USER_ID: ${{ secrets.IG_USER_ID }}
-          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
-          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
-          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
-          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
-          GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
-          GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
-          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
         run: |
           set +e
           IFS=',' read -r -a signal_ids <<< "$APPROVED_SIGNAL_IDS"
@@ -119,9 +111,6 @@ jobs:
         if: steps.approval.outputs.educational_approved_ids != ''
         env:
           EDUCATIONAL_APPROVED_IDS: ${{ steps.approval.outputs.educational_approved_ids }}
-          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
-          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
-          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

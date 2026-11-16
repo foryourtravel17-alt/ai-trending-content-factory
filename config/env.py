@@ -12,13 +12,6 @@ def first_nonempty(*names: str, default: str = "") -> str:
             return value
     return default
 
-def instagram_user_id() -> str:
-    return first_nonempty("IG_USER_ID", "INSTAGRAM_USER_ID")
-
-def instagram_access_token() -> str:
-    # Prefer the Meta System User token validated by the Instagram Token Health workflow.
-    return first_nonempty("META_SYSTEM_USER_TOKEN", "INSTAGRAM_ACCESS_TOKEN", "IG_ACCESS_TOKEN")
-
 def human_approval_required() -> bool:
     """Fail closed: unset or ambiguous values require human approval."""
     value = os.getenv("HUMAN_APPROVAL", "").strip().lower()

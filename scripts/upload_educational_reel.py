@@ -159,7 +159,7 @@ def upload_latest_draft():
     content_id = str(record.get("content_id", "")).strip()
     if not content_id or metadata_path.stem != content_id:
         raise SystemExit("Draft metadata content_id/filename mismatch.")
-    if record.get("status") in {"approved_for_publishing", "published_to_instagram", "published", "rejected"}:
+    if record.get("status") in {"approved_for_publishing", "published", "published", "rejected"}:
         raise SystemExit("Refusing to replace media for an already decided/published draft.")
 
     video_path = Path(str(record.get("video") or (OUTPUT_DIR / "media" / f"{content_id}.mp4")))

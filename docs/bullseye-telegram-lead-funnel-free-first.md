@@ -42,7 +42,7 @@ Educational purposes only; not financial advice. Trading involves risk."
 - End with one CTA, not a pile of hashtags.
 - Keep "Educational only. Not financial advice. Illustrative chart—not a live signal. Trading involves risk." legible.
 - Check rendered MP4, audio, spelling, scene order, duration, and disclaimer before approval.
-- Never publish automatically. Keep Instagram/Telegram posting behind owner approval.
+- Never publish automatically. Keep Telegram posting behind owner approval.
 
 ## Free-first production stack
 - Existing Python/Pillow + FFmpeg renderer and GitHub Actions for deterministic rendering.
@@ -55,7 +55,7 @@ Educational purposes only; not financial advice. Trading involves risk."
 - Confirm the bot's configured chat/channel is the intended Bullseye destination without printing token values.
 - Test a harmless draft/approval message first.
 - Verify APPROVE and REJECT callback handlers update the queue/state correctly.
-- Verify approval does not itself publish to Instagram unless a separate explicit approval and configured workflow require it.
+- Verify only the exact owner-approved content may be sent to the Telegram channel.
 - Never expose bot tokens in logs, screenshots, source files, or messages.
 
 ## Lead tracking fields

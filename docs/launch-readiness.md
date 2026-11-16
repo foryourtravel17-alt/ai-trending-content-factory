@@ -14,9 +14,9 @@ Do not describe Bullseye Theory as launch-ready until a real payment has been co
 - [ ] Duplicate callbacks, retries, failed payments, refunds, and replay attempts do not grant extra or unauthorized access.
 - [ ] Evidence, timestamps, and test account are recorded without storing payment secrets or access tokens in logs.
 
-## Meta / Instagram constraint
+## Social publishing constraint
 
-Do not request or rotate Meta/Facebook/Instagram credentials as a default troubleshooting step. Treat Graph API code=100, subcode=33 as a permissions/configuration investigation unless new evidence proves a credential is invalid. Keep publishing changes separate from payment/access readiness.
+Facebook and Instagram integrations are intentionally removed from this project. Telegram is the only active social publishing destination. Do not request, rotate, or test Meta/Facebook/Instagram credentials as part of Bullseye Theory operations. Market cards and educational Reels require the owner's explicit private Telegram approval before channel publishing.
 
 ## Automation repository checks
 
@@ -30,4 +30,4 @@ The deployment_readiness.yml and market_content_tests.yml workflows are expected
 - Protect lesson HTML and media server-side; client-side redirects are not access control.
 - Complete a real payment → server-side verification → course entitlement → protected content → premium Telegram invite/revocation test.
 
-Never store service-role keys, bot tokens, payment secrets, or Meta access tokens in the repository or documentation.
+Never store service-role keys, bot tokens, payment secrets, or social-platform access tokens in the repository or documentation.

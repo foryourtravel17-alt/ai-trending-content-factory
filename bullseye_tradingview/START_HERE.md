@@ -21,7 +21,7 @@ You do not need to become a coder. Learn just enough of the words below to know 
 Max two setups per India date; allowed session 12:00–20:00 IST; avoid high-impact news 15 minutes before/after; max planned risk 1% per setup. This build's news blackout is manual. Position sizing depends on the broker, symbol, contract size and account currency.
 
 ## What can be automated
-GitHub can store files, run source tests, schedule existing workflows, and log errors. The existing Instagram/Telegram content workflows are separate from the trading indicator. Pine compilation and TradingView publication still need actions in your TradingView account.
+GitHub can store files, run source tests, schedule existing workflows, and log errors. The Telegram-only content workflow is separate from the trading indicator; Facebook and Instagram automation are disabled. Pine compilation and TradingView publication still need actions in your TradingView account.
 
 ## Your only manual steps — when I say the build is ready
 1. Open https://www.tradingview.com/chart/ and choose a chart.
