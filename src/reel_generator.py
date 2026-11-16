@@ -753,7 +753,7 @@ def build(content):
         "video": str(output),
         "caption": social.get("caption", ""),
         "hashtags": social.get("hashtags", []),
-        "status": "ready_for_instagram",
+        "status": "ready_for_telegram",
         "audio": {
             "voice": "professional male English neural voice with local fallback",
             "background_music": "procedural cinematic low-volume bed",
