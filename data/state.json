@@ -17320,7 +17320,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_trading-journal_afternoon_20261115_155255",
       "metadata_path": "output/draft_trading-journal_afternoon_20261115_155255.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-15T15:54:22.319681+00:00",
@@ -17351,7 +17351,9 @@
           "message_id": 545,
           "sent_at": "2026-11-15T15:54:23.188684+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-16T12:03:56.886797+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_moving-averages_evening_20261115_190653": {
       "content_type": "educational_reel",
@@ -17680,6 +17682,116 @@
         "reviewed_by": "@bullseyetheory"
       },
       "published_at": "2026-11-16T08:58:36.320821+00:00"
+    },
+    "btc-usd-2026111612-short": {
+      "signal": {
+        "signal_id": "btc-usd-2026111612-short",
+        "slug": "btc-usd-2026111612-short",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 64275.80078125,
+        "stop_loss": 65038.51088867064,
+        "targets": [
+          63513.09067382936,
+          63131.73562011905,
+          62750.38056640873
+        ],
+        "tp1": 63513.09067382936,
+        "tp2": 63131.73562011905,
+        "tp3": 62750.38056640873,
+        "rr_tp2": 1.4999999999999953,
+        "rsi14": 42.65765848456225,
+        "ema20": 64687.15914190142,
+        "ema50": 65409.36495873931,
+        "macd": -210.80474169906665,
+        "macd_signal": -181.12828234452977,
+        "macd_hist": -29.676459354536888,
+        "atr14": 508.47340494709,
+        "vwap": 64452.97717872162,
+        "support": 64081.44921875,
+        "resistance": 65461.26953125,
+        "as_of": "2026-11-16T12:00:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 42.7. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is below EMA50 and RSI(14) is 42.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026111612-short.png",
+      "card_path": "output/btc-usd-2026111612-short_card.png",
+      "created_at": "2026-11-16T12:03:59.733135+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eth-usd-2026111612-short": {
+      "signal": {
+        "signal_id": "eth-usd-2026111612-short",
+        "slug": "eth-usd-2026111612-short",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 1801.6199951171875,
+        "stop_loss": 1827.3599159928203,
+        "targets": [
+          1775.8800742415547,
+          1763.0101138037385,
+          1750.140153365922
+        ],
+        "tp1": 1775.8800742415547,
+        "tp2": 1763.0101138037385,
+        "tp3": 1750.140153365922,
+        "rr_tp2": 1.4999999999999911,
+        "rsi14": 44.37752242263441,
+        "ema20": 1812.1580691773604,
+        "ema50": 1832.171440621268,
+        "macd": -5.035148462475263,
+        "macd_signal": -3.9163461065100535,
+        "macd_hist": -1.1188023559652094,
+        "atr14": 17.15994725042182,
+        "vwap": 1806.621218609374,
+        "support": 1791.02001953125,
+        "resistance": 1840.8299560546875,
+        "as_of": "2026-11-16T12:00:00+00:00",
+        "score": 100,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 44.4. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 44.4. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 44.4. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026111612-short.png",
+      "card_path": "output/eth-usd-2026111612-short_card.png",
+      "created_at": "2026-11-16T12:04:00.267288+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
