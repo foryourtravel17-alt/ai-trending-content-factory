@@ -8,6 +8,7 @@ on:
       - "src/reel_generator.py"
       - "src/main.py"
       - "src/telegram_process.py"
+      - "src/telegram_reel_publish.py"
       - "config/**"
       - "scripts/**"
       - "tests/**"
