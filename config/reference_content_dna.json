@@ -1,14 +1,7 @@
 {
   "name": "Bullseye Theory Reference Content DNA",
-  "purpose": "Use six reference trading accounts as research inputs for original Bullseye Theory content. Never copy scripts, captions, visuals, claims, or identity.",
-  "reference_accounts": [
-    {"handle":"yogeshfx_trader","url":"https://www.instagram.com/yogeshfx_trader/"},
-    {"handle":"ankurforex","url":"https://www.instagram.com/ankurforex/"},
-    {"handle":"flipping_markets","url":"https://www.instagram.com/flipping_markets/"},
-    {"handle":"forex.tradingclub","url":"https://www.instagram.com/forex.tradingclub/"},
-    {"handle":"intelligencefx","url":"https://www.instagram.com/intelligencefx/"},
-    {"handle":"forex.with.rajputt","url":"https://www.instagram.com/forex.with.rajputt/"}
-  ],
+  "purpose": "Use original educational research principles for Bullseye Theory content. No Facebook or Instagram collection, automation, publishing, or account integration is performed.",
+  "reference_accounts": [],
   "derived_content_pillars": [
     "step_by_step_trading_education",
     "chart_and_price_action_breakdowns",
