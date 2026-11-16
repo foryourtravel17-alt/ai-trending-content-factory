@@ -4,17 +4,14 @@ on:
   workflow_run:
     workflows:
       - "Telegram Approval (manual info only)"
-      - "Instagram Token Health Check"
       - "Autonomous Market Content Factory"
       - "Market Signal Approval Poller"
-      - "Bullseye Weekly P&L and Engagement Summary"
+      - "Bullseye Weekly Telegram Performance Summary"
       - "Market Factory Schedule Watchdog"
       - "Bullseye Daily Educational Reel Draft"
       - "Bullseye Premium Daily Auto-Publish"
-      - "Diagnose Instagram Credential Link (Read Only)"
       - "Bullseye Daily Automation Report"
       - "Ritu Daily Content Pack"
-      - "Bullseye Organic-to-Paid Preflight"
     types: [completed]
 
 permissions:
