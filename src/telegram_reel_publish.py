@@ -302,9 +302,22 @@ def publish_content_record(content_path: Path, approved: dict) -> dict:
     ):
         raise RuntimeError("Telegram publishing blocked: explicit owner approval and fact-check are required.")
 
+    # Idempotency comes before token/media/network checks. A completed Telegram
+    # delivery remains completed even if its old media URL later becomes unavailable.
+    publishing = approved.setdefault("publishing", {})
+    telegram = publishing.setdefault("telegram", {})
+    telegram_status = str(telegram.get("status", "")).lower()
+    if telegram_status == "published":
+        print(f"Telegram channel already published for {content_id}; duplicate skipped.")
+        approved["status"] = "published"
+        return approved
+    if telegram_status in {"sending", "unknown"}:
+        raise TelegramPublishUnknown(f"Telegram outcome for {content_id} is ambiguous; automatic resend blocked.")
+
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN is required for approved Telegram Reels.")
+
     video_url = str(approved.get("video_url", "")).strip()
     if video_url:
         video_url = verify_public_video_url(video_url, approved)
@@ -321,16 +334,6 @@ def publish_content_record(content_path: Path, approved: dict) -> dict:
     if isinstance(hashtags, list):
         caption = (caption + "\n\n" + " ".join(str(tag) for tag in hashtags)).strip()
     caption = (caption + "\n\n🎯 Bullseye Theory\nLearn | Trade | Grow").strip()
-
-    publishing = approved.setdefault("publishing", {})
-    telegram = publishing.setdefault("telegram", {})
-    telegram_status = str(telegram.get("status", "")).lower()
-    if telegram_status == "published":
-        print(f"Telegram channel already published for {content_id}; duplicate skipped.")
-        approved["status"] = "published"
-        return approved
-    if telegram_status in {"sending", "unknown"}:
-        raise TelegramPublishUnknown(f"Telegram outcome for {content_id} is ambiguous; automatic resend blocked.")
 
     telegram["status"] = "sending"
     telegram["attempt_started_at"] = datetime.now(timezone.utc).isoformat()
