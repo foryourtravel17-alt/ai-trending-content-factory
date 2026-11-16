@@ -101,7 +101,6 @@ def main():
         },
         "copy": {
             "telegram_html": caption,
-            "instagram_caption": caption,
         },
         "card_path": str(content.get("video", f"output/media/{content_id}.mp4")),
         "fact_check": {
