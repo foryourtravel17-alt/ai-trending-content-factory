@@ -17359,7 +17359,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_moving-averages_evening_20261115_190653",
       "metadata_path": "output/draft_moving-averages_evening_20261115_190653.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-15T19:08:04.147239+00:00",
@@ -17390,7 +17390,9 @@
           "message_id": 547,
           "sent_at": "2026-11-15T19:08:04.902911+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-16T17:58:53.124397+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "gc-f-2026111608-short": {
       "signal": {
@@ -17958,6 +17960,116 @@
         }
       },
       "status": "pending_approval"
+    },
+    "ndx-2026111617-short": {
+      "signal": {
+        "signal_id": "ndx-2026111617-short",
+        "slug": "ndx-2026111617-short",
+        "symbol": "^NDX",
+        "label": "Nasdaq 100",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 27317.88671875,
+        "stop_loss": 27638.765471887917,
+        "targets": [
+          26997.007965612083,
+          26836.568589043123,
+          26676.129212474163
+        ],
+        "tp1": 26997.007965612083,
+        "tp2": 26836.568589043123,
+        "tp3": 26676.129212474163,
+        "rr_tp2": 1.5000000000000058,
+        "rsi14": 35.7098108414873,
+        "ema20": 27807.522544956315,
+        "ema50": 27939.255661841602,
+        "macd": -154.39987829822712,
+        "macd_signal": -52.60681573060721,
+        "macd_hist": -101.79306256761991,
+        "atr14": 213.91916875861185,
+        "vwap": 27397.120924382853,
+        "support": 27256.8359375,
+        "resistance": 28593.40234375,
+        "as_of": "2026-11-16T17:30:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nasdaq 100</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.7. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is below EMA50 and RSI(14) is 35.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ^NDX · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nasdaq",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/ndx-2026111617-short.png",
+      "card_path": "output/ndx-2026111617-short_card.png",
+      "created_at": "2026-11-16T17:58:55.571234+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "spy-2026111617-short": {
+      "signal": {
+        "signal_id": "spy-2026111617-short",
+        "slug": "spy-2026111617-short",
+        "symbol": "SPY",
+        "label": "S&P 500 ETF",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 742.8300170898438,
+        "stop_loss": 748.4960403991995,
+        "targets": [
+          737.163993780488,
+          734.3309821258101,
+          731.4979704711322
+        ],
+        "tp1": 737.163993780488,
+        "tp2": 734.3309821258101,
+        "tp3": 731.4979704711322,
+        "rr_tp2": 1.5,
+        "rsi14": 35.08162982727259,
+        "ema20": 751.1147411830824,
+        "ema50": 752.7097609174571,
+        "macd": -2.2858774815725837,
+        "macd_signal": -0.6526965592558538,
+        "macd_hist": -1.63318092231673,
+        "atr14": 3.7773488729038416,
+        "vwap": 744.633400653932,
+        "support": 743.1799926757812,
+        "resistance": 763.0399780273438,
+        "as_of": "2026-11-16T17:30:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.1. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · S&amp;P 500 ETF</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching S&amp;P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 35.1. The scenario is invalid if structure fails.\n\nS&amp;P 500 ETF: EMA20 is below EMA50 and RSI(14) is 35.1. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> SPY · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#SPY #USMarkets #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#SPY",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/spy-2026111617-short.png",
+      "card_path": "output/spy-2026111617-short_card.png",
+      "created_at": "2026-11-16T17:58:55.899670+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
