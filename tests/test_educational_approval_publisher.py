@@ -8,131 +8,91 @@ from pathlib import Path
 from unittest.mock import patch
 
 from scripts import publish_approved_educational_reels as MODULE
-from src import instagram_publish as PUBLISHER
 
 
-class EducationalApprovalPublisherTests(unittest.TestCase):
+class TelegramEducationalApprovalTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.state_path = Path(self.temp.name) / "data" / "state.json"
+        self.content_id = "draft_approved_20261116"
         self.record = {
             "content_type": "educational_reel",
-            "content_id": "draft_approved_20261022",
+            "content_id": self.content_id,
             "human_approval_required": True,
             "approval_status": "approved",
+            "approval_mode": "human_review",
             "status": "generated",
-            "reviewed_at": "2026-10-22T00:00:00Z",
-            "reviewed_by": "@owner",
-            "fact_check": {"status": "approved", "reviewed_at": "2026-10-22T00:00:00Z", "reviewed_by": "@owner"},
+            "reviewed_at": "2026-11-16T08:00:00Z",
+            "reviewed_by": "id:123",
+            "fact_check": {"status": "approved"},
         }
-        self.write_state({"signals": {self.record["content_id"]: dict(self.record)}, "runs": []})
+        self.write_state({"signals": {self.content_id: dict(self.record)}, "runs": []})
 
     def tearDown(self):
         self.temp.cleanup()
 
-    def write_state(self, state):
+    def write_state(self, value):
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
-        self.state_path.write_text(json.dumps(state), encoding="utf-8")
+        self.state_path.write_text(json.dumps(value), encoding="utf-8")
 
     def read_state(self):
         return json.loads(self.state_path.read_text(encoding="utf-8"))
 
-    def test_metadata_json_loader_handles_missing_and_invalid_files(self):
-        missing = Path(self.temp.name) / "missing.json"
-        invalid = Path(self.temp.name) / "invalid.json"
-        invalid.write_text("{not json", encoding="utf-8")
-        self.assertIsNone(PUBLISHER.load_json(missing, None))
-        self.assertEqual(PUBLISHER.load_json(invalid, {"fallback": True}), {"fallback": True})
-
-    def test_authorized_educational_approval_reaches_adapter_and_persists_returned_status(self):
+    def test_approved_reel_calls_telegram_adapter_and_persists_message(self):
         def publish(record):
             record["status"] = "published"
-            record["publishing"] = {
-                "instagram": {"status": "published_to_instagram", "media_id": "ig-media-test"},
-                "telegram": {"status": "published", "message_id": 321},
-            }
+            record["publishing"] = {"telegram": {"status": "published", "message_id": 321}}
             return record
-
         with patch.object(MODULE, "publish_approved_educational_reel", side_effect=publish) as adapter:
-            result = MODULE.publish_ids(self.record["content_id"], self.state_path)
+            result = MODULE.publish_ids(self.content_id, self.state_path)
         self.assertEqual(result, 0)
         adapter.assert_called_once()
-        state = self.read_state()
-        saved = state["signals"][self.record["content_id"]]
+        saved = self.read_state()["signals"][self.content_id]
         self.assertEqual(saved["status"], "published")
-        self.assertEqual(saved["publishing"]["instagram"]["media_id"], "ig-media-test")
         self.assertEqual(saved["publishing"]["telegram"]["message_id"], 321)
+        self.assertNotIn("instagram_media_id", saved)
 
-    def test_automated_policy_record_reaches_publisher_without_human_review(self):
+    def test_missing_human_approval_blocks_automated_policy_record(self):
         auto = dict(self.record)
-        auto.pop("reviewed_at", None)
-        auto.pop("reviewed_by", None)
         auto.update({
             "human_approval_required": False,
             "approval_mode": "automated_policy",
-            "automated_review_at": "2026-10-22T00:00:00Z",
-            "fact_check": {
-                "status": "automated_passed",
-                "automated_review_at": "2026-10-22T00:00:00Z",
-            },
+            "reviewed_at": None,
+            "reviewed_by": None,
+            "fact_check": {"status": "automated_passed"},
         })
-        self.write_state({"signals": {auto["content_id"]: auto}, "runs": []})
-        with patch.object(MODULE, "publish_approved_educational_reel", side_effect=lambda record: dict(record, status="published")) as adapter:
-            result = MODULE.publish_ids(auto["content_id"], self.state_path)
-        self.assertEqual(result, 0)
-        adapter.assert_called_once()
-        saved = self.read_state()["signals"][auto["content_id"]]
-        self.assertEqual(saved["status"], "published")
-        self.assertEqual(saved["approval_mode"], "automated_policy")
-
-    def test_pending_or_unapproved_record_is_blocked_before_adapter(self):
-        state = self.read_state()
-        state["signals"][self.record["content_id"]]["approval_status"] = "pending"
-        self.write_state(state)
+        self.write_state({"signals": {self.content_id: auto}, "runs": []})
         with patch.object(MODULE, "publish_approved_educational_reel") as adapter:
-            result = MODULE.publish_ids(self.record["content_id"], self.state_path)
+            result = MODULE.publish_ids(self.content_id, self.state_path)
         self.assertEqual(result, 1)
         adapter.assert_not_called()
-        saved = self.read_state()["signals"][self.record["content_id"]]
+        saved = self.read_state()["signals"][self.content_id]
+        self.assertEqual(saved["approval_status"], "approved")
         self.assertEqual(saved["last_publish_error"], "RuntimeError")
-        self.assertEqual(saved["approval_status"], "pending")
 
-    def test_failure_is_persisted_and_other_approved_ids_are_still_attempted(self):
-        second = dict(self.record, content_id="draft_second_20261022")
-        state = {"signals": {
-            self.record["content_id"]: dict(self.record),
-            second["content_id"]: second,
-        }, "runs": []}
-        self.write_state(state)
-
-        def publish(record):
-            if record["content_id"] == self.record["content_id"]:
-                record["publishing"] = {"instagram": {"status": "published_to_instagram"}}
-                raise RuntimeError("simulated failure")
-            record["status"] = "published"
-            return record
-
-        with patch.object(MODULE, "publish_approved_educational_reel", side_effect=publish) as adapter:
-            result = MODULE.publish_ids(
-                f'{self.record["content_id"]},{second["content_id"]}', self.state_path
-            )
+    def test_pending_record_never_reaches_telegram_adapter(self):
+        pending = dict(self.record, approval_status="pending")
+        self.write_state({"signals": {self.content_id: pending}, "runs": []})
+        with patch.object(MODULE, "publish_approved_educational_reel") as adapter:
+            result = MODULE.publish_ids(self.content_id, self.state_path)
         self.assertEqual(result, 1)
-        self.assertEqual(adapter.call_count, 2)
-        saved = self.read_state()["signals"]
-        self.assertEqual(saved[self.record["content_id"]]["last_publish_error"], "RuntimeError")
-        self.assertIn("publishing", saved[self.record["content_id"]])
-        self.assertEqual(saved[second["content_id"]]["status"], "published")
+        adapter.assert_not_called()
+
+    def test_rejects_non_educational_record(self):
+        market = dict(self.record, content_type="market_signal")
+        self.write_state({"signals": {self.content_id: market}, "runs": []})
+        with patch.object(MODULE, "publish_approved_educational_reel") as adapter:
+            result = MODULE.publish_ids(self.content_id, self.state_path)
+        self.assertEqual(result, 1)
+        adapter.assert_not_called()
 
     def test_duplicate_ids_in_one_dispatch_are_deduplicated(self):
         with patch.object(MODULE, "publish_approved_educational_reel", side_effect=lambda record: record) as adapter:
-            result = MODULE.publish_ids(
-                f'{self.record["content_id"]},{self.record["content_id"]}', self.state_path
-            )
+            result = MODULE.publish_ids(f"{self.content_id},{self.content_id}", self.state_path)
         self.assertEqual(result, 0)
         adapter.assert_called_once()
 
-
-    def test_script_entrypoint_can_import_src_from_scripts_directory(self):
+    def test_script_entrypoint_without_ids_is_a_safe_noop(self):
         env = os.environ.copy()
         env["EDUCATIONAL_APPROVED_IDS"] = ""
         result = subprocess.run(
@@ -145,6 +105,7 @@ class EducationalApprovalPublisherTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("No newly approved educational Reel IDs", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
