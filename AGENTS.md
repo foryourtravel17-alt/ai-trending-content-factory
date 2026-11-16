@@ -1,61 +1,58 @@
 # Bullseye Theory — AI Project Source of Truth
 
-## Brand
-- Brand: Bullseye Theory
-- Positioning: serious trading education; never present the product as easy money, guaranteed profits, signal selling, or personalized financial advice.
+## Brand and content safety
+- Brand: Bullseye Theory.
+- Positioning: serious trading education; never present the product as easy money, guaranteed profits, or personalized financial advice.
 - Voice: professional, institutional, confident, educational, disciplined.
-- Primary language: English.
-- Core philosophy: "LEARN | TRADE | GROW"
+- Core philosophy: LEARN | TRADE | GROW.
+- Educational content only. No guaranteed outcomes or certainty about market direction.
+- Include clear educational disclaimers in published content.
+- Do not present illustrative charts as live signals.
 
-## Visual system
-- Background: Dark Obsidian Navy.
-- Signal accent: Neon Lime only for genuine signal / emphasis states.
-- Accent: Metallic Gold.
-- Text: Off-white.
-- Visual direction: terminal HUD, optical focal brackets, structural drafting / modular grid, premium institutional trading environment.
-- Avoid bull/bear/rocket clichés.
-- Charts used for educational illustration must be clearly non-live and not presented as trade signals.
-
-## Content safety
-- Educational content only.
-- No guaranteed outcomes.
-- No personalized buy/sell/entry/exit instructions.
-- No claims of certain profits or certainty about market direction.
-- Include a clear educational disclaimer in published content.
+## Social automation policy — Telegram only
+- Telegram is the only social publishing destination.
+- Facebook and Instagram are disconnected. Do not call Meta Graph API, use Instagram/Facebook credentials, or create FB/IG publisher steps.
+- Market cards and educational Reels always require a persisted owner APPROVE decision from the authorized private Telegram chat before public channel publishing.
+- Automated safety/format checks are not owner approval.
+- Rejected, stale, unapproved, or ambiguous Telegram deliveries must never be automatically republished.
+- Market card images are uploaded directly to Telegram from the Actions runner.
+- Educational Reel MP4s are durably stored in the existing Supabase `REELS` bucket, verified by SHA-256/size/duration, then sent to Telegram after approval.
+- Never expose bot tokens, Supabase service-role keys, or other secrets in source files or logs.
 
 ## Current automation architecture
-1. Daily topic generation.
-2. Educational script + automated safety/format gate.
-3. Render exactly one Reel for each scheduled slot.
-4. Upload the exact MP4 to Supabase and verify its URL, hash, size, and duration.
-5. Publish eligible educational content to Instagram and mirror it to the Telegram channel after the automated policy gate.
-6. Persist platform IDs and status for duplicate-safe retries.
+1. Generate weekday market scenarios and cards.
+2. Render daily educational Reel drafts.
+3. Run automated QA, freshness, duplicate, format, and media-integrity checks.
+4. Send exact draft assets to the private Telegram approval chat.
+5. Poll Telegram callbacks every five minutes.
+6. Publish only the exact approved asset to `@bullseye_theory`.
+7. Persist Telegram message IDs and state for duplicate-safe retries.
+8. Send private Telegram weekly/daily reports and failure alerts.
 
 ## Automation invariants
 - Never regenerate an already-generated approved Reel.
-- Never publish content that failed automated safety, freshness, media-integrity, duplicate, or technical eligibility checks.
-- Never hard-code secrets or tokens.
+- Never publish failed safety, stale, unapproved, or mismatched media.
+- Never publish an item whose approval is not authorized and persisted.
+- Block automatic retry when Telegram's send result is ambiguous.
 - Prefer idempotent steps and explicit state flags.
-- A no-op workflow should finish successfully rather than fail.
-- New scheduled educational Reels and market scenarios use an explicit automated-policy gate; legacy callback handling remains only for older pending records.
+- A safe no-op workflow should finish successfully.
+- Keep manual dispatches in dry-run by default.
 
-## Current known infrastructure
-- GitHub repository is the source of truth for the content factory.
-- Replit hosts the separate D3 project.
-- Supabase REELS bucket provides public media URLs for Instagram/Telegram delivery.
+## Infrastructure
+- GitHub Actions is the workflow runner and source of truth.
+- Supabase `REELS` is durable MP4 media storage only; it is not a social publishing destination.
+- Telegram bot is the sole publishing integration.
+- The project does not connect to a broker or execute trades.
 
+## Market-content extension
+- Market analysis code lives in `agents/` and `src/orchestrator.py`.
+- Market workflow uses public OHLC data and transparent EMA/RSI/MACD/ATR rules.
+- Stale candles are deliberately rejected: 20 hours for non-crypto instruments and 36 hours for crypto.
+- A no-signal run is valid; do not fabricate market setups.
+- Market cards are approved privately, then published to Telegram.
 
-## Autonomous market-content extension
-
-- New market-analysis code lives in `agents/` and `src/orchestrator.py`; it is additive and must not replace the legacy Reel pipeline.
-- The market workflow uses Python 3.11, yfinance OHLC, transparent EMA/RSI/MACD/ATR rules, image cards, and `data/state.json` for deduplication.
-- Market cards are educational scenarios, not personalized trade advice. Never imply a guaranteed result or count targets as hits without an explicitly recorded outcome.
-- `HUMAN_APPROVAL=false` is the default for the market workflow so eligible market cards publish automatically after QA, freshness checks, public-image verification, and deduplication.
-- Daily educational Reels use an automated safety/format policy rather than Telegram approval. The recorded `automated_passed` state means automated screening passed; it is not independent fact verification. Keep topics curated and evergreen, avoid live-market claims/personalized advice, and retain freshness, media integrity, daily-cap, duplicate, and ambiguous-outcome guards.
-- Commit generated images before publishing so public image URLs can be fetched by Instagram. Prefer GitHub Pages; verify reachability and use the public raw-GitHub URL as a fallback.
-- Run the market pipeline's synthetic dry-run tests and never use live publishing credentials in a test job.
-
-
-- The failure watchdog covers the market-content, approval, test, weekly-report, and schedule-watchdog workflows. The weekday schedule watchdog checks for a recent successful market-content run and sends a Telegram alert only when it detects a stall.
-- Missing Telegram or Instagram credentials must fail publishing loudly; do not report success when both channels were skipped.
-- Stale OHLC candles are rejected before publishing: 20 hours for non-crypto instruments and 36 hours for crypto.
+## Local workflow and verification
+- Run `python -m unittest discover -s tests -v`.
+- Validate YAML syntax for all `.github/workflows/*.yml`.
+- Use only synthetic or mocked credentials in CI.
+- Do not deploy or publish content as part of unit tests.
