@@ -31,7 +31,6 @@ jobs:
           generated = 0
           approved = 0
           reels = 0
-          instagram = 0
           telegram = 0
           recent_titles = []
 
@@ -54,10 +53,7 @@ jobs:
               if data.get("reel_generated") or (Path("output/media") / f"{data.get('content_id', path.stem)}.mp4").exists():
                   reels += 1
 
-              ig = data.get("publishing", {}).get("instagram", {}).get("status", "")
               tg = data.get("publishing", {}).get("telegram", {}).get("status", "")
-              if ig in {"published", "success"}:
-                  instagram += 1
               if tg in {"published", "success"}:
                   telegram += 1
 
@@ -69,7 +65,6 @@ jobs:
               f"Last 24h generated: {generated}",
               f"Approved: {approved}",
               f"Reels ready: {reels}",
-              f"Instagram recorded published: {instagram}",
               f"Telegram recorded published: {telegram}",
               "",
           ]
