@@ -820,6 +820,11 @@
       "content_id": "draft_moving-averages_evening_20261115_190653",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_market-structure_morning_20261116_131038",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -862,6 +867,7 @@
     "draft_market-structure_evening_20261110_200021",
     "draft_market-structure_morning_20261031_103724",
     "draft_market-structure_morning_20261108_113315",
+    "draft_market-structure_morning_20261116_131038",
     "draft_moving-averages_afternoon_20261025_132157",
     "draft_moving-averages_afternoon_20261102_185024",
     "draft_moving-averages_afternoon_20261110_163715",
@@ -952,6 +958,7 @@
     "draft_false-breakouts_evening_20261114_182927": 542,
     "draft_risk-reward_morning_20261115_121757": 544,
     "draft_trading-journal_afternoon_20261115_155255": 545,
-    "draft_moving-averages_evening_20261115_190653": 547
+    "draft_moving-averages_evening_20261115_190653": 547,
+    "draft_market-structure_morning_20261116_131038": 563
   }
 }
