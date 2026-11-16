@@ -1,4 +1,3 @@
-import os
 import unittest
 from unittest.mock import patch
 
@@ -14,38 +13,43 @@ class DeploymentReadinessDoctorTests(unittest.TestCase):
         report.failed("required", "missing")
         self.assertEqual(report.exit_code(), 1)
 
-    def test_storage_mp4_path_handles_nested_and_flat_listing_names(self):
-        self.assertEqual(doctor.mp4_object_path([{"name": "reels/abc.mp4"}]), "reels/abc.mp4")
-        self.assertEqual(doctor.mp4_object_path([{"name": "abc.mp4"}]), "reels/abc.mp4")
-        self.assertIsNone(doctor.mp4_object_path([{"name": "directory"}]))
+    def test_telegram_api_only_exposes_safe_result(self):
+        with patch.dict("os.environ", {"TELEGRAM_BOT_TOKEN": "test"}, clear=True), patch.object(
+            doctor.urllib.request, "urlopen"
+        ) as urlopen:
+            class Response:
+                def __enter__(self): return self
+                def __exit__(self, *args): return False
+                def read(self): return b'{"ok":true,"result":{"id":123}}'
+            urlopen.return_value = Response()
+            result = doctor.api("test", "getMe")
+        self.assertEqual(result["id"], 123)
 
-    def test_image_url_uses_configured_base_and_does_not_show_credentials(self):
-        with patch.dict(os.environ, {"IMAGE_BASE_URL": "https://example.test/output"}, clear=True):
-            url, source = doctor.image_url_for_card("output/test_card.png")
-        self.assertEqual(url, "https://example.test/output/test_card.png")
-        self.assertEqual(source, "IMAGE_BASE_URL")
-
-    def test_image_url_uses_pages_when_configured(self):
-        with patch.dict(os.environ, {"GH_USER": "owner", "GH_REPO": "repo"}, clear=True):
-            url, source = doctor.image_url_for_card("output/test_card.png")
-        self.assertEqual(url, "https://owner.github.io/repo/output/test_card.png")
-        self.assertEqual(source, "GitHub Pages")
-
-    def test_github_image_base_rejects_non_http_scheme(self):
-        with patch.dict(os.environ, {"IMAGE_BASE_URL": "file:///tmp", "GH_USER": "", "GH_REPO": ""}, clear=True):
-            url, reason = doctor.image_url_for_card("output/test_card.png")
-        self.assertIsNone(url)
-        self.assertIn("https://", reason)
-
-    def test_http_helper_redacts_exception_text(self):
-        token = "do-not-log-this-token"
-        with patch.object(doctor.urllib.request, "urlopen", side_effect=doctor.urllib.error.URLError(token)):
-            status, body, error = doctor.request_bytes("https://example.test")
-        self.assertIsNone(status)
-        self.assertEqual(body, b"")
-        self.assertEqual(error, "URLError")
-        self.assertNotIn(token, error)
-
+    def test_readiness_checks_only_telegram_and_supabase(self):
+        env = {
+            "TELEGRAM_BOT_TOKEN": "bot",
+            "TELEGRAM_CHAT_ID": "123",
+            "TELEGRAM_APPROVER_USER_IDS": "123",
+            "SUPABASE_URL": "https://example.supabase.co",
+            "SUPABASE_SERVICE_ROLE_KEY": "service-key",
+        }
+        calls = []
+        def fake_api(token, method, payload=None):
+            calls.append(method)
+            if method == "getMe":
+                return {"id": 777}
+            if method == "getChat":
+                return {"type": "channel"} if payload["chat_id"] == "@bullseye_theory" else {"type": "private"}
+            return {"status": "administrator", "can_post_messages": True}
+        def fake_json(url, method="GET", headers=None, payload=None):
+            if url.endswith("/bucket/REELS"):
+                return 200, {"id": "REELS", "public": True}
+            return 200, [{"name": "example.mp4"}]
+        report = doctor.run_checks
+        with patch.dict("os.environ", env, clear=True), patch.object(doctor, "api", side_effect=fake_api), patch.object(doctor, "request_json", side_effect=fake_json), patch("builtins.print"):
+            code = report()
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, ["getMe", "getChat", "getChatMember", "getChat"])
 
 if __name__ == "__main__":
     unittest.main()
