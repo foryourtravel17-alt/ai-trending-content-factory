@@ -62,21 +62,14 @@ def publish_ids(raw_ids: str, state_path: Path | None = None) -> int:
             if record.get("approval_status") != "approved":
                 raise RuntimeError("Persisted publish-policy decision is missing.")
             fact_check = record.get("fact_check") if isinstance(record.get("fact_check"), dict) else {}
-            approval_mode = str(record.get("approval_mode", "")).strip()
-            automated_policy_ok = (
-                approval_mode == "automated_policy"
-                and record.get("human_approval_required") is False
-                and bool(record.get("automated_review_at"))
-                and fact_check.get("status") == "automated_passed"
-            )
             human_policy_ok = (
                 record.get("human_approval_required") is True
                 and fact_check.get("status") == "approved"
                 and bool(record.get("reviewed_at"))
                 and bool(record.get("reviewed_by"))
             )
-            if not (automated_policy_ok or human_policy_ok):
-                raise RuntimeError("Neither the automated safety gate nor the legacy human-review gate is complete.")
+            if not human_policy_ok:
+                raise RuntimeError("Telegram publishing requires the exact human owner approval recorded by Telegram.")
 
             updated = publish_approved_educational_reel(record)
             if not isinstance(updated, dict):
