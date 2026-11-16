@@ -17891,8 +17891,13 @@
       "chart_path": "output/btc-usd-2026111613-short.png",
       "card_path": "output/btc-usd-2026111613-short_card.png",
       "created_at": "2026-11-16T13:59:28.786468+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 564
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026111613-short": {
       "signal": {
@@ -17946,8 +17951,13 @@
       "chart_path": "output/eth-usd-2026111613-short.png",
       "card_path": "output/eth-usd-2026111613-short_card.png",
       "created_at": "2026-11-16T13:59:29.300349+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 565
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -19580,6 +19590,18 @@
     {
       "at": "2026-11-16T12:04:11.269834+00:00",
       "signal_id": "eth-usd-2026111612-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-16T13:59:34.998965+00:00",
+      "signal_id": "btc-usd-2026111613-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-16T13:59:36.696673+00:00",
+      "signal_id": "eth-usd-2026111613-short",
       "status": "pending_approval",
       "dry_run": false
     }
