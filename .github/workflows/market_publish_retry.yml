@@ -1,14 +1,14 @@
-name: Controlled Single Market Signal Retry
+name: Controlled Single Telegram Signal Retry
 
 on:
   workflow_dispatch:
     inputs:
       signal_id:
-        description: "Exact approved signal ID to retry"
+        description: "Exact previously approved market signal ID to retry"
         required: true
         type: string
       confirm:
-        description: "Type RETRY to authorize one controlled publish attempt"
+        description: "Type RETRY to authorize one controlled Telegram attempt"
         required: true
         type: string
 
@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
-      - name: Preflight approval, freshness and duplicate state
+      - name: Preflight owner approval, freshness and Telegram duplicate state
         env:
           SIGNAL_ID: ${{ inputs.signal_id }}
         run: |
@@ -49,70 +49,37 @@ jobs:
           if not sid or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for c in sid):
               print("BLOCKED: invalid signal ID")
               sys.exit(1)
-          state = json.load(open("data/state.json", encoding="utf-8"))
+          with open("data/state.json", encoding="utf-8") as handle:
+              state = json.load(handle)
           rec = state.get("signals", {}).get(sid)
           if not rec:
               print("BLOCKED: signal not found")
               sys.exit(1)
           if rec.get("approval_status") != "approved":
-              print("BLOCKED: signal lacks explicit human approval")
+              print("BLOCKED: signal lacks explicit human Telegram approval")
               sys.exit(1)
           if not _signal_is_fresh(rec.get("signal", {})):
               print("BLOCKED: signal is stale; generate a fresh market observation")
               sys.exit(1)
-          pub = rec.get("publishing", {})
-          tg = pub.get("telegram", {}).get("status")
-          ig = pub.get("instagram", {}).get("status")
-          if tg != "published":
-              print("BLOCKED: Instagram-only retry requires Telegram to already be published")
+          telegram = (rec.get("publishing") or {}).get("telegram") or {}
+          status = telegram.get("status")
+          if status == "published":
+              print("BLOCKED: Telegram already published this signal")
               sys.exit(1)
-          if ig == "published":
-              print("BLOCKED: Instagram already published this signal")
+          if status in {"sending", "unknown"}:
+              print("BLOCKED: Telegram delivery outcome is ambiguous; manual reconciliation required")
               sys.exit(1)
-          print(f"Preflight passed for Instagram-only retry {sid}; Telegram={tg}, Instagram={ig}")
+          print(f"Preflight passed for owner-approved Telegram signal {sid}; prior status={status}")
           PY
 
-      - name: Resolve linked Instagram account ID
-        id: resolve_ig
-        env:
-          META_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN || secrets.IG_ACCESS_TOKEN || secrets.META_SYSTEM_USER_TOKEN }}
-          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
-        run: |
-          set -euo pipefail
-          if [ -z "${META_TOKEN}" ]; then
-            echo "ERROR: No Meta credential configured."
-            exit 1
-          fi
-          response="$(curl -sS --get "https://graph.facebook.com/${META_GRAPH_API_VERSION}/me/accounts" --data-urlencode "fields=id,name,instagram_business_account{id,username}" --data-urlencode "access_token=${META_TOKEN}")"
-          if echo "${response}" | grep -q '"error"'; then
-            echo "ERROR: Meta could not resolve linked Instagram account; response redacted."
-            exit 1
-          fi
-          linked="$(python -c 'import json,sys; d=json.load(sys.stdin); rows=[x for x in d.get("data",[]) if (x.get("instagram_business_account") or {}).get("id")]; rows.sort(key=lambda x: 0 if str(x.get("name","")).strip().lower()=="bullseye theory" else 1); print((rows[0].get("instagram_business_account") or {}).get("id","") if rows else "")' <<<"${response}")"
-          if [ -z "${linked}" ]; then
-            echo "ERROR: No linked Instagram professional account found for this credential."
-            exit 1
-          fi
-          echo "instagram_user_id=${linked}" >> "$GITHUB_OUTPUT"
-          echo "Resolved linked Instagram account ID from Meta; ID redacted."
-
-      - name: Attempt publishing for exactly one approved signal
+      - name: Send exact approved signal to Telegram
         env:
           PUBLISH_ONLY: "true"
           PUBLISH_ONLY_SIGNAL_ID: ${{ inputs.signal_id }}
-          MARKET_RETRY_INSTAGRAM_ONLY: "true"
-          HUMAN_APPROVAL: "false"
+          HUMAN_APPROVAL: "true"
           DRY_RUN: "0"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          IG_USER_ID: ${{ steps.resolve_ig.outputs.instagram_user_id }}
-          IG_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN || secrets.IG_ACCESS_TOKEN || secrets.META_SYSTEM_USER_TOKEN }}
-          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
-          META_SYSTEM_USER_TOKEN: ${{ secrets.META_SYSTEM_USER_TOKEN }}
-          META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v23.0' }}
-          GH_USER: ${{ vars.GH_USER || secrets.GH_USER }}
-          GH_REPO: ${{ vars.GH_REPO || secrets.GH_REPO }}
-          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
         run: python -m src.orchestrator
 
       - name: Commit updated state
@@ -124,7 +91,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No state changes to commit."
           else
-            git commit -m "market: record controlled single-signal retry"
-            git pull --rebase origin main
+            git commit -m "market: record controlled single-signal Telegram retry"
+            git pull --rebase --autostash origin main
             git push
           fi
