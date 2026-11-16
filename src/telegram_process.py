@@ -35,19 +35,38 @@ def save_json(path, value):
 
 
 def api(method, data=None, timeout=30):
+    """Call Telegram with bounded retries for transient network and rate-limit failures."""
     data = data or {}
     encoded = urllib.parse.urlencode(data).encode()
     req = urllib.request.Request(f"{API}/{method}", data=encoded, method="POST")
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as response:
-            payload = json.loads(response.read().decode())
-    except urllib.error.HTTPError as exc:
-        raise RuntimeError(f"Telegram API HTTP {exc.code}; response redacted to protect bot token.") from None
-    except urllib.error.URLError as exc:
-        raise RuntimeError(f"Telegram API request failed ({type(exc).__name__}); bot token redacted.") from None
-    if not payload.get("ok"):
-        raise RuntimeError("Telegram API returned an unsuccessful response; details redacted.")
-    return payload["result"]
+    retryable_http = {408, 425, 429, 500, 502, 503, 504}
+    max_attempts = 4
+
+    for attempt in range(max_attempts):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as response:
+                payload = json.loads(response.read().decode())
+        except urllib.error.HTTPError as exc:
+            if exc.code in retryable_http and attempt < max_attempts - 1:
+                retry_after = (exc.headers or {}).get("Retry-After", "")
+                try:
+                    delay = min(max(float(retry_after), 1.0), 15.0) if retry_after else min(2 ** attempt, 8)
+                except (TypeError, ValueError):
+                    delay = min(2 ** attempt, 8)
+                time.sleep(delay)
+                continue
+            raise RuntimeError(f"Telegram API HTTP {exc.code}; response redacted to protect bot token.") from None
+        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+            if attempt < max_attempts - 1:
+                time.sleep(min(2 ** attempt, 8))
+                continue
+            raise RuntimeError(f"Telegram API request failed ({type(exc).__name__}); bot token redacted.") from None
+
+        if not payload.get("ok"):
+            raise RuntimeError("Telegram API returned an unsuccessful response; details redacted.")
+        return payload["result"]
+
+    raise RuntimeError("Telegram API retry budget exhausted; bot token redacted.")
 
 
 

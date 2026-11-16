@@ -3,6 +3,8 @@ import json
 import os
 import sys
 import tempfile
+import urllib.error
+from unittest.mock import patch
 import unittest
 from pathlib import Path
 
@@ -128,6 +130,59 @@ class PollerRetryTests(unittest.TestCase):
         self.assertEqual(market["signals"][content_id]["approval_status"], "approved")
         metadata = json.loads((self.root / "output" / f"{content_id}.json").read_text())
         self.assertEqual(metadata["status"], "approved_for_publishing")
+
+
+    def test_api_retries_transient_network_error_then_succeeds(self):
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self): return b'{"ok":true,"result":[{"update_id":1}]}'
+        with patch.object(self.module.urllib.request, "urlopen",
+                          side_effect=[urllib.error.URLError("temporary DNS failure"), Response()]) as request, \
+             patch.object(self.module.time, "sleep") as sleep:
+            result = self.module.api("getUpdates", {"timeout": 1}, timeout=3)
+        self.assertEqual(result, [{"update_id": 1}])
+        self.assertEqual(request.call_count, 2)
+        sleep.assert_called_once_with(1)
+
+    def test_api_retries_telegram_rate_limit_and_honors_retry_after(self):
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self): return b'{"ok":true,"result":{"message_id":7}}'
+        rate_limited = urllib.error.HTTPError(
+            "https://api.telegram.org/botREDACTED/sendMessage", 429, "Too Many Requests",
+            {"Retry-After": "2"}, None
+        )
+        with patch.object(self.module.urllib.request, "urlopen",
+                          side_effect=[rate_limited, Response()]) as request, \
+             patch.object(self.module.time, "sleep") as sleep:
+            result = self.module.api("sendMessage", {"chat_id": "111", "text": "test"})
+        self.assertEqual(result, {"message_id": 7})
+        self.assertEqual(request.call_count, 2)
+        sleep.assert_called_once_with(2.0)
+
+    def test_api_does_not_retry_permanent_http_error(self):
+        permanent = urllib.error.HTTPError(
+            "https://api.telegram.org/botREDACTED/getUpdates", 400, "Bad Request", {}, None
+        )
+        with patch.object(self.module.urllib.request, "urlopen", side_effect=permanent) as request, \
+             patch.object(self.module.time, "sleep") as sleep:
+            with self.assertRaisesRegex(RuntimeError, "HTTP 400") as caught:
+                self.module.api("getUpdates")
+        self.assertEqual(request.call_count, 1)
+        sleep.assert_not_called()
+        self.assertNotIn("test-token", str(caught.exception))
+
+    def test_api_exhausts_network_retry_budget_without_leaking_token(self):
+        with patch.object(self.module.urllib.request, "urlopen",
+                          side_effect=urllib.error.URLError("temporary")) as request, \
+             patch.object(self.module.time, "sleep") as sleep:
+            with self.assertRaisesRegex(RuntimeError, "URLError") as caught:
+                self.module.api("getUpdates")
+        self.assertEqual(request.call_count, 4)
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [1, 2, 4])
+        self.assertNotIn("test-token", str(caught.exception))
 
     def test_workflow_uses_autostash_and_retry_test_trigger(self):
         text = (ROOT / ".github" / "workflows" / "market_approval_poll.yml").read_text()
