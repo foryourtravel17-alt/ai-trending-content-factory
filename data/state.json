@@ -18116,6 +18116,61 @@
           "sent_at": "2026-11-16T18:57:09.368015+00:00"
         }
       }
+    },
+    "ndx-2026111619-short": {
+      "signal": {
+        "signal_id": "ndx-2026111619-short",
+        "slug": "ndx-2026111619-short",
+        "symbol": "^NDX",
+        "label": "Nasdaq 100",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 27163.642578125,
+        "stop_loss": 27480.201082917592,
+        "targets": [
+          26847.084073332408,
+          26688.80482093611,
+          26530.525568539815
+        ],
+        "tp1": 26847.084073332408,
+        "tp2": 26688.80482093611,
+        "tp3": 26530.525568539815,
+        "rr_tp2": 1.5,
+        "rsi14": 33.474760974943464,
+        "ema20": 27693.911314841953,
+        "ema50": 27880.845354607987,
+        "macd": -203.8892987002946,
+        "macd_signal": -104.24759984424378,
+        "macd_hist": -99.64169885605082,
+        "atr14": 211.0390031950622,
+        "vwap": 27342.783406642924,
+        "support": 27153.3359375,
+        "resistance": 28546.56640625,
+        "as_of": "2026-11-16T19:30:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 33.5. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Nasdaq 100</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Nasdaq 100 through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 33.5. The scenario is invalid if structure fails.\n\nNasdaq 100: EMA20 is below EMA50 and RSI(14) is 33.5. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ^NDX · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Nasdaq #USMarkets #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Nasdaq",
+          "#USMarkets",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/ndx-2026111619-short.png",
+      "card_path": "output/ndx-2026111619-short_card.png",
+      "created_at": "2026-11-16T20:24:04.053095+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
