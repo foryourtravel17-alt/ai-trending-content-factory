@@ -38,6 +38,11 @@ class EducationalReelWorkflowApprovalGateTests(unittest.TestCase):
             with self.subTest(workflow=workflow.name):
                 self.assertIn(workflow.name, matrix)
 
+    def test_approval_matrix_has_one_recovery_row_and_no_literal_escape(self):
+        matrix = MATRIX.read_text(encoding="utf-8")
+        self.assertNotIn(r"\\n| telegram_approval.yml", matrix)
+        self.assertEqual(matrix.count("telegram-approval-recovery.yml"), 1)
+
     def test_queue_script_does_not_mark_safety_screen_as_publish_approval(self):
         queue = QUEUE_SCRIPT.read_text(encoding="utf-8")
         self.assertIn('"approval_status": "pending"', queue)
