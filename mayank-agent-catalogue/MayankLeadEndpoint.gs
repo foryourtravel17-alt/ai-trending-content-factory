@@ -3,7 +3,7 @@
  * One-time setup:
  * 1. Open script.google.com while signed in to the dedicated Mayank business Gmail.
  * 2. Create a project and paste this complete file.
- * 3. In Project Settings → Script Properties, add LEAD_EMAIL = the dedicated Mayank sales inbox.
+ * 3. In Project Settings → Script Properties, add LEAD_EMAIL = mayanksharmaa1201@gmail.com (keep this value in Script Properties, not in website code).
  * 4. Optional: add SEND_CUSTOMER_ACK = true.
  * 5. Deploy → New deployment → Web app; Execute as: Me; Who has access: Anyone.
  * 6. Copy the /exec URL into LEAD_ENDPOINT_URL in the Mayank website.
