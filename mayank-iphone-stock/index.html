@@ -29,8 +29,8 @@ h1,h2,h3,.brand{font-family:'Space Grotesk','Manrope',sans-serif}
 <div class="terms"><div class="tile"><b>🇮🇳 ORIGINAL INDIAN VARIANT</b>Indian-market variant only.</div><div class="tile"><b>📦 BRAND NEW & SEALED</b>Factory-sealed product as represented by the seller.</div><div class="tile"><b>🛡️ 1-YEAR WARRANTY</b>One-year warranty as represented by the seller. Warranty provider and coverage details will be shared with order documents.</div><div class="tile"><b>↩️ 14-DAY RETURN & REFUND</b>Eligible returns and refunds are available within 14 days after delivery. Return condition, process and exclusions will be shared before order confirmation.</div><div class="tile"><b>💳 ₹999 BOOKING ADVANCE</b>Customer pays ₹999 first to start the order. We then share the order details; the remaining balance is payable as per the confirmed order terms. The 14-day return/refund period is counted from delivery, not from the order date.</div><div class="tile"><b>🚫 EMI NOT AVAILABLE</b>EMI and pay-later options are not available.</div><div class="tile"><b>🧾 GST INVOICE</b>Invoice details will be provided with the order where applicable.</div></div>
 </section>
 <section class="section" id="enquiry"><div class="panel"><div class="eyebrow">One quick form · personal assistance</div><h2>Book your iPhone</h2><p>Share your contact details and preferred variant. We will contact you to confirm the exact model, price and order steps. ₹999 booking advance is collected manually after confirmation; this form does not collect payment.</p>
-<form action="https://formsubmit.co/mayanksharmaa1201@gmail.com" method="POST">
-<input type="hidden" name="_subject" value="New booking enquiry — Premium Deals"><input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="true"><input type="hidden" name="_autoresponse" value="Thank you for contacting Premium Deals. We have received your iPhone enquiry. This is not an order or payment confirmation. Our team will contact you to confirm the exact model, variant, price and booking steps. Please do not transfer any money until you receive confirmed order details from us."><input type="hidden" name="_next" value="https://premium-deals.onrender.com/thank-you.html"><input type="hidden" name="_url" value="https://premium-deals.onrender.com/">
+<form id="lead-form" method="POST" action="">
+<input type="hidden" name="source" id="lead-source" value="direct"><input type="hidden" name="campaign" id="lead-campaign" value="none"><input type="text" name="website" id="lead-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0">
 <div class="formgrid">
 <div><label for="name">Your name *</label><input id="name" name="Customer name" autocomplete="name" required maxlength="80" placeholder="Enter your name"></div>
 <div><label for="phone">Mobile number *</label><input id="phone" name="Phone number" type="tel" inputmode="numeric" autocomplete="tel" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required placeholder="10-digit Indian number"></div>
@@ -41,7 +41,7 @@ h1,h2,h3,.brand{font-family:'Space Grotesk','Manrope',sans-serif}
 <div><label for="city">City *</label><input id="city" name="City" autocomplete="address-level2" required maxlength="80" placeholder="Your city"></div>
 <div class="full"><label for="note">Your query / special request (optional)</label><textarea id="note" name="Customer query" maxlength="700" placeholder="Ask about the model, storage, colour, invoice, warranty, delivery or anything else…"></textarea></div>
 <div class="full"><label class="consent"><input type="checkbox" name="Contact consent" value="Customer agrees to be contacted about this enquiry" required><span>I agree to be contacted about this enquiry. I understand that this is not an order or payment confirmation.</span></label></div>
-<div class="full"><button class="btn primary submit" type="submit">Send enquiry</button><p class="fine">Enquiry goes to our business inbox. You will also receive an acknowledgement at your email address after the form is activated. See our <a href="privacy.html">privacy note</a>.</p></div>
+<div class="full"><button class="btn primary submit" id="lead-submit" type="submit" disabled>Enquiry setup pending</button><p class="fine" id="lead-status" role="status">Your enquiry will be sent privately to the Premium Deals sales inbox once its secure connection is activated.</p><p class="fine">Your email address and contact details are not displayed publicly. See our <a href="privacy.html">privacy note</a>.</p></div>
 </div></form></div></section>
 </main><div class="quick-book" id="quick-book"><span>Ready to order? · ₹999 advance</span><a class="btn primary" href="#enquiry">BOOK NOW</a></div><footer class="wrap">© <span id="year"></span> <strong>PREMIUM DEALS ✦</strong><br><span class="fine">Premium smartphone offers · Personal order assistance · Customer-first service</span></footer>
 <script>
@@ -59,4 +59,21 @@ document.getElementById("year").textContent=new Date().getFullYear();
 document.getElementById("products").innerHTML=products.map((p,i)=>'<article class="card"><div class="product-visual"><img src="'+p.image+'" alt="'+p.name+' product reference photo" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'"><span class="photo-caption">Illustrative product photo</span></div><div class="body"><div class="modelmeta"><div class="tag">Original Indian variant</div><span class="small">Model '+String(i+1).padStart(2,'0')+'</span></div><h3>'+p.name+'</h3><div class="price">'+p.price+'</div><div class="price-note">Listed price · confirm selected storage</div><div class="model-offer"><span><b>₹999</b> booking advance</span><span>Remaining balance as per order confirmation</span></div><div class="specs"><div class="spec"><b>Display</b><span>'+p.display+'</span></div><div class="spec"><b>Chip</b><span>'+p.chip+'</span></div><div class="spec"><b>Camera</b><span>'+p.camera+'</span></div><div class="spec"><b>Storage</b><span>'+p.storage+'</span></div></div><div class="small"><b>Colours:</b> '+p.colours+'</div><ul class="features"><li>'+p.other+'</li><li>'+p.detail+'</li></ul><button class="btn secondary" type="button" data-model="'+p.name+'">Enquire about '+p.name+'</button></div></article>').join('');
 document.querySelectorAll("[data-model]").forEach(b=>b.addEventListener("click",()=>{document.getElementById("model").value=b.dataset.model;document.getElementById("enquiry").scrollIntoView({behavior:"smooth"});}));
 const bookingBar=document.getElementById("quick-book");const enquiryForm=document.getElementById("enquiry");if("IntersectionObserver" in window){const observer=new IntersectionObserver(entries=>{bookingBar.style.opacity=entries[0].isIntersecting?"0":"1";bookingBar.style.pointerEvents=entries[0].isIntersecting?"none":"auto";},{threshold:0.16});observer.observe(enquiryForm);}
+
+const LEAD_ENDPOINT_URL = "";
+const leadForm = document.getElementById("lead-form");
+const leadSubmit = document.getElementById("lead-submit");
+const leadStatus = document.getElementById("lead-status");
+const queryParams = new URLSearchParams(window.location.search);
+document.getElementById("lead-source").value = queryParams.get("utm_source") || "direct";
+document.getElementById("lead-campaign").value = queryParams.get("utm_campaign") || "none";
+if (LEAD_ENDPOINT_URL.startsWith("https://script.google.com/macros/s/") && LEAD_ENDPOINT_URL.endsWith("/exec")) {
+  leadForm.action = LEAD_ENDPOINT_URL;
+  leadSubmit.disabled = false;
+  leadSubmit.textContent = "SEND ENQUIRY";
+  leadStatus.textContent = "Your enquiry is delivered privately to the Premium Deals sales inbox.";
+} else {
+  leadSubmit.disabled = true;
+  leadSubmit.textContent = "Enquiry setup pending";
+}
 </script></body></html>
