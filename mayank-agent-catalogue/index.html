@@ -64,7 +64,7 @@ const leadStatus = document.getElementById("lead-status");
 const queryParams = new URLSearchParams(window.location.search);
 document.getElementById("lead-source").value = queryParams.get("utm_source") || "direct";
 document.getElementById("lead-campaign").value = queryParams.get("utm_campaign") || "none";
-if (/^https:\\/\\/script\\.google\\.com\\/macros\\/s\\/[^/]+\\/exec$/.test(LEAD_ENDPOINT_URL)) {
+if (LEAD_ENDPOINT_URL.startsWith("https://script.google.com/macros/s/") && LEAD_ENDPOINT_URL.endsWith("/exec")) {
   leadForm.action = LEAD_ENDPOINT_URL;
   leadSubmit.disabled = false;
   leadSubmit.textContent = "SEND ENQUIRY";
