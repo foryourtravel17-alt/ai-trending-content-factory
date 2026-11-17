@@ -1,12 +1,12 @@
 /**
  * PREMIUM DEALS — private enquiry delivery endpoint.
  * One-time setup:
- * 1. Open script.google.com while signed in to the dedicated Mayank business Gmail.
+ * 1. Open script.google.com while signed in to the dedicated Premium Deals business Gmail.
  * 2. Create a project and paste this complete file.
- * 3. In Project Settings → Script Properties, add LEAD_EMAIL = the dedicated Mayank sales inbox.
+ * 3. In Project Settings → Script Properties, add LEAD_EMAIL = the dedicated Premium Deals sales inbox.
  * 4. Optional: add SEND_CUSTOMER_ACK = true.
  * 5. Deploy → New deployment → Web app; Execute as: Me; Who has access: Anyone.
- * 6. Copy the /exec URL into LEAD_ENDPOINT_URL in the Mayank website.
+ * 6. Copy the /exec URL into LEAD_ENDPOINT_URL in the Premium Deals website.
  * This web app accepts enquiry POSTs only. It does not expose a list/read endpoint.
  */
 const BRAND_NAME = "Premium Deals";
