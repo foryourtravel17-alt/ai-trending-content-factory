@@ -96,3 +96,15 @@ class SingleTelegramPollerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+    def test_poller_logs_only_safe_read_only_telegram_metadata(self):
+        text = POLLER.read_text(encoding="utf-8")
+        self.assertIn('Inspect Telegram bot identity and webhook state (read-only)', text)
+        self.assertIn('getMe', text)
+        self.assertIn('getWebhookInfo', text)
+        self.assertIn('Pending Telegram updates reported by Bot API', text)
+        self.assertNotIn('setWebhook', text)
+        self.assertNotIn('deleteWebhook', text)
+        self.assertNotIn('print(token)', text)
+        self.assertNotIn('print(webhook_url)', text)
