@@ -49,10 +49,10 @@ jobs:
           print("Webhook last error recorded: " + ("yes" if webhook.get("last_error_date") else "no"))
           print("Webhook allowed-updates filter present: " + ("yes" if webhook.get("allowed_updates") else "no"))
           if webhook_url:
-              print("RESULT: getUpdates polling is incompatible while this webhook remains configured.")
+              print("RESULT: Polling is incompatible while this webhook remains configured.")
           else:
               print("RESULT: no webhook is configured; investigate polling token, offset and callback delivery next.")
 
           # Deliberately do not print the token, webhook URL, raw response, or error text.
-          # This diagnostic does not call getUpdates, setWebhook, or deleteWebhook.
+          # This diagnostic never consumes updates or changes webhook configuration.
           PY
