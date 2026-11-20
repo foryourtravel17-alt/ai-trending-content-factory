@@ -453,7 +453,7 @@ def recover_educational_record(content_id: str):
     caption = str(social.get("caption", content.get("caption", "")))
     hashtags = social.get("hashtags", content.get("hashtags", []))
     if isinstance(hashtags, list):
-        caption = (caption + "\\n\\n" + " ".join(str(tag) for tag in hashtags)).strip()
+        caption = (caption + "\n\n" + " ".join(str(tag) for tag in hashtags)).strip()
     created_at = str(content.get("created_at") or content.get("generated_at") or "")
     return {
         "content_type": "educational_reel",
