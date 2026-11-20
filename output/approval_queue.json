@@ -851,6 +851,11 @@
       "status": "approved",
       "processed": true,
       "decided_at": "2026-11-20T19:53:09Z"
+    },
+    {
+      "content_id": "draft_trading-journal_evening_20261120_204406",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
