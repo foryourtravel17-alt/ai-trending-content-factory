@@ -9,7 +9,9 @@ from __future__ import annotations
 import json
 import os
 import re
+import socket
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -39,30 +41,55 @@ def describe_chat_id(chat_id: str) -> str:
     )
 
 
-def telegram_api(token: str, method: str, params: dict[str, str] | None = None) -> dict[str, Any]:
-    """Call a read-only Telegram Bot API method without exposing credentials."""
+def telegram_api(
+    token: str,
+    method: str,
+    params: dict[str, str] | None = None,
+    *,
+    timeout: int = 20,
+    max_attempts: int = 3,
+) -> dict[str, Any]:
+    """Call a read-only Telegram Bot API method with bounded network retries.
+
+    This helper is used only for getMe/getChat/getChatMember. Those reads are
+    idempotent, so transient timeouts and server errors can be retried safely.
+    It never sends messages and never logs the token or chat ID.
+    """
+    if max_attempts < 1:
+        raise ValueError("max_attempts must be at least 1")
     url = f"{API_BASE}/bot{token}/{method}"
     body = urllib.parse.urlencode(params or {}).encode("utf-8")
     request = urllib.request.Request(url, data=body, method="POST")
-    try:
-        with urllib.request.urlopen(request, timeout=20) as response:
-            payload = json.loads(response.read().decode("utf-8", errors="replace"))
-    except urllib.error.HTTPError as exc:
+
+    for attempt in range(1, max_attempts + 1):
         try:
-            detail = json.loads(exc.read().decode("utf-8", errors="replace")).get("description", "HTTP error")
-        except Exception:
-            detail = "HTTP error"
-        raise RuntimeError(f"Telegram {method} request failed (HTTP {exc.code}): {detail}") from None
-    except urllib.error.URLError:
-        raise RuntimeError(f"Telegram {method} request failed due to a network error") from None
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        raise RuntimeError(f"Telegram {method} returned an unreadable response") from None
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                payload = json.loads(response.read().decode("utf-8", errors="replace"))
+        except urllib.error.HTTPError as exc:
+            if exc.code >= 500 and attempt < max_attempts:
+                time.sleep(attempt)
+                continue
+            try:
+                detail = json.loads(exc.read().decode("utf-8", errors="replace")).get("description", "HTTP error")
+            except Exception:
+                detail = "HTTP error"
+            raise RuntimeError(f"Telegram {method} request failed (HTTP {exc.code}): {detail}") from None
+        except (urllib.error.URLError, TimeoutError, socket.timeout, OSError):
+            if attempt < max_attempts:
+                time.sleep(attempt)
+                continue
+            raise RuntimeError(
+                f"Telegram {method} request failed after {max_attempts} read-only attempts due to a network error"
+            ) from None
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            raise RuntimeError(f"Telegram {method} returned an unreadable response") from None
 
-    if not payload.get("ok"):
-        detail = str(payload.get("description", "unspecified Telegram API error"))
-        raise RuntimeError(f"Telegram {method} request failed: {detail}")
-    return payload
+        if not isinstance(payload, dict) or not payload.get("ok"):
+            detail = str(payload.get("description", "unspecified Telegram API error")) if isinstance(payload, dict) else "invalid response"
+            raise RuntimeError(f"Telegram {method} request failed: {detail}")
+        return payload
 
+    raise RuntimeError(f"Telegram {method} read-only request failed")
 
 def check_destination(token: str, chat_id: str) -> int:
     print("READ-ONLY TELEGRAM DESTINATION CHECK — no messages will be sent.")
