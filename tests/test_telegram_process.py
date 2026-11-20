@@ -55,6 +55,21 @@ class TelegramProcessApprovalTests(unittest.TestCase):
         self.assertEqual(record["approval_status"], "approved")
         self.assertEqual(record["fact_check"]["status"], "approved")
 
+    def test_expired_record_cannot_be_approved_or_rejected(self):
+        record = {
+            "content_type": "educational_reel",
+            "content_id": "draft_expired_20261118",
+            "status": "expired",
+            "approval_status": "pending",
+            "expired_at": self.now,
+            "fact_check": {"status": "needs_human_review", "notes": []},
+        }
+        original = json.loads(json.dumps(record))
+        self.assertFalse(MODULE.apply_market_decision(record, "market_approve", self.now, "@owner"))
+        self.assertEqual(record, original)
+        self.assertFalse(MODULE.apply_market_decision(record, "market_reject", self.now, "@owner"))
+        self.assertEqual(record, original)
+
     def test_metadata_mirror_updates_reviewed_by_and_status(self):
         with tempfile.TemporaryDirectory() as temp:
             old_dir = MODULE.OUTPUT_DIR

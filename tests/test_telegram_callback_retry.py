@@ -45,12 +45,12 @@ class PollerRetryTests(unittest.TestCase):
                 os.environ[key] = value
         self.tmp.cleanup()
 
-    def seed(self, metadata=True, record=True, content_id="draft_x_1"):
+    def seed(self, metadata=True, record=True, content_id="draft_x_1", status="pending_approval"):
         signals = {}
         if record:
             signals[content_id] = {
                 "content_id": content_id, "content_type": "educational_reel",
-                "status": "pending_approval", "approval_status": "pending",
+                "status": status, "approval_status": "pending",
                 "human_approval_required": True,
                 "approval": {"required": True, "status": "pending", "mode": "human_review"},
                 "fact_check": {"status": "needs_human_review"},
@@ -63,7 +63,7 @@ class PollerRetryTests(unittest.TestCase):
             json.dumps({"items": [], "telegram_sent": []}), encoding="utf-8")
         if metadata:
             (self.root / "output" / f"{content_id}.json").write_text(
-                json.dumps({"content_id": content_id, "status": "pending_approval",
+                json.dumps({"content_id": content_id, "status": status,
                             "approval": {"required": True, "status": "pending"},
                             "fact_check": {"status": "needs_human_review"}}), encoding="utf-8")
 
@@ -118,6 +118,22 @@ class PollerRetryTests(unittest.TestCase):
                       (self.root / "gh_output.txt").read_text())
         metadata = json.loads((self.root / "output" / "draft_x_1.json").read_text())
         self.assertEqual(metadata["status"], "approved_for_publishing")
+
+    def test_expired_approval_callback_is_consumed_without_saving_approval(self):
+        self.seed(metadata=False, status="expired")
+        calls = self.run_update()
+        methods = [method for method, _ in calls]
+        self.assertIn("editMessageReplyMarkup", methods)
+        self.assertEqual(self.offset(), 501)
+        market = json.loads((self.root / "data" / "state.json").read_text())
+        record = market["signals"]["draft_x_1"]
+        self.assertEqual(record["status"], "expired")
+        self.assertEqual(record["approval_status"], "pending")
+        self.assertNotIn("reviewed_at", record)
+        self.assertNotIn("educational_approved_ids=draft_x_1",
+                         (self.root / "gh_output.txt").read_text())
+        answers = [data.get("text", "") for method, data in calls if method == "answerCallbackQuery"]
+        self.assertTrue(any("expired" in answer.lower() for answer in answers), answers)
 
     def test_compact_callback_approves_long_id_within_telegram_limit(self):
         content_id = "draft_support-resistance_afternoon_20261031_144537"

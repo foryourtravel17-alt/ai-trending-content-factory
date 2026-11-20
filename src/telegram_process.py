@@ -119,6 +119,8 @@ def is_authorized_callback(callback: dict) -> bool:
 
 def apply_market_decision(record: dict, action: str, now: str, reviewed_by: str = "unknown") -> bool:
     """Apply a single approval decision without allowing conflicting clicks to overwrite it."""
+    if record.get("status") == "expired" or record.get("expired_at"):
+        return False
     if record.get("approval_status") in ("approved", "rejected"):
         return False
     if action not in ("market_approve", "market_reject"):
@@ -286,6 +288,9 @@ def main():
                     if not record:
                         answer = "This draft is no longer available. No decision was saved."
                         retryable = True
+                    elif record.get("status") == "expired" or record.get("expired_at"):
+                        answer = "This approval has expired. No decision was saved and no post will be made; a fresh draft is required."
+                        print(f"Ignored approval callback for expired draft: {signal_id}")
                     elif record.get("content_type") == "educational_reel" and not sync_metadata_preflight(signal_id):
                         answer = "Draft metadata is missing or mismatched. No decision was saved."
                         print(f"Blocked approval for missing/mismatched educational metadata: {signal_id}")
