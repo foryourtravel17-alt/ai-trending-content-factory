@@ -63,6 +63,50 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Inspect Telegram bot identity and webhook state (read-only)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+          if not token:
+              print("Telegram diagnostic skipped: bot token is not configured.")
+              raise SystemExit(0)
+
+          def call(method):
+              request = urllib.request.Request(
+                  f"https://api.telegram.org/bot{token}/{method}",
+                  data=b"",
+                  method="POST",
+              )
+              with urllib.request.urlopen(request, timeout=15) as response:
+                  payload = json.loads(response.read().decode("utf-8"))
+              if not payload.get("ok") or not isinstance(payload.get("result"), dict):
+                  raise RuntimeError("Telegram returned an unsuccessful metadata response")
+              return payload["result"]
+
+          try:
+              bot = call("getMe")
+              webhook = call("getWebhookInfo")
+          except Exception as exc:
+              # Keep this diagnostic non-blocking; never print URLs, response bodies, or tokens.
+              print("Telegram metadata diagnostic unavailable: " + type(exc).__name__)
+              raise SystemExit(0)
+
+          print("Configured Telegram bot username: @" + str(bot.get("username") or "unknown"))
+          webhook_url = str(webhook.get("url") or "")
+          print("Webhook configured: " + ("yes" if webhook_url else "no"))
+          print("Pending Telegram updates reported by Bot API: " + str(webhook.get("pending_update_count", 0)))
+          print("Webhook last error recorded: " + ("yes" if webhook.get("last_error_date") else "no"))
+          if webhook_url:
+              print("WARNING: webhook is configured; getUpdates polling cannot receive updates while it remains active.")
+          PY
+
       - name: Poll Telegram approval buttons
         id: approval
         env:

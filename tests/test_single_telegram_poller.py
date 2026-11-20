@@ -94,5 +94,28 @@ class SingleTelegramPollerTests(unittest.TestCase):
             self.assertIn("output/draft_x_1.json", staged)
 
 
+    def test_poller_logs_only_safe_read_only_telegram_metadata(self):
+        text = POLLER.read_text(encoding="utf-8")
+        self.assertIn('Inspect Telegram bot identity and webhook state (read-only)', text)
+        self.assertIn('getMe', text)
+        self.assertIn('getWebhookInfo', text)
+        self.assertIn('Pending Telegram updates reported by Bot API', text)
+        self.assertNotIn('setWebhook', text)
+        self.assertNotIn('deleteWebhook', text)
+        self.assertNotIn('print(token)', text)
+        self.assertNotIn('print(webhook_url)', text)
+
+    def test_standalone_telegram_diagnostic_never_consumes_or_changes_updates(self):
+        diagnostic = (ROOT / '.github' / 'workflows' / 'telegram_listener_diagnostics.yml').read_text()
+        self.assertIn('workflow_dispatch:', diagnostic)
+        self.assertIn('getMe', diagnostic)
+        self.assertIn('getWebhookInfo', diagnostic)
+        self.assertNotIn('getUpdates', diagnostic)
+        self.assertNotIn('setWebhook', diagnostic)
+        self.assertNotIn('deleteWebhook', diagnostic)
+        self.assertNotIn('print(token)', diagnostic)
+        self.assertNotIn('print(webhook_url)', diagnostic)
+
+
 if __name__ == "__main__":
     unittest.main()
