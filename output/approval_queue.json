@@ -845,6 +845,11 @@
       "content_id": "draft_false-breakouts_morning_20261120_133825",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_risk-reward_afternoon_20261120_171804",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
@@ -879,6 +884,7 @@
     "draft_false-breakouts_morning_20261027_100433",
     "draft_false-breakouts_morning_20261104_123628",
     "draft_false-breakouts_morning_20261112_131750",
+    "draft_false-breakouts_morning_20261120_133825",
     "draft_market-structure_afternoon_20261028_152820",
     "draft_market-structure_afternoon_20261105_165122",
     "draft_market-structure_afternoon_20261113_164416",
@@ -917,6 +923,7 @@
     "draft_risk-reward_afternoon_20261027_145520",
     "draft_risk-reward_afternoon_20261104_163558",
     "draft_risk-reward_afternoon_20261112_170541",
+    "draft_risk-reward_afternoon_20261120_171804",
     "draft_risk-reward_evening_20261024_161502",
     "draft_risk-reward_evening_20261101_180651",
     "draft_risk-reward_evening_20261109_224226",
@@ -985,6 +992,8 @@
     "draft_market-structure_morning_20261116_131038": 563,
     "draft_support-resistance_afternoon_20261116_185547": 569,
     "draft_risk-per-trade_evening_20261116_223129": 571,
-    "draft_overtrading_morning_20261117_135437": 578
+    "draft_overtrading_morning_20261117_135437": 578,
+    "draft_false-breakouts_morning_20261120_133825": 589,
+    "draft_risk-reward_afternoon_20261120_171804": 590
   }
 }
