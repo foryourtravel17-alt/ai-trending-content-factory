@@ -19,7 +19,7 @@ class WorkflowSafetyTests(unittest.TestCase):
 
     def test_market_approval_poller_is_five_minute_telegram_only(self):
         workflow = Path(".github/workflows/market_approval_poll.yml").read_text(encoding="utf-8")
-        self.assertIn('cron: "*/5 * * * *"', workflow)
+        self.assertIn('cron: "2-57/5 * * * *"', workflow)
         self.assertIn('workflows: ["Autonomous Market Content Factory"]', workflow)
         self.assertIn("Poll Telegram approval buttons", workflow)
         self.assertIn("market_approve:", Path("src/telegram_process.py").read_text(encoding="utf-8"))
