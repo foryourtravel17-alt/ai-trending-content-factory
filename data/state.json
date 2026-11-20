@@ -18986,7 +18986,7 @@
           "status": "unknown"
         }
       },
-      "status": "generated",
+      "status": "publish_failed",
       "last_error": "See workflow logs for details."
     },
     "draft_risk-reward_afternoon_20261120_171804": {
