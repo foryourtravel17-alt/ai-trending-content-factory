@@ -51,7 +51,7 @@ class SingleTelegramPollerTests(unittest.TestCase):
         text = POLLER.read_text(encoding="utf-8")
         triggers = workflow_triggers(text)
         self.assertIn("schedule", triggers)
-        self.assertIn('cron: "*/5 * * * *"', text)
+        self.assertIn('cron: "2-57/5 * * * *"', text)
         self.assertIn("group: market-state", text)
         self.assertIn("run: python src/telegram_process.py", text)
         job = yaml.safe_load(text)["jobs"]["poll-and-publish-approved"]
