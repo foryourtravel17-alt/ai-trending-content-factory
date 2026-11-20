@@ -18980,7 +18980,7 @@
           "status": "unknown"
         }
       },
-      "status": "generated",
+      "status": "publish_failed",
       "last_error": "See workflow logs for details."
     }
   },
