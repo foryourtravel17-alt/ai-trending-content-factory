@@ -48,7 +48,8 @@ concurrency:
 
 jobs:
   poll-and-publish-approved:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    # Always poll callbacks, even when the upstream draft workflow fails.
+    # A Telegram delivery timeout must not disable the independent approval listener.
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
