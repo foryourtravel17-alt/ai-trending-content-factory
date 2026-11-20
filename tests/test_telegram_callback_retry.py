@@ -64,7 +64,13 @@ class PollerRetryTests(unittest.TestCase):
         if metadata:
             (self.root / "output" / f"{content_id}.json").write_text(
                 json.dumps({"content_id": content_id, "status": status,
-                            "approval": {"required": True, "status": "pending"},
+                            "created_at": "2026-11-20T17:18:04+00:00",
+                            "approval": {"required": True, "status": "pending", "mode": "human_review"},
+                            "human_approval_required": True,
+                            "reel_generated": True,
+                            "safety_check": {"passed": True},
+                            "topic": {"title": "Educational test draft"},
+                            "social": {"caption": "Test caption", "hashtags": ["#Test"]},
                             "fact_check": {"status": "needs_human_review"}}), encoding="utf-8")
 
     def run_update(self, callback_data="market_approve:draft_x_1"):
@@ -100,9 +106,29 @@ class PollerRetryTests(unittest.TestCase):
         poller_state = json.loads((self.root / "output" / "telegram_state.json").read_text())
         self.assertEqual(poller_state["callback_retries"]["500"], 1)
 
-    def test_missing_record_keeps_callback_retryable(self):
+    def test_missing_record_recovers_from_valid_educational_metadata(self):
         self.seed(metadata=True, record=False)
+        calls = self.run_update()
+        methods = [method for method, _ in calls]
+        self.assertIn("answerCallbackQuery", methods)
+        self.assertIn("editMessageReplyMarkup", methods)
+        self.assertEqual(self.offset(), 501)
+        market = json.loads((self.root / "data" / "state.json").read_text())
+        self.assertEqual(market["signals"]["draft_x_1"]["content_type"], "educational_reel")
+        self.assertEqual(market["signals"]["draft_x_1"]["approval_status"], "approved")
+        self.assertIn("educational_approved_ids=draft_x_1",
+                      (self.root / "gh_output.txt").read_text())
+        metadata = json.loads((self.root / "output" / "draft_x_1.json").read_text())
+        self.assertEqual(metadata["status"], "approved_for_publishing")
+
+    def test_missing_record_with_unsafe_or_incomplete_metadata_stays_retryable(self):
+        self.seed(metadata=True, record=False)
+        metadata_path = self.root / "output" / "draft_x_1.json"
+        metadata = json.loads(metadata_path.read_text())
+        metadata["safety_check"]["passed"] = False
+        metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
         methods = [method for method, _ in self.run_update()]
+        self.assertIn("answerCallbackQuery", methods)
         self.assertNotIn("editMessageReplyMarkup", methods)
         self.assertEqual(self.offset(), 500)
 
