@@ -286,6 +286,10 @@ def main():
                     action = {"a": "market_approve", "r": "market_reject"}.get(action, action)
                     record = market_state["signals"].get(signal_id)
                     if not record:
+                        record = recover_educational_record(signal_id)
+                        if record:
+                            market_state["signals"][signal_id] = record
+                    if not record:
                         answer = "This draft is no longer available. No decision was saved."
                         retryable = True
                     elif record.get("status") == "expired" or record.get("expired_at"):
@@ -423,6 +427,61 @@ def sync_metadata_preflight(content_id: str) -> bool:
         return False
     content = load_json(OUTPUT_DIR / f"{content_id}.json", None)
     return isinstance(content, dict) and content.get("content_id") == content_id
+
+
+def recover_educational_record(content_id: str):
+    """Rebuild a missing approval-state index entry from its authoritative draft metadata."""
+    if not content_id or any(ch not in SAFE_ID for ch in content_id):
+        return None
+    content = load_json(OUTPUT_DIR / f"{content_id}.json", None)
+    if not isinstance(content, dict) or content.get("content_id") != content_id:
+        return None
+    approval = content.get("approval") if isinstance(content.get("approval"), dict) else {}
+    safety = content.get("safety_check") if isinstance(content.get("safety_check"), dict) else {}
+    if (
+        str(content.get("status", "")).lower() != "pending_approval"
+        or approval.get("required") is not True
+        or str(approval.get("status", "")).lower() != "pending"
+        or content.get("human_approval_required") is not True
+        or safety.get("passed") is not True
+        or not (content.get("reel_generated") is True or content.get("video_url"))
+    ):
+        return None
+
+    topic = content.get("topic") if isinstance(content.get("topic"), dict) else {}
+    social = content.get("social") if isinstance(content.get("social"), dict) else {}
+    caption = str(social.get("caption", content.get("caption", "")))
+    hashtags = social.get("hashtags", content.get("hashtags", []))
+    if isinstance(hashtags, list):
+        caption = (caption + "\\n\\n" + " ".join(str(tag) for tag in hashtags)).strip()
+    created_at = str(content.get("created_at") or content.get("generated_at") or "")
+    return {
+        "content_type": "educational_reel",
+        "content_id": content_id,
+        "metadata_path": str(OUTPUT_DIR / f"{content_id}.json"),
+        "status": "pending_approval",
+        "approval_status": "pending",
+        "approval_mode": "human_review",
+        "created_at": created_at,
+        "human_approval_required": True,
+        "signal": {
+            "signal_id": content_id,
+            "symbol": "EDUCATIONAL_REEL",
+            "as_of": created_at,
+            "title": str(topic.get("title", content_id)),
+        },
+        "copy": {"telegram_html": caption},
+        "card_path": str(content.get("video", f"output/media/{content_id}.mp4")),
+        "fact_check": {
+            "status": "needs_human_review",
+            "safety_screened_at": safety.get("screened_at") or safety.get("checked_at") or "",
+            "notes": [
+                "Recovered from the matching pending educational draft metadata.",
+                "Human approval remains required; publishing eligibility checks still apply.",
+            ],
+        },
+        "publishing": {},
+    }
 
 
 if __name__ == "__main__":
