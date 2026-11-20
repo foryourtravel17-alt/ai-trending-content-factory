@@ -54,6 +54,8 @@ class SingleTelegramPollerTests(unittest.TestCase):
         self.assertIn('cron: "*/5 * * * *"', text)
         self.assertIn("group: market-state", text)
         self.assertIn("run: python src/telegram_process.py", text)
+        job = yaml.safe_load(text)["jobs"]["poll-and-publish-approved"]
+        self.assertNotIn("if", job, "The callback poller must run even when the upstream content workflow fails.")
         self.assertIn("Guard and publish approved market scenarios", text)
         self.assertIn("bash scripts/stage_publish_state.sh", text)
 
