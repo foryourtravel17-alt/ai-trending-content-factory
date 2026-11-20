@@ -4,10 +4,8 @@ import html
 import json
 import os
 from pathlib import Path
-import urllib.parse
-import urllib.request
-import urllib.error
-from datetime import datetime, timezone
+
+from src.telegram_delivery import api_request, send_once
 
 OUTPUT = Path("output")
 QUEUE_FILE = OUTPUT / "approval_queue.json"
@@ -21,37 +19,8 @@ if not TOKEN or not CHAT_ID:
 BASE = f"https://api.telegram.org/bot{TOKEN}"
 
 
-def _safe_api_description(raw: bytes) -> str:
-    """Return Telegram's human-readable error without exposing request credentials."""
-    try:
-        payload = json.loads(raw.decode("utf-8", errors="replace"))
-        description = " ".join(str(payload.get("description") or "").split())
-    except (ValueError, TypeError, AttributeError):
-        description = ""
-    # Telegram descriptions contain API diagnostics, not the bot token or request URL.
-    # Still redact any accidental credential echo before logging.
-    if TOKEN:
-        description = description.replace(TOKEN, "[REDACTED]")
-    return description[:180]
-
-
 def api(method, params):
-    data = urllib.parse.urlencode(params).encode("utf-8")
-    request = urllib.request.Request(f"{BASE}/{method}", data=data, method="POST")
-    try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            result = json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        detail = _safe_api_description(exc.read())
-        suffix = f": {detail}" if detail else ""
-        raise RuntimeError(f"Telegram API HTTP {exc.code} in {method}{suffix}; bot token redacted.") from None
-    except urllib.error.URLError as exc:
-        raise RuntimeError(f"Telegram API request failed ({type(exc).__name__}); bot token redacted.") from None
-    if not result.get("ok"):
-        detail = _safe_api_description(json.dumps(result).encode("utf-8"))
-        suffix = f": {detail}" if detail else ""
-        raise RuntimeError(f"Telegram API error in {method}{suffix}; details redacted.")
-    return result.get("result")
+    return api_request(method, params, base_url=BASE, timeout=30)
 
 
 def load_json(path, default):
@@ -94,8 +63,12 @@ for item in items:
         continue
     publishing = record.get("publishing", {}) if isinstance(record.get("publishing"), dict) else {}
     previous_dm = publishing.get("telegram_dm", {}) if isinstance(publishing.get("telegram_dm"), dict) else {}
-    if previous_dm.get("status") == "sent" and previous_dm.get("message_id"):
+    previous_status = str(previous_dm.get("status", "")).strip().lower()
+    if previous_status == "sent" and previous_dm.get("message_id"):
         sent_ids.add(content_id)
+        continue
+    if previous_status in {"sending", "unknown"}:
+        print(f"Skipping ambiguous Telegram delivery; manual reconciliation required: {content_id}")
         continue
     content = load_json(OUTPUT / f"{content_id}.json", None)
     if not isinstance(content, dict):
@@ -138,22 +111,23 @@ for item in items:
         {"text": "✅ APPROVE", "callback_data": approve_callback},
         {"text": "❌ REJECT", "callback_data": reject_callback},
     ]]}
-    result = api("sendMessage", {
-        "chat_id": CHAT_ID, "text": message_text, "parse_mode": "HTML",
-        "reply_markup": json.dumps(keyboard, separators=(",", ":")),
-    })
+    result = send_once(
+        record,
+        lambda: api("sendMessage", {
+            "chat_id": CHAT_ID, "text": message_text, "parse_mode": "HTML",
+            "reply_markup": json.dumps(keyboard, separators=(",", ":")),
+        }),
+        lambda: save_json(STATE_FILE, state),
+    )
+    if result is None:
+        print(f"Skipping previously started/sent Telegram delivery: {content_id}")
+        continue
     sent_ids.add(content_id)
-    message_ids[content_id] = result.get("message_id")
+    message_ids[content_id] = result["message_id"]
     queue["telegram_message_ids"] = message_ids
-    record["publishing"] = record.get("publishing", {})
-    record["publishing"]["telegram_dm"] = {
-        "status": "sent",
-        "message_id": result.get("message_id"),
-        "sent_at": datetime.now(timezone.utc).isoformat(),
-    }
     sent_count += 1
-    # Persist each successful message immediately. If a later Telegram request
-    # fails, the next run must not resend messages that Telegram already accepted.
+    # The status and message ID are persisted before the queue index. If the
+    # queue save fails, the state record alone prevents an automatic resend.
     save_json(STATE_FILE, state)
     queue["telegram_sent"] = sorted(sent_ids)
     save_json(QUEUE_FILE, queue)
