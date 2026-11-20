@@ -848,8 +848,9 @@
     },
     {
       "content_id": "draft_risk-reward_afternoon_20261120_171804",
-      "status": "pending_approval",
-      "processed": false
+      "status": "approved",
+      "processed": true,
+      "decided_at": "2026-11-20T19:53:09Z"
     }
   ],
   "telegram_sent": [

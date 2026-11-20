@@ -18993,8 +18993,8 @@
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_afternoon_20261120_171804",
       "metadata_path": "output/draft_risk-reward_afternoon_20261120_171804.json",
-      "status": "pending_approval",
-      "approval_status": "pending",
+      "status": "published",
+      "approval_status": "approved",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-20T17:19:28.475103+00:00",
       "created_at": "2026-11-20T17:18:04.303194+00:00",
@@ -19010,20 +19010,37 @@
       },
       "card_path": "output/media/draft_risk-reward_afternoon_20261120_171804.mp4",
       "fact_check": {
-        "status": "needs_human_review",
+        "status": "approved",
         "safety_screened_at": "2026-11-20T17:19:28.475103+00:00",
         "notes": [
           "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
-          "Owner must review the exact script, caption, hashtags and matching video before publication."
-        ]
+          "Owner must review the exact script, caption, hashtags and matching video before publication.",
+          "Human reviewer approved the displayed educational draft in Telegram."
+        ],
+        "reviewed_at": "2026-11-20T19:53:09Z",
+        "reviewed_by": "@bullseyetheory"
       },
       "publishing": {
-        "telegram_dm": {
-          "status": "sent",
-          "message_id": 590,
-          "sent_at": "2026-11-20T17:19:30.133340+00:00"
-        }
-      }
+        "telegram": {
+          "status": "published",
+          "attempt_started_at": "2026-11-20T19:53:43.378591+00:00",
+          "message_id": 182,
+          "published_at": "2026-11-20T19:53:47.622799+00:00"
+        },
+        "reel_file": "output/media/draft_risk-reward_afternoon_20261120_171804.mp4"
+      },
+      "approved_at": "2026-11-20T19:53:09Z",
+      "reviewed_at": "2026-11-20T19:53:09Z",
+      "reviewed_by": "@bullseyetheory",
+      "approval": {
+        "required": true,
+        "status": "approved",
+        "mode": "human_review",
+        "decided_at": "2026-11-20T19:53:09Z",
+        "reviewed_at": "2026-11-20T19:53:09Z",
+        "reviewed_by": "@bullseyetheory"
+      },
+      "published_at": "2026-11-20T19:53:47.622799+00:00"
     }
   },
   "runs": [
