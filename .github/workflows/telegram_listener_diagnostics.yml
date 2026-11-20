@@ -1,0 +1,58 @@
+name: Telegram Listener Diagnostics
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-telegram-listener:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Inspect configured Telegram bot and webhook (read-only)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+          if not token:
+              raise SystemExit("TELEGRAM_BOT_TOKEN secret is missing.")
+
+          def call(method):
+              request = urllib.request.Request(
+                  f"https://api.telegram.org/bot{token}/{method}",
+                  data=b"",
+                  method="POST",
+              )
+              with urllib.request.urlopen(request, timeout=15) as response:
+                  payload = json.loads(response.read().decode("utf-8"))
+              if not isinstance(payload, dict) or payload.get("ok") is not True:
+                  raise RuntimeError(f"Telegram {method} returned an unsuccessful response.")
+              return payload.get("result")
+
+          bot = call("getMe")
+          webhook = call("getWebhookInfo")
+          if not isinstance(bot, dict) or not isinstance(webhook, dict):
+              raise RuntimeError("Telegram returned unexpected metadata.")
+
+          webhook_url = str(webhook.get("url") or "")
+          print("Configured bot username: @" + str(bot.get("username") or "unknown"))
+          print("Configured bot ID present: " + ("yes" if bot.get("id") else "no"))
+          print("Webhook configured: " + ("yes" if webhook_url else "no"))
+          print("Pending updates reported by Telegram: " + str(webhook.get("pending_update_count", 0)))
+          print("Webhook last error recorded: " + ("yes" if webhook.get("last_error_date") else "no"))
+          print("Webhook allowed-updates filter present: " + ("yes" if webhook.get("allowed_updates") else "no"))
+          if webhook_url:
+              print("RESULT: getUpdates polling is incompatible while this webhook remains configured.")
+          else:
+              print("RESULT: no webhook is configured; investigate polling token, offset and callback delivery next.")
+
+          # Deliberately do not print the token, webhook URL, raw response, or error text.
+          # This diagnostic does not call getUpdates, setWebhook, or deleteWebhook.
+          PY
