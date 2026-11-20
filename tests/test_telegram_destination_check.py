@@ -81,6 +81,24 @@ class TelegramDestinationCheckTests(unittest.TestCase):
         self.assertNotIn("-100123", rendered)
         self.assertNotIn("sendMessage", rendered)
 
+    def test_read_only_api_retries_a_transient_timeout_then_succeeds(self):
+        from unittest.mock import MagicMock
+        from scripts.telegram_destination_check import telegram_api
+
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.read.return_value = b'{"ok": true, "result": {"id": 123}}'
+        with patch(
+            "scripts.telegram_destination_check.urllib.request.urlopen",
+            side_effect=[TimeoutError("read timed out"), response],
+        ) as urlopen:
+            with patch("scripts.telegram_destination_check.time.sleep") as sleep:
+                result = telegram_api("redacted-token", "getMe")
+
+        self.assertEqual(result["result"]["id"], 123)
+        self.assertEqual(urlopen.call_count, 2)
+        sleep.assert_called_once_with(1)
+
     def test_api_error_from_getme_fails_safely(self):
         with patch("scripts.telegram_destination_check.telegram_api", side_effect=RuntimeError("invalid token")):
             with patch("builtins.print"):
