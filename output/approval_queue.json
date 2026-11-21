@@ -866,6 +866,11 @@
       "content_id": "draft_market-structure_afternoon_20261121_162315",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_support-resistance_evening_20261121_194735",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
