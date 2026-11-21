@@ -856,6 +856,11 @@
       "content_id": "draft_trading-journal_evening_20261120_204406",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_moving-averages_morning_20261121_130357",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
