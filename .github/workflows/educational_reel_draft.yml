@@ -111,7 +111,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python src/telegram_send.py
+        run: python -m src.telegram_send
 
       - name: Persist publishing state and exact Reel metadata
         if: always() && steps.draft.outcome == 'success' && steps.draft.outputs.skip != 'true'
