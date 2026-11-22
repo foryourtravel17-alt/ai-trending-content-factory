@@ -19,6 +19,11 @@ class EducationalReelWorkflowApprovalGateTests(unittest.TestCase):
         self.assertNotIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("Publish eligible educational Reel to Instagram and Telegram automatically", workflow)
 
+    def test_manual_telegram_recovery_uses_package_module(self):
+        workflow = (ROOT / ".github" / "workflows" / "telegram-approval-recovery.yml").read_text(encoding="utf-8")
+        self.assertIn("run: python -m src.telegram_send", workflow)
+        self.assertNotIn("run: python src/telegram_send.py", workflow)
+
     def test_legacy_manual_pipeline_is_removed_and_premium_exception_is_explicit(self):
         premium = PREMIUM.read_text(encoding="utf-8")
         self.assertFalse(PIPELINE.exists())
