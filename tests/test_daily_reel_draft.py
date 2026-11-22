@@ -74,7 +74,7 @@ class DailyReelDraftTests(unittest.TestCase):
         self.assertIn("github.event.schedule == '47 8 * * *' && 'afternoon'", workflow)
         self.assertIn("github.event.schedule == '47 12 * * *' && 'evening'", workflow)
         self.assertIn("Send private Telegram approval request (no public publishing)", workflow)
-        self.assertIn("run: python src/telegram_send.py", workflow)
+        self.assertIn("run: python -m src.telegram_send", workflow)
         self.assertIn("Register Reel for owner approval", workflow)
         self.assertNotIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("EDUCATIONAL_APPROVED_IDS: ${{ steps.queue.outputs.content_id }}", workflow)
