@@ -871,6 +871,11 @@
       "content_id": "draft_support-resistance_evening_20261121_194735",
       "status": "pending_approval",
       "processed": false
+    },
+    {
+      "content_id": "draft_risk-per-trade_morning_20261122_125325",
+      "status": "pending_approval",
+      "processed": false
     }
   ],
   "telegram_sent": [
