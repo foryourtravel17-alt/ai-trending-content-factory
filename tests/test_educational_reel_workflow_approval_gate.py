@@ -15,7 +15,7 @@ class EducationalReelWorkflowApprovalGateTests(unittest.TestCase):
     def test_generation_workflow_requests_human_approval_instead_of_publishing(self):
         workflow = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("Send private Telegram approval request (no public publishing)", workflow)
-        self.assertIn("run: python src/telegram_send.py", workflow)
+        self.assertIn("run: python -m src.telegram_send", workflow)
         self.assertNotIn("run: python scripts/publish_approved_educational_reels.py", workflow)
         self.assertNotIn("Publish eligible educational Reel to Instagram and Telegram automatically", workflow)
 
