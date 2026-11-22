@@ -12,7 +12,7 @@
   "audience": "Beginner to intermediate traders",
   "content_category": "Trading Education",
   "content_role": "education",
-  "status": "pending_approval",
+  "status": "published",
   "topic": {
     "title": "Position Sizing Starts With Risk, Not the Lot Button",
     "source": "curated evergreen topic rotation",
@@ -35,14 +35,17 @@
     "verification_scope": "evergreen concept draft; source links are general references, not claim-level citations; no live market data"
   },
   "fact_check": {
-    "status": "needs_human_review",
+    "status": "approved",
     "notes": [
       "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
-      "Owner must review the exact script, caption, hashtags and matching video before publication."
+      "Owner must review the exact script, caption, hashtags and matching video before publication.",
+      "Human reviewer approved the displayed educational draft in Telegram."
     ],
     "source_count": 2,
     "verification_scope": "automated safety screen only; not independent fact verification",
-    "safety_screened_at": "2026-11-22T12:54:43.412552+00:00"
+    "safety_screened_at": "2026-11-22T12:54:43.412552+00:00",
+    "reviewed_at": "2026-11-22T13:26:09Z",
+    "reviewed_by": "@bullseyetheory"
   },
   "safety_check": {
     "passed": true,
@@ -94,16 +97,22 @@
   },
   "approval": {
     "required": true,
-    "status": "pending",
+    "status": "approved",
     "mode": "human_review",
-    "safety_screened_at": "2026-11-22T12:54:43.412552+00:00"
+    "safety_screened_at": "2026-11-22T12:54:43.412552+00:00",
+    "decided_at": "2026-11-22T13:26:09Z",
+    "reviewed_at": "2026-11-22T13:26:09Z",
+    "reviewed_by": "@bullseyetheory"
   },
   "reel_generated": true,
   "selected_archetype": "rule",
   "reel_generated_at": "2026-11-22T12:54:37.848860+00:00",
   "publishing": {
     "telegram": {
-      "status": "pending_approval"
+      "status": "published",
+      "attempt_started_at": "2026-11-22T13:27:01.519472+00:00",
+      "message_id": 183,
+      "published_at": "2026-11-22T13:27:05.588676+00:00"
     },
     "reel_file": "output/media/draft_risk-per-trade_morning_20261122_125325.mp4"
   },
@@ -113,5 +122,8 @@
   "video_sha256": "b2e87d53e270a762972561db01f53e06532388a777f7e63e0ee16003c3ae2ac4",
   "video_size_bytes": 1659834,
   "video_duration_seconds": 44.592,
-  "video_uploaded_at": "2026-11-22T12:54:43.370350+00:00"
+  "video_uploaded_at": "2026-11-22T12:54:43.370350+00:00",
+  "approval_action": "approve",
+  "approval_action_at": "2026-11-22T13:26:09Z",
+  "published_at": "2026-11-22T13:27:05.588676+00:00"
 }

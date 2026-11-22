@@ -874,8 +874,9 @@
     },
     {
       "content_id": "draft_risk-per-trade_morning_20261122_125325",
-      "status": "pending_approval",
-      "processed": false
+      "status": "approved",
+      "processed": true,
+      "decided_at": "2026-11-22T13:26:09Z"
     }
   ],
   "telegram_sent": [
