@@ -19390,7 +19390,7 @@
           "message_id": 610
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_risk-reward_morning_20261123_152532": {
       "content_type": "educational_reel",
@@ -21348,6 +21348,12 @@
     },
     {
       "at": "2026-11-23T19:53:07.305835+00:00",
+      "signal_id": "tcs-ns-2026112309-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-23T22:01:26.937143+00:00",
       "signal_id": "tcs-ns-2026112309-long",
       "status": "pending_approval",
       "dry_run": false
