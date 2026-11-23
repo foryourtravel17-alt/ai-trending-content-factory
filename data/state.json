@@ -18897,7 +18897,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_false-breakouts_morning_20261120_133825",
       "metadata_path": "output/draft_false-breakouts_morning_20261120_133825.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-20T13:39:21.100971+00:00",
@@ -18927,7 +18927,9 @@
           "message_id": 589,
           "sent_at": "2026-11-20T17:19:29.432299+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T13:40:31.145094+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026112009-long": {
       "signal": {
@@ -19046,7 +19048,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_trading-journal_evening_20261120_204406",
       "metadata_path": "output/draft_trading-journal_evening_20261120_204406.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-20T20:45:22.823017+00:00",
@@ -19077,13 +19079,15 @@
           "message_id": 603,
           "sent_at": "2026-11-22T16:39:36.648476+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T13:40:31.167859+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_moving-averages_morning_20261121_130357": {
       "content_type": "educational_reel",
       "content_id": "draft_moving-averages_morning_20261121_130357",
       "metadata_path": "output/draft_moving-averages_morning_20261121_130357.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-21T13:05:08.785038+00:00",
@@ -19114,13 +19118,15 @@
           "message_id": 604,
           "sent_at": "2026-11-22T16:39:37.235576+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T13:40:31.189783+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_market-structure_afternoon_20261121_162315": {
       "content_type": "educational_reel",
       "content_id": "draft_market-structure_afternoon_20261121_162315",
       "metadata_path": "output/draft_market-structure_afternoon_20261121_162315.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-21T16:24:34.007665+00:00",
@@ -19151,13 +19157,15 @@
           "message_id": 605,
           "sent_at": "2026-11-22T16:39:37.830962+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T13:40:31.211252+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_support-resistance_evening_20261121_194735": {
       "content_type": "educational_reel",
       "content_id": "draft_support-resistance_evening_20261121_194735",
       "metadata_path": "output/draft_support-resistance_evening_20261121_194735.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-21T19:48:48.345368+00:00",
@@ -19188,7 +19196,9 @@
           "message_id": 606,
           "sent_at": "2026-11-22T16:39:38.414570+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T13:40:31.232502+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-per-trade_morning_20261122_125325": {
       "content_type": "educational_reel",
@@ -19247,7 +19257,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_overtrading_afternoon_20261122_163830",
       "metadata_path": "output/draft_overtrading_afternoon_20261122_163830.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-22T16:39:35.925463+00:00",
@@ -19278,7 +19288,9 @@
           "message_id": 607,
           "sent_at": "2026-11-22T16:39:39.100228+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T13:40:31.253946+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_evening_20261122_195853": {
       "content_type": "educational_reel",
@@ -19316,6 +19328,61 @@
           "sent_at": "2026-11-22T20:00:04.266956+00:00"
         }
       }
+    },
+    "tcs-ns-2026112309-long": {
+      "signal": {
+        "signal_id": "tcs-ns-2026112309-long",
+        "slug": "tcs-ns-2026112309-long",
+        "symbol": "TCS.NS",
+        "label": "TCS",
+        "region": "INDIA",
+        "language": "Hinglish",
+        "direction": "LONG",
+        "entry": 2460.0,
+        "stop_loss": 2425.9253623109967,
+        "targets": [
+          2494.0746376890033,
+          2511.1119565335052,
+          2528.1492753780067
+        ],
+        "tp1": 2494.0746376890033,
+        "tp2": 2511.1119565335052,
+        "tp3": 2528.1492753780067,
+        "rr_tp2": 1.5000000000000067,
+        "rsi14": 61.29511396747075,
+        "ema20": 2422.9029573090156,
+        "ema50": 2416.8994444522905,
+        "macd": 19.357215858789004,
+        "macd_signal": 10.388244238764923,
+        "macd_hist": 8.968971620024082,
+        "atr14": 22.71642512600227,
+        "vwap": 2467.1896085784833,
+        "support": 2317.300048828125,
+        "resistance": 2501.0,
+        "as_of": "2026-11-23T09:45:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "Main TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 61.3 hai. Structure hold nahi hua toh setup invalid ho sakta hai.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "Setup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · TCS</b>\n\n<b>Structure first. Risk always.</b>\n\nMain TCS par long scenario dekh raha hoon. EMA20 EMA50 ke upar hai; RSI(14) 61.3 hai. Structure hold nahi hua toh setup invalid ho sakta hai.\n\nTCS: EMA20 EMA50 ke upar hai aur RSI(14) 61.3 hai. Ye rule-based scenario hai, prediction nahi.\n\n<b>Scenario:</b> TCS.NS · LONG\n\nSetup fail ho sakta hai; levels guarantee nahi hain. Yeh education hai, financial advice nahi.\n\n#IndianStocks #PriceAction #RiskManagement #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#IndianStocks",
+          "#PriceAction",
+          "#RiskManagement",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/tcs-ns-2026112309-long.png",
+      "card_path": "output/tcs-ns-2026112309-long_card.png",
+      "created_at": "2026-11-23T13:40:36.397734+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
