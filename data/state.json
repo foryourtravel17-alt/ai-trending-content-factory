@@ -19297,7 +19297,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_false-breakouts_evening_20261122_195853",
       "metadata_path": "output/draft_false-breakouts_evening_20261122_195853.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-22T20:00:03.544015+00:00",
@@ -19328,7 +19328,9 @@
           "message_id": 608,
           "sent_at": "2026-11-22T20:00:04.266956+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-23T16:28:27.441849+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "tcs-ns-2026112309-long": {
       "signal": {
@@ -19388,7 +19390,7 @@
           "message_id": 610
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_risk-reward_morning_20261123_152532": {
       "content_type": "educational_reel",
@@ -19426,6 +19428,116 @@
           "sent_at": "2026-11-23T15:28:28.060929+00:00"
         }
       }
+    },
+    "btc-usd-2026112316-long": {
+      "signal": {
+        "signal_id": "btc-usd-2026112316-long",
+        "slug": "btc-usd-2026112316-long",
+        "symbol": "BTC-USD",
+        "label": "Bitcoin",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 62615.55859375,
+        "stop_loss": 61524.547543894434,
+        "targets": [
+          63706.569643605566,
+          64252.07516853335,
+          64797.58069346113
+        ],
+        "tp1": 63706.569643605566,
+        "tp2": 64252.07516853335,
+        "tp3": 64797.58069346113,
+        "rr_tp2": 1.5000000000000033,
+        "rsi14": 62.3886575274821,
+        "ema20": 61703.681635197194,
+        "ema50": 61025.031213487804,
+        "macd": 577.9950693372011,
+        "macd_signal": 449.5811778600697,
+        "macd_hist": 128.41389147713141,
+        "atr14": 727.3406999037109,
+        "vwap": 63007.984866665705,
+        "support": 60296.53125,
+        "resistance": 64469.83984375,
+        "as_of": "2026-11-23T16:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.4. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Bitcoin</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Bitcoin through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 62.4. The scenario is invalid if structure fails.\n\nBitcoin: EMA20 is above EMA50 and RSI(14) is 62.4. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> BTC-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Bitcoin #CryptoTrading #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Bitcoin",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/btc-usd-2026112316-long.png",
+      "card_path": "output/btc-usd-2026112316-long_card.png",
+      "created_at": "2026-11-23T16:28:30.747492+00:00",
+      "publishing": {},
+      "status": "generated"
+    },
+    "eth-usd-2026112316-long": {
+      "signal": {
+        "signal_id": "eth-usd-2026112316-long",
+        "slug": "eth-usd-2026112316-long",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 1771.1800537109375,
+        "stop_loss": 1736.5837937052481,
+        "targets": [
+          1805.7763137166269,
+          1823.0744437194717,
+          1840.3725737223162
+        ],
+        "tp1": 1805.7763137166269,
+        "tp2": 1823.0744437194717,
+        "tp3": 1840.3725737223162,
+        "rr_tp2": 1.5000000000000033,
+        "rsi14": 63.6317452207121,
+        "ema20": 1737.8800970728846,
+        "ema50": 1716.1896168628798,
+        "macd": 18.367487248490306,
+        "macd_signal": 13.651270205640115,
+        "macd_hist": 4.716217042850191,
+        "atr14": 23.06417333712626,
+        "vwap": 1782.8141032357114,
+        "support": 1694.3299560546875,
+        "resistance": 1841.9100341796875,
+        "as_of": "2026-11-23T16:00:00+00:00",
+        "score": 80,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 63.6. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 63.6. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is above EMA50 and RSI(14) is 63.6. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026112316-long.png",
+      "card_path": "output/eth-usd-2026112316-long_card.png",
+      "created_at": "2026-11-23T16:28:31.186422+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
