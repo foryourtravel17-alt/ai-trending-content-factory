@@ -19390,7 +19390,7 @@
           "message_id": 610
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_risk-reward_morning_20261123_152532": {
       "content_type": "educational_reel",
@@ -19481,8 +19481,13 @@
       "chart_path": "output/btc-usd-2026112316-long.png",
       "card_path": "output/btc-usd-2026112316-long_card.png",
       "created_at": "2026-11-23T16:28:30.747492+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 613
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026112316-long": {
       "signal": {
@@ -19536,8 +19541,13 @@
       "chart_path": "output/eth-usd-2026112316-long.png",
       "card_path": "output/eth-usd-2026112316-long_card.png",
       "created_at": "2026-11-23T16:28:31.186422+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 614
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -21278,6 +21288,24 @@
     {
       "at": "2026-11-23T13:40:41.728526+00:00",
       "signal_id": "tcs-ns-2026112309-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-23T16:28:35.418182+00:00",
+      "signal_id": "tcs-ns-2026112309-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-23T16:28:37.003018+00:00",
+      "signal_id": "btc-usd-2026112316-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-23T16:28:38.570082+00:00",
+      "signal_id": "eth-usd-2026112316-long",
       "status": "pending_approval",
       "dry_run": false
     }
