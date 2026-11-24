@@ -19679,8 +19679,13 @@
       "chart_path": "output/gc-f-2026112414-short.png",
       "card_path": "output/gc-f-2026112414-short_card.png",
       "created_at": "2026-11-24T14:18:15.763793+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 619
+        }
+      },
+      "status": "pending_approval"
     },
     "btc-usd-2026112414-short": {
       "signal": {
@@ -19734,8 +19739,13 @@
       "chart_path": "output/btc-usd-2026112414-short.png",
       "card_path": "output/btc-usd-2026112414-short_card.png",
       "created_at": "2026-11-24T14:18:16.267873+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 620
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026112414-short": {
       "signal": {
@@ -19789,8 +19799,13 @@
       "chart_path": "output/eth-usd-2026112414-short.png",
       "card_path": "output/eth-usd-2026112414-short_card.png",
       "created_at": "2026-11-24T14:18:16.716597+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 621
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -21561,6 +21576,24 @@
     {
       "at": "2026-11-23T22:01:26.937143+00:00",
       "signal_id": "tcs-ns-2026112309-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-24T14:18:22.122429+00:00",
+      "signal_id": "gc-f-2026112414-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-24T14:18:23.818711+00:00",
+      "signal_id": "btc-usd-2026112414-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-24T14:18:24.978315+00:00",
+      "signal_id": "eth-usd-2026112414-short",
       "status": "pending_approval",
       "dry_run": false
     }
