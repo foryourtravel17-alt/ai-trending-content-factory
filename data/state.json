@@ -19806,6 +19806,43 @@
         }
       },
       "status": "pending_approval"
+    },
+    "draft_market-structure_morning_20261124_151959": {
+      "content_type": "educational_reel",
+      "content_id": "draft_market-structure_morning_20261124_151959",
+      "metadata_path": "output/draft_market-structure_morning_20261124_151959.json",
+      "status": "pending_approval",
+      "approval_status": "pending",
+      "approval_mode": "human_review",
+      "safety_screened_at": "2026-11-24T15:21:16.817233+00:00",
+      "created_at": "2026-11-24T15:19:59.396067+00:00",
+      "human_approval_required": true,
+      "signal": {
+        "signal_id": "draft_market-structure_morning_20261124_151959",
+        "symbol": "EDUCATIONAL_REEL",
+        "as_of": "2026-11-24T15:19:59.396067+00:00",
+        "title": "Market Structure: Higher Highs, Lower Lows, and Real Direction"
+      },
+      "copy": {
+        "telegram_html": "Before you call a market bullish, check what its swing points are actually doing.\n\nA sequence of higher highs and higher lows can describe upward structure. Lower highs and lower lows can describe downward structure. One swing alone does not define the whole market, and structure can change. Mark the swings, zoom out for context, and wait for confirmation instead of forcing a label.\n\nEducational content only; not financial advice.\n\n#BullseyeTheory #TradingEducation #TechnicalAnalysis #RiskManagement"
+      },
+      "card_path": "output/media/draft_market-structure_morning_20261124_151959.mp4",
+      "fact_check": {
+        "status": "needs_human_review",
+        "safety_screened_at": "2026-11-24T15:21:16.817233+00:00",
+        "notes": [
+          "Automated safety/format screen passed; this is not a fact-check or publishing approval.",
+          "Owner must review the exact script, caption, hashtags and matching video before publication."
+        ]
+      },
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "started_at": "2026-11-24T15:21:16.921320+00:00",
+          "message_id": 623,
+          "sent_at": "2026-11-24T15:21:17.413951+00:00"
+        }
+      }
     }
   },
   "runs": [
