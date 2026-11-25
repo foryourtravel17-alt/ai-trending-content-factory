@@ -20679,7 +20679,7 @@
           "message_id": 640
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "nsei-2026112509-long": {
       "signal": {
@@ -20740,7 +20740,7 @@
           "message_id": 641
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "hdfcbank-ns-2026112509-long": {
       "signal": {
@@ -20800,7 +20800,7 @@
           "message_id": 642
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_overtrading_morning_20261125_145959": {
       "content_type": "educational_reel",
@@ -23076,6 +23076,24 @@
     {
       "at": "2026-11-25T18:27:32.019795+00:00",
       "signal_id": "spy-2026112517-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T19:54:24.157411+00:00",
+      "signal_id": "reliance-ns-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T19:54:24.190099+00:00",
+      "signal_id": "nsei-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T19:54:24.221207+00:00",
+      "signal_id": "hdfcbank-ns-2026112509-long",
       "status": "pending_approval",
       "dry_run": false
     }
