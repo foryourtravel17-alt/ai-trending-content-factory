@@ -20679,7 +20679,7 @@
           "message_id": 640
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "nsei-2026112509-long": {
       "signal": {
@@ -20740,7 +20740,7 @@
           "message_id": 641
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "hdfcbank-ns-2026112509-long": {
       "signal": {
@@ -20800,7 +20800,7 @@
           "message_id": 642
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_overtrading_morning_20261125_145959": {
       "content_type": "educational_reel",
@@ -21028,8 +21028,13 @@
       "chart_path": "output/ndx-2026112517-short.png",
       "card_path": "output/ndx-2026112517-short_card.png",
       "created_at": "2026-11-25T18:27:22.216763+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 649
+        }
+      },
+      "status": "pending_approval"
     },
     "spy-2026112517-short": {
       "signal": {
@@ -21083,8 +21088,13 @@
       "chart_path": "output/spy-2026112517-short.png",
       "card_path": "output/spy-2026112517-short_card.png",
       "created_at": "2026-11-25T18:27:22.674668+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 650
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -23000,6 +23010,36 @@
       "at": "2026-11-25T16:03:24.537957+00:00",
       "signal_id": "spy-2026112515-short",
       "status": "published",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T18:27:28.438715+00:00",
+      "signal_id": "reliance-ns-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T18:27:28.469191+00:00",
+      "signal_id": "nsei-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T18:27:28.498266+00:00",
+      "signal_id": "hdfcbank-ns-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T18:27:30.270072+00:00",
+      "signal_id": "ndx-2026112517-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T18:27:32.019795+00:00",
+      "signal_id": "spy-2026112517-short",
+      "status": "pending_approval",
       "dry_run": false
     }
   ],
