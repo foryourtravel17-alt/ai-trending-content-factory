@@ -20487,8 +20487,13 @@
       "chart_path": "output/btc-usd-2026112513-short.png",
       "card_path": "output/btc-usd-2026112513-short_card.png",
       "created_at": "2026-11-25T13:31:45.787710+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 637
+        }
+      },
+      "status": "pending_approval"
     },
     "eurusd-x-2026112513-short": {
       "signal": {
@@ -20542,8 +20547,13 @@
       "chart_path": "output/eurusd-x-2026112513-short.png",
       "card_path": "output/eurusd-x-2026112513-short_card.png",
       "created_at": "2026-11-25T13:31:46.303864+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 638
+        }
+      },
+      "status": "pending_approval"
     },
     "eth-usd-2026112513-short": {
       "signal": {
@@ -20597,8 +20607,13 @@
       "chart_path": "output/eth-usd-2026112513-short.png",
       "card_path": "output/eth-usd-2026112513-short_card.png",
       "created_at": "2026-11-25T13:31:46.802994+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 639
+        }
+      },
+      "status": "pending_approval"
     },
     "reliance-ns-2026112509-long": {
       "signal": {
@@ -20652,8 +20667,13 @@
       "chart_path": "output/reliance-ns-2026112509-long.png",
       "card_path": "output/reliance-ns-2026112509-long_card.png",
       "created_at": "2026-11-25T13:31:47.303130+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 640
+        }
+      },
+      "status": "pending_approval"
     },
     "nsei-2026112509-long": {
       "signal": {
@@ -20708,8 +20728,13 @@
       "chart_path": "output/nsei-2026112509-long.png",
       "card_path": "output/nsei-2026112509-long_card.png",
       "created_at": "2026-11-25T13:31:47.883134+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 641
+        }
+      },
+      "status": "pending_approval"
     },
     "hdfcbank-ns-2026112509-long": {
       "signal": {
@@ -20763,8 +20788,13 @@
       "chart_path": "output/hdfcbank-ns-2026112509-long.png",
       "card_path": "output/hdfcbank-ns-2026112509-long_card.png",
       "created_at": "2026-11-25T13:31:48.393397+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 642
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -22607,6 +22637,42 @@
     {
       "at": "2026-11-24T20:38:11.053065+00:00",
       "signal_id": "eurusd-x-2026112420-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T13:31:54.558273+00:00",
+      "signal_id": "btc-usd-2026112513-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T13:31:56.186560+00:00",
+      "signal_id": "eurusd-x-2026112513-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T13:31:57.420491+00:00",
+      "signal_id": "eth-usd-2026112513-short",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T13:31:59.019707+00:00",
+      "signal_id": "reliance-ns-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T13:32:01.429465+00:00",
+      "signal_id": "nsei-2026112509-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-25T13:32:03.180830+00:00",
+      "signal_id": "hdfcbank-ns-2026112509-long",
       "status": "pending_approval",
       "dry_run": false
     }
