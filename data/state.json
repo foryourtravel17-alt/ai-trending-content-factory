@@ -21441,7 +21441,7 @@
           "message_id": 657
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "reliance-ns-2026112609-long": {
       "signal": {
@@ -21501,7 +21501,7 @@
           "message_id": 658
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "hdfcbank-ns-2026112609-long": {
       "signal": {
@@ -21561,7 +21561,7 @@
           "message_id": 659
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_trading-journal_morning_20261126_143023": {
       "content_type": "educational_reel",
@@ -21652,8 +21652,13 @@
       "chart_path": "output/eurusd-x-2026112615-long.png",
       "card_path": "output/eurusd-x-2026112615-long_card.png",
       "created_at": "2026-11-26T15:46:08.008449+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 662
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -23652,6 +23657,30 @@
     {
       "at": "2026-11-26T13:11:27.532873+00:00",
       "signal_id": "hdfcbank-ns-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T15:46:13.658013+00:00",
+      "signal_id": "nsei-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T15:46:13.692537+00:00",
+      "signal_id": "reliance-ns-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T15:46:13.726286+00:00",
+      "signal_id": "hdfcbank-ns-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T15:46:15.346096+00:00",
+      "signal_id": "eurusd-x-2026112615-long",
       "status": "pending_approval",
       "dry_run": false
     }
