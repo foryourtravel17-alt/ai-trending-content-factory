@@ -1,20 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T16:03:25.361623+00:00",
+  "generatedAt": "2026-11-26T02:27:05.837789+00:00",
   "source": "Bullseye Theory educational market factory",
   "dataStatus": "human_approved_observations",
   "maxObservationAgeHours": 8,
   "disclaimer": "Educational structure observations only. Not a forecast or a recommendation to buy, sell, or hold. Conditions can change; scenarios can fail.",
-  "records": [
-    {
-      "id": "spy-2026112515-short",
-      "symbol": "SPY",
-      "label": "S&P 500 ETF",
-      "direction": "SHORT",
-      "as_of": "2026-11-25T15:30:00+00:00",
-      "view": "I’m watching S&P 500 ETF through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 33.1. The scenario is invalid if structure fails.",
-      "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario.",
-      "approvalStatus": "approved"
-    }
-  ]
+  "records": []
 }
