@@ -21060,7 +21060,9 @@
           "message_id": 649
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-26T15:46:05.153737+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "spy-2026112517-short": {
       "signal": {
@@ -21120,13 +21122,15 @@
           "message_id": 650
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-26T15:46:05.187932+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_false-breakouts_afternoon_20261125_185056": {
       "content_type": "educational_reel",
       "content_id": "draft_false-breakouts_afternoon_20261125_185056",
       "metadata_path": "output/draft_false-breakouts_afternoon_20261125_185056.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-25T18:52:30.974502+00:00",
@@ -21157,7 +21161,9 @@
           "message_id": 651,
           "sent_at": "2026-11-25T18:52:31.803821+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-26T15:46:05.220478+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_risk-reward_evening_20261125_215846": {
       "content_type": "educational_reel",
@@ -21435,7 +21441,7 @@
           "message_id": 657
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "reliance-ns-2026112609-long": {
       "signal": {
@@ -21495,7 +21501,7 @@
           "message_id": 658
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "hdfcbank-ns-2026112609-long": {
       "signal": {
@@ -21555,7 +21561,7 @@
           "message_id": 659
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_trading-journal_morning_20261126_143023": {
       "content_type": "educational_reel",
@@ -21593,6 +21599,61 @@
           "sent_at": "2026-11-26T14:31:42.124084+00:00"
         }
       }
+    },
+    "eurusd-x-2026112615-long": {
+      "signal": {
+        "signal_id": "eurusd-x-2026112615-long",
+        "slug": "eurusd-x-2026112615-long",
+        "symbol": "EURUSD=X",
+        "label": "EUR/USD",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "LONG",
+        "entry": 1.0976948738098145,
+        "stop_loss": 1.0962965759855454,
+        "targets": [
+          1.0990931716340835,
+          1.099792320546218,
+          1.1004914694583523
+        ],
+        "tp1": 1.0990931716340835,
+        "tp2": 1.099792320546218,
+        "tp3": 1.1004914694583523,
+        "rr_tp2": 1.4999999999999205,
+        "rsi14": 54.68789630582421,
+        "ema20": 1.0973725897609534,
+        "ema50": 1.0965870626612246,
+        "macd": 0.0005010742804698598,
+        "macd_signal": 0.0004713388197849999,
+        "macd_hist": 2.9735460684859915e-05,
+        "atr14": 0.0009321985495126508,
+        "vwap": null,
+        "support": 1.0960105657577515,
+        "resistance": 1.0991426706314087,
+        "as_of": "2026-11-26T15:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 54.7. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · EUR/USD</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching EUR/USD through structure, momentum, and defined risk. EMA20 is above EMA50, while RSI(14) is 54.7. The scenario is invalid if structure fails.\n\nEUR/USD: EMA20 is above EMA50 and RSI(14) is 54.7. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> EURUSD=X · LONG\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#ForexTrading #EURUSD #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#ForexTrading",
+          "#EURUSD",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eurusd-x-2026112615-long.png",
+      "card_path": "output/eurusd-x-2026112615-long_card.png",
+      "created_at": "2026-11-26T15:46:08.008449+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
