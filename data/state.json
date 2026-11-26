@@ -21169,7 +21169,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_risk-reward_evening_20261125_215846",
       "metadata_path": "output/draft_risk-reward_evening_20261125_215846.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-25T22:00:05.605376+00:00",
@@ -21200,7 +21200,9 @@
           "message_id": 652,
           "sent_at": "2026-11-25T22:00:06.464766+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-26T18:09:38.121050+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "btc-usd-2026112613-long": {
       "signal": {
@@ -21441,7 +21443,7 @@
           "message_id": 657
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "reliance-ns-2026112609-long": {
       "signal": {
@@ -21501,7 +21503,7 @@
           "message_id": 658
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "hdfcbank-ns-2026112609-long": {
       "signal": {
@@ -21561,7 +21563,7 @@
           "message_id": 659
         }
       },
-      "status": "pending_approval"
+      "status": "generated"
     },
     "draft_trading-journal_morning_20261126_143023": {
       "content_type": "educational_reel",
