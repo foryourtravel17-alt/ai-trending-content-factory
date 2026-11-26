@@ -21443,7 +21443,7 @@
           "message_id": 657
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "reliance-ns-2026112609-long": {
       "signal": {
@@ -21503,7 +21503,7 @@
           "message_id": 658
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "hdfcbank-ns-2026112609-long": {
       "signal": {
@@ -21563,7 +21563,7 @@
           "message_id": 659
         }
       },
-      "status": "generated"
+      "status": "pending_approval"
     },
     "draft_trading-journal_morning_20261126_143023": {
       "content_type": "educational_reel",
@@ -23737,6 +23737,24 @@
     },
     {
       "at": "2026-11-26T18:09:45.072406+00:00",
+      "signal_id": "hdfcbank-ns-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T19:35:33.920713+00:00",
+      "signal_id": "nsei-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T19:35:33.946883+00:00",
+      "signal_id": "reliance-ns-2026112609-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-26T19:35:33.971699+00:00",
       "signal_id": "hdfcbank-ns-2026112609-long",
       "status": "pending_approval",
       "dry_run": false
