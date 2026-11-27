@@ -22004,8 +22004,13 @@
       "chart_path": "output/eth-usd-2026112719-short.png",
       "card_path": "output/eth-usd-2026112719-short_card.png",
       "created_at": "2026-11-27T19:27:06.884354+00:00",
-      "publishing": {},
-      "status": "generated"
+      "publishing": {
+        "telegram_dm": {
+          "status": "sent",
+          "message_id": 674
+        }
+      },
+      "status": "pending_approval"
     }
   },
   "runs": [
@@ -24076,6 +24081,12 @@
     {
       "at": "2026-11-27T17:52:05.505403+00:00",
       "signal_id": "gc-f-2026112717-long",
+      "status": "pending_approval",
+      "dry_run": false
+    },
+    {
+      "at": "2026-11-27T19:27:12.240321+00:00",
+      "signal_id": "eth-usd-2026112719-short",
       "status": "pending_approval",
       "dry_run": false
     }
