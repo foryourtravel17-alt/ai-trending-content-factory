@@ -20515,7 +20515,9 @@
           "message_id": 637
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.594970+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026112513-short": {
       "signal": {
@@ -20637,7 +20639,9 @@
           "message_id": 639
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.626953+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026112509-long": {
       "signal": {
@@ -20923,7 +20927,9 @@
           "message_id": 645
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.660946+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "spy-2026112515-short": {
       "signal": {
@@ -21382,7 +21388,9 @@
           "message_id": 656
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.694935+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "nsei-2026112609-long": {
       "signal": {
@@ -21443,7 +21451,9 @@
           "message_id": 657
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.725782+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "reliance-ns-2026112609-long": {
       "signal": {
@@ -21503,7 +21513,9 @@
           "message_id": 658
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.756530+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "hdfcbank-ns-2026112609-long": {
       "signal": {
@@ -21563,13 +21575,15 @@
           "message_id": 659
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.788435+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_trading-journal_morning_20261126_143023": {
       "content_type": "educational_reel",
       "content_id": "draft_trading-journal_morning_20261126_143023",
       "metadata_path": "output/draft_trading-journal_morning_20261126_143023.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-26T14:31:41.284742+00:00",
@@ -21600,7 +21614,9 @@
           "message_id": 661,
           "sent_at": "2026-11-26T14:31:42.124084+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-27T13:08:22.821323+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "eurusd-x-2026112615-long": {
       "signal": {
@@ -21660,7 +21676,9 @@
           "message_id": 662
         }
       },
-      "status": "pending_approval"
+      "status": "expired",
+      "expired_at": "2026-11-27T13:08:22.864355+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_moving-averages_afternoon_20261126_183818": {
       "content_type": "educational_reel",
