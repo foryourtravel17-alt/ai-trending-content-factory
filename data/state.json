@@ -21723,7 +21723,7 @@
       "content_type": "educational_reel",
       "content_id": "draft_market-structure_evening_20261126_215544",
       "metadata_path": "output/draft_market-structure_evening_20261126_215544.json",
-      "status": "pending_approval",
+      "status": "expired",
       "approval_status": "pending",
       "approval_mode": "human_review",
       "safety_screened_at": "2026-11-26T21:56:59.618083+00:00",
@@ -21754,7 +21754,9 @@
           "message_id": 666,
           "sent_at": "2026-11-26T21:57:00.216980+00:00"
         }
-      }
+      },
+      "expired_at": "2026-11-27T19:27:03.810230+00:00",
+      "last_error": "Signal expired before publishing; a fresh market candle is required."
     },
     "draft_support-resistance_morning_20261127_142504": {
       "content_type": "educational_reel",
@@ -21949,6 +21951,61 @@
           "sent_at": "2026-11-27T18:29:11.495441+00:00"
         }
       }
+    },
+    "eth-usd-2026112719-short": {
+      "signal": {
+        "signal_id": "eth-usd-2026112719-short",
+        "slug": "eth-usd-2026112719-short",
+        "symbol": "ETH-USD",
+        "label": "Ethereum",
+        "region": "GLOBAL",
+        "language": "English",
+        "direction": "SHORT",
+        "entry": 1671.1099853515625,
+        "stop_loss": 1696.5426434545832,
+        "targets": [
+          1645.6773272485418,
+          1632.9609981970314,
+          1620.2446691455211
+        ],
+        "tp1": 1645.6773272485418,
+        "tp2": 1632.9609981970314,
+        "tp3": 1620.2446691455211,
+        "rr_tp2": 1.5000000000000044,
+        "rsi14": 37.460788453007616,
+        "ema20": 1694.7965585195413,
+        "ema50": 1695.9093977168789,
+        "macd": -8.480071952333219,
+        "macd_signal": -1.4324564362121015,
+        "macd_hist": -7.047615516121118,
+        "atr14": 16.955105402013817,
+        "vwap": 1692.5102717831094,
+        "support": 1632.989990234375,
+        "resistance": 1751.8800048828125,
+        "as_of": "2026-11-27T19:00:00+00:00",
+        "score": 60,
+        "disclaimer": "Educational market scenario only; not financial advice. Levels can fail."
+      },
+      "analyst": {
+        "view": "I’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.5. The scenario is invalid if structure fails.",
+        "hook": "Structure first. Risk always.",
+        "caveat": "This rule-based screen is not a prediction; price can invalidate the scenario."
+      },
+      "copy": {
+        "telegram_html": "<b>🎯 Bullseye Theory · Ethereum</b>\n\n<b>Structure first. Risk always.</b>\n\nI’m watching Ethereum through structure, momentum, and defined risk. EMA20 is below EMA50, while RSI(14) is 37.5. The scenario is invalid if structure fails.\n\nEthereum: EMA20 is below EMA50 and RSI(14) is 37.5. This is a rule-based scenario, not a prediction.\n\n<b>Scenario:</b> ETH-USD · SHORT\n\nThis rule-based screen is not a prediction; price can invalidate the scenario.\n\n#Ethereum #CryptoTrading #TechnicalAnalysis #BullseyeTheory\n\n<i>Educational scenario only. Not financial advice; levels can fail.</i>",
+        "hook": "Structure first. Risk always.",
+        "hashtags": [
+          "#Ethereum",
+          "#CryptoTrading",
+          "#TechnicalAnalysis",
+          "#BullseyeTheory"
+        ]
+      },
+      "chart_path": "output/eth-usd-2026112719-short.png",
+      "card_path": "output/eth-usd-2026112719-short_card.png",
+      "created_at": "2026-11-27T19:27:06.884354+00:00",
+      "publishing": {},
+      "status": "generated"
     }
   },
   "runs": [
